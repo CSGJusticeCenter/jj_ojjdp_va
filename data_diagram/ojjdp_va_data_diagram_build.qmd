@@ -1,0 +1,81 @@
+---
+title: "Virginia OJJDP Data Diagram"
+format: html
+---
+
+This syntax pulls in all data files provided by Virginia DJJ stored as a series of Excel file tabs -- and preliminarily maps their relationships with the datamodelr package (https://github.com/bergant/datamodelr)
+
+File names reflect the names provided by DJJ. Find more information on files and variables in `Codebook` tab.
+
+
+```{r include=FALSE}
+### call libraries
+library(easypackages)
+libraries("tidyverse","foreign","lubridate","reshape2", "ggplot2","RColorBrewer","knitr","forcats","openxlsx","statar","svDialogs","xlsx", "magrittr","stringr", "data.table","janitor","kableExtra","leaflet", "readr", "rmarkdown","rowr", "gganimate", "gifski","tidycensus","sf","htmltools","acs","tigris","mapview","rgeos", "ggrepel", "censusxy","gdata","lavaan","mclust","tmap", "raster","rgeos","gmapsdistance","viridis","cowplot","lintr","leaflet.extras","censusapi","data.table","gridGraphics","readxl","haven","ggridges","extrafont","extrafontdb","datamodelr","Lahman","DiagrammeR","fs","readxl","rsvg","V8","csgjcr")
+```
+
+```{r include=FALSE}
+### pull in virginia djj data from raw data folder
+
+### set sharepoint path using csgjcr function
+sharepoint_ojjdp_va_raw_data <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Data/VA/raw"))
+
+########################################################
+### import first excel file w/ multiple tabs with purrr
+########################################################
+
+### using purrr::map, import list of tabs from excel worksheet
+ojjdp_va_raw_tab_list_file_one <- purrr::map(purrr::set_names(excel_sheets(file.path(sharepoint_ojjdp_va_raw_data,
+                                                              "CSG Front End data 01202023 - pt1 - SENSITIVE.xlsx"))),
+                      read_excel, 
+                      path = file.path(sharepoint_ojjdp_va_raw_data,"CSG Front End data 01202023 - pt1 - SENSITIVE.xlsx")) %>% 
+  purrr::map(janitor::clean_names)
+
+### clean names of all imported tabs before converting to dataframes
+names(ojjdp_va_raw_tab_list_file_one) <- janitor::make_clean_names(names(ojjdp_va_raw_tab_list_file_one))
+
+### then convert list of tabs to distinct dataframes with names from tabs
+purrr::map(names(ojjdp_va_raw_tab_list_file_one),
+           ~assign(.x, 
+                   ojjdp_va_raw_tab_list_file_one[[.x]], 
+        envir = .GlobalEnv)) 
+
+########################################################
+### now import second file from djj -- with only one tab
+########################################################
+intake_complaints <- openxlsx::read.xlsx(file.path(sharepoint_ojjdp_va_raw_data,
+                                                              "CSG Front End data 01202023 - pt2 - SENSITIVE.xlsx"),
+                                                    sheet = 1) %>% 
+  clean_names()
+
+```
+
+
+```{r echo=FALSE,warning=FALSE,message=FALSE}
+### create data map using datamodelr package; first, we have to name each table in the list we're creating, second we establish which columns are primary keys for each table via dm_set_key, and lastly we indicate how tables should be joined together -- which produces arrows between two tables via dm_add_references (this data map will need to be confirmed with our data contacts)
+va_djj_data_diagram <- list(caseload = caseload, 
+                      disposition = disposition,
+                      intake_complaints = intake_complaints) %>% ### list dataframes to map
+    dm_from_data_frames() %>%
+    dm_set_key("caseload", c("juvenile_number","offense_number")) %>% ### set primary keys in each dataframe 
+    dm_set_key("disposition", c("juvenile_number","case_number","offense_number")) %>%
+    dm_set_key("intake_complaints", c("juvenile_number","case_number","offense_number")) %>%
+    dm_add_references(
+        disposition$juvenile_number == intake_complaints$juvenile_number, 
+        disposition$case_number == intake_complaints$case_number,
+        disposition$offense_number == intake_complaints$offense_number,
+        caseload$juvenile_number == intake_complaints$juvenile_number, 
+        caseload$offense_number == intake_complaints$offense_number) %>% 
+    dm_create_graph(rankdir = "BT", 
+                    columnArrows = FALSE, 
+                    col_attr = c("column")) ### draw arrow to establish linkage relationship
+
+### set sharepoint path using file.path function (path has different structure than usual so not using csg_sp_path from csgjcr package)
+sharepoint_ojjdp_va_code_img <- file.path("C:/Users/abyrum/OneDrive - The Council of State Governments/Code/jj_ojjdp_va/img")
+
+### export data map as png file -- had to play around with height and width to render an image that kept legibility as user zooms in
+dm_export_graph(va_djj_data_diagram, 
+                file_name = file.path(sharepoint_ojjdp_va_code_img,"ojjdp_va_diagram.png"), 
+                width = 525, 
+                height = 1050)
+```

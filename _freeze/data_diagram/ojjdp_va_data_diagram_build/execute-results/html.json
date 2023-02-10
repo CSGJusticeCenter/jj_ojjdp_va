@@ -1,0 +1,14 @@
+{
+  "hash": "85003cfe61af5b7ddcf298b6c90bc493",
+  "result": {
+    "markdown": "---\ntitle: \"Virginia OJJDP Data Diagram\"\nformat: html\n---\n\n\nThis syntax pulls in all data files provided by Virginia DJJ stored as a series of Excel file tabs -- and preliminarily maps their relationships with the datamodelr package (https://github.com/bergant/datamodelr)\n\nFile names reflect the names provided by DJJ. Find more information on files and variables in `Codebook` tab.\n\n\n\n\n\n\n\n::: {.cell}\n\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

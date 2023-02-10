@@ -1,0 +1,14 @@
+{
+  "hash": "96e847d494b87afd25ab6de669af18c8",
+  "result": {
+    "markdown": "---\ntitle: \"Sample Descriptive Statistics\"\nformat: html\n---\n\n\nIn this file, we'll import all of the Virginia DJJ files provided and create preliminary cross-tabulations and merges to explore basic counts, trends, and double check primary keys and joins across the data files. \n\nSee `Codebooks` and `Data Diagram` tabs for more information on each individual data file. \n\nTBD\n\n\n\n\n\n\n\n\n\n\n\n<br>\n\n# Sample Descriptives\n\n**Data Sample:** \n\n* Juvenile intake complaints with intake dates from July 1, 2015 - June 30, 2021\n\n* Dispositions – all dispositions for the intake complaints in the sample. \n\n* Caseload – all intake complaints in the sample that are associated with a workload status for diversion - \"Diversion At Intake\" or \"Diversion Program Beyond 90 Days\"\n\n\n\n## Table 1. Unique Youth and Referrals by Year (Year of Referral)\n\n\n\n\n\n\n\n<br>\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

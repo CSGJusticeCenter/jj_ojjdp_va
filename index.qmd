@@ -1,0 +1,50 @@
+---
+format:
+  html:
+    css: styles.css
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r out.width="70%", echo=FALSE}
+knitr::include_graphics("img/csg-logo.png")
+```
+
+This is the OJJDP Virginia project databook. FOR INTERNAL CSG JC USE ONLY. 
+
+**Project Goals:** Assess statewide referral and diversion policies and practices, and identify opportunities to align DJJ diversion policies, practices, and resource allocation strategies with what research shows works to improve public safety and youth outcomes
+
+**Research Questions:**
+
+
+**Part I:** Using a cohort of first-time system involved youth, look at adjusted differences in likelihood of being diverted and likelihood of a re-complaint for diverted vs. non-diverted youth.
+
+A.	How does the likelihood of being diverted differ by race, sex, and geography?
+
+B.	What is the impact of a diversion on a youth’s likelihood of coming back into the system?
+
+<br>
+
+**Part II:** Conduct a front-end system assessment from intake through petition for all complaints 2016-2021.
+
+*Methods:*
+
+
+*Part I:* For research question (A) we will build a series of logistic regression models, adjusting for race/ethnicity, age, offense, risk level, and other factors that may also be related to a decision to divert. Our outcome variable will be diversion/petition (0/1) and our independent variables of interest will be race, sex, and CSU. For research question (B) we will take a similar methodological approach, but restrict our cohort to diverted youth and focus on likelihood of a re-complaint within a year of diversion while adjusting for demographics, offense, risk level, etc. For research question (B) our outcome variable will be re-complaint within a year of the initial intake decision date (0/1) and our independent variables of interest will be race, sex, and CSU.
+
+
+*Part II:* We will conduct a descriptive analysis of the front end of the system from intake through petition, provide unadjusted counts, RRI’s and means tests where applicable, by race, sex, offense, risk, CSU, & year for:
+
+*	Complaints
+
+*	Intake decisions: divert, resolve, petition, other
+
+*	Average LOS on diversion 
+
+*	Diversion completions: successful, unsuccessful, other
+
+*	Dispositions on petitioned cases
+
+<br>

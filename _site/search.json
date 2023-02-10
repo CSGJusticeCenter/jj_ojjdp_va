@@ -1,0 +1,65 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "OJJDP Juvenile Justice System Reform Initiative: Virginia",
+    "section": "",
+    "text": "This is the OJJDP Virginia project databook. FOR INTERNAL CSG JC USE ONLY.\nProject Goals: Assess statewide referral and diversion policies and practices, and identify opportunities to align DJJ diversion policies, practices, and resource allocation strategies with what research shows works to improve public safety and youth outcomes\nResearch Questions:\nPart I: Using a cohort of first-time system involved youth, look at adjusted differences in likelihood of being diverted and likelihood of a re-complaint for diverted vs. non-diverted youth.\n\nHow does the likelihood of being diverted differ by race, sex, and geography?\nWhat is the impact of a diversion on a youth’s likelihood of coming back into the system?\n\n\nPart II: Conduct a front-end system assessment from intake through petition for all complaints 2016-2021.\nMethods:\nPart I: For research question (A) we will build a series of logistic regression models, adjusting for race/ethnicity, age, offense, risk level, and other factors that may also be related to a decision to divert. Our outcome variable will be diversion/petition (0/1) and our independent variables of interest will be race, sex, and CSU. For research question (B) we will take a similar methodological approach, but restrict our cohort to diverted youth and focus on likelihood of a re-complaint within a year of diversion while adjusting for demographics, offense, risk level, etc. For research question (B) our outcome variable will be re-complaint within a year of the initial intake decision date (0/1) and our independent variables of interest will be race, sex, and CSU.\nPart II: We will conduct a descriptive analysis of the front end of the system from intake through petition, provide unadjusted counts, RRI’s and means tests where applicable, by race, sex, offense, risk, CSU, & year for:\n\nComplaints\nIntake decisions: divert, resolve, petition, other\nAverage LOS on diversion\nDiversion completions: successful, unsuccessful, other\nDispositions on petitioned cases"
+  },
+  {
+    "objectID": "ojjdp_va_preliminary_descriptives.html",
+    "href": "ojjdp_va_preliminary_descriptives.html",
+    "title": "Sample Descriptive Statistics",
+    "section": "",
+    "text": "In this file, we’ll import all of the Virginia DJJ files provided and create preliminary cross-tabulations and merges to explore basic counts, trends, and double check primary keys and joins across the data files.\nSee Codebooks and Data Diagram tabs for more information on each individual data file.\nTBD"
+  },
+  {
+    "objectID": "ojjdp_va_preliminary_descriptives.html#table-1.-unique-youth-and-referrals-by-year-year-of-referral",
+    "href": "ojjdp_va_preliminary_descriptives.html#table-1.-unique-youth-and-referrals-by-year-year-of-referral",
+    "title": "Sample Descriptive Statistics",
+    "section": "Table 1. Unique Youth and Referrals by Year (Year of Referral)",
+    "text": "Table 1. Unique Youth and Referrals by Year (Year of Referral)"
+  },
+  {
+    "objectID": "ojjdp_va_questions_updates.html",
+    "href": "ojjdp_va_questions_updates.html",
+    "title": "Virginia DJJ Data Questions/Updates",
+    "section": "",
+    "text": "Virginia DJJ Data Questions and Responses:\n\nCurrent Internal Questions & Next Steps:\n\nOther:"
+  },
+  {
+    "objectID": "ojjdp_va_data_diagram_viz.html",
+    "href": "ojjdp_va_data_diagram_viz.html",
+    "title": "Virginia DJJ Data Diagram",
+    "section": "",
+    "text": "This syntax pulls in all data files provided by Virginia DJJ stored as a series of Excel file tabs – and preliminarily maps their relationships with the datamodelr package (https://github.com/bergant/datamodelr)\nFile names reflect the names provided by DJJ. Find more information on files and variables in Codebook tab."
+  },
+  {
+    "objectID": "ojjdp_va_data_codebooks.html",
+    "href": "ojjdp_va_data_codebooks.html",
+    "title": "Virginia DJJ Data File Codebooks",
+    "section": "",
+    "text": "Data Sample:\nFor all missing data plots, here are the % missingness categories: “Good” <= 5% missing, “OK” <= 40% missing, “Bad” <= 80% missing, and “Remove” = 100% missing\nThis syntax pulls in all data files provided by DJJ stored as a series of Excel file tabs – creates high-level codebooks for each using the DataExplorer package (https://boxuancui.github.io/DataExplorer/index.html). File names reflect the names provided by Dallas County."
+  },
+  {
+    "objectID": "ojjdp_va_data_codebooks.html#intake-complaints-file",
+    "href": "ojjdp_va_data_codebooks.html#intake-complaints-file",
+    "title": "Virginia DJJ Data File Codebooks",
+    "section": "Intake Complaints File",
+    "text": "Intake Complaints File\nDJJ Description: Juvenile intake complaints with intake dates from July 1, 2015 - June 30, 2021\n\n\nIntake Complaints, Data Overview\n\n\n\n\n \n  \n    Measure \n    Count \n  \n \n\n  \n    rows \n    276,930 \n  \n  \n    columns \n    33 \n  \n  \n    discrete_columns \n    19 \n  \n  \n    continuous_columns \n    14 \n  \n  \n    all_missing_columns \n    0 \n  \n  \n    total_missing_values \n    2,046,164 \n  \n  \n    complete_rows \n    1,051 \n  \n  \n    total_observations \n    9,138,690 \n  \n  \n    memory_usage \n    73,321,440 \n  \n\n\n\n\n\n\n\n\nIntake Complaints, Fields Included\n\n\n\n\n \n  \n    Variable \n    Description \n  \n \n\n  \n    juvenile_number \n    A unique identification number that is automatically assigned at the time an electronic juvenile record is created in the electronic data management system. \n  \n  \n    case_number \n    A unique identification number that is assigned to an intake case upon the creation of the intake. \n  \n  \n    offense_number \n    A unique identification number that is automatically generated at the time an offense is entered in the electronic data management system. \n  \n  \n    csu \n    The court service unit that opened the intake case. \n  \n  \n    fips_code \n    The FIPS that opened the intake case. \n  \n  \n    date_opened \n    Month and year of intake \n  \n  \n    intake_age \n    Age at intake \n  \n  \n    pet_age \n    Age at petition \n  \n  \n    sex \n    The youth's sex assigned at birth. \n  \n  \n    race \n    The youth's race. \n  \n  \n    hispanic \n    The youth's ethnicity. \n  \n  \n    petitioner_type \n    The type of individual who requested the petition for the case. In February 2015, petitioner type was expanded to include “School Resource Officer” (SRO) in addition to “School Official.” Previously, it was unclear if an SRO’s intake was marked as “School Official,” “Police Department,” or other. \n  \n  \n    petitioner_desc \n    NA \n  \n  \n    intake_decision \n    The decision made by the intake officer \n  \n  \n    prior_misd \n    Prior number of misdemeanor complaints (any type of misdemeanor prior to intake date) \n  \n  \n    prior_felony \n    Prior number of felony complaints (prior to intake date) \n  \n  \n    prior_chinsup \n    Prior number of CHINSup complaints (prior to intake date) \n  \n  \n    prior_chins \n    Prior number of CHINS complaints (prior to intake date) \n  \n  \n    prior_other_status \n    Prior number  of Status complaints (prior to intake date) \n  \n  \n    prior_other \n    Prior number of other complaints (prior to the intake date) \n  \n  \n    prior_adj \n    Prior number of adjudicated complaints (FG, G, GA) (prior to intake date) \n  \n  \n    drg \n    Offense category \n  \n  \n    description \n    The offense description of the offense. \n  \n  \n    vcc_code \n    The Virginia Crime Code of the offense. \n  \n  \n    dai \n    Offense severity of the offense according to the Detention Assessment Instrument (DAI) ranking \n  \n  \n    flg_category \n    Indicates if the complaint is a technical, status, delinquent, or traffic offense \n  \n  \n    mso_flag \n    Indicates if the complaint was the most serious offense of the intake case. There may be more than one most serious offense if the severity ranking was tied. \n  \n  \n    prob_yn \n    Indicates whether the juvenile received probation for the complaint \n  \n  \n    comm_yn \n    Indicates whether the juvenile was committed to DJJ for the complaint \n  \n  \n    risk_level \n    The risk level of the youth closest to the intake date based on the Youth Assessment and Screening Instrument (YASI) \n  \n  \n    ysai_date \n    Indicates if the YASI was done before, on, or after the intake date \n  \n  \n    assessmenttype \n    Indicates if the YASI is an initial assessment, reassessment, or done at case closure \n  \n  \n    mentalhealthflag \n    Mental health flag from the YASI \n  \n\n\n\n\n\n\n\n\nIntake Complaints, Missing Data"
+  },
+  {
+    "objectID": "ojjdp_va_data_codebooks.html#disposition-file",
+    "href": "ojjdp_va_data_codebooks.html#disposition-file",
+    "title": "Virginia DJJ Data File Codebooks",
+    "section": "Disposition File",
+    "text": "Disposition File\nDJJ Description: All dispositions for the intake complaints in the sample\n\n\nDisposition, Data Overview\n\n\n\n\n \n  \n    Measure \n    Count \n  \n \n\n  \n    rows \n    372,637 \n  \n  \n    columns \n    6 \n  \n  \n    discrete_columns \n    1 \n  \n  \n    continuous_columns \n    5 \n  \n  \n    all_missing_columns \n    0 \n  \n  \n    total_missing_values \n    551,839 \n  \n  \n    complete_rows \n    184,098 \n  \n  \n    total_observations \n    2,235,822 \n  \n  \n    memory_usage \n    17,891,976 \n  \n\n\n\n\n\n\n\n\nDisposition, Fields Included\n\n\n\n\n \n  \n    Variable \n    Description \n  \n \n\n  \n    juvenile_number \n    A unique identification number that is automatically assigned at the time an electronic juvenile record is created in the electronic data management system. \n  \n  \n    case_number \n    A unique identification number that is assigned to an intake case upon the creation of the intake. \n  \n  \n    offense_number \n    A unique identification number that is automatically generated at the time an offense is entered in the electronic data management system. \n  \n  \n    court_disp_age \n    Age at court ordered disposition. \n  \n  \n    description \n    Court ordered disposition \n  \n  \n    days_int_to_cd \n    Days from intake date to court ordered disposition date \n  \n\n\n\n\n\n\n\n\nDisposition, Missing Data"
+  },
+  {
+    "objectID": "ojjdp_va_data_codebooks.html#caseload-file",
+    "href": "ojjdp_va_data_codebooks.html#caseload-file",
+    "title": "Virginia DJJ Data File Codebooks",
+    "section": "Caseload File",
+    "text": "Caseload File\nDJJ Description: All intake complaints in the sample that are associated with a workload status for diversion - “Diversion At Intake” or “Diversion Program Beyond 90 Days”\n\n\nCaseload, Data Overview\n\n\n\n\n \n  \n    Measure \n    Count \n  \n \n\n  \n    rows \n    291,379 \n  \n  \n    columns \n    4 \n  \n  \n    discrete_columns \n    1 \n  \n  \n    continuous_columns \n    3 \n  \n  \n    all_missing_columns \n    0 \n  \n  \n    total_missing_values \n    542,838 \n  \n  \n    complete_rows \n    0 \n  \n  \n    total_observations \n    1,165,516 \n  \n  \n    memory_usage \n    8,160,384 \n  \n\n\n\n\n\n\n\n\nCaseload, Fields Included\n\n\n\n\n \n  \n    Variable \n    Description \n  \n \n\n  \n    juvenile_number \n    A unique identification number that is automatically assigned at the time an electronic juvenile record is created in the electronic data management system. \n  \n  \n    offense_number \n    A unique identification number that is automatically generated at the time an offense is entered in the electronic data management system. \n  \n  \n    div_at_int \n    Number of days on the workload status \"Diversion at Intake\" \n  \n  \n    div_bey_90 \n    Number of days on the workload status \"Diversion Beyond 90 Days\" \n  \n\n\n\n\n\n\n\n\nCaseload, Missing Data"
+  }
+]

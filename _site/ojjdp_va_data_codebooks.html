@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>OJJDP Juvenile Justice System Reform Initiative: Virginia - Virginia DJJ Data File Codebooks</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./img/favicon.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">OJJDP Juvenile Justice System Reform Initiative: Virginia</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html">
+ <span class="menu-text">Project and Analysis Plan</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./ojjdp_va_create_analytic_files.html">
+ <span class="menu-text">Analytic Files</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./ojjdp_va_questions_updates.html">
+ <span class="menu-text">Questions and Updates</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./ojjdp_va_preliminary_descriptives.html">
+ <span class="menu-text">Sample Descriptives</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./ojjdp_va_data_codebooks.html" aria-current="page">
+ <span class="menu-text">Codebooks</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./ojjdp_va_data_diagram_viz.html">
+ <span class="menu-text">Data Diagram</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/CSGJusticeCenter/jj_ojjdp_va"><i class="bi bi-fab fa-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#intake-complaints-file" id="toc-intake-complaints-file" class="nav-link active" data-scroll-target="#intake-complaints-file">Intake Complaints File</a>
+  <ul class="collapse">
+  <li><a href="#intake-complaints-data-overview" id="toc-intake-complaints-data-overview" class="nav-link" data-scroll-target="#intake-complaints-data-overview">Intake Complaints, Data Overview</a></li>
+  <li><a href="#intake-complaints-fields-included" id="toc-intake-complaints-fields-included" class="nav-link" data-scroll-target="#intake-complaints-fields-included">Intake Complaints, Fields Included</a></li>
+  <li><a href="#intake-complaints-missing-data" id="toc-intake-complaints-missing-data" class="nav-link" data-scroll-target="#intake-complaints-missing-data">Intake Complaints, Missing Data</a></li>
+  </ul></li>
+  <li><a href="#disposition-file" id="toc-disposition-file" class="nav-link" data-scroll-target="#disposition-file">Disposition File</a>
+  <ul class="collapse">
+  <li><a href="#disposition-data-overview" id="toc-disposition-data-overview" class="nav-link" data-scroll-target="#disposition-data-overview">Disposition, Data Overview</a></li>
+  <li><a href="#disposition-fields-included" id="toc-disposition-fields-included" class="nav-link" data-scroll-target="#disposition-fields-included">Disposition, Fields Included</a></li>
+  <li><a href="#disposition-missing-data" id="toc-disposition-missing-data" class="nav-link" data-scroll-target="#disposition-missing-data">Disposition, Missing Data</a></li>
+  </ul></li>
+  <li><a href="#caseload-file" id="toc-caseload-file" class="nav-link" data-scroll-target="#caseload-file">Caseload File</a>
+  <ul class="collapse">
+  <li><a href="#caseload-data-overview" id="toc-caseload-data-overview" class="nav-link" data-scroll-target="#caseload-data-overview">Caseload, Data Overview</a></li>
+  <li><a href="#caseload-fields-included" id="toc-caseload-fields-included" class="nav-link" data-scroll-target="#caseload-fields-included">Caseload, Fields Included</a></li>
+  <li><a href="#caseload-missing-data" id="toc-caseload-missing-data" class="nav-link" data-scroll-target="#caseload-missing-data">Caseload, Missing Data</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Virginia DJJ Data File Codebooks</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p><strong>Data Sample:</strong></p>
+<ul>
+<li><p>Juvenile intake complaints with intake dates from July 1, 2015 - June 30, 2021</p></li>
+<li><p>Dispositions – all dispositions for the intake complaints in the sample.</p></li>
+<li><p>Caseload – all intake complaints in the sample that are associated with a workload status for diversion - “Diversion At Intake” or “Diversion Program Beyond 90 Days”</p></li>
+</ul>
+<p><strong>For all missing data plots</strong>, here are the % missingness categories: “Good” &lt;= 5% missing, “OK” &lt;= 40% missing, “Bad” &lt;= 80% missing, and “Remove” = 100% missing</p>
+<p><br></p>
+<p>This syntax pulls in all data files provided by DJJ stored as a series of Excel file tabs – creates high-level codebooks for each using the DataExplorer package (https://boxuancui.github.io/DataExplorer/index.html). File names reflect the names provided by Dallas County.</p>
+<p><br></p>
+<section id="intake-complaints-file" class="level2">
+<h2 class="anchored" data-anchor-id="intake-complaints-file">Intake Complaints File</h2>
+<p><strong>DJJ Description:</strong> Juvenile intake complaints with intake dates from July 1, 2015 - June 30, 2021</p>
+<p><br></p>
+<section id="intake-complaints-data-overview" class="level3">
+<h3 class="anchored" data-anchor-id="intake-complaints-data-overview">Intake Complaints, Data Overview</h3>
+<div class="cell">
+<div class="cell-output-display">
+
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:center;"> Measure </th>
+   <th style="text-align:center;"> Count </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:center;"> rows </td>
+   <td style="text-align:center;"> 276,930 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> columns </td>
+   <td style="text-align:center;"> 33 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> discrete_columns </td>
+   <td style="text-align:center;"> 19 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> continuous_columns </td>
+   <td style="text-align:center;"> 14 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> all_missing_columns </td>
+   <td style="text-align:center;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> total_missing_values </td>
+   <td style="text-align:center;"> 2,046,164 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> complete_rows </td>
+   <td style="text-align:center;"> 1,051 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> total_observations </td>
+   <td style="text-align:center;"> 9,138,690 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> memory_usage </td>
+   <td style="text-align:center;"> 73,321,440 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="intake-complaints-fields-included" class="level3">
+<h3 class="anchored" data-anchor-id="intake-complaints-fields-included">Intake Complaints, Fields Included</h3>
+<div class="cell">
+<div class="cell-output-display">
+
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:center;"> Variable </th>
+   <th style="text-align:center;"> Description </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:center;"> juvenile_number </td>
+   <td style="text-align:center;"> A unique identification number that is automatically assigned at the time an electronic juvenile record is created in the electronic data management system. </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> case_number </td>
+   <td style="text-align:center;"> A unique identification number that is assigned to an intake case upon the creation of the intake. </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> offense_number </td>
+   <td style="text-align:center;"> A unique identification number that is automatically generated at the time an offense is entered in the electronic data management system. </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> csu </td>
+   <td style="text-align:center;"> The court service unit that opened the intake case. </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> fips_code </td>
+   <td style="text-align:center;"> The FIPS that opened the intake case. </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> date_opened </td>
+   <td style="text-align:center;"> Month and year of intake </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> intake_age </td>
+   <td style="text-align:center;"> Age at intake </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> pet_age </td>
+   <td style="text-align:center;"> Age at petition </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> sex </td>
+   <td style="text-align:center;"> The youth's sex assigned at birth. </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> race </td>
+   <td style="text-align:center;"> The youth's race. </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> hispanic </td>
+   <td style="text-align:center;"> The youth's ethnicity. </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> petitioner_type </td>
+   <td style="text-align:center;"> The type of individual who requested the petition for the case. In February 2015, petitioner type was expanded to include “School Resource Officer” (SRO) in addition to “School Official.” Previously, it was unclear if an SRO’s intake was marked as “School Official,” “Police Department,” or other. </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> petitioner_desc </td>
+   <td style="text-align:center;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> intake_decision </td>
+   <td style="text-align:center;"> The decision made by the intake officer </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> prior_misd </td>
+   <td style="text-align:center;"> Prior number of misdemeanor complaints (any type of misdemeanor prior to intake date) </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> prior_felony </td>
+   <td style="text-align:center;"> Prior number of felony complaints (prior to intake date) </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> prior_chinsup </td>
+   <td style="text-align:center;"> Prior number of CHINSup complaints (prior to intake date) </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> prior_chins </td>
+   <td style="text-align:center;"> Prior number of CHINS complaints (prior to intake date) </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> prior_other_status </td>
+   <td style="text-align:center;"> Prior number  of Status complaints (prior to intake date) </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> prior_other </td>
+   <td style="text-align:center;"> Prior number of other complaints (prior to the intake date) </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> prior_adj </td>
+   <td style="text-align:center;"> Prior number of adjudicated complaints (FG, G, GA) (prior to intake date) </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> drg </td>
+   <td style="text-align:center;"> Offense category </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> description </td>
+   <td style="text-align:center;"> The offense description of the offense. </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> vcc_code </td>
+   <td style="text-align:center;"> The Virginia Crime Code of the offense. </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> dai </td>
+   <td style="text-align:center;"> Offense severity of the offense according to the Detention Assessment Instrument (DAI) ranking </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> flg_category </td>
+   <td style="text-align:center;"> Indicates if the complaint is a technical, status, delinquent, or traffic offense </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> mso_flag </td>
+   <td style="text-align:center;"> Indicates if the complaint was the most serious offense of the intake case. There may be more than one most serious offense if the severity ranking was tied. </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> prob_yn </td>
+   <td style="text-align:center;"> Indicates whether the juvenile received probation for the complaint </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> comm_yn </td>
+   <td style="text-align:center;"> Indicates whether the juvenile was committed to DJJ for the complaint </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> risk_level </td>
+   <td style="text-align:center;"> The risk level of the youth closest to the intake date based on the Youth Assessment and Screening Instrument (YASI) </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> ysai_date </td>
+   <td style="text-align:center;"> Indicates if the YASI was done before, on, or after the intake date </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> assessmenttype </td>
+   <td style="text-align:center;"> Indicates if the YASI is an initial assessment, reassessment, or done at case closure </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> mentalhealthflag </td>
+   <td style="text-align:center;"> Mental health flag from the YASI </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="intake-complaints-missing-data" class="level3">
+<h3 class="anchored" data-anchor-id="intake-complaints-missing-data">Intake Complaints, Missing Data</h3>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="ojjdp_va_data_codebooks_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" style="width:120.0%"></p>
+</div>
+</div>
+<p><br><br></p>
+</section>
+</section>
+<section id="disposition-file" class="level2">
+<h2 class="anchored" data-anchor-id="disposition-file">Disposition File</h2>
+<p><strong>DJJ Description:</strong> All dispositions for the intake complaints in the sample</p>
+<p><br></p>
+<section id="disposition-data-overview" class="level3">
+<h3 class="anchored" data-anchor-id="disposition-data-overview">Disposition, Data Overview</h3>
+<div class="cell">
+<div class="cell-output-display">
+
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:center;"> Measure </th>
+   <th style="text-align:center;"> Count </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:center;"> rows </td>
+   <td style="text-align:center;"> 372,637 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> columns </td>
+   <td style="text-align:center;"> 6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> discrete_columns </td>
+   <td style="text-align:center;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> continuous_columns </td>
+   <td style="text-align:center;"> 5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> all_missing_columns </td>
+   <td style="text-align:center;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> total_missing_values </td>
+   <td style="text-align:center;"> 551,839 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> complete_rows </td>
+   <td style="text-align:center;"> 184,098 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> total_observations </td>
+   <td style="text-align:center;"> 2,235,822 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> memory_usage </td>
+   <td style="text-align:center;"> 17,891,976 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="disposition-fields-included" class="level3">
+<h3 class="anchored" data-anchor-id="disposition-fields-included">Disposition, Fields Included</h3>
+<div class="cell">
+<div class="cell-output-display">
+
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:center;"> Variable </th>
+   <th style="text-align:center;"> Description </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:center;"> juvenile_number </td>
+   <td style="text-align:center;"> A unique identification number that is automatically assigned at the time an electronic juvenile record is created in the electronic data management system. </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> case_number </td>
+   <td style="text-align:center;"> A unique identification number that is assigned to an intake case upon the creation of the intake. </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> offense_number </td>
+   <td style="text-align:center;"> A unique identification number that is automatically generated at the time an offense is entered in the electronic data management system. </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> court_disp_age </td>
+   <td style="text-align:center;"> Age at court ordered disposition. </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> description </td>
+   <td style="text-align:center;"> Court ordered disposition </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> days_int_to_cd </td>
+   <td style="text-align:center;"> Days from intake date to court ordered disposition date </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="disposition-missing-data" class="level3">
+<h3 class="anchored" data-anchor-id="disposition-missing-data">Disposition, Missing Data</h3>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="ojjdp_va_data_codebooks_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" style="width:120.0%"></p>
+</div>
+</div>
+<p><br><br></p>
+</section>
+</section>
+<section id="caseload-file" class="level2">
+<h2 class="anchored" data-anchor-id="caseload-file">Caseload File</h2>
+<p><strong>DJJ Description:</strong> All intake complaints in the sample that are associated with a workload status for diversion - “Diversion At Intake” or “Diversion Program Beyond 90 Days”</p>
+<p><br></p>
+<section id="caseload-data-overview" class="level3">
+<h3 class="anchored" data-anchor-id="caseload-data-overview">Caseload, Data Overview</h3>
+<div class="cell">
+<div class="cell-output-display">
+
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:center;"> Measure </th>
+   <th style="text-align:center;"> Count </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:center;"> rows </td>
+   <td style="text-align:center;"> 291,379 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> columns </td>
+   <td style="text-align:center;"> 4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> discrete_columns </td>
+   <td style="text-align:center;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> continuous_columns </td>
+   <td style="text-align:center;"> 3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> all_missing_columns </td>
+   <td style="text-align:center;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> total_missing_values </td>
+   <td style="text-align:center;"> 542,838 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> complete_rows </td>
+   <td style="text-align:center;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> total_observations </td>
+   <td style="text-align:center;"> 1,165,516 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> memory_usage </td>
+   <td style="text-align:center;"> 8,160,384 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="caseload-fields-included" class="level3">
+<h3 class="anchored" data-anchor-id="caseload-fields-included">Caseload, Fields Included</h3>
+<div class="cell">
+<div class="cell-output-display">
+
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:center;"> Variable </th>
+   <th style="text-align:center;"> Description </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:center;"> juvenile_number </td>
+   <td style="text-align:center;"> A unique identification number that is automatically assigned at the time an electronic juvenile record is created in the electronic data management system. </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> offense_number </td>
+   <td style="text-align:center;"> A unique identification number that is automatically generated at the time an offense is entered in the electronic data management system. </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> div_at_int </td>
+   <td style="text-align:center;"> Number of days on the workload status "Diversion at Intake" </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> div_bey_90 </td>
+   <td style="text-align:center;"> Number of days on the workload status "Diversion Beyond 90 Days" </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="caseload-missing-data" class="level3">
+<h3 class="anchored" data-anchor-id="caseload-missing-data">Caseload, Missing Data</h3>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="ojjdp_va_data_codebooks_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" style="width:120.0%"></p>
+</div>
+</div>
+<p><br><br></p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

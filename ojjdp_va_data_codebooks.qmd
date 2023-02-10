@@ -1,0 +1,251 @@
+---
+title: "Virginia DJJ Data File Codebooks"
+format: html
+---
+
+**Data Sample:** 
+
+* Juvenile intake complaints with intake dates from July 1, 2015 - June 30, 2021
+
+* Dispositions – all dispositions for the intake complaints in the sample. 
+
+* Caseload – all intake complaints in the sample that are associated with a workload status for diversion - "Diversion At Intake" or "Diversion Program Beyond 90 Days"
+
+
+**For all missing data plots**, here are the % missingness categories: "Good" <= 5% missing, "OK" <= 40% missing, "Bad" <= 80% missing, and "Remove" = 100% missing
+
+<br>
+
+This syntax pulls in all data files provided by DJJ stored as a series of Excel file tabs -- creates high-level codebooks for each using the DataExplorer package (https://boxuancui.github.io/DataExplorer/index.html). File names reflect the names provided by Dallas County.
+
+
+```{r include=FALSE}
+### call libraries
+library(easypackages)
+libraries("tidyverse","foreign","lubridate","reshape2", "ggplot2","RColorBrewer","knitr","forcats","openxlsx","statar","svDialogs","xlsx", "magrittr","stringr", "data.table","janitor","kableExtra","leaflet", "readr", "rmarkdown","rowr", "gganimate", "gifski","tidycensus","sf","htmltools","acs","tigris","mapview","rgeos", "ggrepel", "censusxy","gdata","lavaan","mclust","tmap", "raster","rgeos","gmapsdistance","viridis","cowplot","lintr","leaflet.extras","censusapi","data.table","gridGraphics","readxl","haven","ggridges","extrafont","extrafontdb","datamodelr","Lahman","DiagrammeR","fs","readxl","rsvg","V8","csgjcr","DataExplorer")
+```
+
+```{r include=FALSE,message=FALSE,warning=FALSE}
+### set chunk output specifications
+knitr::opts_chunk$set(
+  echo = TRUE,
+  dev = "ragg_png",
+  cache = FALSE)
+
+### set theme
+theme_set(theme_minimal())
+```
+
+```{r include=FALSE}
+### pull in virginia djj data from raw data folder
+
+### set sharepoint path using csgjcr function
+sharepoint_ojjdp_va_raw_data <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Data/VA/raw"))
+
+########################################################
+### import first excel file w/ multiple tabs with purrr
+########################################################
+
+### using purrr::map, import list of tabs from excel worksheet
+ojjdp_va_raw_tab_list_file_one <- purrr::map(purrr::set_names(excel_sheets(file.path(sharepoint_ojjdp_va_raw_data,
+                                                              "CSG Front End data 01202023 - pt1 - SENSITIVE.xlsx"))),
+                      read_excel, 
+                      path = file.path(sharepoint_ojjdp_va_raw_data,"CSG Front End data 01202023 - pt1 - SENSITIVE.xlsx")) %>% 
+  purrr::map(janitor::clean_names)
+
+### clean names of all imported tabs before converting to dataframes
+names(ojjdp_va_raw_tab_list_file_one) <- janitor::make_clean_names(names(ojjdp_va_raw_tab_list_file_one))
+
+### then convert list of tabs to distinct dataframes with names from tabs
+purrr::map(names(ojjdp_va_raw_tab_list_file_one),
+           ~assign(.x, 
+                   ojjdp_va_raw_tab_list_file_one[[.x]], 
+        envir = .GlobalEnv)) 
+
+########################################################
+### now import second file from djj -- with only one tab
+########################################################
+df_djj_intake_complaints_raw <- openxlsx::read.xlsx(file.path(sharepoint_ojjdp_va_raw_data,
+                                                              "CSG Front End data 01202023 - pt2 - SENSITIVE.xlsx"),
+                                                    sheet = 1) %>% 
+  clean_names()
+```
+
+```{r include=FALSE}
+# Custom function
+plot_missing_2 <-
+function (data, group = list(Good = 0.05, Okay = 0.4, Poor = 0.8, 
+  Remove =  1), geom_label_args = list(), title = NULL, ggtheme = theme_gray(), 
+theme_config = list(legend.position = c("bottom"))) 
+{
+  pct_missing <- Missingness <- NULL
+  missing_value <- data.table(profile_missing(data))
+  group <- group[sort.list(unlist(group))]
+  invisible(lapply(seq_along(group), function(i) {
+    if (i == 1) {
+      missing_value[pct_missing <= group[[i]], `:=`(Missingness,
+         names(group)[i])]
+    } else {
+  missing_value[pct_missing > group[[i - 1]] & pct_missing <= 
+     group[[i]], `:=`(Missingness, names(group)[i])]
+    }
+}))
+  output <- ggplot(missing_value, aes_string(x = "feature", 
+    y = "num_missing", fill = "Missingness")) + geom_bar(stat = "identity") + 
+   scale_fill_manual("Missingness", values = c("Good"="green2","Okay"="gold","Poor"="darkorange","Remove"="firebrick2")) + coord_flip() + xlab("Features") + 
+   ylab("Missing Rows")
+  geom_label_args_list <- list(mapping = aes(label = paste0(round(100 * 
+    pct_missing, 2), "%")))
+  output <- output + do.call("geom_label", c(geom_label_args_list, 
+     geom_label_args))
+  class(output) <- c("single", class(output))
+  plotDataExplorer(plot_obj = output, title = title, ggtheme = ggtheme, 
+   theme_config = theme_config)
+}
+```
+
+
+<br>
+
+## Intake Complaints File
+
+**DJJ Description:** Juvenile intake complaints with intake dates from July 1, 2015 - June 30, 2021
+
+<br>
+
+### Intake Complaints, Data Overview
+```{r out.width="50%",echo=FALSE,warning=FALSE,message=FALSE}
+### run the `DataExplorer` function introduce()
+table <- DataExplorer::introduce(df_djj_intake_complaints_raw) %>% 
+  pivot_longer(rows:memory_usage, names_to = "Measure", values_to = "Count")
+
+kable(table, format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), 
+                 row_label_position = "l") 
+```
+
+<br>
+
+### Intake Complaints, Fields Included
+```{r out.width="50%",echo=FALSE,warning=FALSE,message=FALSE}
+### join pertinent variable labels from 'data_field_list' dataframe (the high-level data dictionary that DJJ provided)
+### using snakecase to clean values in columns
+column_labels <- data_field_list %>% 
+  mutate(Variable = snakecase::to_any_case(field_name)) %>% 
+  filter(excel_tab=="Intake Complaints") %>% 
+  dplyr::rename(Description=description) %>% 
+  dplyr::select(Variable,
+                Description)
+  
+### create table with kable
+kable(column_labels, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                row_label_position = "l")
+```
+
+<br>
+
+### Intake Complaints, Missing Data
+```{r out.width="120%",echo=FALSE,warning=FALSE,message=FALSE}
+### run the `DataExplorer` function plot_missing()
+plot_missing_2(df_djj_intake_complaints_raw)
+```
+
+<br><br>
+
+## Disposition File 
+
+**DJJ Description:** All dispositions for the intake complaints in the sample 
+
+<br>
+
+### Disposition, Data Overview
+```{r out.width="50%",echo=FALSE,warning=FALSE,message=FALSE}
+### run the `DataExplorer` function introduce()
+table <- DataExplorer::introduce(disposition) %>% 
+  pivot_longer(rows:memory_usage, names_to = "Measure", values_to = "Count")
+
+kable(table, format.args = list(big.mark = ","), align=rep('c')) %>%
+   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), row_label_position = "l") 
+```
+
+<br>
+
+### Disposition, Fields Included
+```{r out.width="50%",echo=FALSE,warning=FALSE,message=FALSE}
+### join pertinent variable labels from 'data_field_list' dataframe (the high-level data dictionary that DJJ provided)
+### using snakecase to clean values in columns
+column_labels <- data_field_list %>% 
+  mutate(Variable = snakecase::to_any_case(field_name)) %>% 
+  filter(excel_tab=="Disposition") %>% 
+  dplyr::rename(Description=description) %>% 
+  dplyr::select(Variable,
+                Description)
+  
+### create table with kable
+kable(column_labels, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                row_label_position = "l")
+```
+
+<br>
+
+### Disposition, Missing Data
+```{r out.width="120%",echo=FALSE,warning=FALSE,message=FALSE}
+### run the `DataExplorer` function plot_missing()
+plot_missing_2(disposition)
+```
+
+<br><br>
+
+## Caseload File 
+
+**DJJ Description:** All intake complaints in the sample that are associated with a workload status for diversion - "Diversion At Intake" or "Diversion Program Beyond 90 Days"
+
+<br>
+
+### Caseload, Data Overview
+```{r out.width="50%",echo=FALSE,warning=FALSE,message=FALSE}
+### run the `DataExplorer` function introduce()
+table <- DataExplorer::introduce(caseload) %>% 
+  pivot_longer(rows:memory_usage, names_to = "Measure", values_to = "Count")
+
+kable(table, format.args = list(big.mark = ","), align=rep('c')) %>%
+   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), row_label_position = "l") 
+```
+
+<br>
+
+### Caseload, Fields Included
+```{r out.width="50%",echo=FALSE,warning=FALSE,message=FALSE}
+### join pertinent variable labels from 'data_field_list' dataframe (the high-level data dictionary that DJJ provided)
+### using snakecase to clean values in columns
+column_labels <- data_field_list %>% 
+  mutate(Variable = snakecase::to_any_case(field_name)) %>% 
+  filter(excel_tab=="Caseload") %>% 
+  dplyr::rename(Description=description) %>% 
+  dplyr::select(Variable,
+                Description)
+  
+### create table with kable
+kable(column_labels, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                row_label_position = "l")
+```
+
+<br>
+
+### Caseload, Missing Data
+```{r out.width="120%",echo=FALSE,warning=FALSE,message=FALSE}
+### run the `DataExplorer` function plot_missing()
+plot_missing_2(caseload)
+```
+
+<br><br>

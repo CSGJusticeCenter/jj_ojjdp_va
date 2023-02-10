@@ -1,0 +1,14 @@
+{
+  "hash": "968c7412b863c300b35eca6b96d534f4",
+  "result": {
+    "markdown": "---\ntitle: \"ojjdp_va_data_exploration_import_clean\"\nauthor: \"Andrew Byrum\"\nformat: html\n---\n\n\n**The purpose of this RMD is to import, join, and clean all data files provided by the Department of Juvenile Justice (DJJ) in Virginia -- provided to us as 2 excel file with 3 tabs of relational data as 3 tabs of data documentation**\n\n\n\n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
