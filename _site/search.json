@@ -61,5 +61,19 @@
     "title": "Virginia DJJ Data File Codebooks",
     "section": "Caseload File",
     "text": "Caseload File\nDJJ Description: All intake complaints in the sample that are associated with a workload status for diversion - “Diversion At Intake” or “Diversion Program Beyond 90 Days”\n\n\nCaseload, Data Overview\n\n\n\n\n \n  \n    Measure \n    Count \n  \n \n\n  \n    rows \n    291,379 \n  \n  \n    columns \n    4 \n  \n  \n    discrete_columns \n    1 \n  \n  \n    continuous_columns \n    3 \n  \n  \n    all_missing_columns \n    0 \n  \n  \n    total_missing_values \n    542,838 \n  \n  \n    complete_rows \n    0 \n  \n  \n    total_observations \n    1,165,516 \n  \n  \n    memory_usage \n    8,160,384 \n  \n\n\n\n\n\n\n\n\nCaseload, Fields Included\n\n\n\n\n \n  \n    Variable \n    Description \n  \n \n\n  \n    juvenile_number \n    A unique identification number that is automatically assigned at the time an electronic juvenile record is created in the electronic data management system. \n  \n  \n    offense_number \n    A unique identification number that is automatically generated at the time an offense is entered in the electronic data management system. \n  \n  \n    div_at_int \n    Number of days on the workload status \"Diversion at Intake\" \n  \n  \n    div_bey_90 \n    Number of days on the workload status \"Diversion Beyond 90 Days\" \n  \n\n\n\n\n\n\n\n\nCaseload, Missing Data"
+  },
+  {
+    "objectID": "ojjdp_va_create_analytic_files.html",
+    "href": "ojjdp_va_create_analytic_files.html",
+    "title": "Building the Analytic Files",
+    "section": "",
+    "text": "In this syntax, we’ll import all of the DJJ files provided and create two analytic files based on the templates in the second and third tabs here: https://csgorg.sharepoint.com/:x:/s/Team-JC-Research-JJ_AV/EZ-RDTetlZVCoiQxlasiboEBhsT7WNlx5v0qR7sDBji1-A?e=eggzRJ\nSee Codebooks and Data Diagram tabs for more information on each individual data file.\nTBD"
+  },
+  {
+    "objectID": "data_diagram/ojjdp_va_data_diagram_build.html",
+    "href": "data_diagram/ojjdp_va_data_diagram_build.html",
+    "title": "Virginia OJJDP Data Diagram",
+    "section": "",
+    "text": "This syntax pulls in all data files provided by Virginia DJJ stored as a series of Excel file tabs – and preliminarily maps their relationships with the datamodelr package (https://github.com/bergant/datamodelr)\nFile names reflect the names provided by DJJ. Find more information on files and variables in Codebook tab."
   }
 ]
