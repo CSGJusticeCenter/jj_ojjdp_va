@@ -12,6 +12,11 @@ format: html
 
 **Current Internal Questions & Next Steps:**
 
+- `Disposition` file appears to have a small number of pure duplicates (~850/~370,000) and a somewhat larger population of duplicates across youth ID, case number, offense, and disposition (~11,000/~370,000). How should we interpret/treat this? It seems like one case could have multiple intakes and thus, multiple measures of days from intake to disposition -- but for one offense ID?
+
+- Why does the caseload file not have case number/ID?
+
+- `Caseload` file seems to have duplicates across youth ID (juvenile number) and offense number -- how should we interpret this?
 
 <br>
 

@@ -4,14 +4,14 @@
     "href": "index.html",
     "title": "OJJDP Juvenile Justice System Reform Initiative: Virginia",
     "section": "",
-    "text": "This is the OJJDP Virginia project databook. FOR INTERNAL CSG JC USE ONLY.\nProject Goals: Assess statewide referral and diversion policies and practices, and identify opportunities to align DJJ diversion policies, practices, and resource allocation strategies with what research shows works to improve public safety and youth outcomes\nResearch Questions:\nPart I: Using a cohort of first-time system involved youth, look at adjusted differences in likelihood of being diverted and likelihood of a re-complaint for diverted vs. non-diverted youth.\n\nHow does the likelihood of being diverted differ by race, sex, and geography?\nWhat is the impact of a diversion on a youth’s likelihood of coming back into the system?\n\n\nPart II: Conduct a front-end system assessment from intake through petition for all complaints 2016-2021.\nMethods:\nPart I: For research question (A) we will build a series of logistic regression models, adjusting for race/ethnicity, age, offense, risk level, and other factors that may also be related to a decision to divert. Our outcome variable will be diversion/petition (0/1) and our independent variables of interest will be race, sex, and CSU. For research question (B) we will take a similar methodological approach, but restrict our cohort to diverted youth and focus on likelihood of a re-complaint within a year of diversion while adjusting for demographics, offense, risk level, etc. For research question (B) our outcome variable will be re-complaint within a year of the initial intake decision date (0/1) and our independent variables of interest will be race, sex, and CSU.\nPart II: We will conduct a descriptive analysis of the front end of the system from intake through petition, provide unadjusted counts, RRI’s and means tests where applicable, by race, sex, offense, risk, CSU, & year for:\n\nComplaints\nIntake decisions: divert, resolve, petition, other\nAverage LOS on diversion\nDiversion completions: successful, unsuccessful, other\nDispositions on petitioned cases"
+    "text": "This is the OJJDP Virginia project databook. FOR INTERNAL CSG JC USE ONLY.\nProject Goals: Assess statewide referral and diversion policies and practices, and identify opportunities to align DJJ diversion policies, practices, and resource allocation strategies with what research shows works to improve public safety and youth outcomes\n\nResearch Questions:\nPart I: Using a cohort of first-time system involved youth, look at adjusted differences in likelihood of being diverted and likelihood of a re-complaint for diverted vs. non-diverted youth.\n\nHow does the likelihood of being diverted differ by race, sex, and geography?\nWhat is the impact of a diversion on a youth’s likelihood of coming back into the system?\n\nPart II: Conduct a front-end system assessment from intake through petition for all complaints 2016-2021.\n\nMethods:\nPart I: For research question (A) we will build a series of logistic regression models, adjusting for race/ethnicity, age, offense, risk level, and other factors that may also be related to a decision to divert. Our outcome variable will be diversion/petition (0/1) and our independent variables of interest will be race, sex, and CSU. For research question (B) we will take a similar methodological approach, but restrict our cohort to diverted youth and focus on likelihood of a re-complaint within a year of diversion while adjusting for demographics, offense, risk level, etc. For research question (B) our outcome variable will be re-complaint within a year of the initial intake decision date (0/1) and our independent variables of interest will be race, sex, and CSU.\nPart II: We will conduct a descriptive analysis of the front end of the system from intake through petition, provide unadjusted counts, RRI’s and means tests where applicable, by race, sex, offense, risk, CSU, and year for:\n\nComplaints\nIntake decisions: divert, resolve, petition, other\nAverage LOS on diversion\nDiversion completions: successful, unsuccessful, other\nDispositions on petitioned cases"
   },
   {
     "objectID": "ojjdp_va_preliminary_descriptives.html",
     "href": "ojjdp_va_preliminary_descriptives.html",
     "title": "Sample Descriptive Statistics",
     "section": "",
-    "text": "In this file, we’ll import all of the Virginia DJJ files provided and create preliminary cross-tabulations and merges to explore basic counts, trends, and double check primary keys and joins across the data files.\nSee Codebooks and Data Diagram tabs for more information on each individual data file.\nTBD"
+    "text": "In this file, we’ll import all of the Virginia DJJ files provided and create preliminary cross-tabulations and merges to explore basic counts, trends, and double check primary keys and joins across the data files.\nSee Codebooks and Data Diagram tabs for more information on each individual data file."
   },
   {
     "objectID": "ojjdp_va_preliminary_descriptives.html#table-1.-unique-youth-and-referrals-by-year-year-of-referral",
@@ -25,7 +25,7 @@
     "href": "ojjdp_va_questions_updates.html",
     "title": "Virginia DJJ Data Questions/Updates",
     "section": "",
-    "text": "Virginia DJJ Data Questions and Responses:\n\nCurrent Internal Questions & Next Steps:\n\nOther:"
+    "text": "Virginia DJJ Data Questions and Responses:\n\nCurrent Internal Questions & Next Steps:\n\nDisposition file appears to have a small number of pure duplicates (850/370,000) and a somewhat larger population of duplicates across youth ID, case number, offense, and disposition (11,000/370,000). How should we interpret/treat this? It seems like one case could have multiple intakes and thus, multiple measures of days from intake to disposition – but for one offense ID?\nWhy does the caseload file not have case number/ID?\nCaseload file seems to have duplicates across youth ID (juvenile number) and offense number – how should we interpret this?\n\n\nOther:"
   },
   {
     "objectID": "ojjdp_va_data_diagram_viz.html",
@@ -75,5 +75,19 @@
     "title": "Virginia OJJDP Data Diagram",
     "section": "",
     "text": "This syntax pulls in all data files provided by Virginia DJJ stored as a series of Excel file tabs – and preliminarily maps their relationships with the datamodelr package (https://github.com/bergant/datamodelr)\nFile names reflect the names provided by DJJ. Find more information on files and variables in Codebook tab."
+  },
+  {
+    "objectID": "ojjdp_va_preliminary_descriptives.html#table-1.-unique-youth-and-complaints-by-year-year-of-complaint",
+    "href": "ojjdp_va_preliminary_descriptives.html#table-1.-unique-youth-and-complaints-by-year-year-of-complaint",
+    "title": "Sample Descriptive Statistics",
+    "section": "Table 1. Unique Youth and Complaints by Year (Year of Complaint)",
+    "text": "Table 1. Unique Youth and Complaints by Year (Year of Complaint)\n\n\n\n\n \n  \n    Year of Complaint \n    Unique Youth (N) \n    Unique Complaints (N) \n    Complaints, Percent of Sample (%) \n  \n \n\n  \n    2015 \n    14,520 \n    19,549 \n    9.8% \n  \n  \n    2016 \n    26,018 \n    39,575 \n    19.8% \n  \n  \n    2017 \n    26,227 \n    39,397 \n    19.7% \n  \n  \n    2018 \n    24,030 \n    35,385 \n    17.7% \n  \n  \n    2019 \n    23,793 \n    34,842 \n    17.5% \n  \n  \n    2020 \n    14,978 \n    21,402 \n    10.7% \n  \n  \n    2021 \n    7,401 \n    9,501 \n    4.8% \n  \n  \n    Overall \n    99,224 \n    199,651 \n    100.0%"
+  },
+  {
+    "objectID": "ojjdp_va_preliminary_descriptives.html#table-2-unique-youth-and-complaints-by-raceethnicity",
+    "href": "ojjdp_va_preliminary_descriptives.html#table-2-unique-youth-and-complaints-by-raceethnicity",
+    "title": "Sample Descriptive Statistics",
+    "section": "Table 2: Unique Youth and Complaints by Race/Ethnicity",
+    "text": "Table 2: Unique Youth and Complaints by Race/Ethnicity\n\n\n\n\n \n  \n    Race/Ethnicity \n    Unique Youth (N) \n    Unique Youth, Percent of Sample (%) \n    Unique Complaints (N) \n    Complaints, Percent of Sample (%) \n  \n \n\n  \n    American Indian \n    115 \n    0.1% \n    197 \n    0.1% \n  \n  \n    Asian \n    1,239 \n    1.2% \n    1,949 \n    1.0% \n  \n  \n    Black \n    35,020 \n    35.3% \n    81,971 \n    41.1% \n  \n  \n    Hispanic \n    9,447 \n    9.5% \n    21,495 \n    10.8% \n  \n  \n    White \n    44,022 \n    44.4% \n    80,498 \n    40.3% \n  \n  \n    Other \n    8,145 \n    8.2% \n    12,135 \n    6.1% \n  \n  \n    Missing \n    1,236 \n    1.2% \n    1,406 \n    0.7% \n  \n  \n    Overall \n    99,224 \n    100.0% \n    199,651 \n    100.0%"
   }
 ]
