@@ -27,9 +27,9 @@ This is the OJJDP Virginia project databook. FOR INTERNAL CSG JC USE ONLY.
 
 **Part I:** Using a cohort of first-time system involved youth, look at adjusted differences in likelihood of being diverted and likelihood of a re-complaint for diverted vs. non-diverted youth.
 
-A.	How does the likelihood of being diverted differ by race, sex, and geography?
+A. How does the likelihood of being diverted differ by race, sex, and geography?
 
-B.	What is the impact of a diversion on a youth’s likelihood of coming back into the system?
+B. What is the impact of a diversion on a youth’s likelihood of coming back into the system?
 
 C. What is the impact of a diversion vs probation on a youth’s likelihood of coming back into the system with a new complaint or new petition within a year of the initial intake decision?
 
