@@ -18,6 +18,8 @@ format: html
 
 - `Caseload` file seems to have duplicates across youth ID (juvenile number) and offense number -- how should we interpret this?
 
+- Should we use intake decision to create the diverted versus not diverted samples? Are these codes overwritten?  If so, which intake decision codes belong in the diverted group ("UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21')?)
+
 <br>
 
 **Other:** 
