@@ -8,16 +8,24 @@ website:
    right:
       - text: "Project and Analysis Plan"
         href: index.html
-      - text: "Analytic Files"
-        href: ojjdp_va_create_analytic_files.html
+      - text: "Analysis"
+        menu:
+          - text: "Part I (Regression Analysis)"
+            href: ojjdp_va_part_i_analysis.html
+          - text: "Part II (Descriptive Analysis)"
+            href: ojjdp_va_part_ii_analysis.html
       - text: "Questions and Updates"
         href: ojjdp_va_questions_updates.html
+      - text: "Analytic File Prep"
+        href: ojjdp_va_create_analytic_files.html
       - text: "Sample Descriptives"
-        href: ojjdp_va_preliminary_descriptives.html
-      - text: "Codebooks"
-        href: ojjdp_va_data_codebooks.html
-      - text: "Data Diagram"
-        href: ojjdp_va_data_diagram_viz.html
+        menu:
+          - text: "Basic Descriptive Statistics"
+            href: ojjdp_va_preliminary_descriptives.html
+          - text: "Codebooks"
+            href: ojjdp_va_data_codebooks.html
+          - text: "Data Diagram"
+            href: ojjdp_va_data_diagram_viz.html
       - icon: fab fa-github
         href: https://github.com/CSGJusticeCenter/jj_ojjdp_va
 

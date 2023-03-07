@@ -1,0 +1,315 @@
+---
+title: "Analysis: Part II"
+format: html
+---
+
+**Data Sample:** 
+
+* Juvenile intake complaints with intake dates from July 1, 2015 - June 30, 2021
+
+* Dispositions – all dispositions for the intake complaints in the sample. 
+
+
+**Research Question:**
+
+Conduct a front-end system assessment from intake through petition for all complaints 2016-2021.
+
+
+**Methods:**
+
+We will conduct a descriptive analysis of the front end of the system from intake through petition, provide unadjusted counts, RRI’s and means tests where applicable, by race, sex, offense, risk, CSU, and year for:
+
+*	Complaints
+
+*	Intake decisions: divert, resolve, petition, other
+
+*	Average LOS on diversion 
+
+*	Diversion completions: successful, unsuccessful, other
+
+*	Dispositions on petitioned cases
+
+*Cohort:* All complaints from 2016-2021  
+
+<br>
+
+```{r include=FALSE}
+### call libraries
+library(easypackages)
+libraries("tidyverse","foreign","lubridate","reshape2", "ggplot2","RColorBrewer","knitr","forcats","openxlsx","statar","svDialogs","xlsx", "magrittr","stringr", "data.table","janitor","kableExtra","leaflet", "readr", "rmarkdown","rowr", "gganimate", "gifski","tidycensus","sf","htmltools","acs","tigris","mapview","rgeos", "ggrepel", "censusxy","gdata","lavaan","mclust","tmap", "raster","rgeos","gmapsdistance","viridis","cowplot","lintr","leaflet.extras","censusapi","data.table","gridGraphics","readxl","haven","ggridges","extrafont","extrafontdb","datamodelr","Lahman","DiagrammeR","fs","readxl","rsvg","V8","csgjcr","DataExplorer","tidylog")
+```
+
+```{r include=FALSE,message=FALSE,warning=FALSE}
+### set chunk output specifications
+knitr::opts_chunk$set(
+  echo = TRUE,
+  dev = "ragg_png",
+  cache = FALSE)
+
+### set theme
+theme_set(theme_minimal())
+```
+
+```{r include=FALSE}
+### pull in virginia djj data from raw data folder
+
+### set sharepoint path using csgjcr function
+sharepoint_ojjdp_va_raw_data <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Data/VA/raw"))
+
+########################################################
+### import first excel file w/ multiple tabs with purrr
+########################################################
+
+### using purrr::map, import list of tabs from excel worksheet
+ojjdp_va_raw_tab_list_file_one <- purrr::map(purrr::set_names(excel_sheets(file.path(sharepoint_ojjdp_va_raw_data,
+                                                              "CSG Front End data 01202023 - pt1 - SENSITIVE.xlsx"))),
+                      read_excel, 
+                      path = file.path(sharepoint_ojjdp_va_raw_data,"CSG Front End data 01202023 - pt1 - SENSITIVE.xlsx")) %>% 
+  purrr::map(janitor::clean_names)
+
+### clean names of all imported tabs before converting to dataframes
+names(ojjdp_va_raw_tab_list_file_one) <- janitor::make_clean_names(names(ojjdp_va_raw_tab_list_file_one))
+
+### then convert list of tabs to distinct dataframes with names from tabs
+purrr::map(names(ojjdp_va_raw_tab_list_file_one),
+           ~assign(.x, 
+                   ojjdp_va_raw_tab_list_file_one[[.x]], 
+        envir = .GlobalEnv)) 
+
+########################################################
+### now import second file from djj -- with only one tab
+########################################################
+df_djj_intake_complaints_raw <- openxlsx::read.xlsx(file.path(sharepoint_ojjdp_va_raw_data,
+                                                              "CSG Front End data 01202023 - pt2 - SENSITIVE.xlsx"),
+                                                    sheet = 1) %>% 
+  clean_names()
+```
+
+```{r include=FALSE, message=FALSE, warning=FALSE}
+#############################################
+### clean and de-dup df_djj_intake_complaints_raw dataframe
+### this is our base file for the sample
+#############################################
+df_djj_intake_complaints_clean <- df_djj_intake_complaints_raw %>% 
+  distinct(juvenile_number,
+           case_number,
+           offense_number,
+           .keep_all=TRUE) %>% ### no records dropped
+  ### clean race/ethnicity and gender
+  ### use factor function to assign labels to values
+  mutate(race_clean = case_when(
+    race=="I" & hispanic!="Y" ~ 1,
+    race=="A" & hispanic!="Y" ~ 2,
+    race=="B" & hispanic!="Y" ~ 3,
+    hispanic=="Y" ~ 4,
+    race=="W" & hispanic!="Y" ~ 5,
+    race %in% c("X","O") & hispanic!="Y" ~ 6,
+    TRUE ~ 7),
+    race_clean = factor(race_clean,
+         levels = c(1,2,3,4,5,6,7),
+         labels = c("American Indian", "Asian", "Black", "Hispanic", "White", "Other","Missing"))) %>% 
+  mutate(gender_clean = case_when(
+    sex=="F" ~ 1,
+    sex=="M" ~ 2,
+    TRUE ~ as.numeric(NA)),
+    gender_clean = factor(gender_clean,
+         levels = c(1,2),
+         labels = c("Female", "Male"))) %>%   
+### clean dates and create year for potential grouping in future trend analysis
+  mutate(date_opened = ymd(as_date(excel_numeric_to_date(as.numeric(as.character(date_opened)), 
+                                                  date_system = "modern"))),
+         ysai_date = ymd(as_date(ysai_date)),
+         date_opened_year = year(date_opened)) 
+
+### clean up codebook values that we need
+codebook_intake_decision_values <- codebook %>% 
+  filter(field_name=="INTAKE_DECISION") %>% 
+  dplyr::select(intake_decision=code,
+                intake_decision_label=options,
+                intake_decision_description=definitions) %>% 
+  mutate(intake_decision = as.numeric(intake_decision))
+
+### unique youth and complaints per year
+df_complaints_youth_intake_decision <- df_djj_intake_complaints_clean %>% 
+  mutate(intake_decision = as.numeric(intake_decision)) %>% 
+  left_join(codebook_intake_decision_values,
+            by = "intake_decision") %>% 
+  ### create diversion flag
+  ### create unique complaint-level ID
+  mutate(diverted_flag = ifelse(intake_decision_label%in%c("UNSUCCESSFUL DIVERSION/PETITION FILED", "SUCCESSFUL DIVERSION","UNSUCCESSFUL DIVERSION/NO PETITION FILED","REQ'D TO PARTICIPATE-DIVERSION"),
+                                1,0),
+         diverted_flag = factor(diverted_flag,
+                                levels = c(1,0),
+                                labels = c("Yes","No")),
+         unique_complaint_id = paste0(juvenile_number,case_number,.keep_all=TRUE))
+
+########################################
+### clean and de-dup disposition dataframe
+########################################
+### note: disposition file is unique by youth, case number, offense number, disposition, amd days from intake to disposition
+disposition_clean <- disposition %>% 
+  distinct(juvenile_number,
+           case_number,
+           offense_number,
+           description,
+           .keep_all=TRUE) ### no records dropped
+  
+  ### next step: de-dup by disposition -- keeping most serious?
+  
+
+########################################
+### clean and de-dup caseload dataframe
+########################################
+caseload_clean <- caseload %>% 
+  distinct(juvenile_number,
+           offense_number,
+           .keep_all=TRUE) ### need to look into duplicates
+
+```
+
+```{r include=FALSE,warning=FALSE,include=FALSE}
+### create denominator -- unique complaint for entire sample
+unique_complaints_sample_denom <- n_distinct(df_complaints_youth_intake_decision$unique_complaint_id)
+
+### create denominator -- unique youth for entire sample
+unique_youth_sample_denom <- n_distinct(df_complaints_youth_intake_decision$juvenile_number)
+```
+
+<br>
+
+# Tables
+
+
+## Table 1: % of All Complaints Diverted, 2015-2021
+
+Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+### overall complaints by diversion status
+df_complaints_youth_intake_decision_table <- df_complaints_youth_intake_decision %>% 
+  dplyr::group_by(diverted_flag) %>% 
+  dplyr::summarise(`Unique Complaints (N)` = n_distinct(unique_complaint_id),
+            `Complaints, Percent of Sample (%)` = scales::percent(`Unique Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`Diverted?` = diverted_flag) 
+
+
+### print table via kableextra
+kable(df_complaints_youth_intake_decision_table, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") 
+```
+
+<br>
+
+## Table 2: % of All Complaints Diverted by Year
+
+Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+### unique complaints split out
+df_complaints_youth_intake_decision_table_year <- df_complaints_youth_intake_decision %>% 
+  dplyr::group_by(date_opened_year) %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
+                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`Year of Complaint` = date_opened_year) 
+
+### unique complaints statewide
+df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
+                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::mutate(`Year of Complaint` = "Overall") 
+
+### combine two dataframes for table
+df_complaints_youth_intake_decision_table_year_final <- rbind(df_complaints_youth_intake_decision_table_year,
+                                                              df_complaints_youth_intake_decision_table_overall)
+
+
+### print table via kableextra
+kable(df_complaints_youth_intake_decision_table_year_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") %>% 
+  row_spec(8, bold = TRUE)
+```
+
+<br>
+
+## Table 3: % of All Complaints Diverted by Offense Type
+
+Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+### unique complaints split out
+df_complaints_youth_intake_decision_table_offense <- df_complaints_youth_intake_decision %>% 
+  dplyr::group_by(dai) %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
+                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`Offense Description` = dai)  
+
+### unique complaints statewide
+df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
+                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::mutate(`Offense Description` = "Overall") 
+
+### combine two dataframes for table
+df_complaints_youth_intake_decision_table_offense_final <- rbind(df_complaints_youth_intake_decision_table_offense,
+                                                              df_complaints_youth_intake_decision_table_overall)
+
+
+### print table via kableextra
+kable(df_complaints_youth_intake_decision_table_offense_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") %>% 
+  row_spec(10, bold = TRUE)
+```
+
+<br>
