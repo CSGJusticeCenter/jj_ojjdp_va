@@ -84,26 +84,48 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="./index.html">
  <span class="menu-text">Project and Analysis Plan</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./ojjdp_va_create_analytic_files.html">
- <span class="menu-text">Analytic Files</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-analysis" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Analysis</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-analysis">    
+        <li>
+    <a class="dropdown-item" href="./ojjdp_va_part_i_analysis.html">
+ <span class="dropdown-text">Part I (Regression Analysis)</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./ojjdp_va_part_ii_analysis.html">
+ <span class="dropdown-text">Part II (Descriptive Analysis)</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link active" href="./ojjdp_va_questions_updates.html" aria-current="page">
  <span class="menu-text">Questions and Updates</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./ojjdp_va_preliminary_descriptives.html">
- <span class="menu-text">Sample Descriptives</span></a>
+    <a class="nav-link" href="./ojjdp_va_create_analytic_files.html">
+ <span class="menu-text">Analytic File Prep</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./ojjdp_va_data_codebooks.html">
- <span class="menu-text">Codebooks</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-sample-descriptives" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Sample Descriptives</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-sample-descriptives">    
+        <li>
+    <a class="dropdown-item" href="./ojjdp_va_preliminary_descriptives.html">
+ <span class="dropdown-text">Basic Descriptive Statistics</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./ojjdp_va_data_diagram_viz.html">
- <span class="menu-text">Data Diagram</span></a>
+        <li>
+    <a class="dropdown-item" href="./ojjdp_va_data_codebooks.html">
+ <span class="dropdown-text">Codebooks</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./ojjdp_va_data_diagram_viz.html">
+ <span class="dropdown-text">Data Diagram</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/CSGJusticeCenter/jj_ojjdp_va"><i class="bi bi-fab fa-github" role="img">
 </i> 
@@ -145,16 +167,35 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 <p><strong>Virginia DJJ Data Questions and Responses:</strong></p>
+<p><em>Questions about the disposition file:</em></p>
+<ul>
+<li><p>The disposition file appears to have a small number of pure duplicates (<sub>850/</sub>370,000) and a somewhat larger population of duplicates across youth ID, case number, offense, and disposition (<sub>11,000/</sub>370,000). How should we interpret/treat this? It seems like one case could have multiple intakes and thus, multiple measures of days from intake to disposition – but for one offense ID</p></li>
+<li><p>We seem to be missing description, days_int_to_cd, and court_disp_age for about half of the records in the file. Are these intake complaints without dispositions? Or how should we interpret this?</p></li>
+</ul>
+<p><em>Questions about the intake complaints file:</em></p>
+<p>Missing data:</p>
+<ul>
+<li><p>How should we interpret missing prior JJ complaint data? About 40% of all intake complaints records appear to have missing data in these columns</p></li>
+<li><p>We seem to be missing age (pet_age) for about 35% of all records in the intake complaints file – how should we interpret this?</p></li>
+<li><p>It also appears that we have risk level, mental health flag, and other assessment information for only about 38% of all records in the intake complaints file.</p></li>
+<li><p>Should we use intake decision to create the diverted versus not diverted samples? Are these codes overwritten over time? If so, which intake decision codes belong in the diverted group (“UNSUCCESSFUL DIVERSION/PETITION FILED” (code of ‘18’), “SUCCESSFUL DIVERSION” (code of ‘20’), and “UNSUCCESSFUL DIVERSION/NO PETITION FILED” (code of ‘21’),“REQ’D TO PARTICIPATE-DIVERSION” (code of ‘7’)?)</p></li>
+</ul>
+<p><em>Questions about the caseload file:</em></p>
+<ul>
+<li><p>Caseload file seems to have duplicates across youth ID (juvenile number) and offense number – how should we interpret this?</p></li>
+<li><p>What is the best way to join the caseload file to the other files (without case number)?</p></li>
+<li><p>We seem to be missing div_at_int and div_bey_90 for the vast majority of the records in the file (87%+). Are these intake complaints that were not diverted? Or how should we interpret this?</p></li>
+</ul>
 <p><br></p>
 <p><strong>Current Internal Questions &amp; Next Steps:</strong></p>
 <ul>
-<li><p><code>Disposition</code> file appears to have a small number of pure duplicates (<sub>850/</sub>370,000) and a somewhat larger population of duplicates across youth ID, case number, offense, and disposition (<sub>11,000/</sub>370,000). How should we interpret/treat this? It seems like one case could have multiple intakes and thus, multiple measures of days from intake to disposition – but for one offense ID?</p></li>
-<li><p>Why does the caseload file not have case number/ID?</p></li>
-<li><p><code>Caseload</code> file seems to have duplicates across youth ID (juvenile number) and offense number – how should we interpret this?</p></li>
-<li><p>Should we use intake decision to create the diverted versus not diverted samples? Are these codes overwritten? If so, which intake decision codes belong in the diverted group (“UNSUCCESSFUL DIVERSION/PETITION FILED” (code of ‘18’), “SUCCESSFUL DIVERSION” (code of ‘20’), and “UNSUCCESSFUL DIVERSION/NO PETITION FILED” (code of ‘21’)?)</p></li>
+<li><p>We have CHINS/CHINSup/status split out for history, but not current charge</p></li>
+<li><p>Language: complaint vs intake complaint vs intake case</p></li>
+<li><p>For complaint-level analysis, I’ve created a unique complaint ID using juvenile_number and case_number</p></li>
+<li><p>Other variables to categorize/group: petitioner type, disposition type</p></li>
+<li><p>Do we want to include the following intake decisions/types in our base sample: “COMPLAINT UNFOUNDED”, “SHELTER CARE ONLY”, “RETURNED TO OUT-OF-STATE”, “REFERRED TO ANOTHER AGY FOR SV”, “RESOLVED”, “PENDING”? Look at DJJ-provided descriptions for these, as well.</p></li>
+<li><p>Do we want to explore both CSU-level and region-level variation? (see: https://www.djj.virginia.gov/pages/community/court-service-units.htm)</p></li>
 </ul>
-<p><br></p>
-<p><strong>Other:</strong></p>
 <p><br></p>
 
 

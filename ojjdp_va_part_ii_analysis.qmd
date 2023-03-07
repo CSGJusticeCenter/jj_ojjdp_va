@@ -95,6 +95,15 @@ df_djj_intake_complaints_clean <- df_djj_intake_complaints_raw %>%
            case_number,
            offense_number,
            .keep_all=TRUE) %>% ### no records dropped
+  ### keep most serious offense associated with intake case/complaint
+  dplyr::filter(mso_flag == "Y") %>% 
+  ### according to DJJ documentation, multiple offenses may have mso flag of 1 if
+  ### severity ranking is tied; so now de-dup those instances 
+  ### note: if we decide to further explore counts of offenses/types of status offenses
+  ### we will want the full dataframe duplicated by complaint/intake/offense
+  distinct(juvenile_number,
+           case_number,
+           .keep_all=TRUE) %>% 
   ### clean race/ethnicity and gender
   ### use factor function to assign labels to values
   mutate(race_clean = case_when(
@@ -141,7 +150,17 @@ df_complaints_youth_intake_decision <- df_djj_intake_complaints_clean %>%
          diverted_flag = factor(diverted_flag,
                                 levels = c(1,0),
                                 labels = c("Yes","No")),
-         unique_complaint_id = paste0(juvenile_number,case_number,.keep_all=TRUE))
+         unique_complaint_id = paste0(juvenile_number,case_number,.keep_all=TRUE)) %>% 
+  ### create var for jj history using flags provided by DJJ
+   mutate(jj_history_clean = case_when(
+    prior_adj==0 ~ "No Prior JJ History",
+    prior_other>0 ~ "Prior 'Other' History",
+    (prior_chinsup>0 | prior_chins>0 | prior_other_status>0) ~ "Prior Status/CHINS/CHINsup",
+    prior_misd>0 ~ "Prior Misdemeanor",
+    prior_felony>0 ~ "Prior Felony",
+    TRUE ~ as.character(NA)),
+    jj_history_clean = factor(jj_history_clean,
+                              levels = c("No Prior JJ History","Prior 'Other' History","Prior Status/CHINS/CHINsup","Prior Misdemeanor","Prior Felony")))
 
 ########################################
 ### clean and de-dup disposition dataframe
@@ -175,6 +194,61 @@ unique_complaints_sample_denom <- n_distinct(df_complaints_youth_intake_decision
 unique_youth_sample_denom <- n_distinct(df_complaints_youth_intake_decision$juvenile_number)
 ```
 
+```{r include=FALSE,warning=FALSE,include=FALSE}
+### create lists of court service unit (CSU) regions
+### see here: https://www.djj.virginia.gov/pages/community/court-service-units.htm
+eastern_region <- c("001",
+                    "002",
+                    "02A",
+                    "003",
+                    "004",
+                    "005",
+                    "007",
+                    "008")
+
+northern_region <- c("017",
+                    "018",
+                    "019",
+                    "020",
+                    "026",
+                    "031")
+
+western_region <- c("021",
+                    "022",
+                    "023",
+                    "027",
+                    "028",
+                    "029",
+                    "030")
+
+southern_region <- c("006",
+                    "010",
+                    "011",
+                    "012",
+                    "013",
+                    "014")
+
+central_region <- c("009",
+                    "015",
+                    "016",
+                    "024",
+                    "013",
+                    "025")
+```
+
+
+```{r include=FALSE,warning=FALSE,message=FALSE}
+### add csu region to df
+df_complaints_youth_intake_decision_csu <- df_complaints_youth_intake_decision %>% 
+  mutate(csu_region = case_when(
+    csu %in% eastern_region ~ "Eastern",
+    csu %in% northern_region ~ "Northern",
+    csu %in% western_region ~ "Western",
+    csu %in% southern_region ~ "Southern",
+    csu %in% central_region ~ "Central", 
+    TRUE ~ as.character(NA)))
+```
+
 <br>
 
 # Tables
@@ -186,7 +260,7 @@ Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUC
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### overall complaints by diversion status
-df_complaints_youth_intake_decision_table <- df_complaints_youth_intake_decision %>% 
+df_complaints_youth_intake_decision_table <- df_complaints_youth_intake_decision_csu %>% 
   dplyr::group_by(diverted_flag) %>% 
   dplyr::summarise(`Unique Complaints (N)` = n_distinct(unique_complaint_id),
             `Complaints, Percent of Sample (%)` = scales::percent(`Unique Complaints (N)`/unique_complaints_sample_denom,
@@ -214,7 +288,7 @@ Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUC
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### unique complaints split out
-df_complaints_youth_intake_decision_table_year <- df_complaints_youth_intake_decision %>% 
+df_complaints_youth_intake_decision_table_year <- df_complaints_youth_intake_decision_csu %>% 
   dplyr::group_by(date_opened_year) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
@@ -229,7 +303,7 @@ df_complaints_youth_intake_decision_table_year <- df_complaints_youth_intake_dec
   dplyr::rename(`Year of Complaint` = date_opened_year) 
 
 ### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision %>% 
+df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
@@ -261,13 +335,176 @@ kable(df_complaints_youth_intake_decision_table_year_final,
 
 <br>
 
-## Table 3: % of All Complaints Diverted by Offense Type
+## Table 3: % of All Complaints Diverted by Race/Ethnicity
 
 Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### unique complaints split out
-df_complaints_youth_intake_decision_table_offense <- df_complaints_youth_intake_decision %>% 
+df_complaints_youth_intake_decision_table_race <- df_complaints_youth_intake_decision_csu %>% 
+  dplyr::group_by(race_clean) %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
+                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`Race/Ethnicity` = race_clean) 
+
+### unique complaints statewide
+df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
+                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::mutate(`Race/Ethnicity` = "Overall") 
+
+### combine two dataframes for table
+df_complaints_youth_intake_decision_table_race_final <- rbind(df_complaints_youth_intake_decision_table_race,
+                                                              df_complaints_youth_intake_decision_table_overall)
+
+
+### print table via kableextra
+kable(df_complaints_youth_intake_decision_table_race_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") %>% 
+  row_spec(8, bold = TRUE)
+```
+
+<br>
+
+## Table 4: % of All Complaints Diverted by Gender
+
+Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+### unique complaints split out
+df_complaints_youth_intake_decision_table_gender <- df_complaints_youth_intake_decision_csu %>% 
+  dplyr::group_by(gender_clean) %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
+                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`Gender` = gender_clean) 
+
+### unique complaints statewide
+df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
+                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::mutate(`Gender` = "Overall") 
+
+### combine two dataframes for table
+df_complaints_youth_intake_decision_table_gender_final <- rbind(df_complaints_youth_intake_decision_table_gender,
+                                                              df_complaints_youth_intake_decision_table_overall)
+
+
+### print table via kableextra
+kable(df_complaints_youth_intake_decision_table_gender_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") %>% 
+  row_spec(3, bold = TRUE)
+```
+
+<br>
+
+## Table 5: % of All Complaints Diverted by Age at Petition
+
+Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+
+**Question:** We seem to be missing age (pet_age) for about 35% of all records in the intake complaints file -- how should we interpret this? 
+
+**TO DO:** Decide on which ages to exclude because of likely data collection issues (e.g. ages of 0 or 44)
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+### unique complaints split out
+df_complaints_youth_intake_decision_table_age <- df_complaints_youth_intake_decision_csu %>% 
+  dplyr::group_by(pet_age) %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
+                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`Age at Petition` = pet_age) 
+
+### unique complaints statewide
+df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
+                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::mutate(`Age at Petition` = "Overall") 
+
+### combine two dataframes for table
+df_complaints_youth_intake_decision_table_age_final <- rbind(df_complaints_youth_intake_decision_table_age,
+                                                              df_complaints_youth_intake_decision_table_overall)
+
+
+### print table via kableextra
+kable(df_complaints_youth_intake_decision_table_age_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") %>% 
+  row_spec(44, bold = TRUE)
+```
+
+<br>
+
+## Table 6: % of All Complaints Diverted by Offense Type (most serious offense; mso_flag == "Y")
+
+Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+### unique complaints split out
+df_complaints_youth_intake_decision_table_offense <- df_complaints_youth_intake_decision_csu %>% 
   dplyr::group_by(dai) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
@@ -282,7 +519,7 @@ df_complaints_youth_intake_decision_table_offense <- df_complaints_youth_intake_
   dplyr::rename(`Offense Description` = dai)  
 
 ### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision %>% 
+df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
@@ -310,6 +547,171 @@ kable(df_complaints_youth_intake_decision_table_offense_final,
                                        "responsive"), 
                  row_label_position = "l") %>% 
   row_spec(10, bold = TRUE)
+```
+
+<br>
+
+## Table 7: % of All Complaints Diverted by Court Service Unit (CSU)
+
+Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+### unique complaints split out
+df_complaints_youth_intake_decision_table_csu <- df_complaints_youth_intake_decision_csu %>% 
+  dplyr::group_by(csu) %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
+                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`CSU` = csu)  
+
+### unique complaints statewide
+df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
+                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::mutate(`CSU` = "Overall") 
+
+### combine two dataframes for table
+df_complaints_youth_intake_decision_table_csu_final <- rbind(df_complaints_youth_intake_decision_table_csu,
+                                                             df_complaints_youth_intake_decision_table_overall)
+
+
+### print table via kableextra
+kable(df_complaints_youth_intake_decision_table_csu_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") %>% 
+  row_spec(33, bold = TRUE)
+```
+
+<br>
+
+## Table 8: % of All Complaints Diverted by Court Service Unit (CSU) Region
+
+Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+
+See CSU regions here: https://www.djj.virginia.gov/pages/community/court-service-units.htm
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+### unique complaints split out
+df_complaints_youth_intake_decision_table_csu_region <- df_complaints_youth_intake_decision_csu %>% 
+  dplyr::group_by(csu_region) %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
+                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`CSU Region` = csu_region)  
+
+### unique complaints statewide
+df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
+                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::mutate(`CSU Region` = "Overall") 
+
+### combine two dataframes for table
+df_complaints_youth_intake_decision_table_csu_region_final <- rbind(df_complaints_youth_intake_decision_table_csu_region,
+                                                             df_complaints_youth_intake_decision_table_overall)
+
+
+### print table via kableextra
+kable(df_complaints_youth_intake_decision_table_csu_region_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") %>% 
+  row_spec(6, bold = TRUE)
+```
+
+<br>
+
+## Table 9: % of All Complaints Diverted by Prior JJ History 
+
+Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+
+**Question:** How should we interpret missing prior JJ complaint data? About 40% of all intake complaints records appear to have missing data in these columns
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+### unique complaints split out
+df_complaints_youth_intake_decision_table_jj_history <- df_complaints_youth_intake_decision_csu %>% 
+  filter(!is.na(jj_history_clean)==TRUE) %>% 
+  dplyr::group_by(jj_history_clean) %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
+                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`JJ History` = jj_history_clean)  
+
+### unique complaints statewide
+df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
+  filter(!is.na(jj_history_clean)==TRUE) %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
+                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::mutate(`JJ History` = "Overall") 
+
+### combine two dataframes for table
+df_complaints_youth_intake_decision_table_jj_history_final <- rbind(df_complaints_youth_intake_decision_table_jj_history,
+                                                             df_complaints_youth_intake_decision_table_overall)
+
+
+### print table via kableextra
+kable(df_complaints_youth_intake_decision_table_jj_history_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") %>% 
+  row_spec(6, bold = TRUE)
 ```
 
 <br>

@@ -6,29 +6,51 @@ format: html
 
 **Virginia DJJ Data Questions and Responses:**
 
+*Questions about the disposition file:*
+
+*	The disposition file appears to have a small number of pure duplicates (~850/~370,000) and a somewhat larger population of duplicates across youth ID, case number, offense, and disposition (~11,000/~370,000). How should we interpret/treat this? It seems like one case could have multiple intakes and thus, multiple measures of days from intake to disposition -- but for one offense ID
+
+*	We seem to be missing description, days_int_to_cd, and court_disp_age for about half of the records in the file. Are these intake complaints without dispositions? Or how should we interpret this?
+
+
+*Questions about the intake complaints file:*
+
+Missing data:
+
+*	How should we interpret missing prior JJ complaint data? About 40% of all intake complaints records appear to have missing data in these columns
+
+*	We seem to be missing age (pet_age) for about 35% of all records in the intake complaints file -- how should we interpret this? 
+
+*	It also appears that we have risk level, mental health flag, and other assessment information for only about 38% of all records in the intake complaints file.
+
+
+
+*	Should we use intake decision to create the diverted versus not diverted samples? Are these codes overwritten over time?	If so, which intake decision codes belong in the diverted group ("UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'),"REQ'D TO PARTICIPATE-DIVERSION" (code of '7')?)
+
+
+*Questions about the caseload file:*
+
+*	Caseload file seems to have duplicates across youth ID (juvenile number) and offense number -- how should we interpret this?
+
+*	What is the best way to join the caseload file to the other files (without case number)?
+
+*	We seem to be missing div_at_int and div_bey_90 for the vast majority of the records in the file (87%+). Are these intake complaints that were not diverted? Or how should we interpret this? 
 
 
 <br>
 
 **Current Internal Questions & Next Steps:**
 
-- `Disposition` file appears to have a small number of pure duplicates (~850/~370,000) and a somewhat larger population of duplicates across youth ID, case number, offense, and disposition (~11,000/~370,000). How should we interpret/treat this? It seems like one case could have multiple intakes and thus, multiple measures of days from intake to disposition -- but for one offense ID?
+- We have CHINS/CHINSup/status split out for history, but not current charge
+
+- Language: complaint vs intake complaint vs intake case
 
 - For complaint-level analysis, I've created a unique complaint ID using juvenile_number and case_number
-
-- Why does the caseload file not have case number/ID?
-
-- `Caseload` file seems to have duplicates across youth ID (juvenile number) and offense number -- how should we interpret this?
-
-- Should we use intake decision to create the diverted versus not diverted samples? Are these codes overwritten?  If so, which intake decision codes belong in the diverted group ("UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'),"REQ'D TO PARTICIPATE-DIVERSION" (code of '7')?)
 
 - Other variables to categorize/group: petitioner type, disposition type
 
 - Do we want to include the following intake decisions/types in our base sample: "COMPLAINT UNFOUNDED", "SHELTER CARE ONLY", "RETURNED TO OUT-OF-STATE", "REFERRED TO ANOTHER AGY FOR SV", "RESOLVED", "PENDING"? Look at DJJ-provided descriptions for these, as well.
 
-<br>
-
-**Other:** 
-
+- Do we want to explore both CSU-level and region-level variation? (see: https://www.djj.virginia.gov/pages/community/court-service-units.htm)
 
 <br>

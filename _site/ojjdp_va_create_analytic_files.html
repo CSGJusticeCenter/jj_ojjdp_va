@@ -20,6 +20,69 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -84,26 +147,48 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="./index.html">
  <span class="menu-text">Project and Analysis Plan</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link active" href="./ojjdp_va_create_analytic_files.html" aria-current="page">
- <span class="menu-text">Analytic Files</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-analysis" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Analysis</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-analysis">    
+        <li>
+    <a class="dropdown-item" href="./ojjdp_va_part_i_analysis.html">
+ <span class="dropdown-text">Part I (Regression Analysis)</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./ojjdp_va_part_ii_analysis.html">
+ <span class="dropdown-text">Part II (Descriptive Analysis)</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="./ojjdp_va_questions_updates.html">
  <span class="menu-text">Questions and Updates</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./ojjdp_va_preliminary_descriptives.html">
- <span class="menu-text">Sample Descriptives</span></a>
+    <a class="nav-link active" href="./ojjdp_va_create_analytic_files.html" aria-current="page">
+ <span class="menu-text">Analytic File Prep</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./ojjdp_va_data_codebooks.html">
- <span class="menu-text">Codebooks</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-sample-descriptives" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Sample Descriptives</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-sample-descriptives">    
+        <li>
+    <a class="dropdown-item" href="./ojjdp_va_preliminary_descriptives.html">
+ <span class="dropdown-text">Basic Descriptive Statistics</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./ojjdp_va_data_diagram_viz.html">
- <span class="menu-text">Data Diagram</span></a>
+        <li>
+    <a class="dropdown-item" href="./ojjdp_va_data_codebooks.html">
+ <span class="dropdown-text">Codebooks</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./ojjdp_va_data_diagram_viz.html">
+ <span class="dropdown-text">Data Diagram</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/CSGJusticeCenter/jj_ojjdp_va"><i class="bi bi-fab fa-github" role="img">
 </i> 
@@ -147,6 +232,335 @@ ul.task-list li input[type="checkbox"] {
 <p>In this syntax, we’ll import all of the DJJ files provided and create two analytic files based on the templates in the second and third tabs here: https://csgorg.sharepoint.com/:x:/s/Team-JC-Research-JJ_AV/EZ-RDTetlZVCoiQxlasiboEBhsT7WNlx5v0qR7sDBji1-A?e=eggzRJ</p>
 <p>See <code>Codebooks</code> and <code>Data Diagram</code> tabs for more information on each individual data file.</p>
 <p>TBD</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">### pull in virginia djj data from raw data folder</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="do">### set sharepoint path using csgjcr function</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>sharepoint_ojjdp_va_raw_data <span class="ot">&lt;-</span> csgjcr<span class="sc">::</span><span class="fu">csg_sp_path</span>(<span class="fu">file.path</span>(<span class="st">"JJ_OJJDP/Data/VA/raw"</span>))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="do">########################################################</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="do">### import first excel file w/ multiple tabs with purrr</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="do">########################################################</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="do">### using purrr::map, import list of tabs from excel worksheet</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>ojjdp_va_raw_tab_list_file_one <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(purrr<span class="sc">::</span><span class="fu">set_names</span>(<span class="fu">excel_sheets</span>(<span class="fu">file.path</span>(sharepoint_ojjdp_va_raw_data,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>                                                              <span class="st">"CSG Front End data 01202023 - pt1 - SENSITIVE.xlsx"</span>))),</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>                      read_excel, </span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>                      <span class="at">path =</span> <span class="fu">file.path</span>(sharepoint_ojjdp_va_raw_data,<span class="st">"CSG Front End data 01202023 - pt1 - SENSITIVE.xlsx"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map</span>(janitor<span class="sc">::</span>clean_names)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="do">### clean names of all imported tabs before converting to dataframes</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(ojjdp_va_raw_tab_list_file_one) <span class="ot">&lt;-</span> janitor<span class="sc">::</span><span class="fu">make_clean_names</span>(<span class="fu">names</span>(ojjdp_va_raw_tab_list_file_one))</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="do">### then convert list of tabs to distinct dataframes with names from tabs</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="fu">names</span>(ojjdp_va_raw_tab_list_file_one),</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>           <span class="sc">~</span><span class="fu">assign</span>(.x, </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>                   ojjdp_va_raw_tab_list_file_one[[.x]], </span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">envir =</span> .GlobalEnv)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+# A tibble: 10 x 2
+   sample             juvenile_intake_complaints_with_intake_dates_from_july_1_~
+   &lt;chr&gt;              &lt;chr&gt;                                                     
+ 1 &lt;NA&gt;               "Dispositions – all dispostions for the intake complaints~
+ 2 &lt;NA&gt;               "Caseload – all intake complaints in the sample that are ~
+ 3 &lt;NA&gt;                &lt;NA&gt;                                                     
+ 4 Timeframe:         "July 1, 2015 to June 30, 2021"                           
+ 5 &lt;NA&gt;                &lt;NA&gt;                                                     
+ 6 Requestor:         "Rebecca Cohen"                                           
+ 7 &lt;NA&gt;                &lt;NA&gt;                                                     
+ 8 Date of data pull: "44946"                                                   
+ 9 &lt;NA&gt;                &lt;NA&gt;                                                     
+10 Notes:              &lt;NA&gt;                                                     
+
+[[2]]
+# A tibble: 43 x 3
+   excel_tab   field_name      description                                      
+   &lt;chr&gt;       &lt;chr&gt;           &lt;chr&gt;                                            
+ 1 Caseload    JUVENILE_NUMBER "A unique identification number that is automati~
+ 2 Caseload    OFFENSE_NUMBER  "A unique identification number that is automati~
+ 3 Caseload    DIV_AT_INT      "Number of days on the workload status \"Diversi~
+ 4 Caseload    DIV_BEY_90      "Number of days on the workload status \"Diversi~
+ 5 Disposition JUVENILE_NUMBER "A unique identification number that is automati~
+ 6 Disposition CASE_NUMBER     "A unique identification number that is assigned~
+ 7 Disposition OFFENSE_NUMBER  "A unique identification number that is automati~
+ 8 Disposition COURT_DISP_AGE  "Age at court ordered disposition."              
+ 9 Disposition DESCRIPTION     "Court ordered disposition"                      
+10 Disposition DAYS_INT_TO_CD  "Days from intake date to court ordered disposit~
+# ... with 33 more rows
+
+[[3]]
+# A tibble: 348 x 5
+   excel_tab   field_name  code  options                definitions             
+   &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;                  &lt;chr&gt;                   
+ 1 Disposition DESCRIPTION &lt;NA&gt;  COURT ORDER CONDITION~ The juvenile was permit~
+ 2 Disposition DESCRIPTION &lt;NA&gt;  COURT ORDER PARENT PA~ The juvenile's custodia~
+ 3 Disposition DESCRIPTION &lt;NA&gt;  DEFER DISPOSITION ON ~ The disposition was def~
+ 4 Disposition DESCRIPTION &lt;NA&gt;  DEFER DISPOSTION AND ~ &lt;NA&gt;                    
+ 5 Disposition DESCRIPTION &lt;NA&gt;  DEFER FINDING AND DIS~ Without entering a find~
+ 6 Disposition DESCRIPTION &lt;NA&gt;  COURT ORDER NON-RESID~ The juvenile's parent(s~
+ 7 Disposition DESCRIPTION &lt;NA&gt;  PROBATION (16.1-278.8~ The judge orders the ju~
+ 8 Disposition DESCRIPTION &lt;NA&gt;  PROBATION AND COURT O~ The court orders the ju~
+ 9 Disposition DESCRIPTION &lt;NA&gt;  FINE NOT TO EXCEED $5~ A fine, not to be great~
+10 Disposition DESCRIPTION &lt;NA&gt;  SUSPEND DRIVER’S LICE~ &lt;NA&gt;                    
+# ... with 338 more rows
+
+[[4]]
+# A tibble: 372,637 x 6
+   juvenile_number case_number offense_number court_disp_age description        
+             &lt;dbl&gt;       &lt;dbl&gt;          &lt;dbl&gt;          &lt;dbl&gt; &lt;chr&gt;              
+ 1            2428     3079685        4139051             13 COMMUNITY SERVICE ~
+ 2            2428     3079685        4139051             13 COURT ORDER CONDIT~
+ 3            2428     3294368        4458717             15 COURT ORDER CONDIT~
+ 4            2428     3294368        4458717             15 COMMUNITY SERVICE ~
+ 5            2428     3294368        4458717             15 SUSPEND DRIVER'S L~
+ 6            2428     3566830        4863891             17 COURT ORDER CONDIT~
+ 7            2428     3294368        4458717             15 DEFER DISPOSITION ~
+ 8            2428     3566830        4863891             17 DEFER DISPOSITION ~
+ 9            5171     3049040        4093131             NA &lt;NA&gt;               
+10            9841     3206906        4328552             NA &lt;NA&gt;               
+# ... with 372,627 more rows, and 1 more variable: days_int_to_cd &lt;dbl&gt;
+
+[[5]]
+# A tibble: 291,379 x 4
+   juvenile_number offense_number div_at_int div_bey_90
+             &lt;dbl&gt;          &lt;dbl&gt;      &lt;dbl&gt; &lt;lgl&gt;     
+ 1            2428        4863891         NA NA        
+ 2            2428        4458717         NA NA        
+ 3            2428        4139051         NA NA        
+ 4            5171        4093131         NA NA        
+ 5            9841        4328552         NA NA        
+ 6           14527        4219272         NA NA        
+ 7           17483        4734742         NA NA        
+ 8           17483        4734743         NA NA        
+ 9           17483        4734745         NA NA        
+10           17483        4872354         NA NA        
+# ... with 291,369 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">########################################################</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="do">### now import second file from djj -- with only one tab</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">########################################################</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df_djj_intake_complaints_raw <span class="ot">&lt;-</span> openxlsx<span class="sc">::</span><span class="fu">read.xlsx</span>(<span class="fu">file.path</span>(sharepoint_ojjdp_va_raw_data,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                                                              <span class="st">"CSG Front End data 01202023 - pt2 - SENSITIVE.xlsx"</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">sheet =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="do">### clean and de-dup df_djj_intake_complaints_raw dataframe</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="do">### this is our base file for the sample</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>df_djj_intake_complaints_clean <span class="ot">&lt;-</span> df_djj_intake_complaints_raw <span class="sc">%&gt;%</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(juvenile_number,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>           case_number,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>           offense_number,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">.keep_all=</span><span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="do">### no records dropped</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="do">### keep most serious offense associated with intake case/complaint</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(mso_flag <span class="sc">==</span> <span class="st">"Y"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="do">### according to DJJ documentation, multiple offenses may have mso flag of 1 if</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="do">### severity ranking is tied; so now de-dup those instances </span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="do">### note: if we decide to further explore counts of offenses/types of status offenses</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="do">### we will want the full dataframe duplicated by complaint/intake/offense</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(juvenile_number,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>           case_number,</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>           <span class="at">.keep_all=</span><span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="do">### clean race/ethnicity and gender</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="do">### use factor function to assign labels to values</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">race_clean =</span> <span class="fu">case_when</span>(</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    race<span class="sc">==</span><span class="st">"I"</span> <span class="sc">&amp;</span> hispanic<span class="sc">!=</span><span class="st">"Y"</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    race<span class="sc">==</span><span class="st">"A"</span> <span class="sc">&amp;</span> hispanic<span class="sc">!=</span><span class="st">"Y"</span> <span class="sc">~</span> <span class="dv">2</span>,</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    race<span class="sc">==</span><span class="st">"B"</span> <span class="sc">&amp;</span> hispanic<span class="sc">!=</span><span class="st">"Y"</span> <span class="sc">~</span> <span class="dv">3</span>,</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    hispanic<span class="sc">==</span><span class="st">"Y"</span> <span class="sc">~</span> <span class="dv">4</span>,</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    race<span class="sc">==</span><span class="st">"W"</span> <span class="sc">&amp;</span> hispanic<span class="sc">!=</span><span class="st">"Y"</span> <span class="sc">~</span> <span class="dv">5</span>,</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    race <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"X"</span>,<span class="st">"O"</span>) <span class="sc">&amp;</span> hispanic<span class="sc">!=</span><span class="st">"Y"</span> <span class="sc">~</span> <span class="dv">6</span>,</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">7</span>),</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_clean =</span> <span class="fu">factor</span>(race_clean,</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>         <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>),</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>         <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"American Indian"</span>, <span class="st">"Asian"</span>, <span class="st">"Black"</span>, <span class="st">"Hispanic"</span>, <span class="st">"White"</span>, <span class="st">"Other"</span>,<span class="st">"Missing"</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gender_clean =</span> <span class="fu">case_when</span>(</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    sex<span class="sc">==</span><span class="st">"F"</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    sex<span class="sc">==</span><span class="st">"M"</span> <span class="sc">~</span> <span class="dv">2</span>,</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="fu">as.numeric</span>(<span class="cn">NA</span>)),</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">gender_clean =</span> <span class="fu">factor</span>(gender_clean,</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>         <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>),</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>         <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Female"</span>, <span class="st">"Male"</span>))) <span class="sc">%&gt;%</span>   </span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="do">### clean dates and create year for potential grouping in future trend analysis</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date_opened =</span> <span class="fu">ymd</span>(<span class="fu">as_date</span>(<span class="fu">excel_numeric_to_date</span>(<span class="fu">as.numeric</span>(<span class="fu">as.character</span>(date_opened)), </span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>                                                  <span class="at">date_system =</span> <span class="st">"modern"</span>))),</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>         <span class="at">ysai_date =</span> <span class="fu">ymd</span>(<span class="fu">as_date</span>(ysai_date)),</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>         <span class="at">date_opened_year =</span> <span class="fu">year</span>(date_opened)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>distinct: no rows removed</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>distinct: removed 15,314 rows (7%), 199,651 rows remaining</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>mutate: new variable 'race_clean' (factor) with 7 unique values and 0% NA</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>mutate: new variable 'gender_clean' (factor) with 2 unique values and 0% NA</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: All formats failed to parse. No formats found.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>mutate: converted 'date_opened' from double to Date (0 new NA)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>        converted 'ysai_date' from character to Date (64440 new NA)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>        new variable 'date_opened_year' (integer) with 7 unique values and 0% NA</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">### clean up codebook values that we need</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>codebook_intake_decision_values <span class="ot">&lt;-</span> codebook <span class="sc">%&gt;%</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(field_name<span class="sc">==</span><span class="st">"INTAKE_DECISION"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="at">intake_decision=</span>code,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">intake_decision_label=</span>options,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">intake_decision_description=</span>definitions) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">intake_decision =</span> <span class="fu">as.numeric</span>(intake_decision))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>filter: removed 327 rows (94%), 21 rows remaining</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>mutate: converted 'intake_decision' from character to double (0 new NA)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">### unique youth and complaints per year</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>df_complaints_youth_intake_decision <span class="ot">&lt;-</span> df_djj_intake_complaints_clean <span class="sc">%&gt;%</span> </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">intake_decision =</span> <span class="fu">as.numeric</span>(intake_decision)) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(codebook_intake_decision_values,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="st">"intake_decision"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="do">### create diversion flag</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="do">### create unique complaint-level ID</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diverted_flag =</span> <span class="fu">ifelse</span>(intake_decision_label<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"UNSUCCESSFUL DIVERSION/PETITION FILED"</span>, <span class="st">"SUCCESSFUL DIVERSION"</span>,<span class="st">"UNSUCCESSFUL DIVERSION/NO PETITION FILED"</span>,<span class="st">"REQ'D TO PARTICIPATE-DIVERSION"</span>),</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>                                <span class="dv">1</span>,<span class="dv">0</span>),</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">diverted_flag =</span> <span class="fu">factor</span>(diverted_flag,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>                                <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>),</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>                                <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Yes"</span>,<span class="st">"No"</span>)),</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">unique_complaint_id =</span> <span class="fu">paste0</span>(juvenile_number,case_number,<span class="at">.keep_all=</span><span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="do">### create var for jj history using flags provided by DJJ</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">jj_history_clean =</span> <span class="fu">case_when</span>(</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    prior_adj<span class="sc">==</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"No Prior JJ History"</span>,</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    prior_other<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"Prior 'Other' History"</span>,</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    (prior_chinsup<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">|</span> prior_chins<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">|</span> prior_other_status<span class="sc">&gt;</span><span class="dv">0</span>) <span class="sc">~</span> <span class="st">"Prior Status/CHINS/CHINsup"</span>,</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    prior_misd<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"Prior Misdemeanor"</span>,</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    prior_felony<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"Prior Felony"</span>,</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="fu">as.character</span>(<span class="cn">NA</span>)),</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">jj_history_clean =</span> <span class="fu">factor</span>(jj_history_clean,</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>                              <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"No Prior JJ History"</span>,<span class="st">"Prior 'Other' History"</span>,<span class="st">"Prior Status/CHINS/CHINsup"</span>,<span class="st">"Prior Misdemeanor"</span>,<span class="st">"Prior Felony"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>mutate: converted 'intake_decision' from character to double (0 new NA)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>left_join: added 2 columns (intake_decision_label, intake_decision_description)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>           &gt; rows only in x         0</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>           &gt; rows only in y  (      3)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>           &gt; matched rows     199,651</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>           &gt;                 =========</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>           &gt; rows total       199,651</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>mutate: new variable 'diverted_flag' (factor) with 2 unique values and 0% NA</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>        new variable 'unique_complaint_id' (character) with 199,651 unique values and 0% NA</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>mutate: new variable 'jj_history_clean' (factor) with 6 unique values and 42% NA</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">########################################</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="do">### clean and de-dup disposition dataframe</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="do">########################################</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="do">### note: disposition file is unique by youth, case number, offense number, disposition, amd days from intake to disposition</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>disposition_clean <span class="ot">&lt;-</span> disposition <span class="sc">%&gt;%</span> </span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(juvenile_number,</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>           case_number,</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>           offense_number,</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>           description,</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">.keep_all=</span><span class="cn">TRUE</span>) <span class="do">### no records dropped</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>distinct: removed 11,032 rows (3%), 361,605 rows remaining</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>  <span class="do">### next step: de-dup by disposition -- keeping most serious?</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="do">########################################</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="do">### clean and de-dup caseload dataframe</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="do">########################################</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>caseload_clean <span class="ot">&lt;-</span> caseload <span class="sc">%&gt;%</span> </span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(juvenile_number,</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>           offense_number,</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">.keep_all=</span><span class="cn">TRUE</span>) <span class="do">### need to look into duplicates</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>distinct: removed 14,449 rows (5%), 276,930 rows remaining</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="do">### create lists of court service unit (CSU) regions</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="do">### see here: https://www.djj.virginia.gov/pages/community/court-service-units.htm</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>eastern_region <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"001"</span>,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"002"</span>,</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"02A"</span>,</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"003"</span>,</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"004"</span>,</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"005"</span>,</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"007"</span>,</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"008"</span>)</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>northern_region <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"017"</span>,</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"018"</span>,</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"019"</span>,</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"020"</span>,</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"026"</span>,</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"031"</span>)</span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>western_region <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"021"</span>,</span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"022"</span>,</span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"023"</span>,</span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"027"</span>,</span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"028"</span>,</span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"029"</span>,</span>
+<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"030"</span>)</span>
+<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a>southern_region <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"006"</span>,</span>
+<span id="cb31-28"><a href="#cb31-28" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"010"</span>,</span>
+<span id="cb31-29"><a href="#cb31-29" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"011"</span>,</span>
+<span id="cb31-30"><a href="#cb31-30" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"012"</span>,</span>
+<span id="cb31-31"><a href="#cb31-31" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"013"</span>,</span>
+<span id="cb31-32"><a href="#cb31-32" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"014"</span>)</span>
+<span id="cb31-33"><a href="#cb31-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-34"><a href="#cb31-34" aria-hidden="true" tabindex="-1"></a>central_region <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"009"</span>,</span>
+<span id="cb31-35"><a href="#cb31-35" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"015"</span>,</span>
+<span id="cb31-36"><a href="#cb31-36" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"016"</span>,</span>
+<span id="cb31-37"><a href="#cb31-37" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"024"</span>,</span>
+<span id="cb31-38"><a href="#cb31-38" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"013"</span>,</span>
+<span id="cb31-39"><a href="#cb31-39" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"025"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="do">### add csu region to df</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>df_complaints_youth_intake_decision_csu <span class="ot">&lt;-</span> df_complaints_youth_intake_decision <span class="sc">%&gt;%</span> </span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">csu_region =</span> <span class="fu">case_when</span>(</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    csu <span class="sc">%in%</span> eastern_region <span class="sc">~</span> <span class="st">"Eastern"</span>,</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    csu <span class="sc">%in%</span> northern_region <span class="sc">~</span> <span class="st">"Northern"</span>,</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    csu <span class="sc">%in%</span> western_region <span class="sc">~</span> <span class="st">"Western"</span>,</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    csu <span class="sc">%in%</span> southern_region <span class="sc">~</span> <span class="st">"Southern"</span>,</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    csu <span class="sc">%in%</span> central_region <span class="sc">~</span> <span class="st">"Central"</span>, </span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="fu">as.character</span>(<span class="cn">NA</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>mutate: new variable 'csu_region' (character) with 5 unique values and 0% NA</code></pre>
+</div>
+</div>
 <p><br><br></p>
 
 
