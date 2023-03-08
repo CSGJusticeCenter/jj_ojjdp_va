@@ -444,7 +444,7 @@ kable(df_complaints_youth_intake_decision_table_gender_final,
 
 Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
 
-**Question:** We seem to be missing age (pet_age) for about 35% of all records in the intake complaints file -- how should we interpret this? 
+**Question:** We seem to be missing age (pet_age) for about 35% of all records in the intake complaints file -- how should we interpret this? Something seems off with this table -- why is the diversion rate so much higher for youth whose age is missing? Does missing age mean youth was not formally petitioned and thus they don't have age here?
 
 **TO DO:** Decide on which ages to exclude because of likely data collection issues (e.g. ages of 0 or 44)
 
