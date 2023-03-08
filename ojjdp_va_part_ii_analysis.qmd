@@ -451,7 +451,7 @@ Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUC
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### unique complaints split out
 df_complaints_youth_intake_decision_table_age <- df_complaints_youth_intake_decision_csu %>% 
-  dplyr::group_by(pet_age) %>% 
+  dplyr::group_by(intake_age) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
@@ -462,7 +462,7 @@ df_complaints_youth_intake_decision_table_age <- df_complaints_youth_intake_deci
                    `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
-  dplyr::rename(`Age at Petition` = pet_age) 
+  dplyr::rename(`Age at Intake` = intake_age) 
 
 ### unique complaints statewide
 df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
@@ -476,7 +476,7 @@ df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_
                    `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
-  dplyr::mutate(`Age at Petition` = "Overall") 
+  dplyr::mutate(`Age at Intake` = "Overall") 
 
 ### combine two dataframes for table
 df_complaints_youth_intake_decision_table_age_final <- rbind(df_complaints_youth_intake_decision_table_age,
