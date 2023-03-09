@@ -154,6 +154,41 @@ kable(column_labels,
 plot_missing_2(df_djj_intake_complaints_raw)
 ```
 
+<br>
+
+### Intake Complaints, Intake Decision Descriptions
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+### clean up codebook values that we need
+codebook_intake_decision_values <- codebook %>% 
+  filter(field_name=="INTAKE_DECISION") %>% 
+  dplyr::select(intake_decision=code,
+                intake_decision_label=options,
+                intake_decision_description=definitions) %>% 
+  mutate(intake_decision = as.numeric(intake_decision))
+
+### unique youth and complaints per year
+df_complaints_youth_intake_decision <- df_djj_intake_complaints_raw %>% 
+  mutate(intake_decision = as.numeric(intake_decision)) %>% 
+  distinct(intake_decision) %>% 
+  left_join(codebook_intake_decision_values,
+            by = "intake_decision") %>% 
+  dplyr::select(intake_decision_label,
+                intake_decision_description) %>% 
+  dplyr::rename(`Intake Decision` = intake_decision_label,
+                `Intake Decision Description` = intake_decision_description) 
+
+### print table via kableextra
+kable(df_complaints_youth_intake_decision, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") 
+```
+
 <br><br>
 
 ## Disposition File 

@@ -26,7 +26,11 @@ Missing data:
 
 *	Should we use intake decision to create the diverted versus not diverted samples? Are these codes overwritten over time?	If so, which intake decision codes belong in the diverted group ("UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'),"REQ'D TO PARTICIPATE-DIVERSION" (code of '7')?)
 
+*New Questions* 
+
 * How should we interpret FIPS codes of X71 and X21 (both associated with CSU 029)?
+
+* Should we be using the Offense Type column or Delinquent/Status/Technical/Traffic flag to select complaints that are status-related? Or does it not matter?
 
 
 *Questions about the caseload file:*
@@ -48,7 +52,7 @@ Missing data:
 
 - For complaint-level analysis, I've created a unique complaint ID using juvenile_number and case_number
 
-- Other variables to categorize/group: petitioner type, disposition type
+- Other variables to categorize/group: `intake decision` (see table 3 on basic descriptives page), `petitioner type` (see table 4 on basic descriptives page), `disposition type` (see table 8 on basic descriptives page), `offense description` for status offenses (see table 7 on basic descriptives page)
 
 - Do we want to include the following intake decisions/types in our base sample: "COMPLAINT UNFOUNDED", "SHELTER CARE ONLY", "RETURNED TO OUT-OF-STATE", "REFERRED TO ANOTHER AGY FOR SV", "RESOLVED", "PENDING"? Look at DJJ-provided descriptions for these, as well.
 

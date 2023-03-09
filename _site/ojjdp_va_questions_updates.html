@@ -179,7 +179,11 @@ ul.task-list li input[type="checkbox"] {
 <li><p>We seem to be missing age (pet_age) for about 35% of all records in the intake complaints file – how should we interpret this?</p></li>
 <li><p>It also appears that we have risk level, mental health flag, and other assessment information for only about 38% of all records in the intake complaints file.</p></li>
 <li><p>Should we use intake decision to create the diverted versus not diverted samples? Are these codes overwritten over time? If so, which intake decision codes belong in the diverted group (“UNSUCCESSFUL DIVERSION/PETITION FILED” (code of ‘18’), “SUCCESSFUL DIVERSION” (code of ‘20’), and “UNSUCCESSFUL DIVERSION/NO PETITION FILED” (code of ‘21’),“REQ’D TO PARTICIPATE-DIVERSION” (code of ‘7’)?)</p></li>
+</ul>
+<p><em>New Questions</em></p>
+<ul>
 <li><p>How should we interpret FIPS codes of X71 and X21 (both associated with CSU 029)?</p></li>
+<li><p>Should we be using the Offense Type column or Delinquent/Status/Technical/Traffic flag to select complaints that are status-related? Or does it not matter?</p></li>
 </ul>
 <p><em>Questions about the caseload file:</em></p>
 <ul>
@@ -193,7 +197,7 @@ ul.task-list li input[type="checkbox"] {
 <li><p>We have CHINS/CHINSup/status split out for history, but not current charge</p></li>
 <li><p>Language: complaint vs intake complaint vs intake case</p></li>
 <li><p>For complaint-level analysis, I’ve created a unique complaint ID using juvenile_number and case_number</p></li>
-<li><p>Other variables to categorize/group: petitioner type, disposition type</p></li>
+<li><p>Other variables to categorize/group: <code>intake decision</code> (see table 3 on basic descriptives page), <code>petitioner type</code> (see table 4 on basic descriptives page), <code>disposition type</code> (see table 8 on basic descriptives page), <code>offense description</code> for status offenses (see table 7 on basic descriptives page)</p></li>
 <li><p>Do we want to include the following intake decisions/types in our base sample: “COMPLAINT UNFOUNDED”, “SHELTER CARE ONLY”, “RETURNED TO OUT-OF-STATE”, “REFERRED TO ANOTHER AGY FOR SV”, “RESOLVED”, “PENDING”? Look at DJJ-provided descriptions for these, as well.</p></li>
 <li><p>Do we want to explore both CSU-level and region-level variation? (see: https://www.djj.virginia.gov/pages/community/court-service-units.htm)</p></li>
 </ul>

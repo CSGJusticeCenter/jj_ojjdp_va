@@ -351,7 +351,37 @@ kable(df_complaints_youth_offense_type_flag,
 
 <br>
 
-## Table 7: Unique Youth and Complaints by Disposition Type
+## Table 7: Unique Youth and Complaints by Status Offense Description
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+### unique youth and complaints per year
+df_complaints_youth_status_offense_desc_flag <- df_djj_intake_complaints_clean %>% 
+  filter(flg_category=="Status") %>% 
+  dplyr::group_by(description) %>% 
+  dplyr::summarise(`Unique Youth (N)` = n_distinct(juvenile_number),
+            `Unique Youth, Percent of Sample (%)` = scales::percent(`Unique Youth (N)`/unique_youth_sample_denom,
+                                                                       accuracy = .1),
+            `Unique Complaints (N)` = n_distinct(juvenile_number,case_number),
+            `Complaints, Percent of Sample (%)` = scales::percent(`Unique Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`Status Offense Description` = description) 
+
+
+### print table via kableextra
+kable(df_complaints_youth_status_offense_desc_flag, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") 
+```
+
+<br>
+
+## Table 8: Unique Youth and Complaints by Disposition Type
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### unique youth and complaints per year
