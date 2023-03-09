@@ -497,7 +497,7 @@ kable(df_complaints_youth_intake_decision_table_age_final,
 
 <br>
 
-## Table 6: % of All Complaints Diverted by Offense Type (most serious offense; mso_flag == "Y")
+## Table 6a: % of All Complaints Diverted by Offense Type (most serious offense; mso_flag == "Y")
 
 Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
 
@@ -546,6 +546,61 @@ kable(df_complaints_youth_intake_decision_table_offense_final,
                                        "responsive"), 
                  row_label_position = "l") %>% 
   row_spec(10, bold = TRUE)
+```
+
+<br>
+
+## Table 6b: % of All Complaints Diverted by Status Offense Type (most serious offense is status; mso_flag == "Y")
+
+Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+### unique complaints split out
+df_complaints_youth_intake_decision_table_offense_status <- df_complaints_youth_intake_decision_csu %>% 
+  filter(dai=="Status Offense") %>% 
+  dplyr::group_by(drg) %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
+                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`Status Offense Description` = drg)  
+
+### unique complaints statewide
+df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
+  filter(dai=="Status Offense") %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
+                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::mutate(`Status Offense Description` = "Overall") 
+
+### combine two dataframes for table
+df_complaints_youth_intake_decision_table_offense_status_final <- rbind(df_complaints_youth_intake_decision_table_offense_status,
+                                                              df_complaints_youth_intake_decision_table_overall)
+
+
+### print table via kableextra
+kable(df_complaints_youth_intake_decision_table_offense_status_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") %>% 
+  row_spec(4, bold = TRUE)
 ```
 
 <br>
@@ -772,7 +827,9 @@ kable(df_complaints_youth_intake_decision_table_pet_desc_final,
 
 # Visuals
 
-```{r eval=FALSE,include=FALSE,message=FALSE,warning=FALSE}
+TO DO: add CSU region layer
+
+```{r include=FALSE,message=FALSE,warning=FALSE}
 ### read in census/acs api key from environmnent
 ### this allows us to pull census/acs data via the tidycensus package
 readRenviron("~/.Renviron")
@@ -826,7 +883,7 @@ default_font_color <- "#4e4d47"
 default_font_family <- "Franklin Gothic Book"
 ```
 
-```{r eval=FALSE,include=FALSE,message=FALSE,warning=FALSE}
+```{r include=FALSE,message=FALSE,warning=FALSE}
 ### create static map theme (based on https://timogrossenbacher.ch/2019/04/bivariate-maps-with-ggplot2-and-sf/)
 theme_map <- function(...) {
   theme_minimal() +
@@ -870,37 +927,46 @@ theme_map <- function(...) {
 }
 ```
 
-```{r layout="l-page",eval=FALSE,include=FALSE,message=FALSE,warning=FALSE}
+```{r out.width="130%",echo=FALSE,message=FALSE,warning=FALSE}
 ### merge new district shapefile to nh data to attach geography and render the file map-able
 df_county_level_charge_type_summary_geo <- left_join(va_county_shoreline_clipped_final,
                                                      df_complaints_youth_intake_decision_csu,
-                                                     by = c("county"="County"))
+                                                     by = c("county_fip"="fips_code"))
+
+### unique complaints split out
+df_county_level_charge_type_summary_geo_csu <- df_county_level_charge_type_summary_geo %>% 
+  dplyr::group_by(csu) %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `Complaints Diverted (row %)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"])/`All Complaints (N)`,
+                   geometry = st_union(geometry)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`CSU` = csu) 
 
 ### create quantiles object
 no_classes <- 4
 
 ### extract quantiles from var we're mapping
-quantiles <- df_county_level_charge_type_summary_geo %>%
-  pull(`Bookings with any Drug/Alcohol Charge (%)`) %>%
+quantiles <- df_county_level_charge_type_summary_geo_csu %>%
+  pull(`Complaints Diverted (row %)`) %>%
   quantile(probs = seq(0, 1, length.out = no_classes + 1), na.rm=TRUE) %>%
   as.vector() 
 
 ### make labels for map's legend
-label_drug_alcohol_percent <- c("30% and Greater","15% to 30%","15% and Lower")
+label_diversion_rate <- c("25% to 34%","18% to 25%","12% to 18%","5% to 12%")
 
 ### create a new variable with the specified quantiles
-df_county_level_charge_type_summary_geo_to_map <- df_county_level_charge_type_summary_geo %>%
-  mutate(percent_drug_alcohol_quartile = cut(-`Bookings with any Drug/Alcohol Charge (%)`,
+df_county_level_charge_type_summary_geo_csu_to_map <- df_county_level_charge_type_summary_geo_csu %>%
+  mutate(percent_diversion_quartile = cut(-`Complaints Diverted (row %)`,
                                breaks = -quantiles,
                                right = TRUE,
-                               labels = label_drug_alcohol_percent,
+                               labels = label_diversion_rate,
                                include.lowest = T)) 
 
 
 ### map via ggplot 
 ggplot(
   # define main data source
-  data = df_county_level_charge_type_summary_geo_to_map
+  data = df_county_level_charge_type_summary_geo_csu_to_map
 ) +
   scale_alpha(name = "",
               range = c(0.6, 0),
@@ -909,7 +975,7 @@ ggplot(
   # use thin white stroke for municipality borders
   geom_sf(
     mapping = aes(
-      fill = percent_drug_alcohol_quartile
+      fill = percent_diversion_quartile
       ),
     color = "white",
     size = 0.1
@@ -922,8 +988,8 @@ ggplot(
   ### use jr palette here
     # scale_colour_gradientn(colours = c("#D7EBF1","#AFD6E2","#87C2D4","#2F7084","#1F4A58")) +
  scale_fill_manual(
-    values = c("#1F4A58","#2F7084","#87C2D4"),
-    name = "% Bookings with Drug/Alcohol\n Charges",
+    values = c("#1F4A58","#2F7084","#87C2D4","#AFD6E2"),
+    name = "% Intake Complaints Diverted",
     na.value = "grey50",
     guide = guide_legend(
      keyheight = unit(7.5, units = "mm"),
@@ -932,10 +998,10 @@ ggplot(
   )) +
   # use white stroke borders for county boundaries
   geom_sf(
-    data = df_county_level_charge_type_summary_geo_to_map,
+    data = df_county_level_charge_type_summary_geo,
     fill = "transparent",
     color = "white",
-    size = 1
+    size = .3
   )  +
   # # use additional state-level shapefile for state border
   # geom_sf(
@@ -944,26 +1010,26 @@ ggplot(
   #   color = "black",
   #   size = .3
   # )  +
- geom_label(
-     data = df_county_level_charge_type_summary_geo_to_map, 
-     aes(geometry = geometry, 
-         label = paste0(county,"\n",scales::percent(`Bookings with any Drug/Alcohol Charge (%)`, accuracy = 1))),
-     vjust = case_when(df_county_level_charge_type_summary_geo_to_map$geometry==df_county_level_charge_type_summary_geo_to_map$geometry[df_county_level_charge_type_summary_geo_to_map$county=="Hillsborough"] ~ 1.05,
-                       df_county_level_charge_type_summary_geo_to_map$geometry==df_county_level_charge_type_summary_geo_to_map$geometry[df_county_level_charge_type_summary_geo_to_map$county=="Merrimack"] ~ .5,
-                       df_county_level_charge_type_summary_geo_to_map$geometry==df_county_level_charge_type_summary_geo_to_map$geometry[df_county_level_charge_type_summary_geo_to_map$county=="Carroll"] ~ .4,
-                       df_county_level_charge_type_summary_geo_to_map$geometry==df_county_level_charge_type_summary_geo_to_map$geometry[df_county_level_charge_type_summary_geo_to_map$county=="Strafford"] ~ .2,
-                       df_county_level_charge_type_summary_geo_to_map$geometry==df_county_level_charge_type_summary_geo_to_map$geometry[df_county_level_charge_type_summary_geo_to_map$county=="Cheshire"] ~ .15,
-                       df_county_level_charge_type_summary_geo_to_map$geometry==df_county_level_charge_type_summary_geo_to_map$geometry[df_county_level_charge_type_summary_geo_to_map$county=="Rockingham"] ~ .15,
-                              TRUE ~ 0),
+ # geom_label(
+ #     data = df_county_level_charge_type_summary_geo_to_map, 
+ #     aes(geometry = geometry, 
+ #         label = paste0(county,"\n",scales::percent(`Bookings with any Drug/Alcohol Charge (%)`, accuracy = 1))),
+ #     vjust = case_when(df_county_level_charge_type_summary_geo_to_map$geometry==df_county_level_charge_type_summary_geo_to_map$geometry[df_county_level_charge_type_summary_geo_to_map$county=="Hillsborough"] ~ 1.05,
+ #                       df_county_level_charge_type_summary_geo_to_map$geometry==df_county_level_charge_type_summary_geo_to_map$geometry[df_county_level_charge_type_summary_geo_to_map$county=="Merrimack"] ~ .5,
+ #                       df_county_level_charge_type_summary_geo_to_map$geometry==df_county_level_charge_type_summary_geo_to_map$geometry[df_county_level_charge_type_summary_geo_to_map$county=="Carroll"] ~ .4,
+ #                       df_county_level_charge_type_summary_geo_to_map$geometry==df_county_level_charge_type_summary_geo_to_map$geometry[df_county_level_charge_type_summary_geo_to_map$county=="Strafford"] ~ .2,
+ #                       df_county_level_charge_type_summary_geo_to_map$geometry==df_county_level_charge_type_summary_geo_to_map$geometry[df_county_level_charge_type_summary_geo_to_map$county=="Cheshire"] ~ .15,
+ #                       df_county_level_charge_type_summary_geo_to_map$geometry==df_county_level_charge_type_summary_geo_to_map$geometry[df_county_level_charge_type_summary_geo_to_map$county=="Rockingham"] ~ .15,
+ #                              TRUE ~ 0),
       # ifelse(df_county_level_charge_type_summary_geo_to_map$geometry==df_county_level_charge_type_summary_geo_to_map$geometry[df_county_level_charge_type_summary_geo_to_map$county=="Hillsborough"] | 
       #                 df_county_level_charge_type_summary_geo_to_map$geometry==df_county_level_charge_type_summary_geo_to_map$geometry[df_county_level_charge_type_summary_geo_to_map$county=="Merrimack"] | 
       #                 df_county_level_charge_type_summary_geo_to_map$geometry==df_county_level_charge_type_summary_geo_to_map$geometry[df_county_level_charge_type_summary_geo_to_map$county=="Carroll"], 1, 0),
     # hjust = ifelse(nh_acs_census_county_geo_to_map$geometry==nh_acs_census_county_geo_to_map$geometry[nh_acs_census_county_geo_to_map$county=="Hillsborough"], 1, .5),
-    family = "Franklin Gothic Demi",
-    color = "gray25",
-    size = 3.15,
-    fontface = "bold",
-    stat = "sf_coordinates") +
+    # family = "Franklin Gothic Demi",
+    # color = "gray25",
+    # size = 3.15,
+    # fontface = "bold",
+    # stat = "sf_coordinates") +
   # guides(fill = guide_colorbar(barwidth = 8),
   #          direction = "horizontal",
   #     barheight = unit(2, units = "mm"),
@@ -994,17 +1060,17 @@ ggplot(
 #     legend.text = element_text(size = 11)) 
 
 
-### write out
-ggsave(
-    filename = file.path(sp_viz_output_path, "charge_type_percent_drug_alcohol_by_jail_non_pc.png"),
-    plot = last_plot(),
-    device = ragg::agg_png,
-    dpi = 300,
-    height = 5.25,
-    width = 10,
-    units = "in",
-    bg = "transparent"
-  )
+# ### write out
+# ggsave(
+#     filename = file.path(sp_viz_output_path, "charge_type_percent_drug_alcohol_by_jail_non_pc.png"),
+#     plot = last_plot(),
+#     device = ragg::agg_png,
+#     dpi = 300,
+#     height = 5.25,
+#     width = 10,
+#     units = "in",
+#     bg = "transparent"
+#   )
 ```
 
 <br><br>
