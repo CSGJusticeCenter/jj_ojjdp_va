@@ -1,5 +1,5 @@
 ---
-title: "Analysis: Part II"
+title: "Part II Analysis: Diversion"
 format: html
 ---
 
@@ -49,207 +49,26 @@ knitr::opts_chunk$set(
 ### set theme
 theme_set(theme_minimal())
 
-```
-
-```{r include=FALSE}
-### pull in virginia djj data from raw data folder
-
 ### set sharepoint path using csgjcr function
-sharepoint_ojjdp_va_raw_data <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Data/VA/raw"))
+sharepoint_ojjdp_va_analysis_analytic_data <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Data/VA/analysis/analytic"))
 
 ### set sharepoint path using csgjcr function
 sharepoint_ojjdp_va_viz <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Output/VA/r_viz_output"))
-
-########################################################
-### import first excel file w/ multiple tabs with purrr
-########################################################
-
-### using purrr::map, import list of tabs from excel worksheet
-ojjdp_va_raw_tab_list_file_one <- purrr::map(purrr::set_names(excel_sheets(file.path(sharepoint_ojjdp_va_raw_data,
-                                                              "CSG Front End data 01202023 - pt1 - SENSITIVE.xlsx"))),
-                      read_excel, 
-                      path = file.path(sharepoint_ojjdp_va_raw_data,"CSG Front End data 01202023 - pt1 - SENSITIVE.xlsx")) %>% 
-  purrr::map(janitor::clean_names)
-
-### clean names of all imported tabs before converting to dataframes
-names(ojjdp_va_raw_tab_list_file_one) <- janitor::make_clean_names(names(ojjdp_va_raw_tab_list_file_one))
-
-### then convert list of tabs to distinct dataframes with names from tabs
-purrr::map(names(ojjdp_va_raw_tab_list_file_one),
-           ~assign(.x, 
-                   ojjdp_va_raw_tab_list_file_one[[.x]], 
-        envir = .GlobalEnv)) 
-
-########################################################
-### now import second file from djj -- with only one tab
-########################################################
-df_djj_intake_complaints_raw <- openxlsx::read.xlsx(file.path(sharepoint_ojjdp_va_raw_data,
-                                                              "CSG Front End data 01202023 - pt2 - SENSITIVE.xlsx"),
-                                                    sheet = 1) %>% 
-  clean_names()
 ```
 
-```{r include=FALSE, message=FALSE, warning=FALSE}
-#############################################
-### clean and de-dup df_djj_intake_complaints_raw dataframe
-### this is our base file for the sample
-#############################################
-df_djj_intake_complaints_clean <- df_djj_intake_complaints_raw %>% 
-  distinct(juvenile_number,
-           case_number,
-           offense_number,
-           .keep_all=TRUE) %>% ### no records dropped
-  ### keep most serious offense associated with intake case/complaint
-  dplyr::filter(mso_flag == "Y") %>% 
-  ### according to DJJ documentation, multiple offenses may have mso flag of 1 if
-  ### severity ranking is tied; so now de-dup those instances 
-  ### note: if we decide to further explore counts of offenses/types of status offenses
-  ### we will want the full dataframe duplicated by complaint/intake/offense
-  distinct(juvenile_number,
-           case_number,
-           .keep_all=TRUE) %>% 
-  ### clean race/ethnicity and gender
-  ### use factor function to assign labels to values
-  mutate(race_clean = case_when(
-    race=="I" & hispanic!="Y" ~ 1,
-    race=="A" & hispanic!="Y" ~ 2,
-    race=="B" & hispanic!="Y" ~ 3,
-    hispanic=="Y" ~ 4,
-    race=="W" & hispanic!="Y" ~ 5,
-    race %in% c("X","O") & hispanic!="Y" ~ 6,
-    TRUE ~ 7),
-    race_clean = factor(race_clean,
-         levels = c(1,2,3,4,5,6,7),
-         labels = c("American Indian", "Asian", "Black", "Hispanic", "White", "Other","Missing"))) %>% 
-  mutate(gender_clean = case_when(
-    sex=="F" ~ 1,
-    sex=="M" ~ 2,
-    TRUE ~ as.numeric(NA)),
-    gender_clean = factor(gender_clean,
-         levels = c(1,2),
-         labels = c("Female", "Male"))) %>%   
-### clean dates and create year for potential grouping in future trend analysis
-  mutate(date_opened = ymd(as_date(excel_numeric_to_date(as.numeric(as.character(date_opened)), 
-                                                  date_system = "modern"))),
-         ysai_date = ymd(as_date(ysai_date)),
-         date_opened_year = year(date_opened)) 
+```{r include=FALSE}
+### pull in preliminary virginia djj analytic file 
 
-### clean up codebook values that we need
-codebook_intake_decision_values <- codebook %>% 
-  filter(field_name=="INTAKE_DECISION") %>% 
-  dplyr::select(intake_decision=code,
-                intake_decision_label=options,
-                intake_decision_description=definitions) %>% 
-  mutate(intake_decision = as.numeric(intake_decision))
-
-### unique youth and complaints per year
-df_complaints_youth_intake_decision <- df_djj_intake_complaints_clean %>% 
-  mutate(intake_decision = as.numeric(intake_decision)) %>% 
-  left_join(codebook_intake_decision_values,
-            by = "intake_decision") %>% 
-  ### create diversion flag
-  ### create unique complaint-level ID
-  mutate(diverted_flag = ifelse(intake_decision_label%in%c("UNSUCCESSFUL DIVERSION/PETITION FILED", "SUCCESSFUL DIVERSION","UNSUCCESSFUL DIVERSION/NO PETITION FILED","REQ'D TO PARTICIPATE-DIVERSION"),
-                                1,0),
-         diverted_flag = factor(diverted_flag,
-                                levels = c(1,0),
-                                labels = c("Yes","No")),
-         unique_complaint_id = paste0(juvenile_number,case_number,.keep_all=TRUE)) %>% 
-  ### create var for jj history using flags provided by DJJ
-   mutate(jj_history_clean = case_when(
-    prior_adj==0 ~ "No Prior JJ History",
-    prior_other>0 ~ "Prior 'Other' History",
-    (prior_chinsup>0 | prior_chins>0 | prior_other_status>0) ~ "Prior Status/CHINS/CHINsup",
-    prior_misd>0 ~ "Prior Misdemeanor",
-    prior_felony>0 ~ "Prior Felony",
-    TRUE ~ as.character(NA)),
-    jj_history_clean = factor(jj_history_clean,
-                              levels = c("No Prior JJ History","Prior 'Other' History","Prior Status/CHINS/CHINsup","Prior Misdemeanor","Prior Felony")))
-
-########################################
-### clean and de-dup disposition dataframe
-########################################
-### note: disposition file is unique by youth, case number, offense number, disposition, amd days from intake to disposition
-disposition_clean <- disposition %>% 
-  distinct(juvenile_number,
-           case_number,
-           offense_number,
-           description,
-           .keep_all=TRUE) ### no records dropped
-  
-  ### next step: de-dup by disposition -- keeping most serious?
-  
-
-########################################
-### clean and de-dup caseload dataframe
-########################################
-caseload_clean <- caseload %>% 
-  distinct(juvenile_number,
-           offense_number,
-           .keep_all=TRUE) ### need to look into duplicates
-
+### read in preliminary analytic rds file 
+df_complaints_youth_intake_decision_csu <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_complaints_youth_intake_decision_csu.rds"))
 ```
 
 ```{r include=FALSE,warning=FALSE,include=FALSE}
 ### create denominator -- unique complaint for entire sample
-unique_complaints_sample_denom <- n_distinct(df_complaints_youth_intake_decision$unique_complaint_id)
+unique_complaints_sample_denom <- n_distinct(df_complaints_youth_intake_decision_csu$unique_complaint_id)
 
 ### create denominator -- unique youth for entire sample
-unique_youth_sample_denom <- n_distinct(df_complaints_youth_intake_decision$juvenile_number)
-```
-
-```{r include=FALSE,warning=FALSE,include=FALSE}
-### create lists of court service unit (CSU) regions
-### see here: https://www.djj.virginia.gov/pages/community/court-service-units.htm
-eastern_region <- c("001",
-                    "002",
-                    "02A",
-                    "003",
-                    "004",
-                    "005",
-                    "007",
-                    "008")
-
-northern_region <- c("017",
-                    "018",
-                    "019",
-                    "020",
-                    "026",
-                    "031")
-
-western_region <- c("021",
-                    "022",
-                    "023",
-                    "027",
-                    "028",
-                    "029",
-                    "030")
-
-southern_region <- c("006",
-                    "010",
-                    "011",
-                    "012",
-                    "013",
-                    "014")
-
-central_region <- c("009",
-                    "015",
-                    "016",
-                    "024",
-                    "013",
-                    "025")
-```
-
-```{r include=FALSE,warning=FALSE,message=FALSE}
-### add csu region to df
-df_complaints_youth_intake_decision_csu <- df_complaints_youth_intake_decision %>% 
-  mutate(csu_region = case_when(
-    csu %in% eastern_region ~ "Eastern",
-    csu %in% northern_region ~ "Northern",
-    csu %in% western_region ~ "Western",
-    csu %in% southern_region ~ "Southern",
-    csu %in% central_region ~ "Central", 
-    TRUE ~ as.character(NA)))
+unique_youth_sample_denom <- n_distinct(df_complaints_youth_intake_decision_csu$juvenile_number)
 ```
 
 <br>
@@ -830,7 +649,6 @@ kable(df_complaints_youth_intake_decision_table_pet_desc_final,
 <br><br>
 
 # Visuals
-
 
 ```{r include=FALSE,message=FALSE,warning=FALSE}
 ### read in census/acs api key from environmnent

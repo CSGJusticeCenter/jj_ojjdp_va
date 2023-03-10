@@ -1,11 +1,29 @@
 ---
-title: "Building the Analytic Files"
+title: "Analysis: Part I"
 format: html
 ---
 
-In this syntax, we'll import all of the DJJ files provided and create two analytic files based on the templates in the second and third tabs here: https://csgorg.sharepoint.com/:x:/s/Team-JC-Research-JJ_AV/EZ-RDTetlZVCoiQxlasiboEBhsT7WNlx5v0qR7sDBji1-A?e=eggzRJ
 
-See `Codebooks` and `Data Diagram` tabs for more information on each individual data file. 
+**Research Questions:**
+
+
+Using a cohort of first-time system involved youth, look at adjusted differences in likelihood of being diverted and likelihood of a re-complaint for diverted vs. non-diverted youth.
+
+A. How does the likelihood of being diverted differ by race, sex, and geography?
+
+B. For youth who are diverted, how likely are they to come back into the system with a new complaint or new petition within a year of the initial intake decision? 
+
+<br>
+
+**Methods:**
+
+For research question (A) we will build a series of logistic regression models, adjusting for race/ethnicity, age, offense, risk level, and other factors that may also be related to a decision to divert. Our outcome variable will be diversion/petition (0/1) and our independent variables of interest will be race, sex, and CSU. For research question (B) we will take a similar methodological approach, but restrict our cohort to diverted youth and focus on likelihood of a re-complaint within a year of diversion while adjusting for demographics, offense, risk level, etc. For research question (B) our outcome variable will be re-complaint within a year of the initial intake decision date (0/1) and our independent variables of interest will be race, sex, and CSU.
+
+*Cohort:* first time system involved youth (no prior complaints), 2016-2021
+
+*Method:* Logistic Regression, which allows us to look at the relationship between two variables (like race and decision to divert) while adjusting for other factors that may also be related to our outcome (like offense, risk, etc.).
+
+<br>
 
 ```{r include=FALSE}
 ### call libraries
@@ -13,14 +31,22 @@ library(easypackages)
 libraries("tidyverse","foreign","lubridate","reshape2", "ggplot2","RColorBrewer","knitr","forcats","openxlsx","statar","svDialogs","xlsx", "magrittr","stringr", "data.table","janitor","kableExtra","leaflet", "readr", "rmarkdown","rowr", "gganimate", "gifski","tidycensus","sf","htmltools","acs","tigris","mapview","rgeos", "ggrepel", "censusxy","gdata","lavaan","mclust","tmap", "raster","rgeos","gmapsdistance","viridis","cowplot","lintr","leaflet.extras","censusapi","data.table","gridGraphics","readxl","haven","ggridges","extrafont","extrafontdb","datamodelr","Lahman","DiagrammeR","fs","readxl","rsvg","V8","csgjcr","DataExplorer","tidylog")
 ```
 
-```{r }
+```{r include=FALSE,message=FALSE,warning=FALSE}
+### set chunk output specifications
+knitr::opts_chunk$set(
+  echo = TRUE,
+  dev = "ragg_png",
+  cache = FALSE)
+
+### set theme
+theme_set(theme_minimal())
+```
+
+```{r include=FALSE}
 ### pull in virginia djj data from raw data folder
 
 ### set sharepoint path using csgjcr function
 sharepoint_ojjdp_va_raw_data <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Data/VA/raw"))
-
-### set sharepoint path using csgjcr function
-sharepoint_ojjdp_va_viz <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Output/VA/r_viz_output"))
 
 ########################################################
 ### import first excel file w/ multiple tabs with purrr
@@ -51,7 +77,7 @@ df_djj_intake_complaints_raw <- openxlsx::read.xlsx(file.path(sharepoint_ojjdp_v
   clean_names()
 ```
 
-```{r }
+```{r include=FALSE, message=FALSE, warning=FALSE}
 #############################################
 ### clean and de-dup df_djj_intake_complaints_raw dataframe
 ### this is our base file for the sample
@@ -61,15 +87,6 @@ df_djj_intake_complaints_clean <- df_djj_intake_complaints_raw %>%
            case_number,
            offense_number,
            .keep_all=TRUE) %>% ### no records dropped
-  ### keep most serious offense associated with intake case/complaint
-  dplyr::filter(mso_flag == "Y") %>% 
-  ### according to DJJ documentation, multiple offenses may have mso flag of 1 if
-  ### severity ranking is tied; so now de-dup those instances 
-  ### note: if we decide to further explore counts of offenses/types of status offenses
-  ### we will want the full dataframe duplicated by complaint/intake/offense
-  distinct(juvenile_number,
-           case_number,
-           .keep_all=TRUE) %>% 
   ### clean race/ethnicity and gender
   ### use factor function to assign labels to values
   mutate(race_clean = case_when(
@@ -96,38 +113,6 @@ df_djj_intake_complaints_clean <- df_djj_intake_complaints_raw %>%
          ysai_date = ymd(as_date(ysai_date)),
          date_opened_year = year(date_opened)) 
 
-### clean up codebook values that we need
-codebook_intake_decision_values <- codebook %>% 
-  filter(field_name=="INTAKE_DECISION") %>% 
-  dplyr::select(intake_decision=code,
-                intake_decision_label=options,
-                intake_decision_description=definitions) %>% 
-  mutate(intake_decision = as.numeric(intake_decision))
-
-### unique youth and complaints per year
-df_complaints_youth_intake_decision <- df_djj_intake_complaints_clean %>% 
-  mutate(intake_decision = as.numeric(intake_decision)) %>% 
-  left_join(codebook_intake_decision_values,
-            by = "intake_decision") %>% 
-  ### create diversion flag
-  ### create unique complaint-level ID
-  mutate(diverted_flag = ifelse(intake_decision_label%in%c("UNSUCCESSFUL DIVERSION/PETITION FILED", "SUCCESSFUL DIVERSION","UNSUCCESSFUL DIVERSION/NO PETITION FILED","REQ'D TO PARTICIPATE-DIVERSION"),
-                                1,0),
-         diverted_flag = factor(diverted_flag,
-                                levels = c(1,0),
-                                labels = c("Yes","No")),
-         unique_complaint_id = paste0(juvenile_number,case_number,.keep_all=TRUE)) %>% 
-  ### create var for jj history using flags provided by DJJ
-   mutate(jj_history_clean = case_when(
-    prior_adj==0 ~ "No Prior JJ History",
-    prior_other>0 ~ "Prior 'Other' History",
-    (prior_chinsup>0 | prior_chins>0 | prior_other_status>0) ~ "Prior Status/CHINS/CHINsup",
-    prior_misd>0 ~ "Prior Misdemeanor",
-    prior_felony>0 ~ "Prior Felony",
-    TRUE ~ as.character(NA)),
-    jj_history_clean = factor(jj_history_clean,
-                              levels = c("No Prior JJ History","Prior 'Other' History","Prior Status/CHINS/CHINsup","Prior Misdemeanor","Prior Felony")))
-
 ########################################
 ### clean and de-dup disposition dataframe
 ########################################
@@ -152,68 +137,5 @@ caseload_clean <- caseload %>%
 
 ```
 
-```{r }
-### create lists of court service unit (CSU) regions
-### see here: https://www.djj.virginia.gov/pages/community/court-service-units.htm
-eastern_region <- c("001",
-                    "002",
-                    "02A",
-                    "003",
-                    "004",
-                    "005",
-                    "007",
-                    "008")
+<br>
 
-northern_region <- c("017",
-                    "018",
-                    "019",
-                    "020",
-                    "026",
-                    "031")
-
-western_region <- c("021",
-                    "022",
-                    "023",
-                    "027",
-                    "028",
-                    "029",
-                    "030")
-
-southern_region <- c("006",
-                    "010",
-                    "011",
-                    "012",
-                    "013",
-                    "014")
-
-central_region <- c("009",
-                    "015",
-                    "016",
-                    "024",
-                    "013",
-                    "025")
-```
-
-```{r }
-### add csu region to df
-df_complaints_youth_intake_decision_csu <- df_complaints_youth_intake_decision %>% 
-  mutate(csu_region = case_when(
-    csu %in% eastern_region ~ "Eastern",
-    csu %in% northern_region ~ "Northern",
-    csu %in% western_region ~ "Western",
-    csu %in% southern_region ~ "Southern",
-    csu %in% central_region ~ "Central", 
-    TRUE ~ as.character(NA)))
-```
-
-```{r include=FALSE,message=FALSE,warning=FALSE}
-### set sharepoint path using csgjcr function
-sharepoint_ojjdp_va_analysis_analytic_data <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Data/VA/analysis/analytic"))
-
-### write out file for preliminary analysis
-write_rds(df_complaints_youth_intake_decision_csu,
-          file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_complaints_youth_intake_decision_csu.rds"))
-
-```
-
-<br><br>

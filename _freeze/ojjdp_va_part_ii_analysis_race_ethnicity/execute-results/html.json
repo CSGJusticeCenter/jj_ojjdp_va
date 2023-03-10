@@ -1,0 +1,14 @@
+{
+  "hash": "652653600709ecd944b3aaef72938902",
+  "result": {
+    "markdown": "---\ntitle: \"Part II Analysis: Race/Ethnicity\"\nformat: html\n---\n\n\n**Data Sample:** \n\n* Juvenile intake complaints with intake dates from July 1, 2015 - June 30, 2021\n\n* Dispositions – all dispositions for the intake complaints in the sample. \n\n\n**Research Question:**\n\nConduct a front-end system assessment from intake through petition for all complaints 2016-2021.\n\n\n**Methods:**\n\nWe will conduct a descriptive analysis of the front end of the system from intake through petition, provide unadjusted counts, RRI’s and means tests where applicable, by race, sex, offense, risk, CSU, and year for:\n\n*\tComplaints\n\n*\tIntake decisions: divert, resolve, petition, other\n\n*\tAverage LOS on diversion \n\n*\tDiversion completions: successful, unsuccessful, other\n\n*\tDispositions on petitioned cases\n\n*Cohort:* All complaints from 2016-2021  \n\n<br>\n\n\n\n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

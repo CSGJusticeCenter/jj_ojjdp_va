@@ -148,17 +148,36 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
  <span class="menu-text">Project and Analysis Plan</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-analysis" role="button" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Analysis</span>
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-part-i-analysis" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Part I Analysis</span>
     </a>
-    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-analysis">    
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-part-i-analysis">    
         <li>
-    <a class="dropdown-item" href="./ojjdp_va_part_i_analysis.html">
- <span class="dropdown-text">Part I (Regression Analysis)</span></a>
+    <a class="dropdown-item" href="./ojjdp_va_part_i_analysis_overview.html">
+ <span class="dropdown-text">Descriptive Overview</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./ojjdp_va_part_ii_analysis.html">
- <span class="dropdown-text">Part II (Descriptive Analysis)</span></a>
+    <a class="dropdown-item" href="./ojjdp_va_part_ii_analysis_regression.html">
+ <span class="dropdown-text">Regression Analysis</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-part-ii-analysis" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Part II Analysis</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-part-ii-analysis">    
+        <li>
+    <a class="dropdown-item" href="./ojjdp_va_part_ii_analysis_diversion.html">
+ <span class="dropdown-text">Diversion Trends</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./ojjdp_va_part_ii_analysis_dispo.html">
+ <span class="dropdown-text">Disposition Trends</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./ojjdp_va_part_ii_analysis_race_ethnicity.html">
+ <span class="dropdown-text">Race/Ethnicity</span></a>
   </li>  
     </ul>
   </li>
@@ -231,32 +250,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <p>In this syntax, we’ll import all of the DJJ files provided and create two analytic files based on the templates in the second and third tabs here: https://csgorg.sharepoint.com/:x:/s/Team-JC-Research-JJ_AV/EZ-RDTetlZVCoiQxlasiboEBhsT7WNlx5v0qR7sDBji1-A?e=eggzRJ</p>
 <p>See <code>Codebooks</code> and <code>Data Diagram</code> tabs for more information on each individual data file.</p>
-<p>TBD</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">### pull in virginia djj data from raw data folder</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="do">### set sharepoint path using csgjcr function</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>sharepoint_ojjdp_va_raw_data <span class="ot">&lt;-</span> csgjcr<span class="sc">::</span><span class="fu">csg_sp_path</span>(<span class="fu">file.path</span>(<span class="st">"JJ_OJJDP/Data/VA/raw"</span>))</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="do">########################################################</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="do">### import first excel file w/ multiple tabs with purrr</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="do">########################################################</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="do">### using purrr::map, import list of tabs from excel worksheet</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>ojjdp_va_raw_tab_list_file_one <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(purrr<span class="sc">::</span><span class="fu">set_names</span>(<span class="fu">excel_sheets</span>(<span class="fu">file.path</span>(sharepoint_ojjdp_va_raw_data,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>                                                              <span class="st">"CSG Front End data 01202023 - pt1 - SENSITIVE.xlsx"</span>))),</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>                      read_excel, </span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>                      <span class="at">path =</span> <span class="fu">file.path</span>(sharepoint_ojjdp_va_raw_data,<span class="st">"CSG Front End data 01202023 - pt1 - SENSITIVE.xlsx"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map</span>(janitor<span class="sc">::</span>clean_names)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="do">### clean names of all imported tabs before converting to dataframes</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(ojjdp_va_raw_tab_list_file_one) <span class="ot">&lt;-</span> janitor<span class="sc">::</span><span class="fu">make_clean_names</span>(<span class="fu">names</span>(ojjdp_va_raw_tab_list_file_one))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="do">### set sharepoint path using csgjcr function</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>sharepoint_ojjdp_va_viz <span class="ot">&lt;-</span> csgjcr<span class="sc">::</span><span class="fu">csg_sp_path</span>(<span class="fu">file.path</span>(<span class="st">"JJ_OJJDP/Output/VA/r_viz_output"</span>))</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="do">########################################################</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="do">### import first excel file w/ multiple tabs with purrr</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="do">########################################################</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="do">### using purrr::map, import list of tabs from excel worksheet</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>ojjdp_va_raw_tab_list_file_one <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(purrr<span class="sc">::</span><span class="fu">set_names</span>(<span class="fu">excel_sheets</span>(<span class="fu">file.path</span>(sharepoint_ojjdp_va_raw_data,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>                                                              <span class="st">"CSG Front End data 01202023 - pt1 - SENSITIVE.xlsx"</span>))),</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>                      read_excel, </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                      <span class="at">path =</span> <span class="fu">file.path</span>(sharepoint_ojjdp_va_raw_data,<span class="st">"CSG Front End data 01202023 - pt1 - SENSITIVE.xlsx"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map</span>(janitor<span class="sc">::</span>clean_names)</span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="do">### then convert list of tabs to distinct dataframes with names from tabs</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="fu">names</span>(ojjdp_va_raw_tab_list_file_one),</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>           <span class="sc">~</span><span class="fu">assign</span>(.x, </span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>                   ojjdp_va_raw_tab_list_file_one[[.x]], </span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">envir =</span> .GlobalEnv)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="do">### clean names of all imported tabs before converting to dataframes</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(ojjdp_va_raw_tab_list_file_one) <span class="ot">&lt;-</span> janitor<span class="sc">::</span><span class="fu">make_clean_names</span>(<span class="fu">names</span>(ojjdp_va_raw_tab_list_file_one))</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="do">### then convert list of tabs to distinct dataframes with names from tabs</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="fu">names</span>(ojjdp_va_raw_tab_list_file_one),</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>           <span class="sc">~</span><span class="fu">assign</span>(.x, </span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>                   ojjdp_va_raw_tab_list_file_one[[.x]], </span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">envir =</span> .GlobalEnv)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 # A tibble: 10 x 2

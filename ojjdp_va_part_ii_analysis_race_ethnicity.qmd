@@ -1,0 +1,53 @@
+---
+title: "Part II Analysis: Race/Ethnicity"
+format: html
+---
+
+**Data Sample:** 
+
+* Juvenile intake complaints with intake dates from July 1, 2015 - June 30, 2021
+
+* Dispositions – all dispositions for the intake complaints in the sample. 
+
+
+**Research Question:**
+
+Conduct a front-end system assessment from intake through petition for all complaints 2016-2021.
+
+
+**Methods:**
+
+We will conduct a descriptive analysis of the front end of the system from intake through petition, provide unadjusted counts, RRI’s and means tests where applicable, by race, sex, offense, risk, CSU, and year for:
+
+*	Complaints
+
+*	Intake decisions: divert, resolve, petition, other
+
+*	Average LOS on diversion 
+
+*	Diversion completions: successful, unsuccessful, other
+
+*	Dispositions on petitioned cases
+
+*Cohort:* All complaints from 2016-2021  
+
+<br>
+
+```{r include=FALSE}
+### call libraries
+library(easypackages)
+libraries("tidyverse","foreign","lubridate","reshape2", "ggplot2","RColorBrewer","knitr","forcats","openxlsx","statar","svDialogs","xlsx", "magrittr","stringr", "data.table","janitor","kableExtra","leaflet", "readr", "rmarkdown","rowr", "gganimate", "gifski","tidycensus","sf","htmltools","acs","tigris","mapview","rgeos", "ggrepel", "censusxy","gdata","lavaan","mclust","tmap", "raster","rgeos","gmapsdistance","viridis","cowplot","lintr","leaflet.extras","censusapi","data.table","gridGraphics","readxl","haven","ggridges","extrafont","extrafontdb","datamodelr","Lahman","DiagrammeR","fs","readxl","rsvg","V8","csgjcr","DataExplorer","tidylog")
+```
+
+```{r include=FALSE,message=FALSE,warning=FALSE}
+### set chunk output specifications
+knitr::opts_chunk$set(
+  echo = TRUE,
+  dev = "ragg_png",
+  cache = FALSE)
+
+### set theme
+theme_set(theme_minimal())
+
+```
+

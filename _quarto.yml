@@ -8,12 +8,20 @@ website:
    right:
       - text: "Project and Analysis Plan"
         href: index.html
-      - text: "Analysis"
+      - text: "Part I Analysis"
         menu:
-          - text: "Part I (Regression Analysis)"
-            href: ojjdp_va_part_i_analysis.html
-          - text: "Part II (Descriptive Analysis)"
-            href: ojjdp_va_part_ii_analysis.html
+          - text: "Descriptive Overview"
+            href: ojjdp_va_part_i_analysis_overview.html
+          - text: "Regression Analysis"
+            href: ojjdp_va_part_ii_analysis_regression.html
+      - text: "Part II Analysis"
+        menu:
+          - text: "Diversion Trends"
+            href: ojjdp_va_part_ii_analysis_diversion.html
+          - text: "Disposition Trends"
+            href: ojjdp_va_part_ii_analysis_dispo.html
+          - text: "Race/Ethnicity"
+            href: ojjdp_va_part_ii_analysis_race_ethnicity.html
       - text: "Questions and Updates"
         href: ojjdp_va_questions_updates.html
       - text: "Analytic File Prep"

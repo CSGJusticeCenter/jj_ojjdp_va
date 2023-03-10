@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>OJJDP Juvenile Justice System Reform Initiative: Virginia - Virginia DJJ Data Diagram</title>
+<title>OJJDP Juvenile Justice System Reform Initiative: Virginia - Analysis: Part I</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -170,7 +170,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Virginia DJJ Data Diagram</h1>
+<h1 class="title">Analysis: Part I</h1>
 </div>
 
 
@@ -185,14 +185,17 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>This syntax pulls in all data files provided by Virginia DJJ stored as a series of Excel file tabs – and preliminarily maps their relationships with the datamodelr package (https://github.com/bergant/datamodelr)</p>
-<p>File names reflect the names provided by DJJ. Find more information on files and variables in <code>Codebook</code> tab.</p>
+<p><strong>Research Questions:</strong></p>
+<p>Using a cohort of first-time system involved youth, look at adjusted differences in likelihood of being diverted and likelihood of a re-complaint for diverted vs.&nbsp;non-diverted youth.</p>
+<p>A. How does the likelihood of being diverted differ by race, sex, and geography?</p>
+<p>B. For youth who are diverted, how likely are they to come back into the system with a new complaint or new petition within a year of the initial intake decision?</p>
 <p><br></p>
-<div class="cell">
-<div class="cell-output-display">
-<p><img src="img/ojjdp_va_diagram.png" class="img-fluid" style="width:130.0%"></p>
-</div>
-</div>
+<p><strong>Methods:</strong></p>
+<p>For research question (A) we will build a series of logistic regression models, adjusting for race/ethnicity, age, offense, risk level, and other factors that may also be related to a decision to divert. Our outcome variable will be diversion/petition (0/1) and our independent variables of interest will be race, sex, and CSU. For research question (B) we will take a similar methodological approach, but restrict our cohort to diverted youth and focus on likelihood of a re-complaint within a year of diversion while adjusting for demographics, offense, risk level, etc. For research question (B) our outcome variable will be re-complaint within a year of the initial intake decision date (0/1) and our independent variables of interest will be race, sex, and CSU.</p>
+<p><em>Cohort:</em> first time system involved youth (no prior complaints), 2016-2021</p>
+<p><em>Method:</em> Logistic Regression, which allows us to look at the relationship between two variables (like race and decision to divert) while adjusting for other factors that may also be related to our outcome (like offense, risk, etc.).</p>
+<p><br></p>
+<p><br></p>
 
 
 
