@@ -1,5 +1,5 @@
 ---
-title: "Part II Analysis: Diversion"
+title: "Part II Analysis: Intake Decisions and Diversion"
 format: html
 ---
 
@@ -75,14 +75,12 @@ unique_youth_sample_denom <- n_distinct(df_complaints_youth_intake_decision_csu$
 ```
 
 
-**Note:** See coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
-
 # Tables
 
 
-## Table 1: % of All Complaints Diverted, 2015-2021
+## Table 1: Overall Intake Decisions, 2015-2021
 
-Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+**Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### overall complaints by diversion status
@@ -108,9 +106,9 @@ kable(df_complaints_youth_intake_decision_table,
 
 <br>
 
-## Table 2: % of All Complaints Diverted by Year
+## Table 2: Intake Decisions by Year
 
-Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+**Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### unique complaints split out
@@ -173,9 +171,9 @@ kable(df_complaints_youth_intake_decision_table_year_final,
 
 <br>
 
-## Table 3: % of All Complaints Diverted by Race/Ethnicity
+## Table 3: Intake Decisions by Race/Ethnicity
 
-Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+**Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### unique complaints split out
@@ -238,9 +236,9 @@ kable(df_complaints_youth_intake_decision_table_race_final,
 
 <br>
 
-## Table 4: % of All Complaints Diverted by Gender
+## Table 4: Intake Decisions by Gender
 
-Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+**Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### unique complaints split out
@@ -303,18 +301,18 @@ kable(df_complaints_youth_intake_decision_table_gender_final,
 
 <br>
 
-## Table 5: % of All Complaints Diverted by Age at Petition
+## Table 5: Intake Decisions by Age at Intake
 
-Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+**Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
-**Question:** We seem to be missing age (pet_age) for about 35% of all records in the intake complaints file -- how should we interpret this? Something seems off with this table -- why is the diversion rate so much higher for youth whose age is missing? Does missing age mean youth was not formally petitioned and thus they don't have age here?
-
-**TO DO:** Decide on which ages to exclude because of likely data collection issues (e.g. ages of 0 or 44)
+**TO DO:** Decide on which ages to exclude because of likely data collection issues (e.g. ages of 0 or 44); current process is removing youth <8 and >18
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### unique complaints split out
 df_complaints_youth_intake_decision_table_age <- df_complaints_youth_intake_decision_csu %>% 
-  dplyr::group_by(intake_age) %>% 
+  filter(intake_age>8,
+         intake_age<18) %>% 
+  dplyr::group_by(intake_age_clean) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
@@ -331,10 +329,12 @@ df_complaints_youth_intake_decision_table_age <- df_complaints_youth_intake_deci
                    `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
-  dplyr::rename(`Age at Intake` = intake_age) 
+  dplyr::rename(`Age at Intake` = intake_age_clean) 
 
 ### unique complaints statewide
 df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
+   filter(intake_age>8,
+         intake_age<18) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
@@ -367,14 +367,14 @@ kable(df_complaints_youth_intake_decision_table_age_final,
                                        "condensed", 
                                        "responsive"), 
                  row_label_position = "l") %>% 
-  row_spec(44, bold = TRUE)
+  row_spec(5, bold = TRUE)
 ```
 
 <br>
 
-## Table 6a: % of All Complaints Diverted by Offense Type (most serious offense; mso_flag == "Y")
+## Table 6a: Intake Decisions by Offense Type (most serious offense; mso_flag == "Y")
 
-Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+**Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### unique complaints split out
@@ -437,9 +437,9 @@ kable(df_complaints_youth_intake_decision_table_offense_final,
 
 <br>
 
-## Table 6b: % of All Complaints Diverted by Status Offense Type (most serious offense is status; mso_flag == "Y")
+## Table 6b: Intake Decisions by Status Offense Type (most serious offense is status; mso_flag == "Y")
 
-Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+**Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### unique complaints split out
@@ -504,9 +504,76 @@ kable(df_complaints_youth_intake_decision_table_offense_status_final,
 
 <br>
 
-## Table 7: % of All Complaints Diverted by Court Service Unit (CSU)
+## Table 6c: Intake Decisionsby Status Offense Description (most serious offense is status; mso_flag == "Y")
 
-Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+**Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+### unique complaints split out
+df_complaints_youth_intake_decision_table_offense_status_desc <- df_complaints_youth_intake_decision_csu %>% 
+  filter(dai=="Status Offense") %>% 
+  dplyr::group_by(description) %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
+                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>%  
+  ungroup() %>% 
+  dplyr::rename(`Status Offense Description` = description)  
+
+### unique complaints statewide
+df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
+  filter(dai=="Status Offense") %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
+                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::mutate(`Status Offense Description` = "Overall") 
+
+### combine two dataframes for table
+df_complaints_youth_intake_decision_table_offense_status_desc_final <- rbind(df_complaints_youth_intake_decision_table_offense_status_desc,
+                                                              df_complaints_youth_intake_decision_table_overall)
+
+
+### print table via kableextra
+kable(df_complaints_youth_intake_decision_table_offense_status_desc_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") %>% 
+  row_spec(7, bold = TRUE)
+```
+
+<br>
+
+## Table 7: Intake Decisions by Court Service Unit (CSU)
+
+**Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### unique complaints split out
@@ -569,9 +636,9 @@ kable(df_complaints_youth_intake_decision_table_csu_final,
 
 <br>
 
-## Table 8: % of All Complaints Diverted by Court Service Unit (CSU) Region
+## Table 8: Intake Decisions by Court Service Unit (CSU) Region
 
-Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+**Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
 See CSU regions here: https://www.djj.virginia.gov/pages/community/court-service-units.htm
 
@@ -636,9 +703,9 @@ kable(df_complaints_youth_intake_decision_table_csu_region_final,
 
 <br>
 
-## Table 9: % of All Complaints Diverted by Prior JJ History 
+## Table 9: Intake Decisions by Prior JJ History 
 
-Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+**Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
 **Question:** How should we interpret missing prior JJ complaint data? About 40% of all intake complaints records appear to have missing data in these columns
 
@@ -705,9 +772,9 @@ kable(df_complaints_youth_intake_decision_table_jj_history_final,
 
 <br>
 
-## Table 10: % of All Complaints Diverted by Petitioner Type
+## Table 10: Intake Decisions by Petitioner Type
 
-Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+**Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### unique complaints split out
@@ -776,6 +843,8 @@ kable(df_complaints_youth_intake_decision_table_pet_desc_final,
 
 Both measures of LOS on diversion are calculated by DJJ and provided in the `caseload` file -- see codebook page for more information. The two LOS measures are the "Number of days on the workload status "Diversion at Intake"" and the "Number of days on the workload status "Diversion Beyond 90 Days"". **Still need to check for duplicates**
 
+**Until we receive clarity from DJJ on joining the `caseload` file to the `intake complaints` file, I am only exploring LOS by youth-level characteristics, not case-level characteristics (e.g. offense, JJ history, CSU, etc.)**
+
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ###  mean and median diversion lengths of stay by race/ethnicity
 df_diversion_race_eth_los <- caseload_clean %>% 
@@ -826,6 +895,8 @@ kable(df_diversion_race_eth_los_final,
 ## Table 12: Average Length of Stay on Diversion by Gender
 
 Both measures of LOS on diversion are calculated by DJJ and provided in the `caseload` file -- see codebook page for more information. The two LOS measures are the "Number of days on the workload status "Diversion at Intake"" and the "Number of days on the workload status "Diversion Beyond 90 Days"". **Still need to check for duplicates**
+
+**Until we receive clarity from DJJ on joining the `caseload` file to the `intake complaints` file, I am only exploring LOS by youth-level characteristics, not case-level characteristics (e.g. offense, JJ history, CSU, etc.)**
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ###  mean and median diversion lengths of stay by race/ethnicity

@@ -32,7 +32,7 @@ Missing data:
 
 * Should we be using the Offense Type column or Delinquent/Status/Technical/Traffic flag to select complaints that are status-related? Or does it not matter?
 
-* Do you all have a rule for excluding youth of certain ages from analysis (based on the assumption that it is likely a data entry error? e.g., ages of 0-4 or 25+?)
+* Do you all have a rule for excluding youth of certain ages from analysis (based on the assumption that it is likely a data entry error? e.g., ages of 0-4 or 25+?) Or are the ages accurate and reflect non-JJ involvement?
 
 
 *Questions about the caseload file:*

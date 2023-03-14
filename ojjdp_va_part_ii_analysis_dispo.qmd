@@ -60,43 +60,47 @@ sharepoint_ojjdp_va_viz <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Output/VA/r_v
 ### pull in preliminary virginia djj analytic files 
 
 ### read in preliminary analytic rds file 
-df_complaints_youth_intake_decision_csu <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_complaints_youth_intake_decision_csu.rds"))
-
-### write out file for preliminary analysis
-caseload_clean <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"caseload_clean.rds"))
+disposition_clean <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"disposition_clean.rds"))
 ```
 
 ```{r include=FALSE,warning=FALSE,include=FALSE}
 ### create denominator -- unique complaint for entire sample
-unique_complaints_sample_denom <- n_distinct(df_complaints_youth_intake_decision_csu$unique_complaint_id)
+unique_complaints_sample_denom <- n_distinct(disposition_clean$unique_complaint_id)
 
 ### create denominator -- unique youth for entire sample
-unique_youth_sample_denom <- n_distinct(df_complaints_youth_intake_decision_csu$juvenile_number)
+unique_youth_sample_denom <- n_distinct(disposition_clean$juvenile_number)
 ```
 
+<br>
 
-**Note:** See coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
+**NOTE:** Because dispositions file is still duplicated (one complaint may have multiple associated dispositions), percentages will not add up to 100 -- we need to create ranking of disposition severity and de-duplicate this file by selecting the most serious disposition associated with a complaint as a next step. 
+
+
+
+**Business rules to discuss:** 
+
+* For disposition file cleaning/analysis, should I first filter on intake complaint==petitioned, then merge to dispositions file? We would need to expand current definition of petitioned to include unsuccessful diversions that were eventually petitioned, right? 
 
 # Tables
 
 
-## Table 1: % of All Complaints Diverted, 2015-2021
+## Table 1: Disposition Outcomes, 2015-2021
 
-Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### overall complaints by diversion status
-df_complaints_youth_intake_decision_table <- df_complaints_youth_intake_decision_csu %>% 
-  dplyr::group_by(intake_decision_clean) %>% 
-  dplyr::summarise(`Unique Complaints (N)` = n_distinct(unique_complaint_id),
-            `Complaints, Percent of Sample (%)` = scales::percent(`Unique Complaints (N)`/unique_complaints_sample_denom,
+df_complaints_disposition_outcome_table <- disposition_clean %>% 
+  dplyr::group_by(dispo_description_clean) %>% 
+  dplyr::summarise(`Unique Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+            `Disposed Complaints, Percent of Sample (%)` = scales::percent(`Unique Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
-  dplyr::rename(`Intake Decision` = intake_decision_clean) 
+  dplyr::rename(`Disposition` = dispo_description_clean) 
 
 
 ### print table via kableextra
-kable(df_complaints_youth_intake_decision_table, 
+kable(df_complaints_disposition_outcome_table, 
       format.args = list(big.mark = ","), 
       align=rep('c')) %>%
   kable_styling(bootstrap_options = c("striped", 
@@ -108,59 +112,95 @@ kable(df_complaints_youth_intake_decision_table,
 
 <br>
 
-## Table 2: % of All Complaints Diverted by Year
+## Table 2: Disposition Outcomes by Year
 
-Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### unique complaints split out
-df_complaints_youth_intake_decision_table_year <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_disposition_outcome_table_year <- disposition_clean %>% 
   dplyr::group_by(date_opened_year) %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+  dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
+                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
+                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
+                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
+                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
+                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
+                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Treatment/Programming (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Treatment/Programming"]),
+                   `Treatment/Programming (row %)` = scales::percent(`Treatment/Programming (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
+                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
+                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::rename(`Year of Complaint` = date_opened_year) 
 
 ### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+df_complaints_disposition_outcome_table_overall <- disposition_clean %>% 
+   dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
+                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
+                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
+                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
+                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
+                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
+                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Treatment/Programming (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Treatment/Programming"]),
+                   `Treatment/Programming (row %)` = scales::percent(`Treatment/Programming (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
+                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
+                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::mutate(`Year of Complaint` = "Overall") 
 
 ### combine two dataframes for table
-df_complaints_youth_intake_decision_table_year_final <- rbind(df_complaints_youth_intake_decision_table_year,
-                                                              df_complaints_youth_intake_decision_table_overall)
+df_complaints_disposition_outcome_table_year_final <- rbind(df_complaints_disposition_outcome_table_year,
+                                                              df_complaints_disposition_outcome_table_overall)
 
 
 ### print table via kableextra
-kable(df_complaints_youth_intake_decision_table_year_final, 
+kable(df_complaints_disposition_outcome_table_year_final, 
       format.args = list(big.mark = ","), 
       align=rep('c')) %>%
   kable_styling(bootstrap_options = c("striped", 
@@ -173,59 +213,95 @@ kable(df_complaints_youth_intake_decision_table_year_final,
 
 <br>
 
-## Table 3: % of All Complaints Diverted by Race/Ethnicity
+## Table 3: Disposition Outcomes by Race/Ethnicity
 
-Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### unique complaints split out
-df_complaints_youth_intake_decision_table_race <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_disposition_outcome_table_race <- disposition_clean %>% 
   dplyr::group_by(race_clean) %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+  dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
+                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
+                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
+                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
+                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
+                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
+                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Treatment/Programming (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Treatment/Programming"]),
+                   `Treatment/Programming (row %)` = scales::percent(`Treatment/Programming (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
+                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
+                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::rename(`Race/Ethnicity` = race_clean) 
 
 ### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+df_complaints_disposition_outcome_table_overall <- disposition_clean %>% 
+  dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
+                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
+                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
+                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
+                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
+                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
+                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Treatment/Programming (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Treatment/Programming"]),
+                   `Treatment/Programming (row %)` = scales::percent(`Treatment/Programming (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
+                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
+                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::mutate(`Race/Ethnicity` = "Overall") 
 
 ### combine two dataframes for table
-df_complaints_youth_intake_decision_table_race_final <- rbind(df_complaints_youth_intake_decision_table_race,
-                                                              df_complaints_youth_intake_decision_table_overall)
+df_complaints_disposition_outcome_table_race_final <- rbind(df_complaints_disposition_outcome_table_race,
+                                                              df_complaints_disposition_outcome_table_overall)
 
 
 ### print table via kableextra
-kable(df_complaints_youth_intake_decision_table_race_final, 
+kable(df_complaints_disposition_outcome_table_race_final, 
       format.args = list(big.mark = ","), 
       align=rep('c')) %>%
   kable_styling(bootstrap_options = c("striped", 
@@ -238,59 +314,95 @@ kable(df_complaints_youth_intake_decision_table_race_final,
 
 <br>
 
-## Table 4: % of All Complaints Diverted by Gender
+## Table 4: Disposition Outcomes by Gender
 
-Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### unique complaints split out
-df_complaints_youth_intake_decision_table_gender <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_disposition_outcome_table_gender <- disposition_clean %>% 
   dplyr::group_by(gender_clean) %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+    dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
+                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
+                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
+                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
+                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
+                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
+                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Treatment/Programming (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Treatment/Programming"]),
+                   `Treatment/Programming (row %)` = scales::percent(`Treatment/Programming (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
+                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
+                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::rename(`Gender` = gender_clean) 
 
 ### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+df_complaints_disposition_outcome_table_overall <- disposition_clean %>% 
+  dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
+                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
+                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
+                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
+                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
+                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
+                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Treatment/Programming (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Treatment/Programming"]),
+                   `Treatment/Programming (row %)` = scales::percent(`Treatment/Programming (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
+                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
+                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::mutate(`Gender` = "Overall") 
 
 ### combine two dataframes for table
-df_complaints_youth_intake_decision_table_gender_final <- rbind(df_complaints_youth_intake_decision_table_gender,
-                                                              df_complaints_youth_intake_decision_table_overall)
+df_complaints_disposition_outcome_table_gender_final <- rbind(df_complaints_disposition_outcome_table_gender,
+                                                              df_complaints_disposition_outcome_table_overall)
 
 
 ### print table via kableextra
-kable(df_complaints_youth_intake_decision_table_gender_final, 
+kable(df_complaints_disposition_outcome_table_gender_final, 
       format.args = list(big.mark = ","), 
       align=rep('c')) %>%
   kable_styling(bootstrap_options = c("striped", 
@@ -303,63 +415,101 @@ kable(df_complaints_youth_intake_decision_table_gender_final,
 
 <br>
 
-## Table 5: % of All Complaints Diverted by Age at Petition
+## Table 5: Disposition Outcomes by Age at Disposition
 
-Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
 
-**Question:** We seem to be missing age (pet_age) for about 35% of all records in the intake complaints file -- how should we interpret this? Something seems off with this table -- why is the diversion rate so much higher for youth whose age is missing? Does missing age mean youth was not formally petitioned and thus they don't have age here?
-
-**TO DO:** Decide on which ages to exclude because of likely data collection issues (e.g. ages of 0 or 44)
+**TO DO:** Decide on which ages to exclude because of likely data collection issues (e.g. ages of 0 or 44); current process is removing youth <8 and >18
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### unique complaints split out
-df_complaints_youth_intake_decision_table_age <- df_complaints_youth_intake_decision_csu %>% 
-  dplyr::group_by(intake_age) %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+df_complaints_disposition_outcome_table_age <- disposition_clean %>% 
+   filter(court_disp_age>8,
+         court_disp_age<18) %>% 
+  dplyr::group_by(dispo_age_clean) %>% 
+  dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
+                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
+                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
+                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
+                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
+                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
+                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Treatment/Programming (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Treatment/Programming"]),
+                   `Treatment/Programming (row %)` = scales::percent(`Treatment/Programming (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
+                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
+                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
-  dplyr::rename(`Age at Intake` = intake_age) 
+  dplyr::rename(`Age at Intake` = dispo_age_clean) 
 
 ### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+df_complaints_disposition_outcome_table_overall <- disposition_clean %>% 
+   filter(court_disp_age>8,
+         court_disp_age<18) %>% 
+    dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
+                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
+                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
+                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
+                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
+                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
+                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Treatment/Programming (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Treatment/Programming"]),
+                   `Treatment/Programming (row %)` = scales::percent(`Treatment/Programming (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
+                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
+                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::mutate(`Age at Intake` = "Overall") 
 
 ### combine two dataframes for table
-df_complaints_youth_intake_decision_table_age_final <- rbind(df_complaints_youth_intake_decision_table_age,
-                                                              df_complaints_youth_intake_decision_table_overall)
+df_complaints_disposition_outcome_table_age_final <- rbind(df_complaints_disposition_outcome_table_age,
+                                                              df_complaints_disposition_outcome_table_overall)
 
 
 ### print table via kableextra
-kable(df_complaints_youth_intake_decision_table_age_final, 
+kable(df_complaints_disposition_outcome_table_age_final, 
       format.args = list(big.mark = ","), 
       align=rep('c')) %>%
   kable_styling(bootstrap_options = c("striped", 
@@ -367,64 +517,100 @@ kable(df_complaints_youth_intake_decision_table_age_final,
                                        "condensed", 
                                        "responsive"), 
                  row_label_position = "l") %>% 
-  row_spec(44, bold = TRUE)
+  row_spec(5, bold = TRUE)
 ```
 
 <br>
 
-## Table 6a: % of All Complaints Diverted by Offense Type (most serious offense; mso_flag == "Y")
+## Table 6a: Disposition Outcomes by Offense Type (most serious offense; mso_flag == "Y")
 
-Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### unique complaints split out
-df_complaints_youth_intake_decision_table_offense <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_disposition_outcome_table_offense <- disposition_clean %>% 
   dplyr::group_by(dai) %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+   dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
+                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
+                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
+                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
+                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
+                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
+                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Treatment/Programming (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Treatment/Programming"]),
+                   `Treatment/Programming (row %)` = scales::percent(`Treatment/Programming (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
+                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
+                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::rename(`Offense Description` = dai)  
 
 ### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+df_complaints_disposition_outcome_table_overall <- disposition_clean %>% 
+   dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
+                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
+                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
+                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
+                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
+                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
+                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Treatment/Programming (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Treatment/Programming"]),
+                   `Treatment/Programming (row %)` = scales::percent(`Treatment/Programming (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
+                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
+                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::mutate(`Offense Description` = "Overall") 
 
 ### combine two dataframes for table
-df_complaints_youth_intake_decision_table_offense_final <- rbind(df_complaints_youth_intake_decision_table_offense,
-                                                              df_complaints_youth_intake_decision_table_overall)
+df_complaints_disposition_outcome_table_offense_final <- rbind(df_complaints_disposition_outcome_table_offense,
+                                                              df_complaints_disposition_outcome_table_overall)
 
 
 ### print table via kableextra
-kable(df_complaints_youth_intake_decision_table_offense_final, 
+kable(df_complaints_disposition_outcome_table_offense_final, 
       format.args = list(big.mark = ","), 
       align=rep('c')) %>%
   kable_styling(bootstrap_options = c("striped", 
@@ -437,61 +623,97 @@ kable(df_complaints_youth_intake_decision_table_offense_final,
 
 <br>
 
-## Table 6b: % of All Complaints Diverted by Status Offense Type (most serious offense is status; mso_flag == "Y")
+## Table 6b: Disposition Outcomes by Status Offense Type (most serious offense is status; mso_flag == "Y")
 
-Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### unique complaints split out
-df_complaints_youth_intake_decision_table_offense_status <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_disposition_outcome_table_offense_status <- disposition_clean %>% 
   filter(dai=="Status Offense") %>% 
   dplyr::group_by(drg) %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+   dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
+                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
+                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
+                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1)) %>%  
+                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
+                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
+                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
+                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Treatment/Programming (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Treatment/Programming"]),
+                   `Treatment/Programming (row %)` = scales::percent(`Treatment/Programming (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
+                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
+                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::rename(`Status Offense Description` = drg)  
 
 ### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_disposition_outcome_table_overall <- disposition_clean %>% 
   filter(dai=="Status Offense") %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+   dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
+                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
+                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
+                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
+                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
+                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
+                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Treatment/Programming (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Treatment/Programming"]),
+                   `Treatment/Programming (row %)` = scales::percent(`Treatment/Programming (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
+                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
+                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::mutate(`Status Offense Description` = "Overall") 
 
 ### combine two dataframes for table
-df_complaints_youth_intake_decision_table_offense_status_final <- rbind(df_complaints_youth_intake_decision_table_offense_status,
-                                                              df_complaints_youth_intake_decision_table_overall)
+df_complaints_disposition_outcome_table_offense_status_final <- rbind(df_complaints_disposition_outcome_table_offense_status,
+                                                              df_complaints_disposition_outcome_table_overall)
 
 
 ### print table via kableextra
-kable(df_complaints_youth_intake_decision_table_offense_status_final, 
+kable(df_complaints_disposition_outcome_table_offense_status_final, 
       format.args = list(big.mark = ","), 
       align=rep('c')) %>%
   kable_styling(bootstrap_options = c("striped", 
@@ -504,59 +726,95 @@ kable(df_complaints_youth_intake_decision_table_offense_status_final,
 
 <br>
 
-## Table 7: % of All Complaints Diverted by Court Service Unit (CSU)
+## Table 7:Disposition Outcomes by Court Service Unit (CSU)
 
-Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### unique complaints split out
-df_complaints_youth_intake_decision_table_csu <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_disposition_outcome_table_csu <- disposition_clean %>% 
   dplyr::group_by(csu) %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+   dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
+                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
+                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
+                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
+                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
+                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
+                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Treatment/Programming (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Treatment/Programming"]),
+                   `Treatment/Programming (row %)` = scales::percent(`Treatment/Programming (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
+                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
+                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::rename(`CSU` = csu)  
 
 ### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+df_complaints_disposition_outcome_table_overall <- disposition_clean %>% 
+   dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
+                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
+                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
+                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1)) %>%  
+                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
+                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
+                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
+                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Treatment/Programming (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Treatment/Programming"]),
+                   `Treatment/Programming (row %)` = scales::percent(`Treatment/Programming (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
+                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
+                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::mutate(`CSU` = "Overall") 
 
 ### combine two dataframes for table
-df_complaints_youth_intake_decision_table_csu_final <- rbind(df_complaints_youth_intake_decision_table_csu,
-                                                             df_complaints_youth_intake_decision_table_overall)
+df_complaints_disposition_outcome_table_csu_final <- rbind(df_complaints_disposition_outcome_table_csu,
+                                                             df_complaints_disposition_outcome_table_overall)
 
 
 ### print table via kableextra
-kable(df_complaints_youth_intake_decision_table_csu_final, 
+kable(df_complaints_disposition_outcome_table_csu_final, 
       format.args = list(big.mark = ","), 
       align=rep('c')) %>%
   kable_styling(bootstrap_options = c("striped", 
@@ -569,61 +827,97 @@ kable(df_complaints_youth_intake_decision_table_csu_final,
 
 <br>
 
-## Table 8: % of All Complaints Diverted by Court Service Unit (CSU) Region
+## Table 8: Disposition Outcomes by Court Service Unit (CSU) Region
 
-Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
 
 See CSU regions here: https://www.djj.virginia.gov/pages/community/court-service-units.htm
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### unique complaints split out
-df_complaints_youth_intake_decision_table_csu_region <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_disposition_outcome_table_csu_region <- disposition_clean %>% 
   dplyr::group_by(csu_region) %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+   dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
+                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
+                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
+                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
+                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
+                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
+                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Treatment/Programming (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Treatment/Programming"]),
+                   `Treatment/Programming (row %)` = scales::percent(`Treatment/Programming (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
+                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
+                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::rename(`CSU Region` = csu_region)  
 
 ### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+df_complaints_disposition_outcome_table_overall <- disposition_clean %>% 
+  dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
+                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
+                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
+                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
+                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
+                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
+                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Treatment/Programming (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Treatment/Programming"]),
+                   `Treatment/Programming (row %)` = scales::percent(`Treatment/Programming (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
+                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
+                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::mutate(`CSU Region` = "Overall") 
 
 ### combine two dataframes for table
-df_complaints_youth_intake_decision_table_csu_region_final <- rbind(df_complaints_youth_intake_decision_table_csu_region,
-                                                             df_complaints_youth_intake_decision_table_overall)
+df_complaints_disposition_outcome_table_csu_region_final <- rbind(df_complaints_disposition_outcome_table_csu_region,
+                                                             df_complaints_disposition_outcome_table_overall)
 
 
 ### print table via kableextra
-kable(df_complaints_youth_intake_decision_table_csu_region_final, 
+kable(df_complaints_disposition_outcome_table_csu_region_final, 
       format.args = list(big.mark = ","), 
       align=rep('c')) %>%
   kable_styling(bootstrap_options = c("striped", 
@@ -636,63 +930,99 @@ kable(df_complaints_youth_intake_decision_table_csu_region_final,
 
 <br>
 
-## Table 9: % of All Complaints Diverted by Prior JJ History 
+## Table 9: Disposition Outcomes by Prior JJ History 
 
-Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it.  
 
 **Question:** How should we interpret missing prior JJ complaint data? About 40% of all intake complaints records appear to have missing data in these columns
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### unique complaints split out
-df_complaints_youth_intake_decision_table_jj_history <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_disposition_outcome_table_jj_history <- disposition_clean %>% 
   filter(!is.na(jj_history_clean)==TRUE) %>% 
   dplyr::group_by(jj_history_clean) %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+  dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
+                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
+                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
+                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
+                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
+                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
+                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Treatment/Programming (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Treatment/Programming"]),
+                   `Treatment/Programming (row %)` = scales::percent(`Treatment/Programming (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
+                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
+                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::rename(`JJ History` = jj_history_clean)  
 
 ### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_disposition_outcome_table_overall <- disposition_clean %>% 
   filter(!is.na(jj_history_clean)==TRUE) %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+   dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
+                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
+                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
+                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
+                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
+                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
+                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Treatment/Programming (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Treatment/Programming"]),
+                   `Treatment/Programming (row %)` = scales::percent(`Treatment/Programming (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
+                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
+                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::mutate(`JJ History` = "Overall") 
 
 ### combine two dataframes for table
-df_complaints_youth_intake_decision_table_jj_history_final <- rbind(df_complaints_youth_intake_decision_table_jj_history,
-                                                             df_complaints_youth_intake_decision_table_overall)
+df_complaints_disposition_outcome_table_jj_history_final <- rbind(df_complaints_disposition_outcome_table_jj_history,
+                                                             df_complaints_disposition_outcome_table_overall)
 
 
 ### print table via kableextra
-kable(df_complaints_youth_intake_decision_table_jj_history_final, 
+kable(df_complaints_disposition_outcome_table_jj_history_final, 
       format.args = list(big.mark = ","), 
       align=rep('c')) %>%
   kable_styling(bootstrap_options = c("striped", 
@@ -705,61 +1035,96 @@ kable(df_complaints_youth_intake_decision_table_jj_history_final,
 
 <br>
 
-## Table 10: % of All Complaints Diverted by Petitioner Type
+## Table 10: Disposition Outcomes by Petitioner Type
 
-Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'). All other intake decisions are coded as "Not Diverted". 
+Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it.  
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### unique complaints split out
-df_complaints_youth_intake_decision_table_pet_desc <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_disposition_outcome_table_pet_desc <- disposition_clean %>% 
   filter(!is.na(petitioner_desc)==TRUE) %>% 
   dplyr::group_by(petitioner_desc) %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+  dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
+                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
+                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
+                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
+                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
+                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
+                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Treatment/Programming (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Treatment/Programming"]),
+                   `Treatment/Programming (row %)` = scales::percent(`Treatment/Programming (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
+                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
+                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
-  dplyr::rename(`Petitioner Description` = petitioner_desc)  
+  dplyr::rename(`Petitioner Description` = petitioner_desc) 
 
-### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
+### overall
+df_complaints_disposition_outcome_table_overall <- disposition_clean %>% 
   filter(!is.na(petitioner_desc)==TRUE) %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+  dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
+                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
+                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
+                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
+                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
+                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
+                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Treatment/Programming (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Treatment/Programming"]),
+                   `Treatment/Programming (row %)` = scales::percent(`Treatment/Programming (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
+                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
+                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1)) %>% 
-  ungroup() %>% 
   dplyr::mutate(`Petitioner Description` = "Overall") 
 
 ### combine two dataframes for table
-df_complaints_youth_intake_decision_table_pet_desc_final <- rbind(df_complaints_youth_intake_decision_table_pet_desc,
-                                                             df_complaints_youth_intake_decision_table_overall)
+df_complaints_disposition_outcome_table_pet_desc_final <- rbind(df_complaints_disposition_outcome_table_pet_desc,
+                                                             df_complaints_disposition_outcome_table_overall)
 
 
 ### print table via kableextra
-kable(df_complaints_youth_intake_decision_table_pet_desc_final, 
+kable(df_complaints_disposition_outcome_table_pet_desc_final, 
       format.args = list(big.mark = ","), 
       align=rep('c')) %>%
   kable_styling(bootstrap_options = c("striped", 
