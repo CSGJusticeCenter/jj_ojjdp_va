@@ -180,6 +180,8 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#table-8-of-all-complaints-diverted-by-court-service-unit-csu-region" id="toc-table-8-of-all-complaints-diverted-by-court-service-unit-csu-region" class="nav-link" data-scroll-target="#table-8-of-all-complaints-diverted-by-court-service-unit-csu-region">Table 8: % of All Complaints Diverted by Court Service Unit (CSU) Region</a></li>
   <li><a href="#table-9-of-all-complaints-diverted-by-prior-jj-history" id="toc-table-9-of-all-complaints-diverted-by-prior-jj-history" class="nav-link" data-scroll-target="#table-9-of-all-complaints-diverted-by-prior-jj-history">Table 9: % of All Complaints Diverted by Prior JJ History</a></li>
   <li><a href="#table-10-of-all-complaints-diverted-by-petitioner-type" id="toc-table-10-of-all-complaints-diverted-by-petitioner-type" class="nav-link" data-scroll-target="#table-10-of-all-complaints-diverted-by-petitioner-type">Table 10: % of All Complaints Diverted by Petitioner Type</a></li>
+  <li><a href="#table-11-average-length-of-stay-on-diversion-by-raceethnicity" id="toc-table-11-average-length-of-stay-on-diversion-by-raceethnicity" class="nav-link" data-scroll-target="#table-11-average-length-of-stay-on-diversion-by-raceethnicity">Table 11: Average Length of Stay on Diversion by Race/Ethnicity</a></li>
+  <li><a href="#table-12-average-length-of-stay-on-diversion-by-gender" id="toc-table-12-average-length-of-stay-on-diversion-by-gender" class="nav-link" data-scroll-target="#table-12-average-length-of-stay-on-diversion-by-gender">Table 12: Average Length of Stay on Diversion by Gender</a></li>
   </ul></li>
   <li><a href="#visuals" id="toc-visuals" class="nav-link" data-scroll-target="#visuals">Visuals</a>
   <ul class="collapse">
@@ -230,7 +232,7 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 <p><em>Cohort:</em> All complaints from 2016-2021</p>
 <p><br></p>
-<p><br></p>
+<p><strong>Note:</strong> See coding of intake decisions in <code>Intake Complaints, Intake Decision Descriptions</code> table on <code>codebook</code> page in <code>sample descriptives</code> tab</p>
 <section id="tables" class="level1">
 <h1>Tables</h1>
 <section id="table-1-of-all-complaints-diverted-2015-2021" class="level2">
@@ -242,21 +244,31 @@ ul.task-list li input[type="checkbox"] {
 <table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
  <thead>
   <tr>
-   <th style="text-align:center;"> Diverted? </th>
+   <th style="text-align:center;"> Intake Decision </th>
    <th style="text-align:center;"> Unique Complaints (N) </th>
    <th style="text-align:center;"> Complaints, Percent of Sample (%) </th>
   </tr>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:center;"> Yes </td>
+   <td style="text-align:center;"> Petitioned </td>
+   <td style="text-align:center;"> 134,534 </td>
+   <td style="text-align:center;"> 67.4% </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Diverted </td>
    <td style="text-align:center;"> 37,411 </td>
    <td style="text-align:center;"> 18.7% </td>
   </tr>
   <tr>
-   <td style="text-align:center;"> No </td>
-   <td style="text-align:center;"> 162,240 </td>
-   <td style="text-align:center;"> 81.3% </td>
+   <td style="text-align:center;"> Dismissed </td>
+   <td style="text-align:center;"> 19,014 </td>
+   <td style="text-align:center;"> 9.5% </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Other </td>
+   <td style="text-align:center;"> 8,692 </td>
+   <td style="text-align:center;"> 4.4% </td>
   </tr>
 </tbody>
 </table>
@@ -277,10 +289,14 @@ ul.task-list li input[type="checkbox"] {
    <th style="text-align:center;"> Year of Complaint </th>
    <th style="text-align:center;"> All Complaints (N) </th>
    <th style="text-align:center;"> All Complaints (column %) </th>
+   <th style="text-align:center;"> Complaints Petitioned (N) </th>
+   <th style="text-align:center;"> Complaints Petitioned (row %) </th>
    <th style="text-align:center;"> Complaints Diverted (N) </th>
    <th style="text-align:center;"> Complaints Diverted (row %) </th>
-   <th style="text-align:center;"> Complaints Not Diverted (N) </th>
-   <th style="text-align:center;"> Complaints Not Diverted (row %) </th>
+   <th style="text-align:center;"> Complaints Dismissed (N) </th>
+   <th style="text-align:center;"> Complaints Dismissed (row %) </th>
+   <th style="text-align:center;"> Other (N) </th>
+   <th style="text-align:center;"> Other (row %) </th>
   </tr>
  </thead>
 <tbody>
@@ -288,73 +304,105 @@ ul.task-list li input[type="checkbox"] {
    <td style="text-align:center;"> 2015 </td>
    <td style="text-align:center;"> 19,549 </td>
    <td style="text-align:center;"> 9.8% </td>
+   <td style="text-align:center;"> 14,292 </td>
+   <td style="text-align:center;"> 73.1% </td>
    <td style="text-align:center;"> 2,824 </td>
    <td style="text-align:center;"> 14.4% </td>
-   <td style="text-align:center;"> 16,725 </td>
-   <td style="text-align:center;"> 85.6% </td>
+   <td style="text-align:center;"> 1,618 </td>
+   <td style="text-align:center;"> 8.3% </td>
+   <td style="text-align:center;"> 815 </td>
+   <td style="text-align:center;"> 4.2% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 2016 </td>
    <td style="text-align:center;"> 39,575 </td>
    <td style="text-align:center;"> 19.8% </td>
+   <td style="text-align:center;"> 27,685 </td>
+   <td style="text-align:center;"> 70.0% </td>
    <td style="text-align:center;"> 6,371 </td>
    <td style="text-align:center;"> 16.1% </td>
-   <td style="text-align:center;"> 33,204 </td>
-   <td style="text-align:center;"> 83.9% </td>
+   <td style="text-align:center;"> 3,668 </td>
+   <td style="text-align:center;"> 9.3% </td>
+   <td style="text-align:center;"> 1,851 </td>
+   <td style="text-align:center;"> 4.7% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 2017 </td>
    <td style="text-align:center;"> 39,397 </td>
    <td style="text-align:center;"> 19.7% </td>
+   <td style="text-align:center;"> 26,615 </td>
+   <td style="text-align:center;"> 67.6% </td>
    <td style="text-align:center;"> 6,826 </td>
    <td style="text-align:center;"> 17.3% </td>
-   <td style="text-align:center;"> 32,571 </td>
-   <td style="text-align:center;"> 82.7% </td>
+   <td style="text-align:center;"> 4,004 </td>
+   <td style="text-align:center;"> 10.2% </td>
+   <td style="text-align:center;"> 1,952 </td>
+   <td style="text-align:center;"> 5.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 2018 </td>
    <td style="text-align:center;"> 35,385 </td>
    <td style="text-align:center;"> 17.7% </td>
+   <td style="text-align:center;"> 23,337 </td>
+   <td style="text-align:center;"> 66.0% </td>
    <td style="text-align:center;"> 7,042 </td>
    <td style="text-align:center;"> 19.9% </td>
-   <td style="text-align:center;"> 28,343 </td>
-   <td style="text-align:center;"> 80.1% </td>
+   <td style="text-align:center;"> 3,334 </td>
+   <td style="text-align:center;"> 9.4% </td>
+   <td style="text-align:center;"> 1,672 </td>
+   <td style="text-align:center;"> 4.7% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 2019 </td>
    <td style="text-align:center;"> 34,842 </td>
    <td style="text-align:center;"> 17.5% </td>
+   <td style="text-align:center;"> 21,959 </td>
+   <td style="text-align:center;"> 63.0% </td>
    <td style="text-align:center;"> 8,358 </td>
    <td style="text-align:center;"> 24.0% </td>
-   <td style="text-align:center;"> 26,484 </td>
-   <td style="text-align:center;"> 76.0% </td>
+   <td style="text-align:center;"> 3,254 </td>
+   <td style="text-align:center;"> 9.3% </td>
+   <td style="text-align:center;"> 1,271 </td>
+   <td style="text-align:center;"> 3.6% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 2020 </td>
    <td style="text-align:center;"> 21,402 </td>
    <td style="text-align:center;"> 10.7% </td>
+   <td style="text-align:center;"> 14,187 </td>
+   <td style="text-align:center;"> 66.3% </td>
    <td style="text-align:center;"> 4,152 </td>
    <td style="text-align:center;"> 19.4% </td>
-   <td style="text-align:center;"> 17,250 </td>
-   <td style="text-align:center;"> 80.6% </td>
+   <td style="text-align:center;"> 2,282 </td>
+   <td style="text-align:center;"> 10.7% </td>
+   <td style="text-align:center;"> 781 </td>
+   <td style="text-align:center;"> 3.6% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 2021 </td>
    <td style="text-align:center;"> 9,501 </td>
    <td style="text-align:center;"> 4.8% </td>
+   <td style="text-align:center;"> 6,459 </td>
+   <td style="text-align:center;"> 68.0% </td>
    <td style="text-align:center;"> 1,838 </td>
    <td style="text-align:center;"> 19.3% </td>
-   <td style="text-align:center;"> 7,663 </td>
-   <td style="text-align:center;"> 80.7% </td>
+   <td style="text-align:center;"> 854 </td>
+   <td style="text-align:center;"> 9.0% </td>
+   <td style="text-align:center;"> 350 </td>
+   <td style="text-align:center;"> 3.7% </td>
   </tr>
   <tr>
    <td style="text-align:center;font-weight: bold;"> Overall </td>
    <td style="text-align:center;font-weight: bold;"> 199,651 </td>
    <td style="text-align:center;font-weight: bold;"> 100.0% </td>
+   <td style="text-align:center;font-weight: bold;"> 134,534 </td>
+   <td style="text-align:center;font-weight: bold;"> 67.4% </td>
    <td style="text-align:center;font-weight: bold;"> 37,411 </td>
    <td style="text-align:center;font-weight: bold;"> 18.7% </td>
-   <td style="text-align:center;font-weight: bold;"> 162,240 </td>
-   <td style="text-align:center;font-weight: bold;"> 81.3% </td>
+   <td style="text-align:center;font-weight: bold;"> 19,014 </td>
+   <td style="text-align:center;font-weight: bold;"> 9.5% </td>
+   <td style="text-align:center;font-weight: bold;"> 8,692 </td>
+   <td style="text-align:center;font-weight: bold;"> 4.4% </td>
   </tr>
 </tbody>
 </table>
@@ -375,10 +423,14 @@ ul.task-list li input[type="checkbox"] {
    <th style="text-align:center;"> Race/Ethnicity </th>
    <th style="text-align:center;"> All Complaints (N) </th>
    <th style="text-align:center;"> All Complaints (column %) </th>
+   <th style="text-align:center;"> Complaints Petitioned (N) </th>
+   <th style="text-align:center;"> Complaints Petitioned (row %) </th>
    <th style="text-align:center;"> Complaints Diverted (N) </th>
    <th style="text-align:center;"> Complaints Diverted (row %) </th>
-   <th style="text-align:center;"> Complaints Not Diverted (N) </th>
-   <th style="text-align:center;"> Complaints Not Diverted (row %) </th>
+   <th style="text-align:center;"> Complaints Dismissed (N) </th>
+   <th style="text-align:center;"> Complaints Dismissed (row %) </th>
+   <th style="text-align:center;"> Other (N) </th>
+   <th style="text-align:center;"> Other (row %) </th>
   </tr>
  </thead>
 <tbody>
@@ -386,73 +438,105 @@ ul.task-list li input[type="checkbox"] {
    <td style="text-align:center;"> American Indian </td>
    <td style="text-align:center;"> 197 </td>
    <td style="text-align:center;"> 0.1% </td>
+   <td style="text-align:center;"> 124 </td>
+   <td style="text-align:center;"> 62.9% </td>
    <td style="text-align:center;"> 46 </td>
    <td style="text-align:center;"> 23.4% </td>
-   <td style="text-align:center;"> 151 </td>
-   <td style="text-align:center;"> 76.6% </td>
+   <td style="text-align:center;"> 19 </td>
+   <td style="text-align:center;"> 9.6% </td>
+   <td style="text-align:center;"> 8 </td>
+   <td style="text-align:center;"> 4.1% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Asian </td>
    <td style="text-align:center;"> 1,949 </td>
    <td style="text-align:center;"> 1.0% </td>
+   <td style="text-align:center;"> 1,091 </td>
+   <td style="text-align:center;"> 56.0% </td>
    <td style="text-align:center;"> 443 </td>
    <td style="text-align:center;"> 22.7% </td>
-   <td style="text-align:center;"> 1,506 </td>
-   <td style="text-align:center;"> 77.3% </td>
+   <td style="text-align:center;"> 269 </td>
+   <td style="text-align:center;"> 13.8% </td>
+   <td style="text-align:center;"> 146 </td>
+   <td style="text-align:center;"> 7.5% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Black </td>
    <td style="text-align:center;"> 81,971 </td>
    <td style="text-align:center;"> 41.1% </td>
+   <td style="text-align:center;"> 57,693 </td>
+   <td style="text-align:center;"> 70.4% </td>
    <td style="text-align:center;"> 12,320 </td>
    <td style="text-align:center;"> 15.0% </td>
-   <td style="text-align:center;"> 69,651 </td>
-   <td style="text-align:center;"> 85.0% </td>
+   <td style="text-align:center;"> 7,958 </td>
+   <td style="text-align:center;"> 9.7% </td>
+   <td style="text-align:center;"> 4,000 </td>
+   <td style="text-align:center;"> 4.9% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Hispanic </td>
    <td style="text-align:center;"> 21,495 </td>
    <td style="text-align:center;"> 10.8% </td>
+   <td style="text-align:center;"> 14,247 </td>
+   <td style="text-align:center;"> 66.3% </td>
    <td style="text-align:center;"> 3,928 </td>
    <td style="text-align:center;"> 18.3% </td>
-   <td style="text-align:center;"> 17,567 </td>
-   <td style="text-align:center;"> 81.7% </td>
+   <td style="text-align:center;"> 2,142 </td>
+   <td style="text-align:center;"> 10.0% </td>
+   <td style="text-align:center;"> 1,178 </td>
+   <td style="text-align:center;"> 5.5% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> White </td>
    <td style="text-align:center;"> 80,498 </td>
    <td style="text-align:center;"> 40.3% </td>
+   <td style="text-align:center;"> 53,598 </td>
+   <td style="text-align:center;"> 66.6% </td>
    <td style="text-align:center;"> 17,357 </td>
    <td style="text-align:center;"> 21.6% </td>
-   <td style="text-align:center;"> 63,141 </td>
-   <td style="text-align:center;"> 78.4% </td>
+   <td style="text-align:center;"> 6,791 </td>
+   <td style="text-align:center;"> 8.4% </td>
+   <td style="text-align:center;"> 2,752 </td>
+   <td style="text-align:center;"> 3.4% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Other </td>
    <td style="text-align:center;"> 12,135 </td>
    <td style="text-align:center;"> 6.1% </td>
+   <td style="text-align:center;"> 7,102 </td>
+   <td style="text-align:center;"> 58.5% </td>
    <td style="text-align:center;"> 2,895 </td>
    <td style="text-align:center;"> 23.9% </td>
-   <td style="text-align:center;"> 9,240 </td>
-   <td style="text-align:center;"> 76.1% </td>
+   <td style="text-align:center;"> 1,600 </td>
+   <td style="text-align:center;"> 13.2% </td>
+   <td style="text-align:center;"> 538 </td>
+   <td style="text-align:center;"> 4.4% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Missing </td>
    <td style="text-align:center;"> 1,406 </td>
    <td style="text-align:center;"> 0.7% </td>
+   <td style="text-align:center;"> 679 </td>
+   <td style="text-align:center;"> 48.3% </td>
    <td style="text-align:center;"> 422 </td>
    <td style="text-align:center;"> 30.0% </td>
-   <td style="text-align:center;"> 984 </td>
-   <td style="text-align:center;"> 70.0% </td>
+   <td style="text-align:center;"> 235 </td>
+   <td style="text-align:center;"> 16.7% </td>
+   <td style="text-align:center;"> 70 </td>
+   <td style="text-align:center;"> 5.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;font-weight: bold;"> Overall </td>
    <td style="text-align:center;font-weight: bold;"> 199,651 </td>
    <td style="text-align:center;font-weight: bold;"> 100.0% </td>
+   <td style="text-align:center;font-weight: bold;"> 134,534 </td>
+   <td style="text-align:center;font-weight: bold;"> 67.4% </td>
    <td style="text-align:center;font-weight: bold;"> 37,411 </td>
    <td style="text-align:center;font-weight: bold;"> 18.7% </td>
-   <td style="text-align:center;font-weight: bold;"> 162,240 </td>
-   <td style="text-align:center;font-weight: bold;"> 81.3% </td>
+   <td style="text-align:center;font-weight: bold;"> 19,014 </td>
+   <td style="text-align:center;font-weight: bold;"> 9.5% </td>
+   <td style="text-align:center;font-weight: bold;"> 8,692 </td>
+   <td style="text-align:center;font-weight: bold;"> 4.4% </td>
   </tr>
 </tbody>
 </table>
@@ -473,10 +557,14 @@ ul.task-list li input[type="checkbox"] {
    <th style="text-align:center;"> Gender </th>
    <th style="text-align:center;"> All Complaints (N) </th>
    <th style="text-align:center;"> All Complaints (column %) </th>
+   <th style="text-align:center;"> Complaints Petitioned (N) </th>
+   <th style="text-align:center;"> Complaints Petitioned (row %) </th>
    <th style="text-align:center;"> Complaints Diverted (N) </th>
    <th style="text-align:center;"> Complaints Diverted (row %) </th>
-   <th style="text-align:center;"> Complaints Not Diverted (N) </th>
-   <th style="text-align:center;"> Complaints Not Diverted (row %) </th>
+   <th style="text-align:center;"> Complaints Dismissed (N) </th>
+   <th style="text-align:center;"> Complaints Dismissed (row %) </th>
+   <th style="text-align:center;"> Other (N) </th>
+   <th style="text-align:center;"> Other (row %) </th>
   </tr>
  </thead>
 <tbody>
@@ -484,28 +572,40 @@ ul.task-list li input[type="checkbox"] {
    <td style="text-align:center;"> Female </td>
    <td style="text-align:center;"> 65,632 </td>
    <td style="text-align:center;"> 32.9% </td>
+   <td style="text-align:center;"> 40,528 </td>
+   <td style="text-align:center;"> 61.8% </td>
    <td style="text-align:center;"> 14,244 </td>
    <td style="text-align:center;"> 21.7% </td>
-   <td style="text-align:center;"> 51,388 </td>
-   <td style="text-align:center;"> 78.3% </td>
+   <td style="text-align:center;"> 7,488 </td>
+   <td style="text-align:center;"> 11.4% </td>
+   <td style="text-align:center;"> 3,372 </td>
+   <td style="text-align:center;"> 5.1% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Male </td>
    <td style="text-align:center;"> 134,019 </td>
    <td style="text-align:center;"> 67.1% </td>
+   <td style="text-align:center;"> 94,006 </td>
+   <td style="text-align:center;"> 70.1% </td>
    <td style="text-align:center;"> 23,167 </td>
    <td style="text-align:center;"> 17.3% </td>
-   <td style="text-align:center;"> 110,852 </td>
-   <td style="text-align:center;"> 82.7% </td>
+   <td style="text-align:center;"> 11,526 </td>
+   <td style="text-align:center;"> 8.6% </td>
+   <td style="text-align:center;"> 5,320 </td>
+   <td style="text-align:center;"> 4.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;font-weight: bold;"> Overall </td>
    <td style="text-align:center;font-weight: bold;"> 199,651 </td>
    <td style="text-align:center;font-weight: bold;"> 100.0% </td>
+   <td style="text-align:center;font-weight: bold;"> 134,534 </td>
+   <td style="text-align:center;font-weight: bold;"> 67.4% </td>
    <td style="text-align:center;font-weight: bold;"> 37,411 </td>
    <td style="text-align:center;font-weight: bold;"> 18.7% </td>
-   <td style="text-align:center;font-weight: bold;"> 162,240 </td>
-   <td style="text-align:center;font-weight: bold;"> 81.3% </td>
+   <td style="text-align:center;font-weight: bold;"> 19,014 </td>
+   <td style="text-align:center;font-weight: bold;"> 9.5% </td>
+   <td style="text-align:center;font-weight: bold;"> 8,692 </td>
+   <td style="text-align:center;font-weight: bold;"> 4.4% </td>
   </tr>
 </tbody>
 </table>
@@ -528,10 +628,14 @@ ul.task-list li input[type="checkbox"] {
    <th style="text-align:center;"> Age at Intake </th>
    <th style="text-align:center;"> All Complaints (N) </th>
    <th style="text-align:center;"> All Complaints (column %) </th>
+   <th style="text-align:center;"> Complaints Petitioned (N) </th>
+   <th style="text-align:center;"> Complaints Petitioned (row %) </th>
    <th style="text-align:center;"> Complaints Diverted (N) </th>
    <th style="text-align:center;"> Complaints Diverted (row %) </th>
-   <th style="text-align:center;"> Complaints Not Diverted (N) </th>
-   <th style="text-align:center;"> Complaints Not Diverted (row %) </th>
+   <th style="text-align:center;"> Complaints Dismissed (N) </th>
+   <th style="text-align:center;"> Complaints Dismissed (row %) </th>
+   <th style="text-align:center;"> Other (N) </th>
+   <th style="text-align:center;"> Other (row %) </th>
   </tr>
  </thead>
 <tbody>
@@ -539,370 +643,534 @@ ul.task-list li input[type="checkbox"] {
    <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 151 </td>
    <td style="text-align:center;"> 0.1% </td>
+   <td style="text-align:center;"> 140 </td>
+   <td style="text-align:center;"> 92.7% </td>
    <td style="text-align:center;"> 2 </td>
    <td style="text-align:center;"> 1.3% </td>
-   <td style="text-align:center;"> 149 </td>
-   <td style="text-align:center;"> 98.7% </td>
+   <td style="text-align:center;"> 8 </td>
+   <td style="text-align:center;"> 5.3% </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0.7% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 1 </td>
    <td style="text-align:center;"> 84 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0.0% </td>
    <td style="text-align:center;"> 84 </td>
    <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 2 </td>
    <td style="text-align:center;"> 104 </td>
    <td style="text-align:center;"> 0.1% </td>
+   <td style="text-align:center;"> 103 </td>
+   <td style="text-align:center;"> 99.0% </td>
    <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 104 </td>
-   <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 1.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 3 </td>
    <td style="text-align:center;"> 106 </td>
    <td style="text-align:center;"> 0.1% </td>
+   <td style="text-align:center;"> 105 </td>
+   <td style="text-align:center;"> 99.1% </td>
    <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 106 </td>
-   <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0.9% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 4 </td>
    <td style="text-align:center;"> 108 </td>
    <td style="text-align:center;"> 0.1% </td>
+   <td style="text-align:center;"> 100 </td>
+   <td style="text-align:center;"> 92.6% </td>
    <td style="text-align:center;"> 1 </td>
    <td style="text-align:center;"> 0.9% </td>
-   <td style="text-align:center;"> 107 </td>
-   <td style="text-align:center;"> 99.1% </td>
+   <td style="text-align:center;"> 5 </td>
+   <td style="text-align:center;"> 4.6% </td>
+   <td style="text-align:center;"> 2 </td>
+   <td style="text-align:center;"> 1.9% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 5 </td>
    <td style="text-align:center;"> 359 </td>
    <td style="text-align:center;"> 0.2% </td>
+   <td style="text-align:center;"> 240 </td>
+   <td style="text-align:center;"> 66.9% </td>
    <td style="text-align:center;"> 26 </td>
    <td style="text-align:center;"> 7.2% </td>
-   <td style="text-align:center;"> 333 </td>
-   <td style="text-align:center;"> 92.8% </td>
+   <td style="text-align:center;"> 72 </td>
+   <td style="text-align:center;"> 20.1% </td>
+   <td style="text-align:center;"> 21 </td>
+   <td style="text-align:center;"> 5.8% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 6 </td>
    <td style="text-align:center;"> 538 </td>
    <td style="text-align:center;"> 0.3% </td>
+   <td style="text-align:center;"> 341 </td>
+   <td style="text-align:center;"> 63.4% </td>
    <td style="text-align:center;"> 48 </td>
    <td style="text-align:center;"> 8.9% </td>
-   <td style="text-align:center;"> 490 </td>
-   <td style="text-align:center;"> 91.1% </td>
+   <td style="text-align:center;"> 121 </td>
+   <td style="text-align:center;"> 22.5% </td>
+   <td style="text-align:center;"> 28 </td>
+   <td style="text-align:center;"> 5.2% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 7 </td>
    <td style="text-align:center;"> 654 </td>
    <td style="text-align:center;"> 0.3% </td>
+   <td style="text-align:center;"> 407 </td>
+   <td style="text-align:center;"> 62.2% </td>
    <td style="text-align:center;"> 68 </td>
    <td style="text-align:center;"> 10.4% </td>
-   <td style="text-align:center;"> 586 </td>
-   <td style="text-align:center;"> 89.6% </td>
+   <td style="text-align:center;"> 137 </td>
+   <td style="text-align:center;"> 20.9% </td>
+   <td style="text-align:center;"> 42 </td>
+   <td style="text-align:center;"> 6.4% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 8 </td>
    <td style="text-align:center;"> 763 </td>
    <td style="text-align:center;"> 0.4% </td>
+   <td style="text-align:center;"> 436 </td>
+   <td style="text-align:center;"> 57.1% </td>
    <td style="text-align:center;"> 110 </td>
    <td style="text-align:center;"> 14.4% </td>
-   <td style="text-align:center;"> 653 </td>
-   <td style="text-align:center;"> 85.6% </td>
+   <td style="text-align:center;"> 169 </td>
+   <td style="text-align:center;"> 22.1% </td>
+   <td style="text-align:center;"> 48 </td>
+   <td style="text-align:center;"> 6.3% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 9 </td>
    <td style="text-align:center;"> 936 </td>
    <td style="text-align:center;"> 0.5% </td>
+   <td style="text-align:center;"> 506 </td>
+   <td style="text-align:center;"> 54.1% </td>
    <td style="text-align:center;"> 157 </td>
    <td style="text-align:center;"> 16.8% </td>
-   <td style="text-align:center;"> 779 </td>
-   <td style="text-align:center;"> 83.2% </td>
+   <td style="text-align:center;"> 185 </td>
+   <td style="text-align:center;"> 19.8% </td>
+   <td style="text-align:center;"> 88 </td>
+   <td style="text-align:center;"> 9.4% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 10 </td>
    <td style="text-align:center;"> 1,514 </td>
    <td style="text-align:center;"> 0.8% </td>
+   <td style="text-align:center;"> 754 </td>
+   <td style="text-align:center;"> 49.8% </td>
    <td style="text-align:center;"> 310 </td>
    <td style="text-align:center;"> 20.5% </td>
-   <td style="text-align:center;"> 1,204 </td>
-   <td style="text-align:center;"> 79.5% </td>
+   <td style="text-align:center;"> 343 </td>
+   <td style="text-align:center;"> 22.7% </td>
+   <td style="text-align:center;"> 107 </td>
+   <td style="text-align:center;"> 7.1% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 11 </td>
    <td style="text-align:center;"> 3,435 </td>
    <td style="text-align:center;"> 1.7% </td>
+   <td style="text-align:center;"> 1,448 </td>
+   <td style="text-align:center;"> 42.2% </td>
    <td style="text-align:center;"> 1,033 </td>
    <td style="text-align:center;"> 30.1% </td>
-   <td style="text-align:center;"> 2,402 </td>
-   <td style="text-align:center;"> 69.9% </td>
+   <td style="text-align:center;"> 714 </td>
+   <td style="text-align:center;"> 20.8% </td>
+   <td style="text-align:center;"> 240 </td>
+   <td style="text-align:center;"> 7.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 12 </td>
    <td style="text-align:center;"> 7,985 </td>
    <td style="text-align:center;"> 4.0% </td>
+   <td style="text-align:center;"> 3,626 </td>
+   <td style="text-align:center;"> 45.4% </td>
    <td style="text-align:center;"> 2,463 </td>
    <td style="text-align:center;"> 30.8% </td>
-   <td style="text-align:center;"> 5,522 </td>
-   <td style="text-align:center;"> 69.2% </td>
+   <td style="text-align:center;"> 1,450 </td>
+   <td style="text-align:center;"> 18.2% </td>
+   <td style="text-align:center;"> 446 </td>
+   <td style="text-align:center;"> 5.6% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 13 </td>
    <td style="text-align:center;"> 14,571 </td>
    <td style="text-align:center;"> 7.3% </td>
+   <td style="text-align:center;"> 7,674 </td>
+   <td style="text-align:center;"> 52.7% </td>
    <td style="text-align:center;"> 4,173 </td>
    <td style="text-align:center;"> 28.6% </td>
-   <td style="text-align:center;"> 10,398 </td>
-   <td style="text-align:center;"> 71.4% </td>
+   <td style="text-align:center;"> 1,993 </td>
+   <td style="text-align:center;"> 13.7% </td>
+   <td style="text-align:center;"> 731 </td>
+   <td style="text-align:center;"> 5.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 14 </td>
    <td style="text-align:center;"> 24,241 </td>
    <td style="text-align:center;"> 12.1% </td>
+   <td style="text-align:center;"> 14,950 </td>
+   <td style="text-align:center;"> 61.7% </td>
    <td style="text-align:center;"> 5,516 </td>
    <td style="text-align:center;"> 22.8% </td>
-   <td style="text-align:center;"> 18,725 </td>
-   <td style="text-align:center;"> 77.2% </td>
+   <td style="text-align:center;"> 2,623 </td>
+   <td style="text-align:center;"> 10.8% </td>
+   <td style="text-align:center;"> 1,152 </td>
+   <td style="text-align:center;"> 4.8% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 15 </td>
    <td style="text-align:center;"> 35,295 </td>
    <td style="text-align:center;"> 17.7% </td>
+   <td style="text-align:center;"> 23,532 </td>
+   <td style="text-align:center;"> 66.7% </td>
    <td style="text-align:center;"> 6,722 </td>
    <td style="text-align:center;"> 19.0% </td>
-   <td style="text-align:center;"> 28,573 </td>
-   <td style="text-align:center;"> 81.0% </td>
+   <td style="text-align:center;"> 3,404 </td>
+   <td style="text-align:center;"> 9.6% </td>
+   <td style="text-align:center;"> 1,637 </td>
+   <td style="text-align:center;"> 4.6% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 16 </td>
    <td style="text-align:center;"> 46,549 </td>
    <td style="text-align:center;"> 23.3% </td>
+   <td style="text-align:center;"> 32,946 </td>
+   <td style="text-align:center;"> 70.8% </td>
    <td style="text-align:center;"> 7,868 </td>
    <td style="text-align:center;"> 16.9% </td>
-   <td style="text-align:center;"> 38,681 </td>
-   <td style="text-align:center;"> 83.1% </td>
+   <td style="text-align:center;"> 3,780 </td>
+   <td style="text-align:center;"> 8.1% </td>
+   <td style="text-align:center;"> 1,955 </td>
+   <td style="text-align:center;"> 4.2% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 17 </td>
    <td style="text-align:center;"> 54,623 </td>
    <td style="text-align:center;"> 27.4% </td>
+   <td style="text-align:center;"> 40,882 </td>
+   <td style="text-align:center;"> 74.8% </td>
    <td style="text-align:center;"> 8,389 </td>
    <td style="text-align:center;"> 15.4% </td>
-   <td style="text-align:center;"> 46,234 </td>
-   <td style="text-align:center;"> 84.6% </td>
+   <td style="text-align:center;"> 3,511 </td>
+   <td style="text-align:center;"> 6.4% </td>
+   <td style="text-align:center;"> 1,841 </td>
+   <td style="text-align:center;"> 3.4% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 18 </td>
    <td style="text-align:center;"> 6,208 </td>
    <td style="text-align:center;"> 3.1% </td>
+   <td style="text-align:center;"> 5,250 </td>
+   <td style="text-align:center;"> 84.6% </td>
    <td style="text-align:center;"> 407 </td>
    <td style="text-align:center;"> 6.6% </td>
-   <td style="text-align:center;"> 5,801 </td>
-   <td style="text-align:center;"> 93.4% </td>
+   <td style="text-align:center;"> 301 </td>
+   <td style="text-align:center;"> 4.8% </td>
+   <td style="text-align:center;"> 250 </td>
+   <td style="text-align:center;"> 4.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 19 </td>
    <td style="text-align:center;"> 613 </td>
    <td style="text-align:center;"> 0.3% </td>
+   <td style="text-align:center;"> 544 </td>
+   <td style="text-align:center;"> 88.7% </td>
    <td style="text-align:center;"> 3 </td>
    <td style="text-align:center;"> 0.5% </td>
-   <td style="text-align:center;"> 610 </td>
-   <td style="text-align:center;"> 99.5% </td>
+   <td style="text-align:center;"> 19 </td>
+   <td style="text-align:center;"> 3.1% </td>
+   <td style="text-align:center;"> 47 </td>
+   <td style="text-align:center;"> 7.7% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 20 </td>
    <td style="text-align:center;"> 188 </td>
    <td style="text-align:center;"> 0.1% </td>
+   <td style="text-align:center;"> 182 </td>
+   <td style="text-align:center;"> 96.8% </td>
    <td style="text-align:center;"> 1 </td>
    <td style="text-align:center;"> 0.5% </td>
-   <td style="text-align:center;"> 187 </td>
-   <td style="text-align:center;"> 99.5% </td>
+   <td style="text-align:center;"> 2 </td>
+   <td style="text-align:center;"> 1.1% </td>
+   <td style="text-align:center;"> 3 </td>
+   <td style="text-align:center;"> 1.6% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 21 </td>
    <td style="text-align:center;"> 26 </td>
    <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 25 </td>
+   <td style="text-align:center;"> 96.2% </td>
    <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 26 </td>
-   <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 3.8% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 22 </td>
    <td style="text-align:center;"> 19 </td>
    <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 17 </td>
+   <td style="text-align:center;"> 89.5% </td>
    <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 19 </td>
-   <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 5.3% </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 5.3% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 23 </td>
    <td style="text-align:center;"> 8 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0.0% </td>
    <td style="text-align:center;"> 8 </td>
    <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 24 </td>
    <td style="text-align:center;"> 10 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0.0% </td>
    <td style="text-align:center;"> 10 </td>
    <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 25 </td>
    <td style="text-align:center;"> 6 </td>
    <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 5 </td>
+   <td style="text-align:center;"> 83.3% </td>
    <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 6 </td>
-   <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 16.7% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 26 </td>
    <td style="text-align:center;"> 4 </td>
    <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 3 </td>
+   <td style="text-align:center;"> 75.0% </td>
    <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 4 </td>
-   <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 25.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 27 </td>
    <td style="text-align:center;"> 5 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0.0% </td>
    <td style="text-align:center;"> 5 </td>
    <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 28 </td>
    <td style="text-align:center;"> 4 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0.0% </td>
    <td style="text-align:center;"> 4 </td>
    <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 29 </td>
    <td style="text-align:center;"> 2 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0.0% </td>
    <td style="text-align:center;"> 2 </td>
    <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 30 </td>
    <td style="text-align:center;"> 2 </td>
    <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 50.0% </td>
    <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 2 </td>
-   <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 50.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 31 </td>
    <td style="text-align:center;"> 2 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0.0% </td>
    <td style="text-align:center;"> 2 </td>
    <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 32 </td>
    <td style="text-align:center;"> 3 </td>
    <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 2 </td>
+   <td style="text-align:center;"> 66.7% </td>
    <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 3 </td>
-   <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 33.3% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 33 </td>
    <td style="text-align:center;"> 4 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0.0% </td>
    <td style="text-align:center;"> 4 </td>
    <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 34 </td>
    <td style="text-align:center;"> 2 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0.0% </td>
    <td style="text-align:center;"> 2 </td>
    <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 35 </td>
    <td style="text-align:center;"> 7 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0.0% </td>
    <td style="text-align:center;"> 7 </td>
    <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 36 </td>
    <td style="text-align:center;"> 2 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0.0% </td>
    <td style="text-align:center;"> 2 </td>
    <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 37 </td>
    <td style="text-align:center;"> 2 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0.0% </td>
    <td style="text-align:center;"> 2 </td>
    <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 38 </td>
    <td style="text-align:center;"> 1 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0.0% </td>
    <td style="text-align:center;"> 1 </td>
    <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 39 </td>
    <td style="text-align:center;"> 1 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0.0% </td>
    <td style="text-align:center;"> 1 </td>
    <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 41 </td>
    <td style="text-align:center;"> 1 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0.0% </td>
    <td style="text-align:center;"> 1 </td>
    <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 43 </td>
@@ -910,35 +1178,51 @@ ul.task-list li input[type="checkbox"] {
    <td style="text-align:center;"> 0.0% </td>
    <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
    <td style="text-align:center;"> 1 </td>
    <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 44 </td>
    <td style="text-align:center;"> 4 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 0 </td>
-   <td style="text-align:center;"> 0.0% </td>
    <td style="text-align:center;"> 4 </td>
    <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;font-weight: bold;"> NA </td>
    <td style="text-align:center;font-weight: bold;"> 510 </td>
    <td style="text-align:center;font-weight: bold;"> 0.3% </td>
+   <td style="text-align:center;font-weight: bold;"> 176 </td>
+   <td style="text-align:center;font-weight: bold;"> 34.5% </td>
    <td style="text-align:center;font-weight: bold;"> 114 </td>
    <td style="text-align:center;font-weight: bold;"> 22.4% </td>
-   <td style="text-align:center;font-weight: bold;"> 396 </td>
-   <td style="text-align:center;font-weight: bold;"> 77.6% </td>
+   <td style="text-align:center;font-weight: bold;"> 173 </td>
+   <td style="text-align:center;font-weight: bold;"> 33.9% </td>
+   <td style="text-align:center;font-weight: bold;"> 47 </td>
+   <td style="text-align:center;font-weight: bold;"> 9.2% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Overall </td>
    <td style="text-align:center;"> 199,651 </td>
    <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 134,534 </td>
+   <td style="text-align:center;"> 67.4% </td>
    <td style="text-align:center;"> 37,411 </td>
    <td style="text-align:center;"> 18.7% </td>
-   <td style="text-align:center;"> 162,240 </td>
-   <td style="text-align:center;"> 81.3% </td>
+   <td style="text-align:center;"> 19,014 </td>
+   <td style="text-align:center;"> 9.5% </td>
+   <td style="text-align:center;"> 8,692 </td>
+   <td style="text-align:center;"> 4.4% </td>
   </tr>
 </tbody>
 </table>
@@ -959,10 +1243,14 @@ ul.task-list li input[type="checkbox"] {
    <th style="text-align:center;"> Offense Description </th>
    <th style="text-align:center;"> All Complaints (N) </th>
    <th style="text-align:center;"> All Complaints (column %) </th>
+   <th style="text-align:center;"> Complaints Petitioned (N) </th>
+   <th style="text-align:center;"> Complaints Petitioned (row %) </th>
    <th style="text-align:center;"> Complaints Diverted (N) </th>
    <th style="text-align:center;"> Complaints Diverted (row %) </th>
-   <th style="text-align:center;"> Complaints Not Diverted (N) </th>
-   <th style="text-align:center;"> Complaints Not Diverted (row %) </th>
+   <th style="text-align:center;"> Complaints Dismissed (N) </th>
+   <th style="text-align:center;"> Complaints Dismissed (row %) </th>
+   <th style="text-align:center;"> Other (N) </th>
+   <th style="text-align:center;"> Other (row %) </th>
   </tr>
  </thead>
 <tbody>
@@ -970,91 +1258,131 @@ ul.task-list li input[type="checkbox"] {
    <td style="text-align:center;"> Class 1 Misdemeanor Against Persons </td>
    <td style="text-align:center;"> 30,775 </td>
    <td style="text-align:center;"> 15.4% </td>
+   <td style="text-align:center;"> 15,776 </td>
+   <td style="text-align:center;"> 51.3% </td>
    <td style="text-align:center;"> 8,688 </td>
    <td style="text-align:center;"> 28.2% </td>
-   <td style="text-align:center;"> 22,087 </td>
-   <td style="text-align:center;"> 71.8% </td>
+   <td style="text-align:center;"> 5,172 </td>
+   <td style="text-align:center;"> 16.8% </td>
+   <td style="text-align:center;"> 1,139 </td>
+   <td style="text-align:center;"> 3.7% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Court Order Violation </td>
    <td style="text-align:center;"> 15,172 </td>
    <td style="text-align:center;"> 7.6% </td>
+   <td style="text-align:center;"> 14,443 </td>
+   <td style="text-align:center;"> 95.2% </td>
    <td style="text-align:center;"> 7 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 15,165 </td>
-   <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 88 </td>
+   <td style="text-align:center;"> 0.6% </td>
+   <td style="text-align:center;"> 634 </td>
+   <td style="text-align:center;"> 4.2% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Felony against Persons </td>
    <td style="text-align:center;"> 12,849 </td>
    <td style="text-align:center;"> 6.4% </td>
+   <td style="text-align:center;"> 11,457 </td>
+   <td style="text-align:center;"> 89.2% </td>
    <td style="text-align:center;"> 798 </td>
    <td style="text-align:center;"> 6.2% </td>
-   <td style="text-align:center;"> 12,051 </td>
-   <td style="text-align:center;"> 93.8% </td>
+   <td style="text-align:center;"> 444 </td>
+   <td style="text-align:center;"> 3.5% </td>
+   <td style="text-align:center;"> 150 </td>
+   <td style="text-align:center;"> 1.2% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Felony Weapons and Felony Narcotics Distribution </td>
    <td style="text-align:center;"> 1,639 </td>
    <td style="text-align:center;"> 0.8% </td>
+   <td style="text-align:center;"> 1,495 </td>
+   <td style="text-align:center;"> 91.2% </td>
    <td style="text-align:center;"> 90 </td>
    <td style="text-align:center;"> 5.5% </td>
-   <td style="text-align:center;"> 1,549 </td>
-   <td style="text-align:center;"> 94.5% </td>
+   <td style="text-align:center;"> 39 </td>
+   <td style="text-align:center;"> 2.4% </td>
+   <td style="text-align:center;"> 15 </td>
+   <td style="text-align:center;"> 0.9% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Other Class 1 Misdemeanor </td>
    <td style="text-align:center;"> 39,205 </td>
    <td style="text-align:center;"> 19.6% </td>
+   <td style="text-align:center;"> 20,776 </td>
+   <td style="text-align:center;"> 53.0% </td>
    <td style="text-align:center;"> 12,378 </td>
    <td style="text-align:center;"> 31.6% </td>
-   <td style="text-align:center;"> 26,827 </td>
-   <td style="text-align:center;"> 68.4% </td>
+   <td style="text-align:center;"> 4,238 </td>
+   <td style="text-align:center;"> 10.8% </td>
+   <td style="text-align:center;"> 1,813 </td>
+   <td style="text-align:center;"> 4.6% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Other Felony </td>
    <td style="text-align:center;"> 18,822 </td>
    <td style="text-align:center;"> 9.4% </td>
+   <td style="text-align:center;"> 15,623 </td>
+   <td style="text-align:center;"> 83.0% </td>
    <td style="text-align:center;"> 1,828 </td>
    <td style="text-align:center;"> 9.7% </td>
-   <td style="text-align:center;"> 16,994 </td>
-   <td style="text-align:center;"> 90.3% </td>
+   <td style="text-align:center;"> 878 </td>
+   <td style="text-align:center;"> 4.7% </td>
+   <td style="text-align:center;"> 493 </td>
+   <td style="text-align:center;"> 2.6% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Other Violation </td>
    <td style="text-align:center;"> 29,137 </td>
    <td style="text-align:center;"> 14.6% </td>
+   <td style="text-align:center;"> 20,720 </td>
+   <td style="text-align:center;"> 71.1% </td>
    <td style="text-align:center;"> 5,898 </td>
    <td style="text-align:center;"> 20.2% </td>
-   <td style="text-align:center;"> 23,239 </td>
-   <td style="text-align:center;"> 79.8% </td>
+   <td style="text-align:center;"> 1,092 </td>
+   <td style="text-align:center;"> 3.7% </td>
+   <td style="text-align:center;"> 1,427 </td>
+   <td style="text-align:center;"> 4.9% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Prob./Parole Violation </td>
    <td style="text-align:center;"> 12,435 </td>
    <td style="text-align:center;"> 6.2% </td>
+   <td style="text-align:center;"> 12,381 </td>
+   <td style="text-align:center;"> 99.6% </td>
    <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 12,435 </td>
-   <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 41 </td>
+   <td style="text-align:center;"> 0.3% </td>
+   <td style="text-align:center;"> 13 </td>
+   <td style="text-align:center;"> 0.1% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Status Offense </td>
    <td style="text-align:center;"> 39,617 </td>
    <td style="text-align:center;"> 19.8% </td>
+   <td style="text-align:center;"> 21,863 </td>
+   <td style="text-align:center;"> 55.2% </td>
    <td style="text-align:center;"> 7,724 </td>
    <td style="text-align:center;"> 19.5% </td>
-   <td style="text-align:center;"> 31,893 </td>
-   <td style="text-align:center;"> 80.5% </td>
+   <td style="text-align:center;"> 7,022 </td>
+   <td style="text-align:center;"> 17.7% </td>
+   <td style="text-align:center;"> 3,008 </td>
+   <td style="text-align:center;"> 7.6% </td>
   </tr>
   <tr>
    <td style="text-align:center;font-weight: bold;"> Overall </td>
    <td style="text-align:center;font-weight: bold;"> 199,651 </td>
    <td style="text-align:center;font-weight: bold;"> 100.0% </td>
+   <td style="text-align:center;font-weight: bold;"> 134,534 </td>
+   <td style="text-align:center;font-weight: bold;"> 67.4% </td>
    <td style="text-align:center;font-weight: bold;"> 37,411 </td>
    <td style="text-align:center;font-weight: bold;"> 18.7% </td>
-   <td style="text-align:center;font-weight: bold;"> 162,240 </td>
-   <td style="text-align:center;font-weight: bold;"> 81.3% </td>
+   <td style="text-align:center;font-weight: bold;"> 19,014 </td>
+   <td style="text-align:center;font-weight: bold;"> 9.5% </td>
+   <td style="text-align:center;font-weight: bold;"> 8,692 </td>
+   <td style="text-align:center;font-weight: bold;"> 4.4% </td>
   </tr>
 </tbody>
 </table>
@@ -1075,10 +1403,14 @@ ul.task-list li input[type="checkbox"] {
    <th style="text-align:center;"> Status Offense Description </th>
    <th style="text-align:center;"> All Complaints (N) </th>
    <th style="text-align:center;"> All Complaints (column %) </th>
+   <th style="text-align:center;"> Complaints Petitioned (N) </th>
+   <th style="text-align:center;"> Complaints Petitioned (row %) </th>
    <th style="text-align:center;"> Complaints Diverted (N) </th>
    <th style="text-align:center;"> Complaints Diverted (row %) </th>
-   <th style="text-align:center;"> Complaints Not Diverted (N) </th>
-   <th style="text-align:center;"> Complaints Not Diverted (row %) </th>
+   <th style="text-align:center;"> Complaints Dismissed (N) </th>
+   <th style="text-align:center;"> Complaints Dismissed (row %) </th>
+   <th style="text-align:center;"> Other (N) </th>
+   <th style="text-align:center;"> Other (row %) </th>
   </tr>
  </thead>
 <tbody>
@@ -1086,37 +1418,53 @@ ul.task-list li input[type="checkbox"] {
    <td style="text-align:center;"> CHINS </td>
    <td style="text-align:center;"> 10,369 </td>
    <td style="text-align:center;"> 5.2% </td>
+   <td style="text-align:center;"> 6,129 </td>
+   <td style="text-align:center;"> 59.1% </td>
    <td style="text-align:center;"> 1,057 </td>
    <td style="text-align:center;"> 10.2% </td>
-   <td style="text-align:center;"> 9,312 </td>
-   <td style="text-align:center;"> 89.8% </td>
+   <td style="text-align:center;"> 1,551 </td>
+   <td style="text-align:center;"> 15.0% </td>
+   <td style="text-align:center;"> 1,632 </td>
+   <td style="text-align:center;"> 15.7% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> CHINSup </td>
    <td style="text-align:center;"> 23,350 </td>
    <td style="text-align:center;"> 11.7% </td>
+   <td style="text-align:center;"> 11,827 </td>
+   <td style="text-align:center;"> 50.7% </td>
    <td style="text-align:center;"> 5,283 </td>
    <td style="text-align:center;"> 22.6% </td>
-   <td style="text-align:center;"> 18,067 </td>
-   <td style="text-align:center;"> 77.4% </td>
+   <td style="text-align:center;"> 4,972 </td>
+   <td style="text-align:center;"> 21.3% </td>
+   <td style="text-align:center;"> 1,268 </td>
+   <td style="text-align:center;"> 5.4% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Other Status Offense </td>
    <td style="text-align:center;"> 5,898 </td>
    <td style="text-align:center;"> 3.0% </td>
+   <td style="text-align:center;"> 3,907 </td>
+   <td style="text-align:center;"> 66.2% </td>
    <td style="text-align:center;"> 1,384 </td>
    <td style="text-align:center;"> 23.5% </td>
-   <td style="text-align:center;"> 4,514 </td>
-   <td style="text-align:center;"> 76.5% </td>
+   <td style="text-align:center;"> 499 </td>
+   <td style="text-align:center;"> 8.5% </td>
+   <td style="text-align:center;"> 108 </td>
+   <td style="text-align:center;"> 1.8% </td>
   </tr>
   <tr>
    <td style="text-align:center;font-weight: bold;"> Overall </td>
    <td style="text-align:center;font-weight: bold;"> 39,617 </td>
    <td style="text-align:center;font-weight: bold;"> 19.8% </td>
+   <td style="text-align:center;font-weight: bold;"> 21,863 </td>
+   <td style="text-align:center;font-weight: bold;"> 55.2% </td>
    <td style="text-align:center;font-weight: bold;"> 7,724 </td>
    <td style="text-align:center;font-weight: bold;"> 19.5% </td>
-   <td style="text-align:center;font-weight: bold;"> 31,893 </td>
-   <td style="text-align:center;font-weight: bold;"> 80.5% </td>
+   <td style="text-align:center;font-weight: bold;"> 7,022 </td>
+   <td style="text-align:center;font-weight: bold;"> 17.7% </td>
+   <td style="text-align:center;font-weight: bold;"> 3,008 </td>
+   <td style="text-align:center;font-weight: bold;"> 7.6% </td>
   </tr>
 </tbody>
 </table>
@@ -1137,10 +1485,14 @@ ul.task-list li input[type="checkbox"] {
    <th style="text-align:center;"> CSU </th>
    <th style="text-align:center;"> All Complaints (N) </th>
    <th style="text-align:center;"> All Complaints (column %) </th>
+   <th style="text-align:center;"> Complaints Petitioned (N) </th>
+   <th style="text-align:center;"> Complaints Petitioned (row %) </th>
    <th style="text-align:center;"> Complaints Diverted (N) </th>
    <th style="text-align:center;"> Complaints Diverted (row %) </th>
-   <th style="text-align:center;"> Complaints Not Diverted (N) </th>
-   <th style="text-align:center;"> Complaints Not Diverted (row %) </th>
+   <th style="text-align:center;"> Complaints Dismissed (N) </th>
+   <th style="text-align:center;"> Complaints Dismissed (row %) </th>
+   <th style="text-align:center;"> Other (N) </th>
+   <th style="text-align:center;"> Other (row %) </th>
   </tr>
  </thead>
 <tbody>
@@ -1148,298 +1500,430 @@ ul.task-list li input[type="checkbox"] {
    <td style="text-align:center;"> 001 </td>
    <td style="text-align:center;"> 4,925 </td>
    <td style="text-align:center;"> 2.5% </td>
+   <td style="text-align:center;"> 3,016 </td>
+   <td style="text-align:center;"> 61.2% </td>
    <td style="text-align:center;"> 430 </td>
    <td style="text-align:center;"> 8.7% </td>
-   <td style="text-align:center;"> 4,495 </td>
-   <td style="text-align:center;"> 91.3% </td>
+   <td style="text-align:center;"> 809 </td>
+   <td style="text-align:center;"> 16.4% </td>
+   <td style="text-align:center;"> 670 </td>
+   <td style="text-align:center;"> 13.6% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 002 </td>
    <td style="text-align:center;"> 7,166 </td>
    <td style="text-align:center;"> 3.6% </td>
+   <td style="text-align:center;"> 4,833 </td>
+   <td style="text-align:center;"> 67.4% </td>
    <td style="text-align:center;"> 1,379 </td>
    <td style="text-align:center;"> 19.2% </td>
-   <td style="text-align:center;"> 5,787 </td>
-   <td style="text-align:center;"> 80.8% </td>
+   <td style="text-align:center;"> 724 </td>
+   <td style="text-align:center;"> 10.1% </td>
+   <td style="text-align:center;"> 230 </td>
+   <td style="text-align:center;"> 3.2% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 003 </td>
    <td style="text-align:center;"> 3,230 </td>
    <td style="text-align:center;"> 1.6% </td>
+   <td style="text-align:center;"> 2,300 </td>
+   <td style="text-align:center;"> 71.2% </td>
    <td style="text-align:center;"> 545 </td>
    <td style="text-align:center;"> 16.9% </td>
-   <td style="text-align:center;"> 2,685 </td>
-   <td style="text-align:center;"> 83.1% </td>
+   <td style="text-align:center;"> 120 </td>
+   <td style="text-align:center;"> 3.7% </td>
+   <td style="text-align:center;"> 265 </td>
+   <td style="text-align:center;"> 8.2% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 004 </td>
    <td style="text-align:center;"> 9,805 </td>
    <td style="text-align:center;"> 4.9% </td>
+   <td style="text-align:center;"> 5,664 </td>
+   <td style="text-align:center;"> 57.8% </td>
    <td style="text-align:center;"> 1,162 </td>
    <td style="text-align:center;"> 11.9% </td>
-   <td style="text-align:center;"> 8,643 </td>
-   <td style="text-align:center;"> 88.1% </td>
+   <td style="text-align:center;"> 1,987 </td>
+   <td style="text-align:center;"> 20.3% </td>
+   <td style="text-align:center;"> 992 </td>
+   <td style="text-align:center;"> 10.1% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 005 </td>
    <td style="text-align:center;"> 2,887 </td>
    <td style="text-align:center;"> 1.4% </td>
+   <td style="text-align:center;"> 1,922 </td>
+   <td style="text-align:center;"> 66.6% </td>
    <td style="text-align:center;"> 830 </td>
    <td style="text-align:center;"> 28.7% </td>
-   <td style="text-align:center;"> 2,057 </td>
-   <td style="text-align:center;"> 71.3% </td>
+   <td style="text-align:center;"> 102 </td>
+   <td style="text-align:center;"> 3.5% </td>
+   <td style="text-align:center;"> 33 </td>
+   <td style="text-align:center;"> 1.1% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 006 </td>
    <td style="text-align:center;"> 2,996 </td>
    <td style="text-align:center;"> 1.5% </td>
+   <td style="text-align:center;"> 2,479 </td>
+   <td style="text-align:center;"> 82.7% </td>
    <td style="text-align:center;"> 182 </td>
    <td style="text-align:center;"> 6.1% </td>
-   <td style="text-align:center;"> 2,814 </td>
-   <td style="text-align:center;"> 93.9% </td>
+   <td style="text-align:center;"> 317 </td>
+   <td style="text-align:center;"> 10.6% </td>
+   <td style="text-align:center;"> 18 </td>
+   <td style="text-align:center;"> 0.6% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 007 </td>
    <td style="text-align:center;"> 7,891 </td>
    <td style="text-align:center;"> 4.0% </td>
+   <td style="text-align:center;"> 6,577 </td>
+   <td style="text-align:center;"> 83.3% </td>
    <td style="text-align:center;"> 357 </td>
    <td style="text-align:center;"> 4.5% </td>
-   <td style="text-align:center;"> 7,534 </td>
-   <td style="text-align:center;"> 95.5% </td>
+   <td style="text-align:center;"> 459 </td>
+   <td style="text-align:center;"> 5.8% </td>
+   <td style="text-align:center;"> 498 </td>
+   <td style="text-align:center;"> 6.3% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 008 </td>
    <td style="text-align:center;"> 5,441 </td>
    <td style="text-align:center;"> 2.7% </td>
+   <td style="text-align:center;"> 4,235 </td>
+   <td style="text-align:center;"> 77.8% </td>
    <td style="text-align:center;"> 352 </td>
    <td style="text-align:center;"> 6.5% </td>
-   <td style="text-align:center;"> 5,089 </td>
-   <td style="text-align:center;"> 93.5% </td>
+   <td style="text-align:center;"> 445 </td>
+   <td style="text-align:center;"> 8.2% </td>
+   <td style="text-align:center;"> 409 </td>
+   <td style="text-align:center;"> 7.5% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 009 </td>
    <td style="text-align:center;"> 5,202 </td>
    <td style="text-align:center;"> 2.6% </td>
+   <td style="text-align:center;"> 3,384 </td>
+   <td style="text-align:center;"> 65.1% </td>
    <td style="text-align:center;"> 1,308 </td>
    <td style="text-align:center;"> 25.1% </td>
-   <td style="text-align:center;"> 3,894 </td>
-   <td style="text-align:center;"> 74.9% </td>
+   <td style="text-align:center;"> 392 </td>
+   <td style="text-align:center;"> 7.5% </td>
+   <td style="text-align:center;"> 118 </td>
+   <td style="text-align:center;"> 2.3% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 010 </td>
    <td style="text-align:center;"> 3,905 </td>
    <td style="text-align:center;"> 2.0% </td>
+   <td style="text-align:center;"> 2,897 </td>
+   <td style="text-align:center;"> 74.2% </td>
    <td style="text-align:center;"> 849 </td>
    <td style="text-align:center;"> 21.7% </td>
-   <td style="text-align:center;"> 3,056 </td>
-   <td style="text-align:center;"> 78.3% </td>
+   <td style="text-align:center;"> 119 </td>
+   <td style="text-align:center;"> 3.0% </td>
+   <td style="text-align:center;"> 40 </td>
+   <td style="text-align:center;"> 1.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 011 </td>
    <td style="text-align:center;"> 4,798 </td>
    <td style="text-align:center;"> 2.4% </td>
+   <td style="text-align:center;"> 3,910 </td>
+   <td style="text-align:center;"> 81.5% </td>
    <td style="text-align:center;"> 402 </td>
    <td style="text-align:center;"> 8.4% </td>
-   <td style="text-align:center;"> 4,396 </td>
-   <td style="text-align:center;"> 91.6% </td>
+   <td style="text-align:center;"> 362 </td>
+   <td style="text-align:center;"> 7.5% </td>
+   <td style="text-align:center;"> 124 </td>
+   <td style="text-align:center;"> 2.6% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 012 </td>
    <td style="text-align:center;"> 11,382 </td>
    <td style="text-align:center;"> 5.7% </td>
+   <td style="text-align:center;"> 6,065 </td>
+   <td style="text-align:center;"> 53.3% </td>
    <td style="text-align:center;"> 3,170 </td>
    <td style="text-align:center;"> 27.9% </td>
-   <td style="text-align:center;"> 8,212 </td>
-   <td style="text-align:center;"> 72.1% </td>
+   <td style="text-align:center;"> 1,943 </td>
+   <td style="text-align:center;"> 17.1% </td>
+   <td style="text-align:center;"> 204 </td>
+   <td style="text-align:center;"> 1.8% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 013 </td>
    <td style="text-align:center;"> 5,667 </td>
    <td style="text-align:center;"> 2.8% </td>
+   <td style="text-align:center;"> 4,204 </td>
+   <td style="text-align:center;"> 74.2% </td>
    <td style="text-align:center;"> 1,031 </td>
    <td style="text-align:center;"> 18.2% </td>
-   <td style="text-align:center;"> 4,636 </td>
-   <td style="text-align:center;"> 81.8% </td>
+   <td style="text-align:center;"> 258 </td>
+   <td style="text-align:center;"> 4.6% </td>
+   <td style="text-align:center;"> 174 </td>
+   <td style="text-align:center;"> 3.1% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 014 </td>
    <td style="text-align:center;"> 8,239 </td>
    <td style="text-align:center;"> 4.1% </td>
+   <td style="text-align:center;"> 5,842 </td>
+   <td style="text-align:center;"> 70.9% </td>
    <td style="text-align:center;"> 1,591 </td>
    <td style="text-align:center;"> 19.3% </td>
-   <td style="text-align:center;"> 6,648 </td>
-   <td style="text-align:center;"> 80.7% </td>
+   <td style="text-align:center;"> 724 </td>
+   <td style="text-align:center;"> 8.8% </td>
+   <td style="text-align:center;"> 82 </td>
+   <td style="text-align:center;"> 1.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 015 </td>
    <td style="text-align:center;"> 11,298 </td>
    <td style="text-align:center;"> 5.7% </td>
+   <td style="text-align:center;"> 6,549 </td>
+   <td style="text-align:center;"> 58.0% </td>
    <td style="text-align:center;"> 2,432 </td>
    <td style="text-align:center;"> 21.5% </td>
-   <td style="text-align:center;"> 8,866 </td>
-   <td style="text-align:center;"> 78.5% </td>
+   <td style="text-align:center;"> 1,557 </td>
+   <td style="text-align:center;"> 13.8% </td>
+   <td style="text-align:center;"> 760 </td>
+   <td style="text-align:center;"> 6.7% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 016 </td>
    <td style="text-align:center;"> 7,149 </td>
    <td style="text-align:center;"> 3.6% </td>
+   <td style="text-align:center;"> 4,969 </td>
+   <td style="text-align:center;"> 69.5% </td>
    <td style="text-align:center;"> 1,627 </td>
    <td style="text-align:center;"> 22.8% </td>
-   <td style="text-align:center;"> 5,522 </td>
-   <td style="text-align:center;"> 77.2% </td>
+   <td style="text-align:center;"> 488 </td>
+   <td style="text-align:center;"> 6.8% </td>
+   <td style="text-align:center;"> 65 </td>
+   <td style="text-align:center;"> 0.9% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 017 </td>
    <td style="text-align:center;"> 3,490 </td>
    <td style="text-align:center;"> 1.7% </td>
+   <td style="text-align:center;"> 2,803 </td>
+   <td style="text-align:center;"> 80.3% </td>
    <td style="text-align:center;"> 533 </td>
    <td style="text-align:center;"> 15.3% </td>
-   <td style="text-align:center;"> 2,957 </td>
-   <td style="text-align:center;"> 84.7% </td>
+   <td style="text-align:center;"> 118 </td>
+   <td style="text-align:center;"> 3.4% </td>
+   <td style="text-align:center;"> 36 </td>
+   <td style="text-align:center;"> 1.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 018 </td>
    <td style="text-align:center;"> 2,738 </td>
    <td style="text-align:center;"> 1.4% </td>
+   <td style="text-align:center;"> 1,672 </td>
+   <td style="text-align:center;"> 61.1% </td>
    <td style="text-align:center;"> 346 </td>
    <td style="text-align:center;"> 12.6% </td>
-   <td style="text-align:center;"> 2,392 </td>
-   <td style="text-align:center;"> 87.4% </td>
+   <td style="text-align:center;"> 453 </td>
+   <td style="text-align:center;"> 16.5% </td>
+   <td style="text-align:center;"> 267 </td>
+   <td style="text-align:center;"> 9.8% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 019 </td>
    <td style="text-align:center;"> 13,898 </td>
    <td style="text-align:center;"> 7.0% </td>
+   <td style="text-align:center;"> 9,085 </td>
+   <td style="text-align:center;"> 65.4% </td>
    <td style="text-align:center;"> 1,628 </td>
    <td style="text-align:center;"> 11.7% </td>
-   <td style="text-align:center;"> 12,270 </td>
-   <td style="text-align:center;"> 88.3% </td>
+   <td style="text-align:center;"> 1,237 </td>
+   <td style="text-align:center;"> 8.9% </td>
+   <td style="text-align:center;"> 1,948 </td>
+   <td style="text-align:center;"> 14.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 020 </td>
    <td style="text-align:center;"> 6,716 </td>
    <td style="text-align:center;"> 3.4% </td>
+   <td style="text-align:center;"> 3,225 </td>
+   <td style="text-align:center;"> 48.0% </td>
    <td style="text-align:center;"> 2,153 </td>
    <td style="text-align:center;"> 32.1% </td>
-   <td style="text-align:center;"> 4,563 </td>
-   <td style="text-align:center;"> 67.9% </td>
+   <td style="text-align:center;"> 1,068 </td>
+   <td style="text-align:center;"> 15.9% </td>
+   <td style="text-align:center;"> 270 </td>
+   <td style="text-align:center;"> 4.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 021 </td>
    <td style="text-align:center;"> 2,357 </td>
    <td style="text-align:center;"> 1.2% </td>
+   <td style="text-align:center;"> 1,151 </td>
+   <td style="text-align:center;"> 48.8% </td>
    <td style="text-align:center;"> 616 </td>
    <td style="text-align:center;"> 26.1% </td>
-   <td style="text-align:center;"> 1,741 </td>
-   <td style="text-align:center;"> 73.9% </td>
+   <td style="text-align:center;"> 428 </td>
+   <td style="text-align:center;"> 18.2% </td>
+   <td style="text-align:center;"> 162 </td>
+   <td style="text-align:center;"> 6.9% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 022 </td>
    <td style="text-align:center;"> 6,335 </td>
    <td style="text-align:center;"> 3.2% </td>
+   <td style="text-align:center;"> 5,341 </td>
+   <td style="text-align:center;"> 84.3% </td>
    <td style="text-align:center;"> 798 </td>
    <td style="text-align:center;"> 12.6% </td>
-   <td style="text-align:center;"> 5,537 </td>
-   <td style="text-align:center;"> 87.4% </td>
+   <td style="text-align:center;"> 159 </td>
+   <td style="text-align:center;"> 2.5% </td>
+   <td style="text-align:center;"> 37 </td>
+   <td style="text-align:center;"> 0.6% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 023 </td>
    <td style="text-align:center;"> 9,087 </td>
    <td style="text-align:center;"> 4.6% </td>
+   <td style="text-align:center;"> 6,307 </td>
+   <td style="text-align:center;"> 69.4% </td>
    <td style="text-align:center;"> 1,667 </td>
    <td style="text-align:center;"> 18.3% </td>
-   <td style="text-align:center;"> 7,420 </td>
-   <td style="text-align:center;"> 81.7% </td>
+   <td style="text-align:center;"> 812 </td>
+   <td style="text-align:center;"> 8.9% </td>
+   <td style="text-align:center;"> 301 </td>
+   <td style="text-align:center;"> 3.3% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 024 </td>
    <td style="text-align:center;"> 7,876 </td>
    <td style="text-align:center;"> 3.9% </td>
+   <td style="text-align:center;"> 6,861 </td>
+   <td style="text-align:center;"> 87.1% </td>
    <td style="text-align:center;"> 785 </td>
    <td style="text-align:center;"> 10.0% </td>
-   <td style="text-align:center;"> 7,091 </td>
-   <td style="text-align:center;"> 90.0% </td>
+   <td style="text-align:center;"> 110 </td>
+   <td style="text-align:center;"> 1.4% </td>
+   <td style="text-align:center;"> 120 </td>
+   <td style="text-align:center;"> 1.5% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 025 </td>
    <td style="text-align:center;"> 6,153 </td>
    <td style="text-align:center;"> 3.1% </td>
+   <td style="text-align:center;"> 4,529 </td>
+   <td style="text-align:center;"> 73.6% </td>
    <td style="text-align:center;"> 779 </td>
    <td style="text-align:center;"> 12.7% </td>
-   <td style="text-align:center;"> 5,374 </td>
-   <td style="text-align:center;"> 87.3% </td>
+   <td style="text-align:center;"> 628 </td>
+   <td style="text-align:center;"> 10.2% </td>
+   <td style="text-align:center;"> 217 </td>
+   <td style="text-align:center;"> 3.5% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 026 </td>
    <td style="text-align:center;"> 9,520 </td>
    <td style="text-align:center;"> 4.8% </td>
+   <td style="text-align:center;"> 7,346 </td>
+   <td style="text-align:center;"> 77.2% </td>
    <td style="text-align:center;"> 1,706 </td>
    <td style="text-align:center;"> 17.9% </td>
-   <td style="text-align:center;"> 7,814 </td>
-   <td style="text-align:center;"> 82.1% </td>
+   <td style="text-align:center;"> 269 </td>
+   <td style="text-align:center;"> 2.8% </td>
+   <td style="text-align:center;"> 199 </td>
+   <td style="text-align:center;"> 2.1% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 027 </td>
    <td style="text-align:center;"> 6,248 </td>
    <td style="text-align:center;"> 3.1% </td>
+   <td style="text-align:center;"> 3,769 </td>
+   <td style="text-align:center;"> 60.3% </td>
    <td style="text-align:center;"> 2,152 </td>
    <td style="text-align:center;"> 34.4% </td>
-   <td style="text-align:center;"> 4,096 </td>
-   <td style="text-align:center;"> 65.6% </td>
+   <td style="text-align:center;"> 196 </td>
+   <td style="text-align:center;"> 3.1% </td>
+   <td style="text-align:center;"> 131 </td>
+   <td style="text-align:center;"> 2.1% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 028 </td>
    <td style="text-align:center;"> 2,331 </td>
    <td style="text-align:center;"> 1.2% </td>
+   <td style="text-align:center;"> 1,496 </td>
+   <td style="text-align:center;"> 64.2% </td>
    <td style="text-align:center;"> 674 </td>
    <td style="text-align:center;"> 28.9% </td>
-   <td style="text-align:center;"> 1,657 </td>
-   <td style="text-align:center;"> 71.1% </td>
+   <td style="text-align:center;"> 131 </td>
+   <td style="text-align:center;"> 5.6% </td>
+   <td style="text-align:center;"> 30 </td>
+   <td style="text-align:center;"> 1.3% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 029 </td>
    <td style="text-align:center;"> 3,537 </td>
    <td style="text-align:center;"> 1.8% </td>
+   <td style="text-align:center;"> 2,618 </td>
+   <td style="text-align:center;"> 74.0% </td>
    <td style="text-align:center;"> 721 </td>
    <td style="text-align:center;"> 20.4% </td>
-   <td style="text-align:center;"> 2,816 </td>
-   <td style="text-align:center;"> 79.6% </td>
+   <td style="text-align:center;"> 176 </td>
+   <td style="text-align:center;"> 5.0% </td>
+   <td style="text-align:center;"> 22 </td>
+   <td style="text-align:center;"> 0.6% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 02A </td>
    <td style="text-align:center;"> 1,335 </td>
    <td style="text-align:center;"> 0.7% </td>
+   <td style="text-align:center;"> 954 </td>
+   <td style="text-align:center;"> 71.5% </td>
    <td style="text-align:center;"> 236 </td>
    <td style="text-align:center;"> 17.7% </td>
-   <td style="text-align:center;"> 1,099 </td>
-   <td style="text-align:center;"> 82.3% </td>
+   <td style="text-align:center;"> 91 </td>
+   <td style="text-align:center;"> 6.8% </td>
+   <td style="text-align:center;"> 54 </td>
+   <td style="text-align:center;"> 4.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 030 </td>
    <td style="text-align:center;"> 3,111 </td>
    <td style="text-align:center;"> 1.6% </td>
+   <td style="text-align:center;"> 1,748 </td>
+   <td style="text-align:center;"> 56.2% </td>
    <td style="text-align:center;"> 814 </td>
    <td style="text-align:center;"> 26.2% </td>
-   <td style="text-align:center;"> 2,297 </td>
-   <td style="text-align:center;"> 73.8% </td>
+   <td style="text-align:center;"> 480 </td>
+   <td style="text-align:center;"> 15.4% </td>
+   <td style="text-align:center;"> 69 </td>
+   <td style="text-align:center;"> 2.2% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 031 </td>
    <td style="text-align:center;"> 12,938 </td>
    <td style="text-align:center;"> 6.5% </td>
+   <td style="text-align:center;"> 6,783 </td>
+   <td style="text-align:center;"> 52.4% </td>
    <td style="text-align:center;"> 4,156 </td>
    <td style="text-align:center;"> 32.1% </td>
-   <td style="text-align:center;"> 8,782 </td>
-   <td style="text-align:center;"> 67.9% </td>
+   <td style="text-align:center;"> 1,852 </td>
+   <td style="text-align:center;"> 14.3% </td>
+   <td style="text-align:center;"> 147 </td>
+   <td style="text-align:center;"> 1.1% </td>
   </tr>
   <tr>
    <td style="text-align:center;font-weight: bold;"> Overall </td>
    <td style="text-align:center;font-weight: bold;"> 199,651 </td>
    <td style="text-align:center;font-weight: bold;"> 100.0% </td>
+   <td style="text-align:center;font-weight: bold;"> 134,534 </td>
+   <td style="text-align:center;font-weight: bold;"> 67.4% </td>
    <td style="text-align:center;font-weight: bold;"> 37,411 </td>
    <td style="text-align:center;font-weight: bold;"> 18.7% </td>
-   <td style="text-align:center;font-weight: bold;"> 162,240 </td>
-   <td style="text-align:center;font-weight: bold;"> 81.3% </td>
+   <td style="text-align:center;font-weight: bold;"> 19,014 </td>
+   <td style="text-align:center;font-weight: bold;"> 9.5% </td>
+   <td style="text-align:center;font-weight: bold;"> 8,692 </td>
+   <td style="text-align:center;font-weight: bold;"> 4.4% </td>
   </tr>
 </tbody>
 </table>
@@ -1461,10 +1945,14 @@ ul.task-list li input[type="checkbox"] {
    <th style="text-align:center;"> CSU Region </th>
    <th style="text-align:center;"> All Complaints (N) </th>
    <th style="text-align:center;"> All Complaints (column %) </th>
+   <th style="text-align:center;"> Complaints Petitioned (N) </th>
+   <th style="text-align:center;"> Complaints Petitioned (row %) </th>
    <th style="text-align:center;"> Complaints Diverted (N) </th>
    <th style="text-align:center;"> Complaints Diverted (row %) </th>
-   <th style="text-align:center;"> Complaints Not Diverted (N) </th>
-   <th style="text-align:center;"> Complaints Not Diverted (row %) </th>
+   <th style="text-align:center;"> Complaints Dismissed (N) </th>
+   <th style="text-align:center;"> Complaints Dismissed (row %) </th>
+   <th style="text-align:center;"> Other (N) </th>
+   <th style="text-align:center;"> Other (row %) </th>
   </tr>
  </thead>
 <tbody>
@@ -1472,55 +1960,79 @@ ul.task-list li input[type="checkbox"] {
    <td style="text-align:center;"> Central </td>
    <td style="text-align:center;"> 37,678 </td>
    <td style="text-align:center;"> 18.9% </td>
+   <td style="text-align:center;"> 26,292 </td>
+   <td style="text-align:center;"> 69.8% </td>
    <td style="text-align:center;"> 6,931 </td>
    <td style="text-align:center;"> 18.4% </td>
-   <td style="text-align:center;"> 30,747 </td>
-   <td style="text-align:center;"> 81.6% </td>
+   <td style="text-align:center;"> 3,175 </td>
+   <td style="text-align:center;"> 8.4% </td>
+   <td style="text-align:center;"> 1,280 </td>
+   <td style="text-align:center;"> 3.4% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Eastern </td>
    <td style="text-align:center;"> 42,680 </td>
    <td style="text-align:center;"> 21.4% </td>
+   <td style="text-align:center;"> 29,501 </td>
+   <td style="text-align:center;"> 69.1% </td>
    <td style="text-align:center;"> 5,291 </td>
    <td style="text-align:center;"> 12.4% </td>
-   <td style="text-align:center;"> 37,389 </td>
-   <td style="text-align:center;"> 87.6% </td>
+   <td style="text-align:center;"> 4,737 </td>
+   <td style="text-align:center;"> 11.1% </td>
+   <td style="text-align:center;"> 3,151 </td>
+   <td style="text-align:center;"> 7.4% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Northern </td>
    <td style="text-align:center;"> 49,300 </td>
    <td style="text-align:center;"> 24.7% </td>
+   <td style="text-align:center;"> 30,914 </td>
+   <td style="text-align:center;"> 62.7% </td>
    <td style="text-align:center;"> 10,522 </td>
    <td style="text-align:center;"> 21.3% </td>
-   <td style="text-align:center;"> 38,778 </td>
-   <td style="text-align:center;"> 78.7% </td>
+   <td style="text-align:center;"> 4,997 </td>
+   <td style="text-align:center;"> 10.1% </td>
+   <td style="text-align:center;"> 2,867 </td>
+   <td style="text-align:center;"> 5.8% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Southern </td>
    <td style="text-align:center;"> 36,987 </td>
    <td style="text-align:center;"> 18.5% </td>
+   <td style="text-align:center;"> 25,397 </td>
+   <td style="text-align:center;"> 68.7% </td>
    <td style="text-align:center;"> 7,225 </td>
    <td style="text-align:center;"> 19.5% </td>
-   <td style="text-align:center;"> 29,762 </td>
-   <td style="text-align:center;"> 80.5% </td>
+   <td style="text-align:center;"> 3,723 </td>
+   <td style="text-align:center;"> 10.1% </td>
+   <td style="text-align:center;"> 642 </td>
+   <td style="text-align:center;"> 1.7% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Western </td>
    <td style="text-align:center;"> 33,006 </td>
    <td style="text-align:center;"> 16.5% </td>
+   <td style="text-align:center;"> 22,430 </td>
+   <td style="text-align:center;"> 68.0% </td>
    <td style="text-align:center;"> 7,442 </td>
    <td style="text-align:center;"> 22.5% </td>
-   <td style="text-align:center;"> 25,564 </td>
-   <td style="text-align:center;"> 77.5% </td>
+   <td style="text-align:center;"> 2,382 </td>
+   <td style="text-align:center;"> 7.2% </td>
+   <td style="text-align:center;"> 752 </td>
+   <td style="text-align:center;"> 2.3% </td>
   </tr>
   <tr>
    <td style="text-align:center;font-weight: bold;"> Overall </td>
    <td style="text-align:center;font-weight: bold;"> 199,651 </td>
    <td style="text-align:center;font-weight: bold;"> 100.0% </td>
+   <td style="text-align:center;font-weight: bold;"> 134,534 </td>
+   <td style="text-align:center;font-weight: bold;"> 67.4% </td>
    <td style="text-align:center;font-weight: bold;"> 37,411 </td>
    <td style="text-align:center;font-weight: bold;"> 18.7% </td>
-   <td style="text-align:center;font-weight: bold;"> 162,240 </td>
-   <td style="text-align:center;font-weight: bold;"> 81.3% </td>
+   <td style="text-align:center;font-weight: bold;"> 19,014 </td>
+   <td style="text-align:center;font-weight: bold;"> 9.5% </td>
+   <td style="text-align:center;font-weight: bold;"> 8,692 </td>
+   <td style="text-align:center;font-weight: bold;"> 4.4% </td>
   </tr>
 </tbody>
 </table>
@@ -1542,10 +2054,14 @@ ul.task-list li input[type="checkbox"] {
    <th style="text-align:center;"> JJ History </th>
    <th style="text-align:center;"> All Complaints (N) </th>
    <th style="text-align:center;"> All Complaints (column %) </th>
+   <th style="text-align:center;"> Complaints Petitioned (N) </th>
+   <th style="text-align:center;"> Complaints Petitioned (row %) </th>
    <th style="text-align:center;"> Complaints Diverted (N) </th>
    <th style="text-align:center;"> Complaints Diverted (row %) </th>
-   <th style="text-align:center;"> Complaints Not Diverted (N) </th>
-   <th style="text-align:center;"> Complaints Not Diverted (row %) </th>
+   <th style="text-align:center;"> Complaints Dismissed (N) </th>
+   <th style="text-align:center;"> Complaints Dismissed (row %) </th>
+   <th style="text-align:center;"> Other (N) </th>
+   <th style="text-align:center;"> Other (row %) </th>
   </tr>
  </thead>
 <tbody>
@@ -1553,55 +2069,79 @@ ul.task-list li input[type="checkbox"] {
    <td style="text-align:center;"> No Prior JJ History </td>
    <td style="text-align:center;"> 61,880 </td>
    <td style="text-align:center;"> 31.0% </td>
+   <td style="text-align:center;"> 45,189 </td>
+   <td style="text-align:center;"> 73.0% </td>
    <td style="text-align:center;"> 8,560 </td>
    <td style="text-align:center;"> 13.8% </td>
-   <td style="text-align:center;"> 53,320 </td>
-   <td style="text-align:center;"> 86.2% </td>
+   <td style="text-align:center;"> 5,376 </td>
+   <td style="text-align:center;"> 8.7% </td>
+   <td style="text-align:center;"> 2,755 </td>
+   <td style="text-align:center;"> 4.5% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Prior 'Other' History </td>
    <td style="text-align:center;"> 36,194 </td>
    <td style="text-align:center;"> 18.1% </td>
+   <td style="text-align:center;"> 33,913 </td>
+   <td style="text-align:center;"> 93.7% </td>
    <td style="text-align:center;"> 342 </td>
    <td style="text-align:center;"> 0.9% </td>
-   <td style="text-align:center;"> 35,852 </td>
-   <td style="text-align:center;"> 99.1% </td>
+   <td style="text-align:center;"> 871 </td>
+   <td style="text-align:center;"> 2.4% </td>
+   <td style="text-align:center;"> 1,068 </td>
+   <td style="text-align:center;"> 3.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Prior Status/CHINS/CHINsup </td>
    <td style="text-align:center;"> 8,871 </td>
    <td style="text-align:center;"> 4.4% </td>
+   <td style="text-align:center;"> 7,993 </td>
+   <td style="text-align:center;"> 90.1% </td>
    <td style="text-align:center;"> 278 </td>
    <td style="text-align:center;"> 3.1% </td>
-   <td style="text-align:center;"> 8,593 </td>
-   <td style="text-align:center;"> 96.9% </td>
+   <td style="text-align:center;"> 332 </td>
+   <td style="text-align:center;"> 3.7% </td>
+   <td style="text-align:center;"> 268 </td>
+   <td style="text-align:center;"> 3.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Prior Misdemeanor </td>
    <td style="text-align:center;"> 8,392 </td>
    <td style="text-align:center;"> 4.2% </td>
+   <td style="text-align:center;"> 7,666 </td>
+   <td style="text-align:center;"> 91.3% </td>
    <td style="text-align:center;"> 181 </td>
    <td style="text-align:center;"> 2.2% </td>
-   <td style="text-align:center;"> 8,211 </td>
-   <td style="text-align:center;"> 97.8% </td>
+   <td style="text-align:center;"> 316 </td>
+   <td style="text-align:center;"> 3.8% </td>
+   <td style="text-align:center;"> 229 </td>
+   <td style="text-align:center;"> 2.7% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Prior Felony </td>
    <td style="text-align:center;"> 1,205 </td>
    <td style="text-align:center;"> 0.6% </td>
+   <td style="text-align:center;"> 1,118 </td>
+   <td style="text-align:center;"> 92.8% </td>
    <td style="text-align:center;"> 17 </td>
    <td style="text-align:center;"> 1.4% </td>
-   <td style="text-align:center;"> 1,188 </td>
-   <td style="text-align:center;"> 98.6% </td>
+   <td style="text-align:center;"> 42 </td>
+   <td style="text-align:center;"> 3.5% </td>
+   <td style="text-align:center;"> 28 </td>
+   <td style="text-align:center;"> 2.3% </td>
   </tr>
   <tr>
    <td style="text-align:center;font-weight: bold;"> Overall </td>
    <td style="text-align:center;font-weight: bold;"> 116,542 </td>
    <td style="text-align:center;font-weight: bold;"> 58.4% </td>
+   <td style="text-align:center;font-weight: bold;"> 95,879 </td>
+   <td style="text-align:center;font-weight: bold;"> 82.3% </td>
    <td style="text-align:center;font-weight: bold;"> 9,378 </td>
    <td style="text-align:center;font-weight: bold;"> 8.0% </td>
-   <td style="text-align:center;font-weight: bold;"> 107,164 </td>
-   <td style="text-align:center;font-weight: bold;"> 92.0% </td>
+   <td style="text-align:center;font-weight: bold;"> 6,937 </td>
+   <td style="text-align:center;font-weight: bold;"> 6.0% </td>
+   <td style="text-align:center;font-weight: bold;"> 4,348 </td>
+   <td style="text-align:center;font-weight: bold;"> 3.7% </td>
   </tr>
 </tbody>
 </table>
@@ -1622,10 +2162,14 @@ ul.task-list li input[type="checkbox"] {
    <th style="text-align:center;"> Petitioner Description </th>
    <th style="text-align:center;"> All Complaints (N) </th>
    <th style="text-align:center;"> All Complaints (column %) </th>
+   <th style="text-align:center;"> Complaints Petitioned (N) </th>
+   <th style="text-align:center;"> Complaints Petitioned (row %) </th>
    <th style="text-align:center;"> Complaints Diverted (N) </th>
    <th style="text-align:center;"> Complaints Diverted (row %) </th>
-   <th style="text-align:center;"> Complaints Not Diverted (N) </th>
-   <th style="text-align:center;"> Complaints Not Diverted (row %) </th>
+   <th style="text-align:center;"> Complaints Dismissed (N) </th>
+   <th style="text-align:center;"> Complaints Dismissed (row %) </th>
+   <th style="text-align:center;"> Other (N) </th>
+   <th style="text-align:center;"> Other (row %) </th>
   </tr>
  </thead>
 <tbody>
@@ -1633,217 +2177,438 @@ ul.task-list li input[type="checkbox"] {
    <td style="text-align:center;"> ABC BOARD </td>
    <td style="text-align:center;"> 42 </td>
    <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 15 </td>
+   <td style="text-align:center;"> 35.7% </td>
    <td style="text-align:center;"> 22 </td>
    <td style="text-align:center;"> 52.4% </td>
-   <td style="text-align:center;"> 20 </td>
-   <td style="text-align:center;"> 47.6% </td>
+   <td style="text-align:center;"> 5 </td>
+   <td style="text-align:center;"> 11.9% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> BASE POLICE </td>
    <td style="text-align:center;"> 41 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 23 </td>
-   <td style="text-align:center;"> 56.1% </td>
    <td style="text-align:center;"> 18 </td>
    <td style="text-align:center;"> 43.9% </td>
+   <td style="text-align:center;"> 23 </td>
+   <td style="text-align:center;"> 56.1% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> CITIZEN </td>
    <td style="text-align:center;"> 9,235 </td>
    <td style="text-align:center;"> 4.6% </td>
+   <td style="text-align:center;"> 5,974 </td>
+   <td style="text-align:center;"> 64.7% </td>
    <td style="text-align:center;"> 1,442 </td>
    <td style="text-align:center;"> 15.6% </td>
-   <td style="text-align:center;"> 7,793 </td>
-   <td style="text-align:center;"> 84.4% </td>
+   <td style="text-align:center;"> 1,276 </td>
+   <td style="text-align:center;"> 13.8% </td>
+   <td style="text-align:center;"> 543 </td>
+   <td style="text-align:center;"> 5.9% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> COMMONWLTHS ATTORNEY </td>
    <td style="text-align:center;"> 736 </td>
    <td style="text-align:center;"> 0.4% </td>
+   <td style="text-align:center;"> 695 </td>
+   <td style="text-align:center;"> 94.4% </td>
    <td style="text-align:center;"> 2 </td>
    <td style="text-align:center;"> 0.3% </td>
-   <td style="text-align:center;"> 734 </td>
-   <td style="text-align:center;"> 99.7% </td>
+   <td style="text-align:center;"> 2 </td>
+   <td style="text-align:center;"> 0.3% </td>
+   <td style="text-align:center;"> 37 </td>
+   <td style="text-align:center;"> 5.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> COMMUNITY SRV BOARD </td>
    <td style="text-align:center;"> 44 </td>
    <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 33 </td>
+   <td style="text-align:center;"> 75.0% </td>
    <td style="text-align:center;"> 1 </td>
    <td style="text-align:center;"> 2.3% </td>
-   <td style="text-align:center;"> 43 </td>
-   <td style="text-align:center;"> 97.7% </td>
+   <td style="text-align:center;"> 7 </td>
+   <td style="text-align:center;"> 15.9% </td>
+   <td style="text-align:center;"> 3 </td>
+   <td style="text-align:center;"> 6.8% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> COURT </td>
    <td style="text-align:center;"> 5,343 </td>
    <td style="text-align:center;"> 2.7% </td>
+   <td style="text-align:center;"> 4,161 </td>
+   <td style="text-align:center;"> 77.9% </td>
    <td style="text-align:center;"> 43 </td>
    <td style="text-align:center;"> 0.8% </td>
-   <td style="text-align:center;"> 5,300 </td>
-   <td style="text-align:center;"> 99.2% </td>
+   <td style="text-align:center;"> 33 </td>
+   <td style="text-align:center;"> 0.6% </td>
+   <td style="text-align:center;"> 1,106 </td>
+   <td style="text-align:center;"> 20.7% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> DETENTION HOME </td>
    <td style="text-align:center;"> 699 </td>
    <td style="text-align:center;"> 0.4% </td>
+   <td style="text-align:center;"> 676 </td>
+   <td style="text-align:center;"> 96.7% </td>
    <td style="text-align:center;"> 0 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 699 </td>
-   <td style="text-align:center;"> 100.0% </td>
+   <td style="text-align:center;"> 7 </td>
+   <td style="text-align:center;"> 1.0% </td>
+   <td style="text-align:center;"> 16 </td>
+   <td style="text-align:center;"> 2.3% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> FIRE DEPARTMENT </td>
    <td style="text-align:center;"> 646 </td>
    <td style="text-align:center;"> 0.3% </td>
+   <td style="text-align:center;"> 319 </td>
+   <td style="text-align:center;"> 49.4% </td>
    <td style="text-align:center;"> 237 </td>
    <td style="text-align:center;"> 36.7% </td>
-   <td style="text-align:center;"> 409 </td>
-   <td style="text-align:center;"> 63.3% </td>
+   <td style="text-align:center;"> 60 </td>
+   <td style="text-align:center;"> 9.3% </td>
+   <td style="text-align:center;"> 30 </td>
+   <td style="text-align:center;"> 4.6% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> GROUP HOME </td>
    <td style="text-align:center;"> 252 </td>
    <td style="text-align:center;"> 0.1% </td>
+   <td style="text-align:center;"> 237 </td>
+   <td style="text-align:center;"> 94.0% </td>
    <td style="text-align:center;"> 7 </td>
    <td style="text-align:center;"> 2.8% </td>
-   <td style="text-align:center;"> 245 </td>
-   <td style="text-align:center;"> 97.2% </td>
+   <td style="text-align:center;"> 7 </td>
+   <td style="text-align:center;"> 2.8% </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0.4% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> MENTAL HLTH OFFICIAL </td>
    <td style="text-align:center;"> 5,100 </td>
    <td style="text-align:center;"> 2.6% </td>
+   <td style="text-align:center;"> 5,065 </td>
+   <td style="text-align:center;"> 99.3% </td>
    <td style="text-align:center;"> 4 </td>
    <td style="text-align:center;"> 0.1% </td>
-   <td style="text-align:center;"> 5,096 </td>
-   <td style="text-align:center;"> 99.9% </td>
+   <td style="text-align:center;"> 24 </td>
+   <td style="text-align:center;"> 0.5% </td>
+   <td style="text-align:center;"> 7 </td>
+   <td style="text-align:center;"> 0.1% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> MERCHANTS </td>
    <td style="text-align:center;"> 1,658 </td>
    <td style="text-align:center;"> 0.8% </td>
+   <td style="text-align:center;"> 472 </td>
+   <td style="text-align:center;"> 28.5% </td>
    <td style="text-align:center;"> 876 </td>
    <td style="text-align:center;"> 52.8% </td>
-   <td style="text-align:center;"> 782 </td>
-   <td style="text-align:center;"> 47.2% </td>
+   <td style="text-align:center;"> 205 </td>
+   <td style="text-align:center;"> 12.4% </td>
+   <td style="text-align:center;"> 105 </td>
+   <td style="text-align:center;"> 6.3% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> NCIS </td>
    <td style="text-align:center;"> 5 </td>
    <td style="text-align:center;"> 0.0% </td>
-   <td style="text-align:center;"> 1 </td>
-   <td style="text-align:center;"> 20.0% </td>
    <td style="text-align:center;"> 4 </td>
    <td style="text-align:center;"> 80.0% </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 20.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.0% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Other Law Enforcment </td>
    <td style="text-align:center;"> 1,543 </td>
    <td style="text-align:center;"> 0.8% </td>
+   <td style="text-align:center;"> 1,016 </td>
+   <td style="text-align:center;"> 65.8% </td>
    <td style="text-align:center;"> 379 </td>
    <td style="text-align:center;"> 24.6% </td>
-   <td style="text-align:center;"> 1,164 </td>
-   <td style="text-align:center;"> 75.4% </td>
+   <td style="text-align:center;"> 58 </td>
+   <td style="text-align:center;"> 3.8% </td>
+   <td style="text-align:center;"> 90 </td>
+   <td style="text-align:center;"> 5.8% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> POLICE DEPARTMENT </td>
    <td style="text-align:center;"> 77,232 </td>
    <td style="text-align:center;"> 38.7% </td>
+   <td style="text-align:center;"> 52,843 </td>
+   <td style="text-align:center;"> 68.4% </td>
    <td style="text-align:center;"> 15,531 </td>
    <td style="text-align:center;"> 20.1% </td>
-   <td style="text-align:center;"> 61,701 </td>
-   <td style="text-align:center;"> 79.9% </td>
+   <td style="text-align:center;"> 6,809 </td>
+   <td style="text-align:center;"> 8.8% </td>
+   <td style="text-align:center;"> 2,049 </td>
+   <td style="text-align:center;"> 2.7% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> PROBATION OFFICER </td>
    <td style="text-align:center;"> 19,983 </td>
    <td style="text-align:center;"> 10.0% </td>
+   <td style="text-align:center;"> 18,872 </td>
+   <td style="text-align:center;"> 94.4% </td>
    <td style="text-align:center;"> 234 </td>
    <td style="text-align:center;"> 1.2% </td>
-   <td style="text-align:center;"> 19,749 </td>
-   <td style="text-align:center;"> 98.8% </td>
+   <td style="text-align:center;"> 198 </td>
+   <td style="text-align:center;"> 1.0% </td>
+   <td style="text-align:center;"> 679 </td>
+   <td style="text-align:center;"> 3.4% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> RELATIVE </td>
    <td style="text-align:center;"> 11,403 </td>
    <td style="text-align:center;"> 5.7% </td>
+   <td style="text-align:center;"> 6,052 </td>
+   <td style="text-align:center;"> 53.1% </td>
    <td style="text-align:center;"> 1,198 </td>
    <td style="text-align:center;"> 10.5% </td>
-   <td style="text-align:center;"> 10,205 </td>
-   <td style="text-align:center;"> 89.5% </td>
+   <td style="text-align:center;"> 2,306 </td>
+   <td style="text-align:center;"> 20.2% </td>
+   <td style="text-align:center;"> 1,847 </td>
+   <td style="text-align:center;"> 16.2% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> SCHOOL OFFICIAL </td>
    <td style="text-align:center;"> 24,018 </td>
    <td style="text-align:center;"> 12.0% </td>
+   <td style="text-align:center;"> 14,023 </td>
+   <td style="text-align:center;"> 58.4% </td>
    <td style="text-align:center;"> 5,034 </td>
    <td style="text-align:center;"> 21.0% </td>
-   <td style="text-align:center;"> 18,984 </td>
-   <td style="text-align:center;"> 79.0% </td>
+   <td style="text-align:center;"> 3,952 </td>
+   <td style="text-align:center;"> 16.5% </td>
+   <td style="text-align:center;"> 1,009 </td>
+   <td style="text-align:center;"> 4.2% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> School Res. Officer </td>
    <td style="text-align:center;"> 14,035 </td>
    <td style="text-align:center;"> 7.0% </td>
+   <td style="text-align:center;"> 5,293 </td>
+   <td style="text-align:center;"> 37.7% </td>
    <td style="text-align:center;"> 6,346 </td>
    <td style="text-align:center;"> 45.2% </td>
-   <td style="text-align:center;"> 7,689 </td>
-   <td style="text-align:center;"> 54.8% </td>
+   <td style="text-align:center;"> 1,984 </td>
+   <td style="text-align:center;"> 14.1% </td>
+   <td style="text-align:center;"> 412 </td>
+   <td style="text-align:center;"> 2.9% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> SELF </td>
    <td style="text-align:center;"> 2,003 </td>
    <td style="text-align:center;"> 1.0% </td>
+   <td style="text-align:center;"> 1,425 </td>
+   <td style="text-align:center;"> 71.1% </td>
    <td style="text-align:center;"> 256 </td>
    <td style="text-align:center;"> 12.8% </td>
-   <td style="text-align:center;"> 1,747 </td>
-   <td style="text-align:center;"> 87.2% </td>
+   <td style="text-align:center;"> 165 </td>
+   <td style="text-align:center;"> 8.2% </td>
+   <td style="text-align:center;"> 157 </td>
+   <td style="text-align:center;"> 7.8% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> SHERIFF </td>
    <td style="text-align:center;"> 20,642 </td>
    <td style="text-align:center;"> 10.3% </td>
+   <td style="text-align:center;"> 12,708 </td>
+   <td style="text-align:center;"> 61.6% </td>
    <td style="text-align:center;"> 5,555 </td>
    <td style="text-align:center;"> 26.9% </td>
-   <td style="text-align:center;"> 15,087 </td>
-   <td style="text-align:center;"> 73.1% </td>
+   <td style="text-align:center;"> 1,834 </td>
+   <td style="text-align:center;"> 8.9% </td>
+   <td style="text-align:center;"> 545 </td>
+   <td style="text-align:center;"> 2.6% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> SOCIAL SERVICE </td>
    <td style="text-align:center;"> 2,281 </td>
    <td style="text-align:center;"> 1.1% </td>
+   <td style="text-align:center;"> 2,182 </td>
+   <td style="text-align:center;"> 95.7% </td>
    <td style="text-align:center;"> 23 </td>
    <td style="text-align:center;"> 1.0% </td>
-   <td style="text-align:center;"> 2,258 </td>
-   <td style="text-align:center;"> 99.0% </td>
+   <td style="text-align:center;"> 46 </td>
+   <td style="text-align:center;"> 2.0% </td>
+   <td style="text-align:center;"> 30 </td>
+   <td style="text-align:center;"> 1.3% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> SPOUSE </td>
    <td style="text-align:center;"> 40 </td>
    <td style="text-align:center;"> 0.0% </td>
+   <td style="text-align:center;"> 20 </td>
+   <td style="text-align:center;"> 50.0% </td>
    <td style="text-align:center;"> 11 </td>
    <td style="text-align:center;"> 27.5% </td>
-   <td style="text-align:center;"> 29 </td>
-   <td style="text-align:center;"> 72.5% </td>
+   <td style="text-align:center;"> 8 </td>
+   <td style="text-align:center;"> 20.0% </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 2.5% </td>
   </tr>
   <tr>
    <td style="text-align:center;"> STATE POLICE </td>
    <td style="text-align:center;"> 2,463 </td>
    <td style="text-align:center;"> 1.2% </td>
+   <td style="text-align:center;"> 2,294 </td>
+   <td style="text-align:center;"> 93.1% </td>
    <td style="text-align:center;"> 131 </td>
    <td style="text-align:center;"> 5.3% </td>
-   <td style="text-align:center;"> 2,332 </td>
-   <td style="text-align:center;"> 94.7% </td>
+   <td style="text-align:center;"> 18 </td>
+   <td style="text-align:center;"> 0.7% </td>
+   <td style="text-align:center;"> 20 </td>
+   <td style="text-align:center;"> 0.8% </td>
   </tr>
   <tr>
    <td style="text-align:center;font-weight: bold;"> Overall </td>
    <td style="text-align:center;font-weight: bold;"> 199,444 </td>
    <td style="text-align:center;font-weight: bold;"> 99.9% </td>
+   <td style="text-align:center;font-weight: bold;"> 134,397 </td>
+   <td style="text-align:center;font-weight: bold;"> 67.4% </td>
    <td style="text-align:center;font-weight: bold;"> 37,356 </td>
    <td style="text-align:center;font-weight: bold;"> 18.7% </td>
-   <td style="text-align:center;font-weight: bold;"> 162,088 </td>
-   <td style="text-align:center;font-weight: bold;"> 81.3% </td>
+   <td style="text-align:center;font-weight: bold;"> 19,004 </td>
+   <td style="text-align:center;font-weight: bold;"> 9.5% </td>
+   <td style="text-align:center;font-weight: bold;"> 8,687 </td>
+   <td style="text-align:center;font-weight: bold;"> 4.4% </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="table-11-average-length-of-stay-on-diversion-by-raceethnicity" class="level2">
+<h2 class="anchored" data-anchor-id="table-11-average-length-of-stay-on-diversion-by-raceethnicity">Table 11: Average Length of Stay on Diversion by Race/Ethnicity</h2>
+<p>Both measures of LOS on diversion are calculated by DJJ and provided in the <code>caseload</code> file – see codebook page for more information. The two LOS measures are the “Number of days on the workload status”Diversion at Intake”” and the “Number of days on the workload status”Diversion Beyond 90 Days”“. <strong>Still need to check for duplicates</strong></p>
+<div class="cell">
+<div class="cell-output-display">
+
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:center;"> Race/Ethnicity </th>
+   <th style="text-align:center;"> Mean Diversion (at intake) </th>
+   <th style="text-align:center;"> Median Diversion (at intake) </th>
+   <th style="text-align:center;"> Mean Diversion (beyond 90 days) </th>
+   <th style="text-align:center;"> Median Diversion (beyond 90 days) </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:center;"> American Indian </td>
+   <td style="text-align:center;"> 65.73684 </td>
+   <td style="text-align:center;"> 74 </td>
+   <td style="text-align:center;"> NaN </td>
+   <td style="text-align:center;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Asian </td>
+   <td style="text-align:center;"> 68.15089 </td>
+   <td style="text-align:center;"> 70 </td>
+   <td style="text-align:center;"> 1.0000000 </td>
+   <td style="text-align:center;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Black </td>
+   <td style="text-align:center;"> 70.60206 </td>
+   <td style="text-align:center;"> 69 </td>
+   <td style="text-align:center;"> 0.9960239 </td>
+   <td style="text-align:center;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Hispanic </td>
+   <td style="text-align:center;"> 76.69786 </td>
+   <td style="text-align:center;"> 79 </td>
+   <td style="text-align:center;"> 1.0000000 </td>
+   <td style="text-align:center;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> White </td>
+   <td style="text-align:center;"> 73.68528 </td>
+   <td style="text-align:center;"> 78 </td>
+   <td style="text-align:center;"> 0.9925743 </td>
+   <td style="text-align:center;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Other </td>
+   <td style="text-align:center;"> 76.63043 </td>
+   <td style="text-align:center;"> 76 </td>
+   <td style="text-align:center;"> 0.9871795 </td>
+   <td style="text-align:center;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Missing </td>
+   <td style="text-align:center;"> 80.00000 </td>
+   <td style="text-align:center;"> 85 </td>
+   <td style="text-align:center;"> 0.9000000 </td>
+   <td style="text-align:center;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;font-weight: bold;"> Overall </td>
+   <td style="text-align:center;font-weight: bold;"> 73.13850 </td>
+   <td style="text-align:center;font-weight: bold;"> 75 </td>
+   <td style="text-align:center;font-weight: bold;"> 0.9934396 </td>
+   <td style="text-align:center;font-weight: bold;"> 1 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="table-12-average-length-of-stay-on-diversion-by-gender" class="level2">
+<h2 class="anchored" data-anchor-id="table-12-average-length-of-stay-on-diversion-by-gender">Table 12: Average Length of Stay on Diversion by Gender</h2>
+<p>Both measures of LOS on diversion are calculated by DJJ and provided in the <code>caseload</code> file – see codebook page for more information. The two LOS measures are the “Number of days on the workload status”Diversion at Intake”” and the “Number of days on the workload status”Diversion Beyond 90 Days”“. <strong>Still need to check for duplicates</strong></p>
+<div class="cell">
+<div class="cell-output-display">
+
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:center;"> Gender </th>
+   <th style="text-align:center;"> Mean Diversion (at intake) </th>
+   <th style="text-align:center;"> Median Diversion (at intake) </th>
+   <th style="text-align:center;"> Mean Diversion (beyond 90 days) </th>
+   <th style="text-align:center;"> Median Diversion (beyond 90 days) </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:center;"> Female </td>
+   <td style="text-align:center;"> 72.35603 </td>
+   <td style="text-align:center;"> 72 </td>
+   <td style="text-align:center;"> 0.9919786 </td>
+   <td style="text-align:center;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Male </td>
+   <td style="text-align:center;"> 73.60163 </td>
+   <td style="text-align:center;"> 76 </td>
+   <td style="text-align:center;"> 0.9942280 </td>
+   <td style="text-align:center;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;font-weight: bold;"> Overall </td>
+   <td style="text-align:center;font-weight: bold;"> 73.13850 </td>
+   <td style="text-align:center;font-weight: bold;"> 75 </td>
+   <td style="text-align:center;font-weight: bold;"> 0.9934396 </td>
+   <td style="text-align:center;font-weight: bold;"> 1 </td>
   </tr>
 </tbody>
 </table>
@@ -1859,7 +2624,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="figure-1-of-all-complaints-diverted-by-county">Figure 1: % of all Complaints Diverted by County</h2>
 <div class="cell page-columns page-full">
 <div class="cell-output-display column-page-right">
-<p><img src="ojjdp_va_part_ii_analysis_diversion_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" style="width:85.0%"></p>
+<p><img src="ojjdp_va_part_ii_analysis_diversion_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" style="width:85.0%"></p>
 </div>
 </div>
 <p><br></p>
@@ -1868,7 +2633,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="figure-2-of-all-complaints-diverted-by-court-service-unit-csu">Figure 2: % of all Complaints Diverted by Court Service Unit (CSU)</h2>
 <div class="cell page-columns page-full">
 <div class="cell-output-display column-page-right">
-<p><img src="ojjdp_va_part_ii_analysis_diversion_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" style="width:85.0%"></p>
+<p><img src="ojjdp_va_part_ii_analysis_diversion_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" style="width:85.0%"></p>
 </div>
 </div>
 <p><br><br></p>

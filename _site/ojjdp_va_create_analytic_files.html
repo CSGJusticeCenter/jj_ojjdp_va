@@ -368,8 +368,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="do">### clean and de-dup df_djj_intake_complaints_raw dataframe</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="do">### this is our base file for the sample</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="do">### clean and de-dup df_djj_intake_complaints_raw dataframe by complaint and offense</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="do">### this is our base complaint/offense-level file for the sample</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################</span></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>df_djj_intake_complaints_clean <span class="ot">&lt;-</span> df_djj_intake_complaints_raw <span class="sc">%&gt;%</span> </span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(juvenile_number,</span>
@@ -452,24 +452,53 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">intake_decision =</span> <span class="fu">as.numeric</span>(intake_decision)) <span class="sc">%&gt;%</span> </span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(codebook_intake_decision_values,</span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="st">"intake_decision"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="do">### create diversion flag</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="do">### create unique complaint-level ID</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diverted_flag =</span> <span class="fu">ifelse</span>(intake_decision_label<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"UNSUCCESSFUL DIVERSION/PETITION FILED"</span>, <span class="st">"SUCCESSFUL DIVERSION"</span>,<span class="st">"UNSUCCESSFUL DIVERSION/NO PETITION FILED"</span>,<span class="st">"REQ'D TO PARTICIPATE-DIVERSION"</span>),</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>                                <span class="dv">1</span>,<span class="dv">0</span>),</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">diverted_flag =</span> <span class="fu">factor</span>(diverted_flag,</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>                                <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>),</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>                                <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Yes"</span>,<span class="st">"No"</span>)),</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">unique_complaint_id =</span> <span class="fu">paste0</span>(juvenile_number,case_number,<span class="at">.keep_all=</span><span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="do">### create var for jj history using flags provided by DJJ</span></span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">jj_history_clean =</span> <span class="fu">case_when</span>(</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    prior_adj<span class="sc">==</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"No Prior JJ History"</span>,</span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    prior_other<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"Prior 'Other' History"</span>,</span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    (prior_chinsup<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">|</span> prior_chins<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">|</span> prior_other_status<span class="sc">&gt;</span><span class="dv">0</span>) <span class="sc">~</span> <span class="st">"Prior Status/CHINS/CHINsup"</span>,</span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    prior_misd<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"Prior Misdemeanor"</span>,</span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    prior_felony<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"Prior Felony"</span>,</span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="fu">as.character</span>(<span class="cn">NA</span>)),</span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">jj_history_clean =</span> <span class="fu">factor</span>(jj_history_clean,</span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>                              <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"No Prior JJ History"</span>,<span class="st">"Prior 'Other' History"</span>,<span class="st">"Prior Status/CHINS/CHINsup"</span>,<span class="st">"Prior Misdemeanor"</span>,<span class="st">"Prior Felony"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="do">### create flags for (</span><span class="al">NOTE</span><span class="do">:THIS IS PRELIMINARY AND PENDING CONFIRMATION WITH DJJ RESEARCH STAFF)</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># intake decisions (petitioned, diverted, dismissed, other)</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># diversion (yes or no)</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># diversion outcome (successful, not successful and petitioned, not successful and not petitioned); what to do with "REQ'D TO PARTICIPATE-DIVERSION"?</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># disposition outcomes (where intake complaint is petitioned)</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="do">### create unique complaint-level ID</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">intake_decision_clean =</span> <span class="fu">case_when</span>(</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    intake_decision_label<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"UNSUCCESSFUL DIVERSION/PETITION FILED"</span>, <span class="st">"SUCCESSFUL DIVERSION"</span>,<span class="st">"UNSUCCESSFUL DIVERSION/NO PETITION FILED"</span>,<span class="st">"REQ'D TO PARTICIPATE-DIVERSION"</span>) <span class="sc">~</span> <span class="st">"Diverted"</span>,</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    intake_decision_label<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"PETITION FILED"</span>, <span class="st">"PETITION/DETENTION ORDER FILED"</span>,<span class="st">"COURT SUMMONS"</span>,<span class="st">"PETITION/SHELTER CARE FILED"</span>) <span class="sc">~</span> <span class="st">"Petitioned"</span>,    </span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    intake_decision_label<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"RESOLVED"</span>, <span class="st">"COMPLAINT UNFOUNDED"</span>,<span class="st">"UNOFFICIAL COUNSELING-FAMILY C"</span>) <span class="sc">~</span> <span class="st">"Dismissed"</span>,</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    intake_decision_label<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"DETENTION ORDER ONLY"</span>, <span class="st">"REFERRED TO ANOTHER AGY FOR SV"</span>,<span class="st">"ACCEPTED VIA ICJ"</span>,<span class="st">"RETURNED TO PROBATION SUPERVIS"</span>,<span class="st">"PENDING"</span>,<span class="st">"SHELTER CARE ONLY"</span>,<span class="st">"RETURNED TO OUT-OF-STATE"</span>) <span class="sc">~</span> <span class="st">"Other"</span>,</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>   <span class="cn">TRUE</span> <span class="sc">~</span> <span class="fu">as.character</span>(<span class="cn">NA</span>)),</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">intake_decision_clean =</span> <span class="fu">factor</span>(intake_decision_clean,</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>                              <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Petitioned"</span>,<span class="st">"Diverted"</span>,<span class="st">"Dismissed"</span>,<span class="st">"Other"</span>)),                            </span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>         <span class="at">intake_diverted_flag =</span> <span class="fu">ifelse</span>(intake_decision_label<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"UNSUCCESSFUL DIVERSION/PETITION FILED"</span>, <span class="st">"SUCCESSFUL DIVERSION"</span>,<span class="st">"UNSUCCESSFUL DIVERSION/NO PETITION FILED"</span>,<span class="st">"REQ'D TO PARTICIPATE-DIVERSION"</span>),</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>                                <span class="dv">1</span>,<span class="dv">0</span>),</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>         <span class="at">intake_diverted_flag =</span> <span class="fu">factor</span>(intake_diverted_flag,</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>                                <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>),</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>                                <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Yes"</span>,<span class="st">"No"</span>)),</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>         <span class="at">diversion_successful_flag =</span> <span class="fu">ifelse</span>(intake_decision_label<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"SUCCESSFUL DIVERSION"</span>),</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>                                <span class="dv">1</span>,<span class="dv">0</span>),</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>         <span class="at">diversion_not_successful_flag =</span> <span class="fu">ifelse</span>(intake_decision_label<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"UNSUCCESSFUL DIVERSION/PETITION FILED"</span>,<span class="st">"UNSUCCESSFUL DIVERSION/NO PETITION FILED"</span>),</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>                                <span class="dv">1</span>,<span class="dv">0</span>),</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>   <span class="do">### preliminary options are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other</span></span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>   <span class="at">dispo_description_clean =</span> <span class="fu">case_when</span>(</span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>    description<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"COMMIT TO DJJ (16.1-278.8.14)"</span>,<span class="st">"SERIOUS OFFENDER COMMITMENT TO DJJ (16.1-278.8.17) (16.1-285.1)"</span>,<span class="st">"SUSPENDED COMMITMENT TO DJJ"</span>) <span class="sc">~</span> <span class="st">"Commitment"</span>,</span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>    description<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"POST-DISPOSITIONAL DETENTION (16.1-278.8.16) (16.1-284.1)"</span>,<span class="st">"SENTENCED TO DETENTION"</span>,<span class="st">"SUSPENDED COMMITMENT TO DETENTION"</span>) <span class="sc">~</span> <span class="st">"Detention"</span>,</span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>    description<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"COURT ORDER CONDITIONS AND LIMITATIONS (16.1-278.8.2)"</span>, <span class="st">"DEFER FINDING AND DISPOSITION W/PROBATION SUPERVISION (16.1-278.8.5)"</span>,<span class="st">"PROBATION (16.1-278.8.7)"</span>,<span class="st">"PROBATION AND COURT ORDERED ALCOHOL OR DRUG ABUSE TREATMENT (16.1-278.8.7a"</span>) <span class="sc">~</span> <span class="st">"Probation/Supervision"</span>,</span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>    description<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"DEFER DISPOSITION ON CONDITION OF GOOD BEHAVIOR"</span>) <span class="sc">~</span> <span class="st">"Deferral"</span>,</span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>    description<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"(EXPIRED) DEFER DISPOSTION AND PLACE IN BOOT CAMP (16.1-278.8.4a)"</span>, <span class="st">"COURT ORDER GANG ACTIVITY PREVENTION PROGRAM (16.1-278.8.19)"</span>,<span class="st">"COURT ORDER NON-RESIDENTIAL PARENT PARTICIPATION IN PROGRAMS (16.1-278.8.6)"</span>,<span class="st">"COURT ORDER PARENT PARTICIPATION IN PROGRAMS...FOR REHABILITATION (16.1-278.8.3)"</span>,<span class="st">"FIRST OFFENSE DRUG VIOLATION, MANDATORY TREATMENT (16.1-278.8:01)"</span>) <span class="sc">~</span> <span class="st">"Treatment/Programming"</span>,</span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>    description<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"NO FURTHER ACTION"</span>) <span class="sc">~</span> <span class="st">"No further action/none"</span>,</span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>    description<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"COMMUNITY SERVICE (16.1-278.8.11)"</span>) <span class="sc">~</span> <span class="st">"Community Service"</span>,</span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>    description<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"FINE NOT TO EXCEED $500 (16.1-278.8.8)"</span>) <span class="sc">~</span> <span class="st">"Fine"</span>,</span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a>    description<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"RESTITUTION (16.1-278.8.10)"</span>) <span class="sc">~</span> <span class="st">"Restitution"</span>,</span>
+<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>    description<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"LOSS OF DRIVING PRIVS FOR ALCOHOL,FIREARM,OR TRUANCY(16.1-278.8.18)(16.1-278.9)"</span>,<span class="st">"SENTENCED IN CIRCUIT COURT"</span>,<span class="st">"SUSPEND DRIVER'S LICENSE/IMPOSE CURFEW (16.1-278.8.9)"</span>,<span class="st">"TRAFFIC VIOLATION PENALTIES (16.1-278.8.12)"</span>,<span class="st">"TRANSFER LEGAL CUSTODY (16.1-278.8.12)"</span>,<span class="st">"UPHOLDING RULING OF THE LOWER COURT"</span>,<span class="st">"(EXPIRED) TRANSFER TO CIRCUIT COURT"</span>,<span class="st">"ADULT SENTENCED FOR JUVENILE OFFENSE (16.1-278.8.15) (16.1-284)"</span>) <span class="sc">~</span> <span class="st">"Other"</span>,</span>
+<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a>   <span class="cn">TRUE</span> <span class="sc">~</span> <span class="fu">as.character</span>(<span class="cn">NA</span>)),</span>
+<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a>         <span class="at">unique_complaint_id =</span> <span class="fu">paste0</span>(juvenile_number,case_number,<span class="at">.keep_all=</span><span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>  <span class="do">### create var for jj history using flags provided by DJJ</span></span>
+<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">jj_history_clean =</span> <span class="fu">case_when</span>(</span>
+<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a>    prior_adj<span class="sc">==</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"No Prior JJ History"</span>,</span>
+<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a>    prior_other<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"Prior 'Other' History"</span>,</span>
+<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a>    (prior_chinsup<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">|</span> prior_chins<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">|</span> prior_other_status<span class="sc">&gt;</span><span class="dv">0</span>) <span class="sc">~</span> <span class="st">"Prior Status/CHINS/CHINsup"</span>,</span>
+<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a>    prior_misd<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"Prior Misdemeanor"</span>,</span>
+<span id="cb16-49"><a href="#cb16-49" aria-hidden="true" tabindex="-1"></a>    prior_felony<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">"Prior Felony"</span>,</span>
+<span id="cb16-50"><a href="#cb16-50" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="fu">as.character</span>(<span class="cn">NA</span>)),</span>
+<span id="cb16-51"><a href="#cb16-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">jj_history_clean =</span> <span class="fu">factor</span>(jj_history_clean,</span>
+<span id="cb16-52"><a href="#cb16-52" aria-hidden="true" tabindex="-1"></a>                              <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"No Prior JJ History"</span>,<span class="st">"Prior 'Other' History"</span>,<span class="st">"Prior Status/CHINS/CHINsup"</span>,<span class="st">"Prior Misdemeanor"</span>,<span class="st">"Prior Felony"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>mutate: converted 'intake_decision' from character to double (0 new NA)</code></pre>
 </div>
@@ -492,7 +521,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>           &gt; rows total       199,651</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>mutate: new variable 'diverted_flag' (factor) with 2 unique values and 0% NA</code></pre>
+<pre><code>mutate: new variable 'intake_decision_clean' (factor) with 4 unique values and 0% NA</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>        new variable 'intake_diverted_flag' (factor) with 2 unique values and 0% NA</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>        new variable 'diversion_successful_flag' (double) with 2 unique values and 0% NA</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>        new variable 'diversion_not_successful_flag' (double) with 2 unique values and 0% NA</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>        new variable 'dispo_description_clean' (character) with one unique value and 100% NA</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>        new variable 'unique_complaint_id' (character) with 199,651 unique values and 0% NA</code></pre>
@@ -500,84 +541,163 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell-output cell-output-stderr">
 <pre><code>mutate: new variable 'jj_history_clean' (factor) with 6 unique values and 42% NA</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">########################################</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="do">### clean and de-dup disposition dataframe</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="do">########################################</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="do">### note: disposition file is unique by youth, case number, offense number, disposition, amd days from intake to disposition</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>disposition_clean <span class="ot">&lt;-</span> disposition <span class="sc">%&gt;%</span> </span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(juvenile_number,</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>           case_number,</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>           offense_number,</span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>           description,</span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">.keep_all=</span><span class="cn">TRUE</span>) <span class="do">### no records dropped</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="do">### clean and de-dup df_djj_intake_complaints_raw dataframe by youth</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="do">### this is our base youth-level demo file for the sample</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>df_djj_youth_demo <span class="ot">&lt;-</span> df_djj_intake_complaints_raw <span class="sc">%&gt;%</span> </span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(juvenile_number,</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">.keep_all=</span><span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="do">### clean race/ethnicity and gender</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="do">### use factor function to assign labels to values</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">race_clean =</span> <span class="fu">case_when</span>(</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>    race<span class="sc">==</span><span class="st">"I"</span> <span class="sc">&amp;</span> hispanic<span class="sc">!=</span><span class="st">"Y"</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>    race<span class="sc">==</span><span class="st">"A"</span> <span class="sc">&amp;</span> hispanic<span class="sc">!=</span><span class="st">"Y"</span> <span class="sc">~</span> <span class="dv">2</span>,</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>    race<span class="sc">==</span><span class="st">"B"</span> <span class="sc">&amp;</span> hispanic<span class="sc">!=</span><span class="st">"Y"</span> <span class="sc">~</span> <span class="dv">3</span>,</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>    hispanic<span class="sc">==</span><span class="st">"Y"</span> <span class="sc">~</span> <span class="dv">4</span>,</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>    race<span class="sc">==</span><span class="st">"W"</span> <span class="sc">&amp;</span> hispanic<span class="sc">!=</span><span class="st">"Y"</span> <span class="sc">~</span> <span class="dv">5</span>,</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>    race <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"X"</span>,<span class="st">"O"</span>) <span class="sc">&amp;</span> hispanic<span class="sc">!=</span><span class="st">"Y"</span> <span class="sc">~</span> <span class="dv">6</span>,</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">7</span>),</span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_clean =</span> <span class="fu">factor</span>(race_clean,</span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>         <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>),</span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>         <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"American Indian"</span>, <span class="st">"Asian"</span>, <span class="st">"Black"</span>, <span class="st">"Hispanic"</span>, <span class="st">"White"</span>, <span class="st">"Other"</span>,<span class="st">"Missing"</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gender_clean =</span> <span class="fu">case_when</span>(</span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>    sex<span class="sc">==</span><span class="st">"F"</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>    sex<span class="sc">==</span><span class="st">"M"</span> <span class="sc">~</span> <span class="dv">2</span>,</span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="fu">as.numeric</span>(<span class="cn">NA</span>)),</span>
+<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">gender_clean =</span> <span class="fu">factor</span>(gender_clean,</span>
+<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a>         <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>),</span>
+<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a>         <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Female"</span>, <span class="st">"Male"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>distinct: removed 177,706 rows (64%), 99,224 rows remaining</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>mutate: new variable 'race_clean' (factor) with 7 unique values and 0% NA</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>mutate: new variable 'gender_clean' (factor) with 2 unique values and 0% NA</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="do">########################################</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="do">### clean and de-dup disposition dataframe</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="do">########################################</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="do">### note: disposition file is unique by youth, case number, offense number, disposition, amd days from intake to disposition</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>disposition_clean <span class="ot">&lt;-</span> disposition <span class="sc">%&gt;%</span> </span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(juvenile_number,</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>           case_number,</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>           offense_number,</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>           description,</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">.keep_all=</span><span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="do">### no records dropped</span></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  <span class="do">### preliminary options for grouping dispositions are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other</span></span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dispo_description_clean =</span> <span class="fu">case_when</span>(</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>    description<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"COMMIT TO DJJ (16.1-278.8.14)"</span>,<span class="st">"SERIOUS OFFENDER COMMITMENT TO DJJ (16.1-278.8.17) (16.1-285.1)"</span>,<span class="st">"SUSPENDED COMMITMENT TO DJJ"</span>) <span class="sc">~</span> <span class="st">"Commitment"</span>,</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>    description<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"POST-DISPOSITIONAL DETENTION (16.1-278.8.16) (16.1-284.1)"</span>,<span class="st">"SENTENCED TO DETENTION"</span>,<span class="st">"SUSPENDED COMMITMENT TO DETENTION"</span>) <span class="sc">~</span> <span class="st">"Detention"</span>,</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>    description<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"COURT ORDER CONDITIONS AND LIMITATIONS (16.1-278.8.2)"</span>, <span class="st">"DEFER FINDING AND DISPOSITION W/PROBATION SUPERVISION (16.1-278.8.5)"</span>,<span class="st">"PROBATION (16.1-278.8.7)"</span>,<span class="st">"PROBATION AND COURT ORDERED ALCOHOL OR DRUG ABUSE TREATMENT (16.1-278.8.7a"</span>) <span class="sc">~</span> <span class="st">"Probation/Supervision"</span>,</span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>    description<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"DEFER DISPOSITION ON CONDITION OF GOOD BEHAVIOR"</span>) <span class="sc">~</span> <span class="st">"Deferral"</span>,</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>    description<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"(EXPIRED) DEFER DISPOSTION AND PLACE IN BOOT CAMP (16.1-278.8.4a)"</span>, <span class="st">"COURT ORDER GANG ACTIVITY PREVENTION PROGRAM (16.1-278.8.19)"</span>,<span class="st">"COURT ORDER NON-RESIDENTIAL PARENT PARTICIPATION IN PROGRAMS (16.1-278.8.6)"</span>,<span class="st">"COURT ORDER PARENT PARTICIPATION IN PROGRAMS...FOR REHABILITATION (16.1-278.8.3)"</span>,<span class="st">"FIRST OFFENSE DRUG VIOLATION, MANDATORY TREATMENT (16.1-278.8:01)"</span>) <span class="sc">~</span> <span class="st">"Treatment/Programming"</span>,</span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>    description<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"NO FURTHER ACTION"</span>) <span class="sc">~</span> <span class="st">"No further action/none"</span>,</span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>    description<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"COMMUNITY SERVICE (16.1-278.8.11)"</span>) <span class="sc">~</span> <span class="st">"Community Service"</span>,</span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>    description<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"FINE NOT TO EXCEED $500 (16.1-278.8.8)"</span>) <span class="sc">~</span> <span class="st">"Fine"</span>,</span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>    description<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"RESTITUTION (16.1-278.8.10)"</span>) <span class="sc">~</span> <span class="st">"Restitution"</span>,</span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>    description<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"LOSS OF DRIVING PRIVS FOR ALCOHOL,FIREARM,OR TRUANCY(16.1-278.8.18)(16.1-278.9)"</span>,<span class="st">"SENTENCED IN CIRCUIT COURT"</span>,<span class="st">"SUSPEND DRIVER'S LICENSE/IMPOSE CURFEW (16.1-278.8.9)"</span>,<span class="st">"TRAFFIC VIOLATION PENALTIES (16.1-278.8.12)"</span>,<span class="st">"TRANSFER LEGAL CUSTODY (16.1-278.8.12)"</span>,<span class="st">"UPHOLDING RULING OF THE LOWER COURT"</span>,<span class="st">"(EXPIRED) TRANSFER TO CIRCUIT COURT"</span>,<span class="st">"ADULT SENTENCED FOR JUVENILE OFFENSE (16.1-278.8.15) (16.1-284)"</span>) <span class="sc">~</span> <span class="st">"Other"</span>,</span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a>   <span class="cn">TRUE</span> <span class="sc">~</span> <span class="fu">as.character</span>(<span class="cn">NA</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>distinct: removed 11,032 rows (3%), 361,605 rows remaining</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>  <span class="do">### next step: de-dup by disposition -- keeping most serious?</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="do">########################################</span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="do">### clean and de-dup caseload dataframe</span></span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="do">########################################</span></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>caseload_clean <span class="ot">&lt;-</span> caseload <span class="sc">%&gt;%</span> </span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(juvenile_number,</span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>           offense_number,</span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">.keep_all=</span><span class="cn">TRUE</span>) <span class="do">### need to look into duplicates</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>mutate: new variable 'dispo_description_clean' (character) with 11 unique values and 48% NA</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>  <span class="do">### next step: de-dup by disposition -- keeping most serious?</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="do">########################################</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="do">### clean and de-dup caseload dataframe</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="do">########################################</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>caseload_clean <span class="ot">&lt;-</span> caseload <span class="sc">%&gt;%</span> </span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(juvenile_number,</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>           offense_number,</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">.keep_all=</span><span class="cn">TRUE</span>) <span class="sc">%&gt;%</span>  <span class="do">### need to look into duplicates</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>  <span class="do">### join to youth-level demo file</span></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>  <span class="do">### need to better understand how we should join to complaint/offense-level data</span></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(df_djj_youth_demo,</span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="st">"juvenile_number"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">div_at_int =</span> <span class="fu">as.numeric</span>(div_at_int),</span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">div_bey_90 =</span> <span class="fu">as.numeric</span>(div_bey_90))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>distinct: removed 14,449 rows (5%), 276,930 rows remaining</code></pre>
 </div>
+<div class="cell-output cell-output-stderr">
+<pre><code>left_join: added 35 columns (offense_number.x, case_number, offense_number.y, csu, fips_code, …)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>           &gt; rows only in x         0</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>           &gt; rows only in y  (      0)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>           &gt; matched rows     276,930</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>           &gt;                 =========</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>           &gt; rows total       276,930</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>mutate: converted 'div_bey_90' from logical to double (0 new NA)</code></pre>
+</div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="do">### create lists of court service unit (CSU) regions</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="do">### see here: https://www.djj.virginia.gov/pages/community/court-service-units.htm</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>eastern_region <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"001"</span>,</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"002"</span>,</span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"02A"</span>,</span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"003"</span>,</span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"004"</span>,</span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"005"</span>,</span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"007"</span>,</span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"008"</span>)</span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>northern_region <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"017"</span>,</span>
-<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"018"</span>,</span>
-<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"019"</span>,</span>
-<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"020"</span>,</span>
-<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"026"</span>,</span>
-<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"031"</span>)</span>
-<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>western_region <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"021"</span>,</span>
-<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"022"</span>,</span>
-<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"023"</span>,</span>
-<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"027"</span>,</span>
-<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"028"</span>,</span>
-<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"029"</span>,</span>
-<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"030"</span>)</span>
-<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a>southern_region <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"006"</span>,</span>
-<span id="cb31-28"><a href="#cb31-28" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"010"</span>,</span>
-<span id="cb31-29"><a href="#cb31-29" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"011"</span>,</span>
-<span id="cb31-30"><a href="#cb31-30" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"012"</span>,</span>
-<span id="cb31-31"><a href="#cb31-31" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"013"</span>,</span>
-<span id="cb31-32"><a href="#cb31-32" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"014"</span>)</span>
-<span id="cb31-33"><a href="#cb31-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-34"><a href="#cb31-34" aria-hidden="true" tabindex="-1"></a>central_region <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"009"</span>,</span>
-<span id="cb31-35"><a href="#cb31-35" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"015"</span>,</span>
-<span id="cb31-36"><a href="#cb31-36" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"016"</span>,</span>
-<span id="cb31-37"><a href="#cb31-37" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"024"</span>,</span>
-<span id="cb31-38"><a href="#cb31-38" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"013"</span>,</span>
-<span id="cb31-39"><a href="#cb31-39" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"025"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="do">### create lists of court service unit (CSU) regions</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="do">### see here: https://www.djj.virginia.gov/pages/community/court-service-units.htm</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>eastern_region <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"001"</span>,</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"002"</span>,</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"02A"</span>,</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"003"</span>,</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"004"</span>,</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"005"</span>,</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"007"</span>,</span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"008"</span>)</span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>northern_region <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"017"</span>,</span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"018"</span>,</span>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"019"</span>,</span>
+<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"020"</span>,</span>
+<span id="cb47-16"><a href="#cb47-16" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"026"</span>,</span>
+<span id="cb47-17"><a href="#cb47-17" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"031"</span>)</span>
+<span id="cb47-18"><a href="#cb47-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-19"><a href="#cb47-19" aria-hidden="true" tabindex="-1"></a>western_region <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"021"</span>,</span>
+<span id="cb47-20"><a href="#cb47-20" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"022"</span>,</span>
+<span id="cb47-21"><a href="#cb47-21" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"023"</span>,</span>
+<span id="cb47-22"><a href="#cb47-22" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"027"</span>,</span>
+<span id="cb47-23"><a href="#cb47-23" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"028"</span>,</span>
+<span id="cb47-24"><a href="#cb47-24" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"029"</span>,</span>
+<span id="cb47-25"><a href="#cb47-25" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"030"</span>)</span>
+<span id="cb47-26"><a href="#cb47-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-27"><a href="#cb47-27" aria-hidden="true" tabindex="-1"></a>southern_region <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"006"</span>,</span>
+<span id="cb47-28"><a href="#cb47-28" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"010"</span>,</span>
+<span id="cb47-29"><a href="#cb47-29" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"011"</span>,</span>
+<span id="cb47-30"><a href="#cb47-30" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"012"</span>,</span>
+<span id="cb47-31"><a href="#cb47-31" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"013"</span>,</span>
+<span id="cb47-32"><a href="#cb47-32" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"014"</span>)</span>
+<span id="cb47-33"><a href="#cb47-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-34"><a href="#cb47-34" aria-hidden="true" tabindex="-1"></a>central_region <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"009"</span>,</span>
+<span id="cb47-35"><a href="#cb47-35" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"015"</span>,</span>
+<span id="cb47-36"><a href="#cb47-36" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"016"</span>,</span>
+<span id="cb47-37"><a href="#cb47-37" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"024"</span>,</span>
+<span id="cb47-38"><a href="#cb47-38" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"013"</span>,</span>
+<span id="cb47-39"><a href="#cb47-39" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"025"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="do">### add csu region to df</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>df_complaints_youth_intake_decision_csu <span class="ot">&lt;-</span> df_complaints_youth_intake_decision <span class="sc">%&gt;%</span> </span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">csu_region =</span> <span class="fu">case_when</span>(</span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    csu <span class="sc">%in%</span> eastern_region <span class="sc">~</span> <span class="st">"Eastern"</span>,</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    csu <span class="sc">%in%</span> northern_region <span class="sc">~</span> <span class="st">"Northern"</span>,</span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    csu <span class="sc">%in%</span> western_region <span class="sc">~</span> <span class="st">"Western"</span>,</span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    csu <span class="sc">%in%</span> southern_region <span class="sc">~</span> <span class="st">"Southern"</span>,</span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    csu <span class="sc">%in%</span> central_region <span class="sc">~</span> <span class="st">"Central"</span>, </span>
-<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="fu">as.character</span>(<span class="cn">NA</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="do">### add csu region to df</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>df_complaints_youth_intake_decision_csu <span class="ot">&lt;-</span> df_complaints_youth_intake_decision <span class="sc">%&gt;%</span> </span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">csu_region =</span> <span class="fu">case_when</span>(</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>    csu <span class="sc">%in%</span> eastern_region <span class="sc">~</span> <span class="st">"Eastern"</span>,</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>    csu <span class="sc">%in%</span> northern_region <span class="sc">~</span> <span class="st">"Northern"</span>,</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>    csu <span class="sc">%in%</span> western_region <span class="sc">~</span> <span class="st">"Western"</span>,</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>    csu <span class="sc">%in%</span> southern_region <span class="sc">~</span> <span class="st">"Southern"</span>,</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>    csu <span class="sc">%in%</span> central_region <span class="sc">~</span> <span class="st">"Central"</span>, </span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="fu">as.character</span>(<span class="cn">NA</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>mutate: new variable 'csu_region' (character) with 5 unique values and 0% NA</code></pre>
 </div>

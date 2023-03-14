@@ -53,8 +53,8 @@ df_djj_intake_complaints_raw <- openxlsx::read.xlsx(file.path(sharepoint_ojjdp_v
 
 ```{r }
 #############################################
-### clean and de-dup df_djj_intake_complaints_raw dataframe
-### this is our base file for the sample
+### clean and de-dup df_djj_intake_complaints_raw dataframe by complaint and offense
+### this is our base complaint/offense-level file for the sample
 #############################################
 df_djj_intake_complaints_clean <- df_djj_intake_complaints_raw %>% 
   distinct(juvenile_number,
@@ -109,13 +109,42 @@ df_complaints_youth_intake_decision <- df_djj_intake_complaints_clean %>%
   mutate(intake_decision = as.numeric(intake_decision)) %>% 
   left_join(codebook_intake_decision_values,
             by = "intake_decision") %>% 
-  ### create diversion flag
+  ### create flags for (NOTE:THIS IS PRELIMINARY AND PENDING CONFIRMATION WITH DJJ RESEARCH STAFF)
+  # intake decisions (petitioned, diverted, dismissed, other)
+  # diversion (yes or no)
+  # diversion outcome (successful, not successful and petitioned, not successful and not petitioned); what to do with "REQ'D TO PARTICIPATE-DIVERSION"?
+  # disposition outcomes (where intake complaint is petitioned)
   ### create unique complaint-level ID
-  mutate(diverted_flag = ifelse(intake_decision_label%in%c("UNSUCCESSFUL DIVERSION/PETITION FILED", "SUCCESSFUL DIVERSION","UNSUCCESSFUL DIVERSION/NO PETITION FILED","REQ'D TO PARTICIPATE-DIVERSION"),
+  mutate(intake_decision_clean = case_when(
+    intake_decision_label%in%c("UNSUCCESSFUL DIVERSION/PETITION FILED", "SUCCESSFUL DIVERSION","UNSUCCESSFUL DIVERSION/NO PETITION FILED","REQ'D TO PARTICIPATE-DIVERSION") ~ "Diverted",
+    intake_decision_label%in%c("PETITION FILED", "PETITION/DETENTION ORDER FILED","COURT SUMMONS","PETITION/SHELTER CARE FILED") ~ "Petitioned",    
+    intake_decision_label%in%c("RESOLVED", "COMPLAINT UNFOUNDED","UNOFFICIAL COUNSELING-FAMILY C") ~ "Dismissed",
+    intake_decision_label%in%c("DETENTION ORDER ONLY", "REFERRED TO ANOTHER AGY FOR SV","ACCEPTED VIA ICJ","RETURNED TO PROBATION SUPERVIS","PENDING","SHELTER CARE ONLY","RETURNED TO OUT-OF-STATE") ~ "Other",
+   TRUE ~ as.character(NA)),
+    intake_decision_clean = factor(intake_decision_clean,
+                              levels = c("Petitioned","Diverted","Dismissed","Other")),                            
+         intake_diverted_flag = ifelse(intake_decision_label%in%c("UNSUCCESSFUL DIVERSION/PETITION FILED", "SUCCESSFUL DIVERSION","UNSUCCESSFUL DIVERSION/NO PETITION FILED","REQ'D TO PARTICIPATE-DIVERSION"),
                                 1,0),
-         diverted_flag = factor(diverted_flag,
+         intake_diverted_flag = factor(intake_diverted_flag,
                                 levels = c(1,0),
                                 labels = c("Yes","No")),
+         diversion_successful_flag = ifelse(intake_decision_label%in%c("SUCCESSFUL DIVERSION"),
+                                1,0),
+         diversion_not_successful_flag = ifelse(intake_decision_label%in%c("UNSUCCESSFUL DIVERSION/PETITION FILED","UNSUCCESSFUL DIVERSION/NO PETITION FILED"),
+                                1,0),
+   ### preliminary options are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other
+   dispo_description_clean = case_when(
+    description%in%c("COMMIT TO DJJ (16.1-278.8.14)","SERIOUS OFFENDER COMMITMENT TO DJJ (16.1-278.8.17) (16.1-285.1)","SUSPENDED COMMITMENT TO DJJ") ~ "Commitment",
+    description%in%c("POST-DISPOSITIONAL DETENTION (16.1-278.8.16) (16.1-284.1)","SENTENCED TO DETENTION","SUSPENDED COMMITMENT TO DETENTION") ~ "Detention",
+    description%in%c("COURT ORDER CONDITIONS AND LIMITATIONS (16.1-278.8.2)", "DEFER FINDING AND DISPOSITION W/PROBATION SUPERVISION (16.1-278.8.5)","PROBATION (16.1-278.8.7)","PROBATION AND COURT ORDERED ALCOHOL OR DRUG ABUSE TREATMENT (16.1-278.8.7a") ~ "Probation/Supervision",
+    description%in%c("DEFER DISPOSITION ON CONDITION OF GOOD BEHAVIOR") ~ "Deferral",
+    description%in%c("(EXPIRED) DEFER DISPOSTION AND PLACE IN BOOT CAMP (16.1-278.8.4a)", "COURT ORDER GANG ACTIVITY PREVENTION PROGRAM (16.1-278.8.19)","COURT ORDER NON-RESIDENTIAL PARENT PARTICIPATION IN PROGRAMS (16.1-278.8.6)","COURT ORDER PARENT PARTICIPATION IN PROGRAMS...FOR REHABILITATION (16.1-278.8.3)","FIRST OFFENSE DRUG VIOLATION, MANDATORY TREATMENT (16.1-278.8:01)") ~ "Treatment/Programming",
+    description%in%c("NO FURTHER ACTION") ~ "No further action/none",
+    description%in%c("COMMUNITY SERVICE (16.1-278.8.11)") ~ "Community Service",
+    description%in%c("FINE NOT TO EXCEED $500 (16.1-278.8.8)") ~ "Fine",
+    description%in%c("RESTITUTION (16.1-278.8.10)") ~ "Restitution",
+    description%in%c("LOSS OF DRIVING PRIVS FOR ALCOHOL,FIREARM,OR TRUANCY(16.1-278.8.18)(16.1-278.9)","SENTENCED IN CIRCUIT COURT","SUSPEND DRIVER'S LICENSE/IMPOSE CURFEW (16.1-278.8.9)","TRAFFIC VIOLATION PENALTIES (16.1-278.8.12)","TRANSFER LEGAL CUSTODY (16.1-278.8.12)","UPHOLDING RULING OF THE LOWER COURT","(EXPIRED) TRANSFER TO CIRCUIT COURT","ADULT SENTENCED FOR JUVENILE OFFENSE (16.1-278.8.15) (16.1-284)") ~ "Other",
+   TRUE ~ as.character(NA)),
          unique_complaint_id = paste0(juvenile_number,case_number,.keep_all=TRUE)) %>% 
   ### create var for jj history using flags provided by DJJ
    mutate(jj_history_clean = case_when(
@@ -128,6 +157,34 @@ df_complaints_youth_intake_decision <- df_djj_intake_complaints_clean %>%
     jj_history_clean = factor(jj_history_clean,
                               levels = c("No Prior JJ History","Prior 'Other' History","Prior Status/CHINS/CHINsup","Prior Misdemeanor","Prior Felony")))
 
+#############################################
+### clean and de-dup df_djj_intake_complaints_raw dataframe by youth
+### this is our base youth-level demo file for the sample
+#############################################
+df_djj_youth_demo <- df_djj_intake_complaints_raw %>% 
+  distinct(juvenile_number,
+           .keep_all=TRUE) %>% 
+  ### clean race/ethnicity and gender
+  ### use factor function to assign labels to values
+  mutate(race_clean = case_when(
+    race=="I" & hispanic!="Y" ~ 1,
+    race=="A" & hispanic!="Y" ~ 2,
+    race=="B" & hispanic!="Y" ~ 3,
+    hispanic=="Y" ~ 4,
+    race=="W" & hispanic!="Y" ~ 5,
+    race %in% c("X","O") & hispanic!="Y" ~ 6,
+    TRUE ~ 7),
+    race_clean = factor(race_clean,
+         levels = c(1,2,3,4,5,6,7),
+         labels = c("American Indian", "Asian", "Black", "Hispanic", "White", "Other","Missing"))) %>% 
+  mutate(gender_clean = case_when(
+    sex=="F" ~ 1,
+    sex=="M" ~ 2,
+    TRUE ~ as.numeric(NA)),
+    gender_clean = factor(gender_clean,
+         levels = c(1,2),
+         labels = c("Female", "Male")))
+
 ########################################
 ### clean and de-dup disposition dataframe
 ########################################
@@ -137,7 +194,20 @@ disposition_clean <- disposition %>%
            case_number,
            offense_number,
            description,
-           .keep_all=TRUE) ### no records dropped
+           .keep_all=TRUE) %>% ### no records dropped
+  ### preliminary options for grouping dispositions are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other
+  mutate(dispo_description_clean = case_when(
+    description%in%c("COMMIT TO DJJ (16.1-278.8.14)","SERIOUS OFFENDER COMMITMENT TO DJJ (16.1-278.8.17) (16.1-285.1)","SUSPENDED COMMITMENT TO DJJ") ~ "Commitment",
+    description%in%c("POST-DISPOSITIONAL DETENTION (16.1-278.8.16) (16.1-284.1)","SENTENCED TO DETENTION","SUSPENDED COMMITMENT TO DETENTION") ~ "Detention",
+    description%in%c("COURT ORDER CONDITIONS AND LIMITATIONS (16.1-278.8.2)", "DEFER FINDING AND DISPOSITION W/PROBATION SUPERVISION (16.1-278.8.5)","PROBATION (16.1-278.8.7)","PROBATION AND COURT ORDERED ALCOHOL OR DRUG ABUSE TREATMENT (16.1-278.8.7a") ~ "Probation/Supervision",
+    description%in%c("DEFER DISPOSITION ON CONDITION OF GOOD BEHAVIOR") ~ "Deferral",
+    description%in%c("(EXPIRED) DEFER DISPOSTION AND PLACE IN BOOT CAMP (16.1-278.8.4a)", "COURT ORDER GANG ACTIVITY PREVENTION PROGRAM (16.1-278.8.19)","COURT ORDER NON-RESIDENTIAL PARENT PARTICIPATION IN PROGRAMS (16.1-278.8.6)","COURT ORDER PARENT PARTICIPATION IN PROGRAMS...FOR REHABILITATION (16.1-278.8.3)","FIRST OFFENSE DRUG VIOLATION, MANDATORY TREATMENT (16.1-278.8:01)") ~ "Treatment/Programming",
+    description%in%c("NO FURTHER ACTION") ~ "No further action/none",
+    description%in%c("COMMUNITY SERVICE (16.1-278.8.11)") ~ "Community Service",
+    description%in%c("FINE NOT TO EXCEED $500 (16.1-278.8.8)") ~ "Fine",
+    description%in%c("RESTITUTION (16.1-278.8.10)") ~ "Restitution",
+    description%in%c("LOSS OF DRIVING PRIVS FOR ALCOHOL,FIREARM,OR TRUANCY(16.1-278.8.18)(16.1-278.9)","SENTENCED IN CIRCUIT COURT","SUSPEND DRIVER'S LICENSE/IMPOSE CURFEW (16.1-278.8.9)","TRAFFIC VIOLATION PENALTIES (16.1-278.8.12)","TRANSFER LEGAL CUSTODY (16.1-278.8.12)","UPHOLDING RULING OF THE LOWER COURT","(EXPIRED) TRANSFER TO CIRCUIT COURT","ADULT SENTENCED FOR JUVENILE OFFENSE (16.1-278.8.15) (16.1-284)") ~ "Other",
+   TRUE ~ as.character(NA)))
   
   ### next step: de-dup by disposition -- keeping most serious?
   
@@ -148,7 +218,13 @@ disposition_clean <- disposition %>%
 caseload_clean <- caseload %>% 
   distinct(juvenile_number,
            offense_number,
-           .keep_all=TRUE) ### need to look into duplicates
+           .keep_all=TRUE) %>%  ### need to look into duplicates
+  ### join to youth-level demo file
+  ### need to better understand how we should join to complaint/offense-level data
+  left_join(df_djj_youth_demo,
+            by = "juvenile_number") %>% 
+  mutate(div_at_int = as.numeric(div_at_int),
+         div_bey_90 = as.numeric(div_bey_90))
 
 ```
 
@@ -206,6 +282,7 @@ df_complaints_youth_intake_decision_csu <- df_complaints_youth_intake_decision %
     TRUE ~ as.character(NA)))
 ```
 
+
 ```{r include=FALSE,message=FALSE,warning=FALSE}
 ### set sharepoint path using csgjcr function
 sharepoint_ojjdp_va_analysis_analytic_data <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Data/VA/analysis/analytic"))
@@ -213,6 +290,10 @@ sharepoint_ojjdp_va_analysis_analytic_data <- csgjcr::csg_sp_path(file.path("JJ_
 ### write out file for preliminary analysis
 write_rds(df_complaints_youth_intake_decision_csu,
           file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_complaints_youth_intake_decision_csu.rds"))
+
+### write out file for preliminary analysis
+write_rds(caseload_clean,
+          file.path(sharepoint_ojjdp_va_analysis_analytic_data,"caseload_clean.rds"))
 
 ```
 

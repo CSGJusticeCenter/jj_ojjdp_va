@@ -23,8 +23,8 @@ Missing data:
 
 *	It also appears that we have risk level, mental health flag, and other assessment information for only about 38% of all records in the intake complaints file.
 
-
 *	Should we use intake decision to create the diverted versus not diverted samples? Are these codes overwritten over time?	If so, which intake decision codes belong in the diverted group ("UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), and "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'),"REQ'D TO PARTICIPATE-DIVERSION" (code of '7')?)
+
 
 *New Questions* 
 

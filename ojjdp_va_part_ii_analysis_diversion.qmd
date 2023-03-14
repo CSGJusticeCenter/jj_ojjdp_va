@@ -57,10 +57,13 @@ sharepoint_ojjdp_va_viz <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Output/VA/r_v
 ```
 
 ```{r include=FALSE}
-### pull in preliminary virginia djj analytic file 
+### pull in preliminary virginia djj analytic files 
 
 ### read in preliminary analytic rds file 
 df_complaints_youth_intake_decision_csu <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_complaints_youth_intake_decision_csu.rds"))
+
+### write out file for preliminary analysis
+caseload_clean <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"caseload_clean.rds"))
 ```
 
 ```{r include=FALSE,warning=FALSE,include=FALSE}
@@ -71,7 +74,8 @@ unique_complaints_sample_denom <- n_distinct(df_complaints_youth_intake_decision
 unique_youth_sample_denom <- n_distinct(df_complaints_youth_intake_decision_csu$juvenile_number)
 ```
 
-<br>
+
+**Note:** See coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
 # Tables
 
@@ -83,12 +87,12 @@ Note: I am currently coding the following intake decisions as 'Diverted`: "UNSUC
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### overall complaints by diversion status
 df_complaints_youth_intake_decision_table <- df_complaints_youth_intake_decision_csu %>% 
-  dplyr::group_by(diverted_flag) %>% 
+  dplyr::group_by(intake_decision_clean) %>% 
   dplyr::summarise(`Unique Complaints (N)` = n_distinct(unique_complaint_id),
             `Complaints, Percent of Sample (%)` = scales::percent(`Unique Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
-  dplyr::rename(`Diverted?` = diverted_flag) 
+  dplyr::rename(`Intake Decision` = intake_decision_clean) 
 
 
 ### print table via kableextra
@@ -115,11 +119,17 @@ df_complaints_youth_intake_decision_table_year <- df_complaints_youth_intake_dec
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
                    `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
-                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::rename(`Year of Complaint` = date_opened_year) 
@@ -129,11 +139,17 @@ df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
                    `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
-                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::mutate(`Year of Complaint` = "Overall") 
@@ -168,11 +184,17 @@ df_complaints_youth_intake_decision_table_race <- df_complaints_youth_intake_dec
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
                    `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
-                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::rename(`Race/Ethnicity` = race_clean) 
@@ -182,11 +204,17 @@ df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
                    `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
-                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::mutate(`Race/Ethnicity` = "Overall") 
@@ -221,11 +249,17 @@ df_complaints_youth_intake_decision_table_gender <- df_complaints_youth_intake_d
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
                    `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
-                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::rename(`Gender` = gender_clean) 
@@ -235,11 +269,17 @@ df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
                    `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
-                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::mutate(`Gender` = "Overall") 
@@ -278,11 +318,17 @@ df_complaints_youth_intake_decision_table_age <- df_complaints_youth_intake_deci
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
                    `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
-                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::rename(`Age at Intake` = intake_age) 
@@ -292,11 +338,17 @@ df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
                    `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
-                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::mutate(`Age at Intake` = "Overall") 
@@ -331,11 +383,17 @@ df_complaints_youth_intake_decision_table_offense <- df_complaints_youth_intake_
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
                    `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
-                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::rename(`Offense Description` = dai)  
@@ -345,11 +403,17 @@ df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
                    `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
-                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::mutate(`Offense Description` = "Overall") 
@@ -385,12 +449,18 @@ df_complaints_youth_intake_decision_table_offense_status <- df_complaints_youth_
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
                    `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
-                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1)) %>% 
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>%  
   ungroup() %>% 
   dplyr::rename(`Status Offense Description` = drg)  
 
@@ -400,11 +470,17 @@ df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
                    `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
-                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::mutate(`Status Offense Description` = "Overall") 
@@ -439,11 +515,17 @@ df_complaints_youth_intake_decision_table_csu <- df_complaints_youth_intake_deci
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
                    `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
-                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::rename(`CSU` = csu)  
@@ -453,12 +535,18 @@ df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
                    `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
-                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1)) %>% 
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>%  
   ungroup() %>% 
   dplyr::mutate(`CSU` = "Overall") 
 
@@ -494,11 +582,17 @@ df_complaints_youth_intake_decision_table_csu_region <- df_complaints_youth_inta
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
                    `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
-                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::rename(`CSU Region` = csu_region)  
@@ -508,11 +602,17 @@ df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
                    `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
-                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::mutate(`CSU Region` = "Overall") 
@@ -550,11 +650,17 @@ df_complaints_youth_intake_decision_table_jj_history <- df_complaints_youth_inta
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
                    `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
-                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::rename(`JJ History` = jj_history_clean)  
@@ -565,11 +671,17 @@ df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
                    `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
-                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::mutate(`JJ History` = "Overall") 
@@ -605,11 +717,17 @@ df_complaints_youth_intake_decision_table_pet_desc <- df_complaints_youth_intake
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
                    `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
-                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::rename(`Petitioner Description` = petitioner_desc)  
@@ -620,11 +738,17 @@ df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"]),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
                    `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Not Diverted (N)` = n_distinct(unique_complaint_id[diverted_flag=="No"]),
-                   `Complaints Not Diverted (row %)` = scales::percent(`Complaints Not Diverted (N)`/`All Complaints (N)`,
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::mutate(`Petitioner Description` = "Overall") 
@@ -644,6 +768,108 @@ kable(df_complaints_youth_intake_decision_table_pet_desc_final,
                                        "responsive"), 
                  row_label_position = "l") %>% 
   row_spec(24, bold = TRUE)
+```
+
+<br>
+
+## Table 11: Average Length of Stay on Diversion by Race/Ethnicity
+
+Both measures of LOS on diversion are calculated by DJJ and provided in the `caseload` file -- see codebook page for more information. The two LOS measures are the "Number of days on the workload status "Diversion at Intake"" and the "Number of days on the workload status "Diversion Beyond 90 Days"". **Still need to check for duplicates**
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+###  mean and median diversion lengths of stay by race/ethnicity
+df_diversion_race_eth_los <- caseload_clean %>% 
+  filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
+  group_by(race_clean) %>% 
+  dplyr::summarise(`Mean Diversion (at intake)` = mean(div_at_int,
+                                           na.rm=TRUE),
+                   `Median Diversion (at intake)` = median(div_at_int,
+                                           na.rm=TRUE),
+                   `Mean Diversion (beyond 90 days)` = mean(div_bey_90,
+                                           na.rm=TRUE),
+                   `Median Diversion (beyond 90 days)` = median(div_bey_90,
+                                           na.rm=TRUE)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`Race/Ethnicity` = race_clean)
+
+### overall mean and median diversion lengths of stay
+df_diversion_overall_los <- caseload_clean %>% 
+  filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
+  dplyr::summarise(`Mean Diversion (at intake)` = mean(div_at_int,
+                                           na.rm=TRUE),
+                   `Median Diversion (at intake)` = median(div_at_int,
+                                           na.rm=TRUE),
+                   `Mean Diversion (beyond 90 days)` = mean(div_bey_90,
+                                           na.rm=TRUE),
+                   `Median Diversion (beyond 90 days)` = median(div_bey_90,
+                                           na.rm=TRUE)) %>% 
+  mutate(`Race/Ethnicity` = "Overall")
+ 
+### combine two dataframes for table
+df_diversion_race_eth_los_final <- rbind(df_diversion_race_eth_los,
+                                                             df_diversion_overall_los)
+
+### print table via kableextra
+kable(df_diversion_race_eth_los_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") %>% 
+  row_spec(8, bold = TRUE)
+```
+
+<br>
+
+## Table 12: Average Length of Stay on Diversion by Gender
+
+Both measures of LOS on diversion are calculated by DJJ and provided in the `caseload` file -- see codebook page for more information. The two LOS measures are the "Number of days on the workload status "Diversion at Intake"" and the "Number of days on the workload status "Diversion Beyond 90 Days"". **Still need to check for duplicates**
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+###  mean and median diversion lengths of stay by race/ethnicity
+df_diversion_gender_los <- caseload_clean %>% 
+  filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
+  group_by(gender_clean) %>% 
+  dplyr::summarise(`Mean Diversion (at intake)` = mean(div_at_int,
+                                           na.rm=TRUE),
+                   `Median Diversion (at intake)` = median(div_at_int,
+                                           na.rm=TRUE),
+                   `Mean Diversion (beyond 90 days)` = mean(div_bey_90,
+                                           na.rm=TRUE),
+                   `Median Diversion (beyond 90 days)` = median(div_bey_90,
+                                           na.rm=TRUE)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`Gender` = gender_clean)
+
+### overall mean and median diversion lengths of stay
+df_diversion_overall_los <- caseload_clean %>% 
+  filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
+  dplyr::summarise(`Mean Diversion (at intake)` = mean(div_at_int,
+                                           na.rm=TRUE),
+                   `Median Diversion (at intake)` = median(div_at_int,
+                                           na.rm=TRUE),
+                   `Mean Diversion (beyond 90 days)` = mean(div_bey_90,
+                                           na.rm=TRUE),
+                   `Median Diversion (beyond 90 days)` = median(div_bey_90,
+                                           na.rm=TRUE)) %>% 
+  mutate(`Gender` = "Overall")
+ 
+### combine two dataframes for table
+df_diversion_gender_los_final <- rbind(df_diversion_gender_los,
+                                                             df_diversion_overall_los)
+
+### print table via kableextra
+kable(df_diversion_gender_los_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") %>% 
+  row_spec(3, bold = TRUE)
 ```
 
 <br><br>
