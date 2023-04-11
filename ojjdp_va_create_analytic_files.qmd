@@ -185,11 +185,11 @@ df_complaints_youth_intake_decision <- df_djj_intake_complaints_clean %>%
   mutate(intake_decision_clean = case_when(
     intake_decision_label%in%c("UNSUCCESSFUL DIVERSION/PETITION FILED", "SUCCESSFUL DIVERSION","UNSUCCESSFUL DIVERSION/NO PETITION FILED","REQ'D TO PARTICIPATE-DIVERSION") ~ "Diverted",
     intake_decision_label%in%c("PETITION FILED", "PETITION/DETENTION ORDER FILED","COURT SUMMONS","PETITION/SHELTER CARE FILED") ~ "Petitioned",    
-    intake_decision_label%in%c("RESOLVED", "COMPLAINT UNFOUNDED","UNOFFICIAL COUNSELING-FAMILY C") ~ "Dismissed",
+    intake_decision_label%in%c("RESOLVED", "COMPLAINT UNFOUNDED","UNOFFICIAL COUNSELING-FAMILY C") ~ "Resolved/Dismissed",
     intake_decision_label%in%c("DETENTION ORDER ONLY", "REFERRED TO ANOTHER AGY FOR SV","ACCEPTED VIA ICJ","RETURNED TO PROBATION SUPERVIS","PENDING","SHELTER CARE ONLY","RETURNED TO OUT-OF-STATE") ~ "Other",
    TRUE ~ as.character(NA)),
     intake_decision_clean = factor(intake_decision_clean,
-                              levels = c("Petitioned","Diverted","Dismissed","Other")),                            
+                              levels = c("Petitioned","Diverted","Resolved/Dismissed","Other")),                            
          intake_diverted_flag = ifelse(intake_decision_label%in%c("UNSUCCESSFUL DIVERSION/PETITION FILED", "SUCCESSFUL DIVERSION","UNSUCCESSFUL DIVERSION/NO PETITION FILED","REQ'D TO PARTICIPATE-DIVERSION"),
                                 1,0),
          intake_diverted_flag = factor(intake_diverted_flag,
@@ -199,10 +199,12 @@ df_complaints_youth_intake_decision <- df_djj_intake_complaints_clean %>%
                                 1,0),
          diversion_not_successful_flag = ifelse(intake_decision_label%in%c("UNSUCCESSFUL DIVERSION/PETITION FILED","UNSUCCESSFUL DIVERSION/NO PETITION FILED"),
                                 1,0),
+         diversion_active_at_time_of_pull = ifelse(intake_decision_label=="REQ'D TO PARTICIPATE-DIVERSION",
+                                                  1,0),
          unique_complaint_id = paste0(juvenile_number,case_number)) %>% 
   ### create var for jj history using flags provided by DJJ
    mutate(jj_history_clean = case_when(
-    prior_adj==0 ~ "No Prior JJ History",
+    is.na(prior_adj)==TRUE ~ "No Prior JJ History",
     prior_other>0 ~ "Prior 'Other' History",
     (prior_chinsup>0 | prior_chins>0 | prior_other_status>0) ~ "Prior Status/CHINS/CHINsup",
     prior_misd>0 ~ "Prior Misdemeanor",
