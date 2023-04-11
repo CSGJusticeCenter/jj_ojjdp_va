@@ -188,29 +188,74 @@ ul.task-list li input[type="checkbox"] {
 <p><strong>Virginia DJJ Data Questions and Responses:</strong></p>
 <p><em>Questions about the disposition file:</em></p>
 <ul>
-<li><p>The disposition file appears to have a small number of pure duplicates (<sub>850/</sub>370,000) and a somewhat larger population of duplicates across youth ID, case number, offense, and disposition (<sub>11,000/</sub>370,000). How should we interpret/treat this? It seems like one case could have multiple intakes and thus, multiple measures of days from intake to disposition – but for one offense ID</p></li>
-<li><p>We seem to be missing description, days_int_to_cd, and court_disp_age for about half of the records in the file. Are these intake complaints without dispositions? Or how should we interpret this?</p></li>
+<li>The disposition file appears to have a small number of pure duplicates (<sub>850/</sub>370,000) and a somewhat larger population of duplicates across youth ID, case number, offense, and disposition (<sub>11,000/</sub>370,000). How should we interpret/treat this? It seems like one case could have multiple intakes and thus, multiple measures of days from intake to disposition – but for one offense ID</li>
 </ul>
+<p><em>Response from Nina: One case can have multiple complaints (aka offenses) and each one of the offenses may have one or more dispositions. So yes, there can be multiple measures of days from intake to disposition. The field in our data system calls it the court ordered date since the word “disposition” can mean different things to different individuals. Follow up from phone call: I looked at the data in our data system and the duplicates are correct. For example, the youth may be given more than one type of court ordered condition and the PO may put a disposition for each specific type.</em></p>
+<ul>
+<li>We seem to be missing description, days_int_to_cd, and court_disp_age for about half of the records in the file. Are these intake complaints without dispositions? Or how should we interpret this?</li>
+</ul>
+<p><em>Response from Nina: Since the complaint is diverted the worker may not have entered a disposition. The disposition and intake decision are captured in two different fields.</em></p>
 <p><em>Questions about the intake complaints file:</em></p>
 <p>Missing data:</p>
 <ul>
-<li><p>How should we interpret missing prior JJ complaint data? About 40% of all intake complaints records appear to have missing data in these columns</p></li>
-<li><p>We seem to be missing age (pet_age) for about 35% of all records in the intake complaints file – how should we interpret this?</p></li>
-<li><p>It also appears that we have risk level, mental health flag, and other assessment information for only about 38% of all records in the intake complaints file.</p></li>
-<li><p>Should we use intake decision to create the diverted versus not diverted samples? Are these codes overwritten over time? If so, which intake decision codes belong in the diverted group (“UNSUCCESSFUL DIVERSION/PETITION FILED” (code of ‘18’), “SUCCESSFUL DIVERSION” (code of ‘20’), and “UNSUCCESSFUL DIVERSION/NO PETITION FILED” (code of ‘21’),“REQ’D TO PARTICIPATE-DIVERSION” (code of ‘7’)?)</p></li>
+<li>How should we interpret missing prior JJ complaint data? About 40% of all intake complaints records appear to have missing data in these columns</li>
 </ul>
+<p><em>Response from Nina: Missing means the youth had no prior involvement across all offense types/severities. For the records that have 0 rather than blank, this means they had no type of prior for that field (for example, if prior felony is 0 it means they had no prior felonies). However, they youth may have had a different type of prior (based on the example, the youth may have had a prior misdemeanor).</em></p>
+<ul>
+<li>We seem to be missing age (pet_age) for about 35% of all records in the intake complaints file – how should we interpret this?</li>
+</ul>
+<p><em>Response from Nina: Not all complaints are petitioned. If the case is not petitioned the age will be missing. The percentage missing decreases to less than one percent when intake decision is taken into consideration.</em></p>
+<ul>
+<li>It also appears that we have risk level, mental health flag, and other assessment information for only about 38% of all records in the intake complaints file.</li>
+</ul>
+<p><em>Response from Nina: Not every youth gets a YASI at intake. The youth will usually get a YASI if they have a social history completed, if they are placed on probation, or if they are committed.</em></p>
+<ul>
+<li>Should we use intake decision to create the diverted versus not diverted samples? Are these codes overwritten over time? If so, which intake decision codes belong in the diverted group (“UNSUCCESSFUL DIVERSION/PETITION FILED” (code of ‘18’), “SUCCESSFUL DIVERSION” (code of ‘20’), and “UNSUCCESSFUL DIVERSION/NO PETITION FILED” (code of ‘21’),“REQ’D TO PARTICIPATE-DIVERSION” (code of ‘7’)?)</li>
+</ul>
+<p><em>Response from Nina: The only codes that are overwritten are the diversion intake decisions. ),“REQ’D TO PARTICIPATE-DIVERSION” means the youth has an open diversion plan. When the diversion plan is closed they are either changed to one of the unsuccessful codes or the successful code. You can see how we categorize the different intake decisions on page 18 of the Data Resource Guide, FY 2022.</em></p>
 <p><em>New Questions</em></p>
 <ul>
-<li><p>How should we interpret FIPS codes of X71 and X21 (both associated with CSU 029)?</p></li>
-<li><p>Should we be using the Offense Type column or Delinquent/Status/Technical/Traffic flag to select complaints that are status-related? Or does it not matter?</p></li>
-<li><p>Do you all have a rule for excluding youth of certain ages from analysis (based on the assumption that it is likely a data entry error? e.g., ages of 0-4 or 25+?) Or are the ages accurate and reflect non-JJ involvement?</p></li>
+<li>Could you walk us through the difference between CHINS, CHINSUP, and STATUS categories? Why are all three categories (CHINS, CHINSUP, STATUS) included in prior history, but only status included in current charge?</li>
 </ul>
+<p><em>Response from Nina:</em></p>
+<p><em>These definitions are from pages 4, 5, and 96 of the Data Resource Guide, FY 2022.</em></p>
+<p><em>- CHINS: a child whose behavior, conduct, or condition presents or results in a serious threat to (i) the wellbeing and physical safety of that child or, (ii) if under the age of 14, the well-being and physical safety of another person. To meet the definition of CHINS, there must be a clear and substantial danger to the life or health of the child or another person, and the intervention of the court must be found to be essential to provide the treatment, rehabilitation, or services needed by the child or the child’s family. See § 16.1-228 of the Code of Virginia.</em> <em>- CHINSup: a child who (i) is habitually and without justification absent from school despite opportunity and reasonable effort to maintain school attendance, (ii) runs away from family or lawful custodian on more than one occasion, or (iii) escapes from or leaves a court-ordered residential placement without permission. See § 16.1-228 of the Code of Virginia.</em></p>
+<p><em>In the file the Prior Other Status includes the following:</em> <em>- Other Status Offenses: In the appendix of the DRG you can find the offenses that are considered other status offenses. See below.</em></p>
+<p><em>- Marijuana Status: As of FY 2022, the “Narcotics” offense category no longer includes marijuana possession offenses. These offenses are captured under the new VCC prefix, MRJ. Beginning in FY 2022, there are two “Marijuana” categories: delinquent marijuana offenses and status marijuana offenses.</em></p>
+<ul>
+<li>How should we interpret FIPS codes of X71 and X21 (both associated with CSU 029)?</li>
+</ul>
+<p><em>Response from Nina: X indicates that the code was expired. In this case both FIPS were part of CSU 29. Effective in FY 2019, Bland Co.&nbsp;(FIPS 021) and Giles Co.&nbsp;(FIPS 071) are part of CSU 27. </em></p>
+<ul>
+<li>Should we be using the Offense Type column or Delinquent/Status/Technical/Traffic flag to select complaints that are status-related? Or does it not matter?</li>
+</ul>
+<p><em>Response from Nina: This is something that was included with the request. I believe it was categorized the same way the offenses are categorized on page 21 of the Data Resource Guide, FY 2022.</em></p>
+<ul>
+<li>Do you all have a rule for excluding youth of certain ages from analysis (based on the assumption that it is likely a data entry error? e.g., ages of 0-4 or 25+?) Or are the ages accurate and reflect non-JJ involvement?</li>
+</ul>
+<p><em>Response from Nina: I think it depends on the type of offense/ages. I would exclude “youth” 21 and over since those are most likely data entry errors. Depending on the offense category, the younger ages (0-4 years) may be accurate. For example, if it’s a CHINS complaint the child may actually be 0-4 years old. For the rest of the complaints it is most likely a data entry error. For the Data Resource Guide, our cut off for the intake section is 8 to 20 years old.</em></p>
 <p><em>Questions about the caseload file:</em></p>
 <ul>
-<li><p>Caseload file seems to have duplicates across youth ID (juvenile number) and offense number – how should we interpret this?</p></li>
-<li><p>What is the best way to join the caseload file to the other files (without case number)?</p></li>
-<li><p>We seem to be missing div_at_int and div_bey_90 for the vast majority of the records in the file (87%+). Are these intake complaints that were not diverted? Or how should we interpret this?</p></li>
+<li>Caseload file seems to have duplicates across youth ID (juvenile number) and offense number – how should we interpret this?</li>
 </ul>
+<p><em>Response from Nina: The worker selects a caseload status and then associates one or more offenses with it. The youth’s status can change, for example, the youth may be placed on diversion and then abscond and then go back on diversion status. In this scenario, the youth would have two diversion statuses in the file since it counts the LOS for each status individually.</em></p>
+<ul>
+<li>What is the best way to join the caseload file to the other files (without case number)?</li>
+</ul>
+<p><em>Response from Nina: I would use the juvenile number and offense number both are unique to youth. The same offense number is not used for other youth who had the same offense.</em></p>
+<ul>
+<li>We seem to be missing div_at_int and div_bey_90 for the vast majority of the records in the file (87%+). Are these intake complaints that were not diverted? Or how should we interpret this?</li>
+</ul>
+<p><em>Response from Nina: It looks like if the offense(s) were not associated with a diversion caseload status and that is why it is blank. They may have a different workload status(es). For example, you can see the probation and parole workload statuses on page 97 of the DRG. Data entry practices for diversion caseload statuses may vary by CSU.</em></p>
+<p><em>- Update since our call: I verified with the person that wrote the query. If the youth has the juvenile number and offense number filled in but the two diversion columns are blank. It means the youth had another type of caseload status (pre-Dispositional tracking, probation, parole, etc.) or they did not have any caseload statuses. So it is possible to have the number of days for the two diversion codes filled in and also have a blank row because they had another type of status. If we have to rerun the data we can change the rules to exclude the blanks.</em></p>
+<ul>
+<li>Do youth get a YASI when they are diverted?</li>
+</ul>
+<p><em>Response from Nina: It is not in the procedure but in practice it may vary. I would defer to Ms.&nbsp;McWilliams on the answer to this question.</em></p>
+<ul>
+<li>Are the prior fields mutually exclusive?</li>
+</ul>
+<p><em>Response from Nina: Certain fields will not overlap (e.g., prior felony and prior misdemeanor). The only field that may overlap with felony and misdemeanor is the “other status” category. Different reference tables are used to calculate these fields. There should not be a huge overlap but it is possible. We could probably add a field for the total number of priors (let me know if you want any exclusions) because that shouldn’t change the scope of the project/ what you already requested.</em></p>
 <p><br></p>
 <p><strong>Current Internal Questions &amp; Next Steps:</strong></p>
 <ul>
