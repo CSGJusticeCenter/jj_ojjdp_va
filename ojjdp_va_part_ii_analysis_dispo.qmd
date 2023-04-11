@@ -89,6 +89,9 @@ unique_youth_sample_denom <- n_distinct(disposition_clean$juvenile_number)
 Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
 ### overall complaints by diversion status
 df_complaints_disposition_outcome_table <- disposition_clean %>% 
   dplyr::group_by(dispo_description_clean) %>% 
@@ -117,6 +120,9 @@ kable(df_complaints_disposition_outcome_table,
 Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
 ### unique complaints split out
 df_complaints_disposition_outcome_table_year <- disposition_clean %>% 
   dplyr::group_by(date_opened_year) %>% 
@@ -218,6 +224,9 @@ kable(df_complaints_disposition_outcome_table_year_final,
 Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
 ### unique complaints split out
 df_complaints_disposition_outcome_table_race <- disposition_clean %>% 
   dplyr::group_by(race_clean) %>% 
@@ -319,6 +328,9 @@ kable(df_complaints_disposition_outcome_table_race_final,
 Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
 ### unique complaints split out
 df_complaints_disposition_outcome_table_gender <- disposition_clean %>% 
   dplyr::group_by(gender_clean) %>% 
@@ -422,6 +434,9 @@ Note: The preliminary options for grouping dispositions that I am using are: Det
 **TO DO:** Decide on which ages to exclude because of likely data collection issues (e.g. ages of 0 or 44); current process is removing youth <8 and >18
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
 ### unique complaints split out
 df_complaints_disposition_outcome_table_age <- disposition_clean %>% 
    filter(court_disp_age>8,
@@ -527,6 +542,9 @@ kable(df_complaints_disposition_outcome_table_age_final,
 Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
 ### unique complaints split out
 df_complaints_disposition_outcome_table_offense <- disposition_clean %>% 
   dplyr::group_by(dai) %>% 
@@ -628,6 +646,9 @@ kable(df_complaints_disposition_outcome_table_offense_final,
 Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
 ### unique complaints split out
 df_complaints_disposition_outcome_table_offense_status <- disposition_clean %>% 
   filter(dai=="Status Offense") %>% 
@@ -726,11 +747,14 @@ kable(df_complaints_disposition_outcome_table_offense_status_final,
 
 <br>
 
-## Table 7:Disposition Outcomes by Court Service Unit (CSU)
+## Table 7: Disposition Outcomes by Court Service Unit (CSU)
 
 Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
 ### unique complaints split out
 df_complaints_disposition_outcome_table_csu <- disposition_clean %>% 
   dplyr::group_by(csu) %>% 
@@ -834,6 +858,9 @@ Note: The preliminary options for grouping dispositions that I am using are: Det
 See CSU regions here: https://www.djj.virginia.gov/pages/community/court-service-units.htm
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
 ### unique complaints split out
 df_complaints_disposition_outcome_table_csu_region <- disposition_clean %>% 
   dplyr::group_by(csu_region) %>% 
@@ -934,9 +961,11 @@ kable(df_complaints_disposition_outcome_table_csu_region_final,
 
 Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it.  
 
-**Question:** How should we interpret missing prior JJ complaint data? About 40% of all intake complaints records appear to have missing data in these columns
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
 ### unique complaints split out
 df_complaints_disposition_outcome_table_jj_history <- disposition_clean %>% 
   filter(!is.na(jj_history_clean)==TRUE) %>% 
@@ -1040,6 +1069,9 @@ kable(df_complaints_disposition_outcome_table_jj_history_final,
 Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it.  
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
 ### unique complaints split out
 df_complaints_disposition_outcome_table_pet_desc <- disposition_clean %>% 
   filter(!is.na(petitioner_desc)==TRUE) %>% 
