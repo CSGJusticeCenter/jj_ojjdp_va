@@ -105,12 +105,9 @@ Missing data:
 *Response from Nina: Certain fields will not overlap (e.g., prior felony and prior misdemeanor). The only field that may overlap with felony and misdemeanor is the “other status” category. Different reference tables are used to calculate these fields. There should not be a huge overlap but it is possible. We could probably add a field for the total number of priors (let me know if you want any exclusions) because that shouldn’t change the scope of the project/ what you already requested.* 
 
 
-
 <br>
 
 **Current Internal Questions & Next Steps:**
-
-- We have CHINS/CHINSup/status split out for history, but not current charge
 
 - Language: complaint vs intake complaint vs intake case
 

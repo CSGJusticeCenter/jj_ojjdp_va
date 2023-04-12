@@ -57,12 +57,12 @@ sharepoint_ojjdp_va_viz <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Output/VA/r_v
 ```
 
 ```{r include=FALSE}
-### pull in preliminary virginia djj analytic files 
+### pull in virginia djj analytic files 
 
-### read in preliminary analytic rds file 
+### read in df_complaints_youth_intake_decision_csu.rds analytic rds file 
 df_complaints_youth_intake_decision_csu <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_complaints_youth_intake_decision_csu.rds"))
 
-### write out file for preliminary analysis
+### read in caseload_clean.rds analytic rds file 
 caseload_clean <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"caseload_clean.rds"))
 ```
 
@@ -804,7 +804,7 @@ kable(df_complaints_youth_intake_decision_table_jj_history_final,
 
 <br>
 
-## Table 10: Intake Decisions by Petitioner Type
+## Table 10: Intake Decisions by Petitioner Type/Referral Source
 
 **Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'), and "REQ'D TO PARTICIPATE-DIVERSION" (code of '7'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
@@ -814,8 +814,8 @@ kable(df_complaints_youth_intake_decision_table_jj_history_final,
 
 ### unique complaints split out
 df_complaints_youth_intake_decision_table_pet_desc <- df_complaints_youth_intake_decision_csu %>% 
-  filter(!is.na(petitioner_desc)==TRUE) %>% 
-  dplyr::group_by(petitioner_desc) %>% 
+  filter(!is.na(referral_source_clean)==TRUE) %>% 
+  dplyr::group_by(referral_source_clean) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
@@ -832,11 +832,12 @@ df_complaints_youth_intake_decision_table_pet_desc <- df_complaints_youth_intake
                    `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
-  dplyr::rename(`Petitioner Description` = petitioner_desc)  
+  dplyr::rename(`Petitioner/Referral Source` = referral_source_clean) %>% 
+  arrange(desc(`All Complaints (N)`))
 
 ### unique complaints statewide
 df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
-  filter(!is.na(petitioner_desc)==TRUE) %>% 
+  filter(!is.na(referral_source_clean)==TRUE) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
@@ -853,7 +854,7 @@ df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_
                    `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
-  dplyr::mutate(`Petitioner Description` = "Overall") 
+  dplyr::mutate(`Petitioner/Referral Source` = "Overall") 
 
 ### combine two dataframes for table
 df_complaints_youth_intake_decision_table_pet_desc_final <- rbind(df_complaints_youth_intake_decision_table_pet_desc,
@@ -869,7 +870,7 @@ kable(df_complaints_youth_intake_decision_table_pet_desc_final,
                                        "condensed", 
                                        "responsive"), 
                  row_label_position = "l") %>% 
-  row_spec(24, bold = TRUE)
+  row_spec(9, bold = TRUE)
 ```
 
 <br>
@@ -1151,7 +1152,7 @@ df_csu_region_level_intake_summary_geo <- read_rds(file.path(sharepoint_ojjdp_va
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
-#| out-width: 85%
+#| out-width: 100%
 
 ### create quantiles object
 no_classes <- 4
@@ -1199,7 +1200,7 @@ ggplot(
     # scale_colour_gradientn(colours = c("#D7EBF1","#AFD6E2","#87C2D4","#2F7084","#1F4A58")) +
  scale_fill_manual(
     values = c("#1F4A58","#2F7084","#87C2D4","#AFD6E2"),
-    name = "% of Intake Complaints Diverted",
+    name = "% of Complaints Diverted",
     na.value = "grey50",
     guide = guide_legend(
      keyheight = unit(7.5, units = "mm"),
@@ -1211,14 +1212,14 @@ ggplot(
     data = df_county_level_intake_summary_geo_to_map,
     fill = "transparent",
     color = "white",
-    size = .3
+    size = .05
   )  +
   # use additional csu-level shapefile for region border
   geom_sf(
     data = df_csu_level_intake_summary_geo,
     fill = "transparent",
-    color = "grey10",
-    size = .8
+    color = "white",
+    size = .65
   )  +
  # geom_label(
  #     data = df_csu_region_level_intake_summary_geo,
@@ -1278,7 +1279,7 @@ ggplot(
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
-#| out-width: 85%
+#| out-width: 100%
 
 ### create quantiles object
 no_classes <- 4
@@ -1326,7 +1327,7 @@ ggplot(
     # scale_colour_gradientn(colours = c("#D7EBF1","#AFD6E2","#87C2D4","#2F7084","#1F4A58")) +
  scale_fill_manual(
     values = c("#1F4A58","#2F7084","#87C2D4","#AFD6E2"),
-    name = "% of Intake Complaints Diverted",
+    name = "% of Complaints Diverted",
     na.value = "grey50",
     guide = guide_legend(
      keyheight = unit(7.5, units = "mm"),
@@ -1335,44 +1336,51 @@ ggplot(
   )) +
   # use white stroke borders for county boundaries
   geom_sf(
+    data = df_county_level_intake_summary_geo_to_map,
+    fill = "transparent",
+    color = "white",
+    size = .05
+  ) +
+  # use white stroke borders for csu boundaries
+  geom_sf(
     data = df_csu_level_intake_summary_geo_to_map,
     fill = "transparent",
     color = "white",
-    size = .3
+    size = .65
   )  +
   # use additional csu region-level shapefile for region border
-  geom_sf(
-    data = df_csu_region_level_intake_summary_geo,
-    fill = "transparent",
-    color = "grey10",
-    size = .8
-  )  +
- geom_label(
-     data = df_csu_region_level_intake_summary_geo,
-     aes(geometry = geometry,
-         label = paste0(csu_region)),
- family = "Franklin Gothic Demi",
- color = "gray25",
- size = 3,
- fontface = "bold",
- stat = "sf_coordinates") +
-  # guides(fill = guide_colorbar(barwidth = 8),
-  #          direction = "horizontal",
-  #     barheight = unit(2, units = "mm"),
-  #     barwidth = unit(50, units = "mm"),
-  #     draw.ulim = F,
-  #     title.position = 'top',
-  #     # some shifting around
-  #     title.hjust = 0.5,
-  #     label.hjust = 0.5) +
-  labs(
-    title = NULL,
-    subtitle = NULL,
-    x = NULL,
-    y = NULL,
-    fill = NULL,
-    caption = NULL
-  ) +
+  # geom_sf(
+  #   data = df_csu_region_level_intake_summary_geo,
+  #   fill = "transparent",
+  #   color = "grey20",
+  #   size = .35
+  # )  + 
+ # geom_label(
+ #     data = df_csu_level_intake_summary_geo_to_map,
+ #     aes(geometry = geometry,
+ #         label = paste0(csu)),
+ # family = "Franklin Gothic Demi",
+ # color = "gray25",
+ # size = 3,
+ # fontface = "bold",
+ # stat = "sf_coordinates") +
+ # guides(fill = guide_colorbar(barwidth = 8),
+ #          direction = "horizontal",
+ #     barheight = unit(2, units = "mm"),
+ #     barwidth = unit(50, units = "mm"),
+ #     draw.ulim = F,
+ #     title.position = 'top',
+ #     # some shifting around
+ #     title.hjust = 0.5,
+ #     label.hjust = 0.5) +
+ #  labs(
+ #    title = NULL,
+ #    subtitle = NULL,
+ #    x = NULL,
+ #    y = NULL,
+ #    fill = NULL,
+ #    caption = NULL
+ #  ) +
   # add theme
   theme_map() 
 # +
@@ -1398,4 +1406,116 @@ ggplot(
 #   )
 ```
 
+<br>
+
+## Figure 3: % of all Complaints Diverted by Court Service Unit (CSU) (continuous scale)
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 100%
+
+### map via ggplot 
+ggplot(
+  # define main data source
+  data = df_csu_level_intake_summary_geo_to_map
+) +
+  scale_alpha(name = "",
+              range = c(0.6, 0),
+              guide = F) + # suppress legend
+  # add main fill aesthetic
+  geom_sf(
+    mapping = aes(
+      fill = `Complaints Diverted (row %)`
+      ),
+    color = "white",
+    size = 0.1
+  ) +
+    scale_fill_distiller(
+    labels = scales::percent_format(accuracy=1),
+    direction = 1,
+    name = "% of Complaints Diverted"
+  ) +
+  ### use jr palette here
+    scale_colour_gradientn(colours = c("#D7EBF1","#AFD6E2","#87C2D4","#2F7084","#1F4A58")) +
+ # scale_fill_manual(
+ #    values = c("#1F4A58","#2F7084","#87C2D4","#AFD6E2"),
+ #    name = "% of Complaints Diverted",
+ #    na.value = "grey50",
+ #    guide = guide_legend(
+ #     keyheight = unit(7.5, units = "mm"),
+ #     title.position = "top",
+ #     reverse = F # display highest on top
+  # )) +
+  # use white stroke borders for county boundaries
+  geom_sf(
+    data = df_county_level_intake_summary_geo_to_map,
+    fill = "transparent",
+    color = "white",
+    size = .05
+  ) +
+  # use white stroke borders for csu boundaries
+  geom_sf(
+    data = df_csu_level_intake_summary_geo_to_map,
+    fill = "transparent",
+    color = "white",
+    size = .65
+  )  +
+  # use additional csu region-level shapefile for region border
+  # geom_sf(
+  #   data = df_csu_region_level_intake_summary_geo,
+  #   fill = "transparent",
+  #   color = "grey20",
+  #   size = .35
+  # )  + 
+ # geom_label(
+ #     data = df_csu_level_intake_summary_geo_to_map,
+ #     aes(geometry = geometry,
+ #         label = paste0(csu)),
+ # family = "Franklin Gothic Demi",
+ # color = "gray25",
+ # size = 3,
+ # fontface = "bold",
+ # stat = "sf_coordinates") +
+ guides(fill = guide_colorbar(barwidth = 8),
+          direction = "horizontal",
+     barheight = unit(2, units = "mm"),
+     barwidth = unit(50, units = "mm"),
+     draw.ulim = F,
+     title.position = 'top',
+     # some shifting around
+     title.hjust = 0.5,
+     label.hjust = 0.5) +
+ #  labs(
+ #    title = NULL,
+ #    subtitle = NULL,
+ #    x = NULL,
+ #    y = NULL,
+ #    fill = NULL,
+ #    caption = NULL
+ #  ) +
+  # add theme
+  theme_map() +
+  theme(
+    # plot.margin = margin(),
+    panel.grid = element_blank(),
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    legend.position = "bottom",
+    legend.justification = c(0.5, 0.5),
+    legend.text = element_text(size = 11))
+
+# ### write out
+# ggsave(
+#     filename = file.path(sharepoint_ojjdp_va_viz, "csu_level_diversion_rate_map.png"),
+#     plot = last_plot(),
+#     device = ragg::agg_png,
+#     dpi = 300,
+#     height = 5.25,
+#     width = 10,
+#     units = "in",
+#     bg = "transparent"
+#   )
+```
+
 <br><br>
+

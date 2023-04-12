@@ -175,20 +175,54 @@ df_complaints_youth_intake_decision <- df_djj_intake_complaints_raw %>%
             by = "intake_decision") %>% 
   dplyr::select(intake_decision_label,
                 intake_decision_description) %>% 
-   mutate(intake_decision_clean = case_when(
+  mutate(intake_decision_clean = case_when(
     intake_decision_label%in%c("UNSUCCESSFUL DIVERSION/PETITION FILED", "SUCCESSFUL DIVERSION","UNSUCCESSFUL DIVERSION/NO PETITION FILED","REQ'D TO PARTICIPATE-DIVERSION") ~ "Diverted",
+        intake_decision_label%in%c("REFERRED TO ANOTHER AGY FOR SV","UNOFFICIAL COUNSELING-FAMILY C") ~ "Diverted (Informal)",
     intake_decision_label%in%c("PETITION FILED", "PETITION/DETENTION ORDER FILED","COURT SUMMONS","PETITION/SHELTER CARE FILED") ~ "Petitioned",    
-    intake_decision_label%in%c("RESOLVED", "COMPLAINT UNFOUNDED","UNOFFICIAL COUNSELING-FAMILY C") ~ "Dismissed",
-    intake_decision_label%in%c("DETENTION ORDER ONLY", "REFERRED TO ANOTHER AGY FOR SV","ACCEPTED VIA ICJ","RETURNED TO PROBATION SUPERVIS","PENDING","SHELTER CARE ONLY","RETURNED TO OUT-OF-STATE") ~ "Other",
-   TRUE ~ as.character(NA)),
-    intake_decision_clean = factor(intake_decision_clean,
-                              levels = c("Petitioned","Diverted","Dismissed","Other"))) %>% 
+    intake_decision_label%in%c("RESOLVED", "COMPLAINT UNFOUNDED") ~ "Resolved/Dismissed",
+    intake_decision_label%in%c("DETENTION ORDER ONLY","ACCEPTED VIA ICJ","RETURNED TO PROBATION SUPERVIS","PENDING","SHELTER CARE ONLY","RETURNED TO OUT-OF-STATE") ~ "Other",
+   TRUE ~ as.character(NA))) %>% 
   dplyr::rename(`Intake Decision` = intake_decision_label,
                 `Intake Decision Description` = intake_decision_description,
                 `Prelim Intake Decision Grouping (for analysis)` = intake_decision_clean) 
 
 ### print table via kableextra
 kable(df_complaints_youth_intake_decision, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") 
+```
+
+
+<br>
+
+### Intake Complaints, Petitioner/Referral Source Descriptions
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+### unique youth and complaints per year
+df_complaints_youth_petitioner <- df_djj_intake_complaints_raw %>% 
+  distinct(petitioner_type,petitioner_desc) %>% 
+  ### clean up petitioner type variable based on feedback from team
+  mutate(referral_source_clean = case_when(
+    petitioner_desc%in%c("BASE POLICE","Other Law Enforcment","POLICE DEPARTMENT","SHERIFF","STATE POLICE") ~ "Law Enforcement",
+    petitioner_desc%in%c("SCHOOL OFFICIAL") ~ "School Official",
+    petitioner_desc%in%c("School Res. Officer") ~ "School Resource Officer",    
+    petitioner_desc%in%c("CITIZEN") ~ "Citizen",
+    petitioner_desc%in%c("RELATIVE","SELF","SPOUSE") ~ "Relative/Spouse/Self",
+    petitioner_desc%in%c("COURT") ~ "Court",
+    petitioner_desc%in%c("PROBATION OFFICER") ~ "Probation Officer",
+    petitioner_desc%in%c("ABC BOARD","COMMONWLTHS ATTORNEY","COMMUNITY SRV BOARD","DETENTION HOME","FIRE DEPARTMENT","GROUP HOME","MENTAL HLTH OFFICIAL","MERCHANTS","NCIS","SOCIAL SERVICE") ~ "Other",
+   TRUE ~ as.character(NA))) %>% 
+  dplyr::rename(`Petitioner Code` = petitioner_type,
+                `Petitioner Description` = petitioner_desc,
+                `Prelim Petitioner/Referral Source Grouping (for analysis)` = referral_source_clean) 
+
+### print table via kableextra
+kable(df_complaints_youth_petitioner, 
       format.args = list(big.mark = ","), 
       align=rep('c')) %>%
   kable_styling(bootstrap_options = c("striped", 
@@ -282,16 +316,15 @@ disposition_descriptions <- disposition %>%
   filter(!is.na(description)==TRUE) %>%
   dplyr::select(description) %>%
    mutate(dispo_description_clean = case_when(
-    description%in%c("COMMIT TO DJJ (16.1-278.8.14)","SERIOUS OFFENDER COMMITMENT TO DJJ (16.1-278.8.17) (16.1-285.1)","SUSPENDED COMMITMENT TO DJJ") ~ "Commitment",
-    description%in%c("POST-DISPOSITIONAL DETENTION (16.1-278.8.16) (16.1-284.1)","SENTENCED TO DETENTION","SUSPENDED COMMITMENT TO DETENTION") ~ "Detention",
-    description%in%c("COURT ORDER CONDITIONS AND LIMITATIONS (16.1-278.8.2)", "DEFER FINDING AND DISPOSITION W/PROBATION SUPERVISION (16.1-278.8.5)","PROBATION (16.1-278.8.7)","PROBATION AND COURT ORDERED ALCOHOL OR DRUG ABUSE TREATMENT (16.1-278.8.7a") ~ "Probation/Supervision",
+    description%in%c("COMMIT TO DJJ (16.1-278.8.14)","SERIOUS OFFENDER COMMITMENT TO DJJ (16.1-278.8.17) (16.1-285.1)") ~ "Commitment",
+    description%in%c("POST-DISPOSITIONAL DETENTION (16.1-278.8.16) (16.1-284.1)","SENTENCED TO DETENTION") ~ "Detention",
+    description%in%c("COURT ORDER CONDITIONS AND LIMITATIONS (16.1-278.8.2)", "DEFER FINDING AND DISPOSITION W/PROBATION SUPERVISION (16.1-278.8.5)","PROBATION (16.1-278.8.7)","PROBATION AND COURT ORDERED ALCOHOL OR DRUG ABUSE TREATMENT (16.1-278.8.7a","(EXPIRED) DEFER DISPOSTION AND PLACE IN BOOT CAMP (16.1-278.8.4a)", "COURT ORDER GANG ACTIVITY PREVENTION PROGRAM (16.1-278.8.19)","FIRST OFFENSE DRUG VIOLATION, MANDATORY TREATMENT (16.1-278.8:01)","SUSPENDED COMMITMENT TO DJJ","SUSPENDED COMMITMENT TO DETENTION") ~ "Probation/Supervision",
     description%in%c("DEFER DISPOSITION ON CONDITION OF GOOD BEHAVIOR") ~ "Deferral",
-    description%in%c("(EXPIRED) DEFER DISPOSTION AND PLACE IN BOOT CAMP (16.1-278.8.4a)", "COURT ORDER GANG ACTIVITY PREVENTION PROGRAM (16.1-278.8.19)","COURT ORDER NON-RESIDENTIAL PARENT PARTICIPATION IN PROGRAMS (16.1-278.8.6)","COURT ORDER PARENT PARTICIPATION IN PROGRAMS...FOR REHABILITATION (16.1-278.8.3)","FIRST OFFENSE DRUG VIOLATION, MANDATORY TREATMENT (16.1-278.8:01)") ~ "Treatment/Programming",
     description%in%c("NO FURTHER ACTION") ~ "No further action/none",
     description%in%c("COMMUNITY SERVICE (16.1-278.8.11)") ~ "Community Service",
     description%in%c("FINE NOT TO EXCEED $500 (16.1-278.8.8)") ~ "Fine",
     description%in%c("RESTITUTION (16.1-278.8.10)") ~ "Restitution",
-    description%in%c("LOSS OF DRIVING PRIVS FOR ALCOHOL,FIREARM,OR TRUANCY(16.1-278.8.18)(16.1-278.9)","SENTENCED IN CIRCUIT COURT","SUSPEND DRIVER'S LICENSE/IMPOSE CURFEW (16.1-278.8.9)","TRAFFIC VIOLATION PENALTIES (16.1-278.8.12)","TRANSFER LEGAL CUSTODY (16.1-278.8.12)","UPHOLDING RULING OF THE LOWER COURT","(EXPIRED) TRANSFER TO CIRCUIT COURT","ADULT SENTENCED FOR JUVENILE OFFENSE (16.1-278.8.15) (16.1-284)") ~ "Other",
+    description%in%c("LOSS OF DRIVING PRIVS FOR ALCOHOL,FIREARM,OR TRUANCY(16.1-278.8.18)(16.1-278.9)","SENTENCED IN CIRCUIT COURT","SUSPEND DRIVER'S LICENSE/IMPOSE CURFEW (16.1-278.8.9)","TRAFFIC VIOLATION PENALTIES (16.1-278.8.12)","TRANSFER LEGAL CUSTODY (16.1-278.8.12)","UPHOLDING RULING OF THE LOWER COURT","(EXPIRED) TRANSFER TO CIRCUIT COURT","ADULT SENTENCED FOR JUVENILE OFFENSE (16.1-278.8.15) (16.1-284)","COURT ORDER NON-RESIDENTIAL PARENT PARTICIPATION IN PROGRAMS (16.1-278.8.6)","COURT ORDER PARENT PARTICIPATION IN PROGRAMS...FOR REHABILITATION (16.1-278.8.3)") ~ "Other",
    TRUE ~ as.character(NA))) %>% 
   dplyr::rename(`Disposition` = description,
                 `Prelim Disposition Grouping (for analysis)` = dispo_description_clean)
