@@ -59,16 +59,19 @@ sharepoint_ojjdp_va_viz <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Output/VA/r_v
 ```{r include=FALSE}
 ### pull in virginia djj analytic files 
 
-### read in disposition_clean.rds analytic rds file 
-disposition_clean <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"disposition_clean.rds"))
+# ### read in df_analytic_complaints_disposition_caseload.rds analytic rds file 
+# disposition_clean <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"disposition_clean.rds"))
+
+### read in df_analytic_complaints_disposition_caseload file for analysis
+df_analytic_complaints_disposition_caseload <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_analytic_complaints_disposition_caseload.rds"))
 ```
 
 ```{r include=FALSE,warning=FALSE,include=FALSE}
 ### create denominator -- unique complaint for entire sample
-unique_complaints_sample_denom <- n_distinct(disposition_clean$unique_complaint_id)
+unique_complaints_sample_denom <- n_distinct(df_analytic_complaints_disposition_caseload$unique_complaint_id)
 
 ### create denominator -- unique youth for entire sample
-unique_youth_sample_denom <- n_distinct(disposition_clean$juvenile_number)
+unique_youth_sample_denom <- n_distinct(df_analytic_complaints_disposition_caseload$juvenile_number)
 ```
 
 <br>
@@ -86,14 +89,14 @@ unique_youth_sample_denom <- n_distinct(disposition_clean$juvenile_number)
 
 ## Table 1: Disposition Outcomes, 2015-2021
 
-Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
+Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
 ### overall complaints by diversion status
-df_complaints_disposition_outcome_table <- disposition_clean %>% 
+df_complaints_disposition_outcome_table <- df_analytic_complaints_disposition_caseload %>% 
   dplyr::group_by(dispo_description_clean) %>% 
   dplyr::summarise(`Unique Disposed Complaints (N)` = n_distinct(unique_complaint_id),
             `Disposed Complaints, Percent of Sample (%)` = scales::percent(`Unique Disposed Complaints (N)`/unique_complaints_sample_denom,
@@ -117,14 +120,14 @@ kable(df_complaints_disposition_outcome_table,
 
 ## Table 2: Disposition Outcomes by Year
 
-Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
+Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
 ### unique complaints split out
-df_complaints_disposition_outcome_table_year <- disposition_clean %>% 
+df_complaints_disposition_outcome_table_year <- df_analytic_complaints_disposition_caseload %>% 
   dplyr::group_by(date_opened_year) %>% 
   dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
@@ -160,7 +163,7 @@ df_complaints_disposition_outcome_table_year <- disposition_clean %>%
   dplyr::rename(`Year of Complaint` = date_opened_year) 
 
 ### unique complaints statewide
-df_complaints_disposition_outcome_table_overall <- disposition_clean %>% 
+df_complaints_disposition_outcome_table_overall <- df_analytic_complaints_disposition_caseload %>% 
      dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
@@ -211,20 +214,23 @@ kable(df_complaints_disposition_outcome_table_year_final,
   row_spec(8, bold = TRUE)
 ```
 
+
 <br>
 
-## Table 3: Disposition Outcomes by Race/Ethnicity
+## Table 3: Disposition Outcomes by YASI Risk Level
 
-Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
+**TO DO:** Double check that I’m using correct YASI assessment for dispo exploration (does it matter if it is initial, case closure, etc.?)
+
+Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
 ### unique complaints split out
-df_complaints_disposition_outcome_table_race <- disposition_clean %>% 
-  dplyr::group_by(race_clean) %>% 
-    dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+df_complaints_disposition_outcome_table_risk_score <- df_analytic_complaints_disposition_caseload %>% 
+  dplyr::group_by(risk_level_clean) %>% 
+      dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
                    `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
@@ -255,11 +261,11 @@ df_complaints_disposition_outcome_table_race <- disposition_clean %>%
                    `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
-  dplyr::rename(`Race/Ethnicity` = race_clean) 
+  dplyr::rename(`Risk Score` = risk_level_clean) 
 
 ### unique complaints statewide
-df_complaints_disposition_outcome_table_overall <- disposition_clean %>% 
-    dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+df_complaints_disposition_outcome_table_overall <- df_analytic_complaints_disposition_caseload %>% 
+   dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
                    `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
@@ -290,15 +296,14 @@ df_complaints_disposition_outcome_table_overall <- disposition_clean %>%
                    `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
-  dplyr::mutate(`Race/Ethnicity` = "Overall") 
+  dplyr::mutate(`Risk Score` = "Overall") 
 
 ### combine two dataframes for table
-df_complaints_disposition_outcome_table_race_final <- rbind(df_complaints_disposition_outcome_table_race,
-                                                              df_complaints_disposition_outcome_table_overall)
+df_complaints_disposition_outcome_table_risk_score_final <- rbind(df_complaints_disposition_outcome_table_risk_score,df_complaints_disposition_outcome_table_overall)
 
 
 ### print table via kableextra
-kable(df_complaints_disposition_outcome_table_race_final, 
+kable(df_complaints_disposition_outcome_table_risk_score_final, 
       format.args = list(big.mark = ","), 
       align=rep('c')) %>%
   kable_styling(bootstrap_options = c("striped", 
@@ -306,21 +311,21 @@ kable(df_complaints_disposition_outcome_table_race_final,
                                        "condensed", 
                                        "responsive"), 
                  row_label_position = "l") %>% 
-  row_spec(8, bold = TRUE)
+  row_spec(4, bold = TRUE)
 ```
 
 <br>
 
 ## Table 4: Disposition Outcomes by Gender
 
-Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
+Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
 ### unique complaints split out
-df_complaints_disposition_outcome_table_gender <- disposition_clean %>% 
+df_complaints_disposition_outcome_table_gender <- df_analytic_complaints_disposition_caseload %>% 
   dplyr::group_by(gender_clean) %>% 
       dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
@@ -356,7 +361,7 @@ df_complaints_disposition_outcome_table_gender <- disposition_clean %>%
   dplyr::rename(`Gender` = gender_clean) 
 
 ### unique complaints statewide
-df_complaints_disposition_outcome_table_overall <- disposition_clean %>% 
+df_complaints_disposition_outcome_table_overall <- df_analytic_complaints_disposition_caseload %>% 
    dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
@@ -411,7 +416,7 @@ kable(df_complaints_disposition_outcome_table_gender_final,
 
 ## Table 5: Disposition Outcomes by Age at Disposition
 
-Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
+Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
 
 **TO DO:** Decide on which ages to exclude because of likely data collection issues (e.g. ages of 0 or 44); current process is removing youth <8 and >18
 
@@ -420,7 +425,7 @@ Note: The preliminary options for grouping dispositions that I am using are: Det
 #| out-width: 85%
 
 ### unique complaints split out
-df_complaints_disposition_outcome_table_age <- disposition_clean %>% 
+df_complaints_disposition_outcome_table_age <- df_analytic_complaints_disposition_caseload %>% 
    filter(court_disp_age>8,
          court_disp_age<18) %>% 
   dplyr::group_by(dispo_age_clean) %>% 
@@ -458,7 +463,7 @@ df_complaints_disposition_outcome_table_age <- disposition_clean %>%
   dplyr::rename(`Age at Intake` = dispo_age_clean) 
 
 ### unique complaints statewide
-df_complaints_disposition_outcome_table_overall <- disposition_clean %>% 
+df_complaints_disposition_outcome_table_overall <- df_analytic_complaints_disposition_caseload %>% 
    filter(court_disp_age>8,
          court_disp_age<18) %>% 
      dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
@@ -515,14 +520,14 @@ kable(df_complaints_disposition_outcome_table_age_final,
 
 ## Table 6a: Disposition Outcomes by Offense Type (most serious offense; mso_flag == "Y")
 
-Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
+Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
 ### unique complaints split out
-df_complaints_disposition_outcome_table_offense <- disposition_clean %>% 
+df_complaints_disposition_outcome_table_offense <- df_analytic_complaints_disposition_caseload %>% 
   dplyr::group_by(dai) %>% 
     dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
@@ -558,7 +563,7 @@ df_complaints_disposition_outcome_table_offense <- disposition_clean %>%
   dplyr::rename(`Offense Description` = dai)  
 
 ### unique complaints statewide
-df_complaints_disposition_outcome_table_overall <- disposition_clean %>% 
+df_complaints_disposition_outcome_table_overall <- df_analytic_complaints_disposition_caseload %>% 
    dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
@@ -613,14 +618,14 @@ kable(df_complaints_disposition_outcome_table_offense_final,
 
 ## Table 6b: Disposition Outcomes by Status Offense Type (most serious offense is status; mso_flag == "Y")
 
-Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
+Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
 ### unique complaints split out
-df_complaints_disposition_outcome_table_offense_status <- disposition_clean %>% 
+df_complaints_disposition_outcome_table_offense_status <- df_analytic_complaints_disposition_caseload %>% 
   filter(dai=="Status Offense") %>% 
   dplyr::group_by(drg) %>% 
     dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
@@ -657,7 +662,7 @@ df_complaints_disposition_outcome_table_offense_status <- disposition_clean %>%
   dplyr::rename(`Status Offense Description` = drg)  
 
 ### unique complaints statewide
-df_complaints_disposition_outcome_table_overall <- disposition_clean %>% 
+df_complaints_disposition_outcome_table_overall <- df_analytic_complaints_disposition_caseload %>% 
   filter(dai=="Status Offense") %>% 
      dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
@@ -711,207 +716,9 @@ kable(df_complaints_disposition_outcome_table_offense_status_final,
 
 <br>
 
-## Table 7: Disposition Outcomes by Court Service Unit (CSU)
+## Table 7: Disposition Outcomes by Prior JJ History 
 
-Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
-
-```{r echo=FALSE,message=FALSE,warning=FALSE}
-#| column: page-right
-#| out-width: 85%
-
-### unique complaints split out
-df_complaints_disposition_outcome_table_csu <- disposition_clean %>% 
-  dplyr::group_by(csu) %>% 
-     dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
-                                                                       accuracy = .1),
-                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
-                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
-                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
-                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
-                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
-                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
-                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
-                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
-                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1)) %>% 
-  ungroup() %>% 
-  dplyr::rename(`CSU` = csu)  
-
-### unique complaints statewide
-df_complaints_disposition_outcome_table_overall <- disposition_clean %>% 
-    dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
-                                                                       accuracy = .1),
-                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
-                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
-                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
-                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
-                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
-                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
-                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
-                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
-                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1)) %>% 
-  ungroup() %>% 
-  dplyr::mutate(`CSU` = "Overall") 
-
-### combine two dataframes for table
-df_complaints_disposition_outcome_table_csu_final <- rbind(df_complaints_disposition_outcome_table_csu,
-                                                             df_complaints_disposition_outcome_table_overall)
-
-
-### print table via kableextra
-kable(df_complaints_disposition_outcome_table_csu_final, 
-      format.args = list(big.mark = ","), 
-      align=rep('c')) %>%
-  kable_styling(bootstrap_options = c("striped", 
-                                       "hover", 
-                                       "condensed", 
-                                       "responsive"), 
-                 row_label_position = "l") %>% 
-  row_spec(33, bold = TRUE)
-```
-
-<br>
-
-## Table 8: Disposition Outcomes by Court Service Unit (CSU) Region
-
-Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
-
-See CSU regions here: https://www.djj.virginia.gov/pages/community/court-service-units.htm
-
-```{r echo=FALSE,message=FALSE,warning=FALSE}
-#| column: page-right
-#| out-width: 85%
-
-### unique complaints split out
-df_complaints_disposition_outcome_table_csu_region <- disposition_clean %>% 
-  dplyr::group_by(csu_region) %>% 
-     dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
-                                                                       accuracy = .1),
-                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
-                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
-                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
-                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
-                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
-                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
-                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
-                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
-                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1)) %>% 
-  ungroup() %>% 
-  dplyr::rename(`CSU Region` = csu_region)  
-
-### unique complaints statewide
-df_complaints_disposition_outcome_table_overall <- disposition_clean %>% 
-   dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
-                                                                       accuracy = .1),
-                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
-                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
-                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
-                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
-                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
-                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
-                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
-                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
-                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
-                                                                       accuracy = .1)) %>% 
-  ungroup() %>% 
-  dplyr::mutate(`CSU Region` = "Overall") 
-
-### combine two dataframes for table
-df_complaints_disposition_outcome_table_csu_region_final <- rbind(df_complaints_disposition_outcome_table_csu_region,
-                                                             df_complaints_disposition_outcome_table_overall)
-
-
-### print table via kableextra
-kable(df_complaints_disposition_outcome_table_csu_region_final, 
-      format.args = list(big.mark = ","), 
-      align=rep('c')) %>%
-  kable_styling(bootstrap_options = c("striped", 
-                                       "hover", 
-                                       "condensed", 
-                                       "responsive"), 
-                 row_label_position = "l") %>% 
-  row_spec(6, bold = TRUE)
-```
-
-<br>
-
-## Table 9: Disposition Outcomes by Prior JJ History 
-
-Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it.  
+Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it.  
 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
@@ -919,7 +726,7 @@ Note: The preliminary options for grouping dispositions that I am using are: Det
 #| out-width: 85%
 
 ### unique complaints split out
-df_complaints_disposition_outcome_table_jj_history <- disposition_clean %>% 
+df_complaints_disposition_outcome_table_jj_history <- df_analytic_complaints_disposition_caseload %>% 
   filter(!is.na(jj_history_clean)==TRUE) %>% 
   dplyr::group_by(jj_history_clean) %>% 
   dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
@@ -956,7 +763,7 @@ df_complaints_disposition_outcome_table_jj_history <- disposition_clean %>%
   dplyr::rename(`JJ History` = jj_history_clean)  
 
 ### unique complaints statewide
-df_complaints_disposition_outcome_table_overall <- disposition_clean %>% 
+df_complaints_disposition_outcome_table_overall <- df_analytic_complaints_disposition_caseload %>% 
   filter(!is.na(jj_history_clean)==TRUE) %>% 
    dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
@@ -1009,16 +816,16 @@ kable(df_complaints_disposition_outcome_table_jj_history_final,
 
 <br>
 
-## Table 10: Disposition Outcomes by Petitioner Type/Referral Source
+## Table 8: Disposition Outcomes by Petitioner Type/Referral Source
 
-Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it.  
+Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it.  
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
 ### unique complaints split out
-df_complaints_disposition_outcome_table_pet_desc <- disposition_clean %>% 
+df_complaints_disposition_outcome_table_pet_desc <- df_analytic_complaints_disposition_caseload %>% 
   filter(!is.na(referral_source_clean)==TRUE) %>% 
   dplyr::group_by(referral_source_clean) %>% 
    dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
@@ -1056,7 +863,7 @@ df_complaints_disposition_outcome_table_pet_desc <- disposition_clean %>%
   arrange(desc(`All Disposed Complaints (N)`))
 
 ### overall
-df_complaints_disposition_outcome_table_overall <- disposition_clean %>% 
+df_complaints_disposition_outcome_table_overall <- df_analytic_complaints_disposition_caseload %>% 
   filter(!is.na(referral_source_clean)==TRUE) %>% 
     dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
@@ -1108,4 +915,3 @@ kable(df_complaints_disposition_outcome_table_pet_desc_final,
 ```
 
 <br>
-

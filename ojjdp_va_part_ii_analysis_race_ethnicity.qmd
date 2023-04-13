@@ -49,5 +49,253 @@ knitr::opts_chunk$set(
 ### set theme
 theme_set(theme_minimal())
 
+### set sharepoint path using csgjcr function
+sharepoint_ojjdp_va_analysis_analytic_data <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Data/VA/analysis/analytic"))
+
+### set sharepoint path using csgjcr function
+sharepoint_ojjdp_va_viz <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Output/VA/r_viz_output"))
 ```
 
+```{r include=FALSE}
+### pull in virginia djj analytic files 
+
+# ### read in df_analytic_complaints_disposition_caseload.rds analytic rds file 
+# df_complaints_youth_intake_decision_csu <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_complaints_youth_intake_decision_csu.rds"))
+# 
+# ### read in caseload_clean.rds analytic rds file 
+# caseload_clean <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"caseload_clean.rds"))
+
+### read in df_analytic_complaints_disposition_caseload file for analysis
+df_analytic_complaints_disposition_caseload <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_analytic_complaints_disposition_caseload.rds"))
+```
+
+```{r include=FALSE,warning=FALSE,include=FALSE}
+### create denominator -- unique complaint for entire sample
+unique_complaints_sample_denom <- n_distinct(df_analytic_complaints_disposition_caseload$unique_complaint_id)
+
+### create denominator -- unique youth for entire sample
+unique_youth_sample_denom <- n_distinct(df_analytic_complaints_disposition_caseload$juvenile_number)
+```
+
+
+# Tables
+
+## Table 1: Intake Decisions by Race/Ethnicity
+
+**Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'), and "REQ'D TO PARTICIPATE-DIVERSION" (code of '7'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+### unique complaints split out
+df_complaints_youth_intake_decision_table_race <- df_analytic_complaints_disposition_caseload %>% 
+  dplyr::group_by(race_clean) %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
+                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`Race/Ethnicity` = race_clean) 
+
+### unique complaints statewide
+df_complaints_youth_intake_decision_table_overall <- df_analytic_complaints_disposition_caseload %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
+                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
+                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::mutate(`Race/Ethnicity` = "Overall") 
+
+### combine two dataframes for table
+df_complaints_youth_intake_decision_table_race_final <- rbind(df_complaints_youth_intake_decision_table_race,
+                                                              df_complaints_youth_intake_decision_table_overall)
+
+
+### print table via kableextra
+kable(df_complaints_youth_intake_decision_table_race_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") %>% 
+  row_spec(8, bold = TRUE)
+```
+
+<br>
+
+## Table 2: Disposition Outcomes by Race/Ethnicity
+
+Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. 
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+### unique complaints split out
+df_complaints_disposition_outcome_table_race <- df_analytic_complaints_disposition_caseload %>% 
+  dplyr::group_by(race_clean) %>% 
+    dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
+                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
+                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
+                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
+                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
+                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
+                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
+                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
+                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`Race/Ethnicity` = race_clean) 
+
+### unique complaints statewide
+df_complaints_disposition_outcome_table_overall <- df_analytic_complaints_disposition_caseload %>% 
+    dplyr::summarise(`All Disposed Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Disposed Complaints (column %)` = scales::percent(`All Disposed Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Detention (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Detention"]),
+                   `Detention (row %)` = scales::percent(`Detention (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Commitment (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Commitment"]),
+                   `Commitment (row %)` = scales::percent(`Commitment (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Probation/Supervision (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Probation/Supervision"]),
+                   `Probation/Supervision (row %)` = scales::percent(`Probation/Supervision (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Deferral (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Deferral"]),
+                   `Deferral (row %)` = scales::percent(`Deferral (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Community Service (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Community Service"]),
+                   `Community Service (row %)` = scales::percent(`Community Service (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Fine (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Fine"]),
+                   `Fine (row %)` = scales::percent(`Fine (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `No further action/none (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="No further action/none"]),
+                   `No further action/none (row %)` = scales::percent(`No further action/none (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Restitution (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Restitution"]),
+                   `Restitution (row %)` = scales::percent(`Restitution (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other (N)` = n_distinct(unique_complaint_id[dispo_description_clean=="Other"]),
+                   `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::mutate(`Race/Ethnicity` = "Overall") 
+
+### combine two dataframes for table
+df_complaints_disposition_outcome_table_race_final <- rbind(df_complaints_disposition_outcome_table_race,
+                                                              df_complaints_disposition_outcome_table_overall)
+
+
+### print table via kableextra
+kable(df_complaints_disposition_outcome_table_race_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") %>% 
+  row_spec(8, bold = TRUE)
+```
+
+<br>
+
+## Table : Average Length of Stay on Diversion by Race/Ethnicity
+
+Both measures of LOS on diversion are calculated by DJJ and provided in the `caseload` file -- see codebook page for more information. The two LOS measures are the "Number of days on the workload status "Diversion at Intake" and the "Number of days on the workload status "Diversion Beyond 90 Days"
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+###  mean and median diversion lengths of stay by race/ethnicity
+df_diversion_race_eth_los <- df_analytic_complaints_disposition_caseload %>% 
+  filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
+  group_by(race_clean) %>% 
+  dplyr::summarise(`Mean Diversion LOS (at intake)` = mean(div_at_int,
+                                           na.rm=TRUE),
+                   `Median Diversion LOS (at intake)` = median(div_at_int,
+                                           na.rm=TRUE),
+                   `Mean Diversion LOS (beyond 90 days)` = mean(div_bey_90,
+                                           na.rm=TRUE),
+                   `Median Diversion LOS (beyond 90 days)` = median(div_bey_90,
+                                           na.rm=TRUE)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`Race/Ethnicity` = race_clean)
+
+### overall mean and median diversion lengths of stay
+df_diversion_overall_los <- df_analytic_complaints_disposition_caseload %>% 
+  filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
+  dplyr::summarise(`Mean Diversion LOS (at intake)` = mean(div_at_int,
+                                           na.rm=TRUE),
+                   `Median Diversion LOS (at intake)` = median(div_at_int,
+                                           na.rm=TRUE),
+                   `Mean Diversion LOS (beyond 90 days)` = mean(div_bey_90,
+                                           na.rm=TRUE),
+                   `Median Diversion LOS (beyond 90 days)` = median(div_bey_90,
+                                           na.rm=TRUE)) %>% 
+  mutate(`Race/Ethnicity` = "Overall")
+ 
+### combine two dataframes for table
+df_diversion_race_eth_los_final <- rbind(df_diversion_race_eth_los,
+                                                             df_diversion_overall_los)
+
+### print table via kableextra
+kable(df_diversion_race_eth_los_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") %>% 
+  row_spec(8, bold = TRUE)
+```
+
+<br>

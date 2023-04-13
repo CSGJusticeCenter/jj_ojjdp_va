@@ -124,7 +124,7 @@ df_djj_intake_complaints_clean <- df_djj_intake_complaints_raw %>%
     TRUE ~ 7),
     race_clean = factor(race_clean,
          levels = c(1,2,3,4,5,6,7),
-         labels = c("American Indian", "Asian", "Black", "Hispanic", "White", "Other","Missing"))) %>% 
+         labels = c("American Indian","Asian", "Black", "Hispanic", "White", "Other","Missing"))) %>% 
   mutate(gender_clean = case_when(
     sex=="F" ~ 1,
     sex=="M" ~ 2,
@@ -156,7 +156,17 @@ df_djj_intake_complaints_clean <- df_djj_intake_complaints_raw %>%
          labels = c("Less than 12", 
                     "12 to 13",
                     "14 to 15",
-                    "16 to 20"))) %>%   
+                    "16 to 20")),
+    risk_level_clean = case_when(
+    risk_level=="L" ~ 1,
+    risk_level=="M" ~ 2,
+    risk_level=="H" ~ 3,
+    TRUE ~ as.numeric(NA)),
+    risk_level_clean = factor(risk_level_clean,
+         levels = c(1,2,3),
+         labels = c("Low", 
+                    "Medium",
+                    "High"))) %>%   
   ### clean dates and create year for potential grouping in future trend analysis
   mutate(date_opened = ymd(as_date(excel_numeric_to_date(as.numeric(as.character(date_opened)), 
                                                   date_system = "modern"))),
@@ -171,7 +181,8 @@ codebook_intake_decision_values <- codebook %>%
                 intake_decision_description=definitions) %>% 
   mutate(intake_decision = as.numeric(intake_decision))
 
-### unique youth and complaints per year
+### categorize intake decisions, referral source, and jj history
+### join in lookup values from DJJ-provided codebook
 df_complaints_youth_intake_decision <- df_djj_intake_complaints_clean %>% 
   mutate(intake_decision = as.numeric(intake_decision)) %>% 
   left_join(codebook_intake_decision_values,
@@ -184,7 +195,7 @@ df_complaints_youth_intake_decision <- df_djj_intake_complaints_clean %>%
   ### create unique complaint-level ID
   mutate(intake_decision_clean = case_when(
     intake_decision_label%in%c("UNSUCCESSFUL DIVERSION/PETITION FILED", "SUCCESSFUL DIVERSION","UNSUCCESSFUL DIVERSION/NO PETITION FILED","REQ'D TO PARTICIPATE-DIVERSION") ~ "Diverted",
-        intake_decision_label%in%c("REFERRED TO ANOTHER AGY FOR SV","UNOFFICIAL COUNSELING-FAMILY C") ~ "Diverted (Informal)",
+    intake_decision_label%in%c("REFERRED TO ANOTHER AGY FOR SV","UNOFFICIAL COUNSELING-FAMILY C") ~ "Diverted (Informal)",
     intake_decision_label%in%c("PETITION FILED", "PETITION/DETENTION ORDER FILED","COURT SUMMONS","PETITION/SHELTER CARE FILED") ~ "Petitioned",    
     intake_decision_label%in%c("RESOLVED", "COMPLAINT UNFOUNDED") ~ "Resolved/Dismissed",
     intake_decision_label%in%c("DETENTION ORDER ONLY","ACCEPTED VIA ICJ","RETURNED TO PROBATION SUPERVIS","PENDING","SHELTER CARE ONLY","RETURNED TO OUT-OF-STATE") ~ "Other",
@@ -193,20 +204,22 @@ df_complaints_youth_intake_decision <- df_djj_intake_complaints_clean %>%
                               levels = c("Petitioned","Diverted","Diverted (Informal)","Resolved/Dismissed","Other")),
    petition_court_summons_flags = ifelse(intake_decision_label=="COURT SUMMONS",
                                 1,0),
-         intake_diverted_flag = ifelse(intake_decision_label%in%c("UNSUCCESSFUL DIVERSION/PETITION FILED", "SUCCESSFUL DIVERSION","UNSUCCESSFUL DIVERSION/NO PETITION FILED","REQ'D TO PARTICIPATE-DIVERSION"),
+   intake_diverted_flag = ifelse(intake_decision_label%in%c("UNSUCCESSFUL DIVERSION/PETITION FILED", "SUCCESSFUL DIVERSION","UNSUCCESSFUL DIVERSION/NO PETITION FILED","REQ'D TO PARTICIPATE-DIVERSION"),
                                 1,0),
-         intake_diverted_flag = factor(intake_diverted_flag,
+   intake_diverted_flag = factor(intake_diverted_flag,
                                 levels = c(1,0),
                                 labels = c("Yes","No")),
-         diversion_successful_flag = ifelse(intake_decision_label%in%c("SUCCESSFUL DIVERSION"),
+   diversion_successful_flag = ifelse(intake_decision_label%in%c("SUCCESSFUL DIVERSION"),
                                 1,0),
-         diversion_not_successful_flag = ifelse(intake_decision_label%in%c("UNSUCCESSFUL DIVERSION/PETITION FILED","UNSUCCESSFUL DIVERSION/NO PETITION FILED"),
+   diversion_not_successful_petition_flag = ifelse(intake_decision_label%in%c("UNSUCCESSFUL DIVERSION/PETITION FILED"),
                                 1,0),
-         diversion_active_at_time_of_pull = ifelse(intake_decision_label=="REQ'D TO PARTICIPATE-DIVERSION",
+   diversion_not_successful_no_petition_flag = ifelse(intake_decision_label%in%c("UNSUCCESSFUL DIVERSION/NO PETITION FILED"),
+                                1,0),
+   diversion_active_at_time_of_pull = ifelse(intake_decision_label=="REQ'D TO PARTICIPATE-DIVERSION",
                                                   1,0),
-         unique_complaint_id = paste0(juvenile_number,case_number)) %>% 
+   unique_complaint_id = paste0(juvenile_number,case_number)) %>% 
   ### clean up petitioner type variable based on feedback from team
-    mutate(referral_source_clean = case_when(
+  mutate(referral_source_clean = case_when(
     petitioner_desc%in%c("BASE POLICE","Other Law Enforcment","POLICE DEPARTMENT","SHERIFF","STATE POLICE") ~ "Law Enforcement",
     petitioner_desc%in%c("SCHOOL OFFICIAL") ~ "School Official",
     petitioner_desc%in%c("School Res. Officer") ~ "School Resource Officer",    
@@ -215,6 +228,12 @@ df_complaints_youth_intake_decision <- df_djj_intake_complaints_clean %>%
     petitioner_desc%in%c("COURT") ~ "Court",
     petitioner_desc%in%c("PROBATION OFFICER") ~ "Probation Officer",
     petitioner_desc%in%c("ABC BOARD","COMMONWLTHS ATTORNEY","COMMUNITY SRV BOARD","DETENTION HOME","FIRE DEPARTMENT","GROUP HOME","MENTAL HLTH OFFICIAL","MERCHANTS","NCIS","SOCIAL SERVICE") ~ "Other",
+   TRUE ~ as.character(NA))) %>% 
+   ### clean up petitioner type variable for csu-level analysis (with fewer categories)
+  mutate(referral_source_clean_csu_level_categories = case_when(
+    petitioner_desc%in%c("BASE POLICE","Other Law Enforcment","POLICE DEPARTMENT","SHERIFF","STATE POLICE","PROBATION OFFICER") ~ "Law Enforcement",
+    petitioner_desc%in%c("SCHOOL OFFICIAL","School Res. Officer") ~ "School",
+    petitioner_desc%in%c("CITIZEN","RELATIVE","SELF","SPOUSE","COURT","ABC BOARD","COMMONWLTHS ATTORNEY","COMMUNITY SRV BOARD","DETENTION HOME","FIRE DEPARTMENT","GROUP HOME","MENTAL HLTH OFFICIAL","MERCHANTS","NCIS","SOCIAL SERVICE") ~ "Other",
    TRUE ~ as.character(NA))) %>% 
   ### create var for jj history using flags provided by DJJ
    mutate(jj_history_clean = case_when(
@@ -225,10 +244,7 @@ df_complaints_youth_intake_decision <- df_djj_intake_complaints_clean %>%
     prior_felony>0 ~ "Prior Felony",
     TRUE ~ as.character(NA)),
     jj_history_clean = factor(jj_history_clean,
-                              levels = c("No Prior JJ History","Prior 'Other' History","Prior Status/CHINS/CHINsup","Prior Misdemeanor","Prior Felony")))
-
-### add csu region to df
-df_complaints_youth_intake_decision_csu <- df_complaints_youth_intake_decision %>% 
+                              levels = c("No Prior JJ History","Prior 'Other' History","Prior Status/CHINS/CHINsup","Prior Misdemeanor","Prior Felony"))) %>% 
   mutate(csu_region = case_when(
     csu %in% eastern_region ~ "Eastern",
     csu %in% northern_region ~ "Northern",
@@ -238,69 +254,71 @@ df_complaints_youth_intake_decision_csu <- df_complaints_youth_intake_decision %
     TRUE ~ as.character(NA)))
 
 
-#############################################
-### clean and de-dup df_djj_intake_complaints_raw dataframe by youth
-### this is our base youth-level demo file for the sample
-#############################################
-df_djj_youth_demo <- df_djj_intake_complaints_raw %>% 
-  distinct(juvenile_number,
-           .keep_all=TRUE) %>% 
-  ### clean race/ethnicity and gender
-  ### use factor function to assign labels to values
-  mutate(race_clean = case_when(
-    race=="I" & hispanic!="Y" ~ 1,
-    race=="A" & hispanic!="Y" ~ 2,
-    race=="B" & hispanic!="Y" ~ 3,
-    hispanic=="Y" ~ 4,
-    race=="W" & hispanic!="Y" ~ 5,
-    race %in% c("X","O") & hispanic!="Y" ~ 6,
-    TRUE ~ 7),
-    race_clean = factor(race_clean,
-         levels = c(1,2,3,4,5,6,7),
-         labels = c("American Indian",
-                    "Asian", 
-                    "Black", 
-                    "Hispanic", 
-                    "White", 
-                    "Other",
-                    "Missing"))) %>% 
-  mutate(gender_clean = case_when(
-    sex=="F" ~ 1,
-    sex=="M" ~ 2,
-    TRUE ~ as.numeric(NA)),
-    gender_clean = factor(gender_clean,
-         levels = c(1,2),
-         labels = c("Female", "Male"))) %>% 
-  ### temp cleaning of age -- pending feedback from DJJ
-  mutate(petition_age_clean = case_when(
-    pet_age < 12 ~ 1,
-    pet_age>= 12 &  pet_age< 14 ~ 2,
-    pet_age>= 14 &  pet_age< 16 ~ 3,
-    pet_age>= 16 &  pet_age< 20 ~ 4,
-    TRUE ~ as.numeric(NA)),
-    petition_age_clean = factor(petition_age_clean,
-         levels = c(1,2,3,4),
-         labels = c("Less than 12", 
-                    "12 to 13",
-                    "14 to 15",
-                    "16 to 20")),
-    intake_age_clean = case_when(
-    intake_age < 12 ~ 1,
-    intake_age>= 12 &  intake_age< 14 ~ 2,
-    intake_age>= 14 &  intake_age< 16 ~ 3,
-    intake_age>= 16 &  intake_age< 20 ~ 4,
-    TRUE ~ as.numeric(NA)),
-    intake_age_clean = factor(intake_age_clean,
-         levels = c(1,2,3,4),
-         labels = c("Less than 12", 
-                    "12 to 13",
-                    "14 to 15",
-                    "16 to 20"))) 
+### this section is now outdated and no longer needed as we are joining all files together to create one analytic file
+
+# #############################################
+# ### clean and de-dup df_djj_intake_complaints_raw dataframe by youth
+# ### this is our base youth-level demo file for the sample
+# #############################################
+# df_djj_youth_demo <- df_djj_intake_complaints_raw %>% 
+#   distinct(juvenile_number,
+#            .keep_all=TRUE) %>% 
+#   ### clean race/ethnicity and gender
+#   ### use factor function to assign labels to values
+#   mutate(race_clean = case_when(
+#     race=="I" & hispanic!="Y" ~ 1,
+#     race=="A" & hispanic!="Y" ~ 2,
+#     race=="B" & hispanic!="Y" ~ 3,
+#     hispanic=="Y" ~ 4,
+#     race=="W" & hispanic!="Y" ~ 5,
+#     race %in% c("X","O") & hispanic!="Y" ~ 6,
+#     TRUE ~ 7),
+#     race_clean = factor(race_clean,
+#          levels = c(1,2,3,4,5,6,7),
+#          labels = c("American Indian",
+#                     "Asian", 
+#                     "Black", 
+#                     "Hispanic", 
+#                     "White", 
+#                     "Other",
+#                     "Missing"))) %>% 
+#   mutate(gender_clean = case_when(
+#     sex=="F" ~ 1,
+#     sex=="M" ~ 2,
+#     TRUE ~ as.numeric(NA)),
+#     gender_clean = factor(gender_clean,
+#          levels = c(1,2),
+#          labels = c("Female", "Male"))) %>% 
+#   ### temp cleaning of age -- pending feedback from DJJ
+#   mutate(petition_age_clean = case_when(
+#     pet_age < 12 ~ 1,
+#     pet_age>= 12 &  pet_age< 14 ~ 2,
+#     pet_age>= 14 &  pet_age< 16 ~ 3,
+#     pet_age>= 16 &  pet_age< 20 ~ 4,
+#     TRUE ~ as.numeric(NA)),
+#     petition_age_clean = factor(petition_age_clean,
+#          levels = c(1,2,3,4),
+#          labels = c("Less than 12", 
+#                     "12 to 13",
+#                     "14 to 15",
+#                     "16 to 20")),
+#     intake_age_clean = case_when(
+#     intake_age < 12 ~ 1,
+#     intake_age>= 12 &  intake_age< 14 ~ 2,
+#     intake_age>= 14 &  intake_age< 16 ~ 3,
+#     intake_age>= 16 &  intake_age< 20 ~ 4,
+#     TRUE ~ as.numeric(NA)),
+#     intake_age_clean = factor(intake_age_clean,
+#          levels = c(1,2,3,4),
+#          labels = c("Less than 12", 
+#                     "12 to 13",
+#                     "14 to 15",
+#                     "16 to 20"))) 
 
 ########################################
 ### clean and de-dup disposition dataframe
 ########################################
-### note: disposition file is unique by youth, case number, offense number, disposition, amd days from intake to disposition
+### note: disposition file is unique by youth, case number, offense number, disposition, and days from intake to disposition
 disposition_clean <- disposition %>% 
   ### remove records with missing disposition -- waiting on answer from DJJ on how to interpret this
   filter(!is.na(description)==TRUE) %>% 
@@ -334,27 +352,62 @@ disposition_clean <- disposition %>%
                     "12 to 13",
                     "14 to 15",
                     "16 to 20"))) %>% 
-  dplyr::rename(dispo_description = description) %>% 
-  ### join dispositions and intake complaints -- only keeping records that appear in both
-  inner_join(df_complaints_youth_intake_decision_csu,
-            by = c("juvenile_number","case_number","offense_number"))
-  
-  ### next step: de-dup by disposition -- keeping most serious?
+  dplyr::rename(dispo_description = description)
   
 
 ########################################
 ### clean and de-dup caseload dataframe
 ########################################
+
+###############################################
+### from Nina on missing values:
+
+### "I verified with the person that wrote the query. If the youth has the juvenile number and offense number filled in but the two diversion columns are blank. It means the youth had another type of caseload status (pre-Dispositional tracking, probation, parole, etc.) or they did not have any caseload statuses. So it is possible to have the number of days for the two diversion codes filled in and also have a blank row because they had another type of status. If we have to rerun the data we can change the rules to exclude the blanks."
+
+### BUSINESS RULE: based on this, I am dropping records with missing values for either div_at_int or div_bey_90
+################################################
+
+################################################
+### from Nina on duplicate youth and offense IDs
+
+### "The worker selects a caseload status and then associates one or more offenses with it. The youth’s status can change, for example, the youth may be placed on diversion and then abscond and then go back on diversion status. In this scenario, the  youth would have two diversion statuses in the file since it counts the LOS for each status individually."
+
+### BUSINESS RULE: based on this, i think it's best to group by youth ID and offense ID, add LOS values, and then de-duplicate
+#################################################
+
 caseload_clean <- caseload %>% 
+  filter(!is.na(div_at_int) | !is.na(div_bey_90)) %>% 
+  mutate(div_at_int = as.numeric(div_at_int),
+         div_bey_90 = as.numeric(div_bey_90)) %>% 
+  group_by(juvenile_number,
+           offense_number) %>% 
+  mutate(div_at_int = sum(div_at_int, na.rm = TRUE),
+         div_bey_90 = sum(div_bey_90, na.rm = TRUE)) %>% 
+  ungroup() %>% 
   distinct(juvenile_number,
            offense_number,
-           .keep_all=TRUE) %>%  ### need to look into duplicates
-  ### join to youth-level demo file
-  ### need to better understand how we should join to complaint/offense-level data
-  left_join(df_djj_youth_demo,
-            by = "juvenile_number") %>% 
-  mutate(div_at_int = as.numeric(div_at_int),
-         div_bey_90 = as.numeric(div_bey_90))
+           .keep_all=TRUE) 
+
+```
+
+```{r }
+#############################################################################################
+### join three files together to create preliminary analytic file for both part I and part II
+#############################################################################################
+
+### first, left join df_complaints_youth_intake_decision and disposition_clean
+df_complaints_disposition_clean_1 <- left_join(df_complaints_youth_intake_decision,
+                                               disposition_clean,
+                                               by = c("juvenile_number",
+                                                      "case_number",
+                                                      "offense_number"))
+
+### second, left join df_complaints_disposition_clean_1 and caseload_clean to create preliminary analytic file
+df_analytic_complaints_disposition_caseload <- left_join(df_complaints_disposition_clean_1,
+                                                         caseload_clean,
+                                                         by = c("juvenile_number",
+                                                                "offense_number"))
+
 
 ```
 
@@ -362,9 +415,18 @@ caseload_clean <- caseload %>%
 ### set sharepoint path using csgjcr function
 sharepoint_ojjdp_va_analysis_analytic_data <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Data/VA/analysis/analytic"))
 
-### write out df_complaints_youth_intake_decision_csu file for analysis
-write_rds(df_complaints_youth_intake_decision_csu,
-          file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_complaints_youth_intake_decision_csu.rds"))
+### write out df_analytic_complaints_disposition_caseload file for analysis (txt file for analysis in stata)
+readr::write_delim(df_analytic_complaints_disposition_caseload,
+          file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_analytic_complaints_disposition_caseload.txt"),
+          delim = "|")
+
+### write out df_analytic_complaints_disposition_caseload file for analysis
+write_rds(df_analytic_complaints_disposition_caseload,
+          file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_analytic_complaints_disposition_caseload.rds"))
+
+# ### write out df_complaints_youth_intake_decision_csu file for analysis
+# write_rds(df_complaints_youth_intake_decision_csu,
+#           file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_complaints_youth_intake_decision_csu.rds"))
 
 ### write out caseload_clean file for analysis
 write_rds(caseload_clean,

@@ -14,6 +14,8 @@ website:
             href: ojjdp_va_part_i_analysis_overview.html
           - text: "Regression Analysis"
             href: ojjdp_va_part_ii_analysis_regression.html
+          - text: "CSU-level Analysis"
+            href: ojjdp_va_part_i_analysis_csu_level.html
       - text: "Part II Analysis"
         menu:
           - text: "Diversion Trends"
@@ -22,6 +24,8 @@ website:
             href: ojjdp_va_part_ii_analysis_dispo.html
           - text: "Race/Ethnicity"
             href: ojjdp_va_part_ii_analysis_race_ethnicity.html
+          - text: "CSU-level Analysis"
+            href: ojjdp_va_part_ii_analysis_csu_level.html
       - text: "Questions and Updates"
         href: ojjdp_va_questions_updates.html
       - text: "Analytic File Prep"

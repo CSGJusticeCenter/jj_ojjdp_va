@@ -197,7 +197,6 @@ kable(df_complaints_youth_intake_decision,
                  row_label_position = "l") 
 ```
 
-
 <br>
 
 ### Intake Complaints, Petitioner/Referral Source Descriptions
@@ -307,7 +306,7 @@ kable(codebook_dispo_values,
 
 ### Disposition, Preliminary Disposition Groupings
 
-Preliminary options are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other
+Preliminary options are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, No further action/none, Restitution, Other
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 ### unique youth and complaints per year

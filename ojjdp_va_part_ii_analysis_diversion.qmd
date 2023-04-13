@@ -59,19 +59,22 @@ sharepoint_ojjdp_va_viz <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Output/VA/r_v
 ```{r include=FALSE}
 ### pull in virginia djj analytic files 
 
-### read in df_complaints_youth_intake_decision_csu.rds analytic rds file 
-df_complaints_youth_intake_decision_csu <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_complaints_youth_intake_decision_csu.rds"))
+# ### read in df_analytic_complaints_disposition_caseload.rds analytic rds file 
+# df_complaints_youth_intake_decision_csu <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_complaints_youth_intake_decision_csu.rds"))
+# 
+# ### read in caseload_clean.rds analytic rds file 
+# caseload_clean <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"caseload_clean.rds"))
 
-### read in caseload_clean.rds analytic rds file 
-caseload_clean <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"caseload_clean.rds"))
+### read in df_analytic_complaints_disposition_caseload file for analysis
+df_analytic_complaints_disposition_caseload <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_analytic_complaints_disposition_caseload.rds"))
 ```
 
 ```{r include=FALSE,warning=FALSE,include=FALSE}
 ### create denominator -- unique complaint for entire sample
-unique_complaints_sample_denom <- n_distinct(df_complaints_youth_intake_decision_csu$unique_complaint_id)
+unique_complaints_sample_denom <- n_distinct(df_analytic_complaints_disposition_caseload$unique_complaint_id)
 
 ### create denominator -- unique youth for entire sample
-unique_youth_sample_denom <- n_distinct(df_complaints_youth_intake_decision_csu$juvenile_number)
+unique_youth_sample_denom <- n_distinct(df_analytic_complaints_disposition_caseload$juvenile_number)
 ```
 
 
@@ -87,7 +90,7 @@ unique_youth_sample_denom <- n_distinct(df_complaints_youth_intake_decision_csu$
 #| out-width: 85%
 
 ### overall complaints by diversion status
-df_complaints_youth_intake_decision_table <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_youth_intake_decision_table <- df_analytic_complaints_disposition_caseload %>% 
   dplyr::group_by(intake_decision_clean) %>% 
   dplyr::summarise(`Unique Complaints (N)` = n_distinct(unique_complaint_id),
             `Complaints, Percent of Sample (%)` = scales::percent(`Unique Complaints (N)`/unique_complaints_sample_denom,
@@ -119,7 +122,7 @@ kable(df_complaints_youth_intake_decision_table,
 
 
 ### unique complaints split out
-df_complaints_youth_intake_decision_table_year <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_youth_intake_decision_table_year <- df_analytic_complaints_disposition_caseload %>% 
   dplyr::group_by(date_opened_year) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
@@ -140,7 +143,7 @@ df_complaints_youth_intake_decision_table_year <- df_complaints_youth_intake_dec
   dplyr::rename(`Year of Complaint` = date_opened_year) 
 
 ### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_youth_intake_decision_table_overall <- df_analytic_complaints_disposition_caseload %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
@@ -178,7 +181,7 @@ kable(df_complaints_youth_intake_decision_table_year_final,
 
 <br>
 
-## Table 3: Intake Decisions by Race/Ethnicity
+## Table 3: Intake Decisions by Gender
 
 **Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'), and "REQ'D TO PARTICIPATE-DIVERSION" (code of '7'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
@@ -187,75 +190,7 @@ kable(df_complaints_youth_intake_decision_table_year_final,
 #| out-width: 85%
 
 ### unique complaints split out
-df_complaints_youth_intake_decision_table_race <- df_complaints_youth_intake_decision_csu %>% 
-  dplyr::group_by(race_clean) %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
-                                                                       accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1)) %>% 
-  ungroup() %>% 
-  dplyr::rename(`Race/Ethnicity` = race_clean) 
-
-### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
-                                                                       accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1)) %>% 
-  ungroup() %>% 
-  dplyr::mutate(`Race/Ethnicity` = "Overall") 
-
-### combine two dataframes for table
-df_complaints_youth_intake_decision_table_race_final <- rbind(df_complaints_youth_intake_decision_table_race,
-                                                              df_complaints_youth_intake_decision_table_overall)
-
-
-### print table via kableextra
-kable(df_complaints_youth_intake_decision_table_race_final, 
-      format.args = list(big.mark = ","), 
-      align=rep('c')) %>%
-  kable_styling(bootstrap_options = c("striped", 
-                                       "hover", 
-                                       "condensed", 
-                                       "responsive"), 
-                 row_label_position = "l") %>% 
-  row_spec(8, bold = TRUE)
-```
-
-<br>
-
-## Table 4: Intake Decisions by Gender
-
-**Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'), and "REQ'D TO PARTICIPATE-DIVERSION" (code of '7'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
-
-```{r echo=FALSE,message=FALSE,warning=FALSE}
-#| column: page-right
-#| out-width: 85%
-
-### unique complaints split out
-df_complaints_youth_intake_decision_table_gender <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_youth_intake_decision_table_gender <- df_analytic_complaints_disposition_caseload %>% 
   dplyr::group_by(gender_clean) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
@@ -276,7 +211,7 @@ df_complaints_youth_intake_decision_table_gender <- df_complaints_youth_intake_d
   dplyr::rename(`Gender` = gender_clean) 
 
 ### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_youth_intake_decision_table_overall <- df_analytic_complaints_disposition_caseload %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
@@ -314,7 +249,7 @@ kable(df_complaints_youth_intake_decision_table_gender_final,
 
 <br>
 
-## Table 5: Intake Decisions by Age at Intake
+## Table 4: Intake Decisions by Age at Intake
 
 **Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'), and "REQ'D TO PARTICIPATE-DIVERSION" (code of '7'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
@@ -325,7 +260,7 @@ kable(df_complaints_youth_intake_decision_table_gender_final,
 #| out-width: 85%
 
 ### unique complaints split out
-df_complaints_youth_intake_decision_table_age <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_youth_intake_decision_table_age <- df_analytic_complaints_disposition_caseload %>% 
   filter(intake_age>8,
          intake_age<20) %>% 
   dplyr::group_by(intake_age_clean) %>% 
@@ -348,7 +283,7 @@ df_complaints_youth_intake_decision_table_age <- df_complaints_youth_intake_deci
   dplyr::rename(`Age at Intake` = intake_age_clean) 
 
 ### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_youth_intake_decision_table_overall <- df_analytic_complaints_disposition_caseload %>% 
    filter(intake_age>8,
          intake_age<20) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
@@ -388,7 +323,7 @@ kable(df_complaints_youth_intake_decision_table_age_final,
 
 <br>
 
-## Table 6a: Intake Decisions by Offense Type (most serious offense; mso_flag == "Y")
+## Table 5a: Intake Decisions by Offense Type (most serious offense; mso_flag == "Y")
 
 **Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'), and "REQ'D TO PARTICIPATE-DIVERSION" (code of '7'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
@@ -397,7 +332,7 @@ kable(df_complaints_youth_intake_decision_table_age_final,
 #| out-width: 85%
 
 ### unique complaints split out
-df_complaints_youth_intake_decision_table_offense <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_youth_intake_decision_table_offense <- df_analytic_complaints_disposition_caseload %>% 
   dplyr::group_by(dai) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
@@ -418,7 +353,7 @@ df_complaints_youth_intake_decision_table_offense <- df_complaints_youth_intake_
   dplyr::rename(`Offense Description` = dai)  
 
 ### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_youth_intake_decision_table_overall <- df_analytic_complaints_disposition_caseload %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
@@ -456,7 +391,7 @@ kable(df_complaints_youth_intake_decision_table_offense_final,
 
 <br>
 
-## Table 6b: Intake Decisions by Status Offense Type (most serious offense is status; mso_flag == "Y")
+## Table 5b: Intake Decisions by Status Offense Type (most serious offense is status; mso_flag == "Y")
 
 **Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'), and "REQ'D TO PARTICIPATE-DIVERSION" (code of '7'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
@@ -465,7 +400,7 @@ kable(df_complaints_youth_intake_decision_table_offense_final,
 #| out-width: 85%
 
 ### unique complaints split out
-df_complaints_youth_intake_decision_table_offense_status <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_youth_intake_decision_table_offense_status <- df_analytic_complaints_disposition_caseload %>% 
   filter(dai=="Status Offense") %>% 
   dplyr::group_by(drg) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
@@ -487,7 +422,7 @@ df_complaints_youth_intake_decision_table_offense_status <- df_complaints_youth_
   dplyr::rename(`Status Offense Description` = drg)  
 
 ### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_youth_intake_decision_table_overall <- df_analytic_complaints_disposition_caseload %>% 
   filter(dai=="Status Offense") %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
@@ -526,7 +461,7 @@ kable(df_complaints_youth_intake_decision_table_offense_status_final,
 
 <br>
 
-## Table 6c: Intake Decisions by Status Offense Description (most serious offense is status; mso_flag == "Y")
+## Table 5c: Intake Decisions by Status Offense Description (most serious offense is status; mso_flag == "Y")
 
 **Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'), and "REQ'D TO PARTICIPATE-DIVERSION" (code of '7'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
@@ -535,7 +470,7 @@ kable(df_complaints_youth_intake_decision_table_offense_status_final,
 #| out-width: 85%
 
 ### unique complaints split out
-df_complaints_youth_intake_decision_table_offense_status_desc <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_youth_intake_decision_table_offense_status_desc <- df_analytic_complaints_disposition_caseload %>% 
   filter(dai=="Status Offense") %>% 
   dplyr::group_by(description) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
@@ -557,7 +492,7 @@ df_complaints_youth_intake_decision_table_offense_status_desc <- df_complaints_y
   dplyr::rename(`Status Offense Description` = description)  
 
 ### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_youth_intake_decision_table_overall <- df_analytic_complaints_disposition_caseload %>% 
   filter(dai=="Status Offense") %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
@@ -594,9 +529,10 @@ kable(df_complaints_youth_intake_decision_table_offense_status_desc_final,
   row_spec(7, bold = TRUE)
 ```
 
+
 <br>
 
-## Table 7: Intake Decisions by Court Service Unit (CSU)
+## Table 6: Intake Decisions by Prior JJ History 
 
 **Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'), and "REQ'D TO PARTICIPATE-DIVERSION" (code of '7'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
@@ -605,145 +541,7 @@ kable(df_complaints_youth_intake_decision_table_offense_status_desc_final,
 #| out-width: 85%
 
 ### unique complaints split out
-df_complaints_youth_intake_decision_table_csu <- df_complaints_youth_intake_decision_csu %>% 
-  dplyr::group_by(csu) %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
-                                                                       accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1)) %>% 
-  ungroup() %>% 
-  dplyr::rename(`CSU` = csu)  
-
-### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
-                                                                       accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1)) %>%  
-  ungroup() %>% 
-  dplyr::mutate(`CSU` = "Overall") 
-
-### combine two dataframes for table
-df_complaints_youth_intake_decision_table_csu_final <- rbind(df_complaints_youth_intake_decision_table_csu,
-                                                             df_complaints_youth_intake_decision_table_overall)
-
-
-### print table via kableextra
-kable(df_complaints_youth_intake_decision_table_csu_final, 
-      format.args = list(big.mark = ","), 
-      align=rep('c')) %>%
-  kable_styling(bootstrap_options = c("striped", 
-                                       "hover", 
-                                       "condensed", 
-                                       "responsive"), 
-                 row_label_position = "l") %>% 
-  row_spec(33, bold = TRUE)
-```
-
-<br>
-
-## Table 8: Intake Decisions by Court Service Unit (CSU) Region
-
-**Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'), and "REQ'D TO PARTICIPATE-DIVERSION" (code of '7'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
-
-See CSU regions here: https://www.djj.virginia.gov/pages/community/court-service-units.htm
-
-```{r echo=FALSE,message=FALSE,warning=FALSE}
-#| column: page-right
-#| out-width: 85%
-
-### unique complaints split out
-df_complaints_youth_intake_decision_table_csu_region <- df_complaints_youth_intake_decision_csu %>% 
-  dplyr::group_by(csu_region) %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
-                                                                       accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1)) %>% 
-  ungroup() %>% 
-  dplyr::rename(`CSU Region` = csu_region)  
-
-### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
-  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
-                                                                       accuracy = .1),
-                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
-                   `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
-                   `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
-                   `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1)) %>% 
-  ungroup() %>% 
-  dplyr::mutate(`CSU Region` = "Overall") 
-
-### combine two dataframes for table
-df_complaints_youth_intake_decision_table_csu_region_final <- rbind(df_complaints_youth_intake_decision_table_csu_region,
-                                                             df_complaints_youth_intake_decision_table_overall)
-
-
-### print table via kableextra
-kable(df_complaints_youth_intake_decision_table_csu_region_final, 
-      format.args = list(big.mark = ","), 
-      align=rep('c')) %>%
-  kable_styling(bootstrap_options = c("striped", 
-                                       "hover", 
-                                       "condensed", 
-                                       "responsive"), 
-                 row_label_position = "l") %>% 
-  row_spec(6, bold = TRUE)
-```
-
-<br>
-
-## Table 9: Intake Decisions by Prior JJ History 
-
-**Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'), and "REQ'D TO PARTICIPATE-DIVERSION" (code of '7'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
-
-```{r echo=FALSE,message=FALSE,warning=FALSE}
-#| column: page-right
-#| out-width: 85%
-
-### unique complaints split out
-df_complaints_youth_intake_decision_table_jj_history <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_youth_intake_decision_table_jj_history <- df_analytic_complaints_disposition_caseload %>% 
   filter(!is.na(jj_history_clean)==TRUE) %>% 
   dplyr::group_by(jj_history_clean) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
@@ -765,7 +563,7 @@ df_complaints_youth_intake_decision_table_jj_history <- df_complaints_youth_inta
   dplyr::rename(`JJ History` = jj_history_clean)  
 
 ### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_youth_intake_decision_table_overall <- df_analytic_complaints_disposition_caseload %>% 
   filter(!is.na(jj_history_clean)==TRUE) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
@@ -804,7 +602,7 @@ kable(df_complaints_youth_intake_decision_table_jj_history_final,
 
 <br>
 
-## Table 10: Intake Decisions by Petitioner Type/Referral Source
+## Table 7: Intake Decisions by Petitioner Type/Referral Source
 
 **Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'), and "REQ'D TO PARTICIPATE-DIVERSION" (code of '7'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
@@ -813,7 +611,7 @@ kable(df_complaints_youth_intake_decision_table_jj_history_final,
 #| out-width: 85%
 
 ### unique complaints split out
-df_complaints_youth_intake_decision_table_pet_desc <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_youth_intake_decision_table_pet_desc <- df_analytic_complaints_disposition_caseload %>% 
   filter(!is.na(referral_source_clean)==TRUE) %>% 
   dplyr::group_by(referral_source_clean) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
@@ -836,7 +634,7 @@ df_complaints_youth_intake_decision_table_pet_desc <- df_complaints_youth_intake
   arrange(desc(`All Complaints (N)`))
 
 ### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_complaints_youth_intake_decision_csu %>% 
+df_complaints_youth_intake_decision_table_overall <- df_analytic_complaints_disposition_caseload %>% 
   filter(!is.na(referral_source_clean)==TRUE) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
@@ -875,20 +673,19 @@ kable(df_complaints_youth_intake_decision_table_pet_desc_final,
 
 <br>
 
-## Table 11: Average Length of Stay on Diversion by Race/Ethnicity
+## Table 8: Average Length of Stay on Diversion by Status Offense Description (most serious offense is status; mso_flag == "Y")
 
-Both measures of LOS on diversion are calculated by DJJ and provided in the `caseload` file -- see codebook page for more information. The two LOS measures are the "Number of days on the workload status "Diversion at Intake"" and the "Number of days on the workload status "Diversion Beyond 90 Days"". **Still need to check for duplicates**
-
-**Until we receive clarity from DJJ on joining the `caseload` file to the `intake complaints` file, I am only exploring LOS by youth-level characteristics, not case-level characteristics (e.g. offense, JJ history, CSU, etc.)**
+Both measures of LOS on diversion are calculated by DJJ and provided in the `caseload` file -- see codebook page for more information. The two LOS measures are the "Number of days on the workload status "Diversion at Intake" and the "Number of days on the workload status "Diversion Beyond 90 Days"
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
 ###  mean and median diversion lengths of stay by race/ethnicity
-df_diversion_race_eth_los <- caseload_clean %>% 
+df_diversion_offense_los <- df_analytic_complaints_disposition_caseload %>%
+  filter(dai=="Status Offense") %>% 
   filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
-  group_by(race_clean) %>% 
+  group_by(description) %>% 
   dplyr::summarise(`Mean Diversion LOS (at intake)` = mean(div_at_int,
                                            na.rm=TRUE),
                    `Median Diversion LOS (at intake)` = median(div_at_int,
@@ -898,10 +695,11 @@ df_diversion_race_eth_los <- caseload_clean %>%
                    `Median Diversion LOS (beyond 90 days)` = median(div_bey_90,
                                            na.rm=TRUE)) %>% 
   ungroup() %>% 
-  dplyr::rename(`Race/Ethnicity` = race_clean)
+  dplyr::rename(`Offense Description` = description)
 
 ### overall mean and median diversion lengths of stay
-df_diversion_overall_los <- caseload_clean %>% 
+df_diversion_overall_los <- df_analytic_complaints_disposition_caseload %>% 
+  filter(dai=="Status Offense") %>% 
   filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
   dplyr::summarise(`Mean Diversion LOS (at intake)` = mean(div_at_int,
                                            na.rm=TRUE),
@@ -911,14 +709,14 @@ df_diversion_overall_los <- caseload_clean %>%
                                            na.rm=TRUE),
                    `Median Diversion LOS (beyond 90 days)` = median(div_bey_90,
                                            na.rm=TRUE)) %>% 
-  mutate(`Race/Ethnicity` = "Overall")
+  mutate(`Offense Description` = "Overall")
  
 ### combine two dataframes for table
-df_diversion_race_eth_los_final <- rbind(df_diversion_race_eth_los,
-                                                             df_diversion_overall_los)
+df_diversion_offense_los_final <- rbind(df_diversion_offense_los,
+                                        df_diversion_overall_los)
 
 ### print table via kableextra
-kable(df_diversion_race_eth_los_final, 
+kable(df_diversion_offense_los_final, 
       format.args = list(big.mark = ","), 
       align=rep('c')) %>%
   kable_styling(bootstrap_options = c("striped", 
@@ -926,23 +724,133 @@ kable(df_diversion_race_eth_los_final,
                                        "condensed", 
                                        "responsive"), 
                  row_label_position = "l") %>% 
-  row_spec(8, bold = TRUE)
+  row_spec(6, bold = TRUE)
 ```
 
 <br>
 
-## Table 12: Average Length of Stay on Diversion by Gender
+## Table 9: Average Length of Stay on Diversion by JJ History
 
-Both measures of LOS on diversion are calculated by DJJ and provided in the `caseload` file -- see codebook page for more information. The two LOS measures are the "Number of days on the workload status "Diversion at Intake"" and the "Number of days on the workload status "Diversion Beyond 90 Days"". **Still need to check for duplicates**
-
-**Until we receive clarity from DJJ on joining the `caseload` file to the `intake complaints` file, I am only exploring LOS by youth-level characteristics, not case-level characteristics (e.g. offense, JJ history, CSU, etc.)**
+Both measures of LOS on diversion are calculated by DJJ and provided in the `caseload` file -- see codebook page for more information. The two LOS measures are the "Number of days on the workload status "Diversion at Intake" and the "Number of days on the workload status "Diversion Beyond 90 Days"
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
 ###  mean and median diversion lengths of stay by race/ethnicity
-df_diversion_gender_los <- caseload_clean %>% 
+df_diversion_jj_history_los <- df_analytic_complaints_disposition_caseload %>%
+  filter(!is.na(jj_history_clean)==TRUE) %>% 
+  filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
+  dplyr::group_by(jj_history_clean) %>% 
+  dplyr::summarise(`Mean Diversion LOS (at intake)` = mean(div_at_int,
+                                           na.rm=TRUE),
+                   `Median Diversion LOS (at intake)` = median(div_at_int,
+                                           na.rm=TRUE),
+                   `Mean Diversion LOS (beyond 90 days)` = mean(div_bey_90,
+                                           na.rm=TRUE),
+                   `Median Diversion LOS (beyond 90 days)` = median(div_bey_90,
+                                           na.rm=TRUE)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`JJ History` = jj_history_clean)
+
+### overall mean and median diversion lengths of stay
+df_diversion_overall_los <- df_analytic_complaints_disposition_caseload %>% 
+  filter(!is.na(jj_history_clean)==TRUE) %>% 
+  filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
+  dplyr::summarise(`Mean Diversion LOS (at intake)` = mean(div_at_int,
+                                           na.rm=TRUE),
+                   `Median Diversion LOS (at intake)` = median(div_at_int,
+                                           na.rm=TRUE),
+                   `Mean Diversion LOS (beyond 90 days)` = mean(div_bey_90,
+                                           na.rm=TRUE),
+                   `Median Diversion LOS (beyond 90 days)` = median(div_bey_90,
+                                           na.rm=TRUE)) %>% 
+  mutate(`JJ History` = "Overall")
+ 
+### combine two dataframes for table
+df_diversion_jj_history_los_final <- rbind(df_diversion_jj_history_los,
+                                        df_diversion_overall_los)
+
+### print table via kableextra
+kable(df_diversion_jj_history_los_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") %>% 
+  row_spec(6, bold = TRUE)
+```
+
+<br>
+
+## Table 10: Average Length of Stay on Diversion by Petitioner/Referral Source
+
+Both measures of LOS on diversion are calculated by DJJ and provided in the `caseload` file -- see codebook page for more information. The two LOS measures are the "Number of days on the workload status "Diversion at Intake" and the "Number of days on the workload status "Diversion Beyond 90 Days"
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+###  mean and median diversion lengths of stay by race/ethnicity
+df_diversion_referral_source_los <- df_analytic_complaints_disposition_caseload %>%
+  filter(!is.na(referral_source_clean)==TRUE) %>% 
+  filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
+  dplyr::group_by(referral_source_clean) %>% 
+  dplyr::summarise(`Mean Diversion LOS (at intake)` = mean(div_at_int,
+                                           na.rm=TRUE),
+                   `Median Diversion LOS (at intake)` = median(div_at_int,
+                                           na.rm=TRUE),
+                   `Mean Diversion LOS (beyond 90 days)` = mean(div_bey_90,
+                                           na.rm=TRUE),
+                   `Median Diversion LOS (beyond 90 days)` = median(div_bey_90,
+                                           na.rm=TRUE)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`Petitioner/Referral Source` = referral_source_clean)
+
+### overall mean and median diversion lengths of stay
+df_diversion_overall_los <- df_analytic_complaints_disposition_caseload %>% 
+  filter(!is.na(referral_source_clean)==TRUE) %>% 
+  filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
+  dplyr::summarise(`Mean Diversion LOS (at intake)` = mean(div_at_int,
+                                           na.rm=TRUE),
+                   `Median Diversion LOS (at intake)` = median(div_at_int,
+                                           na.rm=TRUE),
+                   `Mean Diversion LOS (beyond 90 days)` = mean(div_bey_90,
+                                           na.rm=TRUE),
+                   `Median Diversion LOS (beyond 90 days)` = median(div_bey_90,
+                                           na.rm=TRUE)) %>% 
+  mutate(`Petitioner/Referral Source` = "Overall")
+ 
+### combine two dataframes for table
+df_diversion_referral_source_los_final <- rbind(df_diversion_referral_source_los,
+                                        df_diversion_overall_los)
+
+### print table via kableextra
+kable(df_diversion_referral_source_los_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") %>% 
+  row_spec(9, bold = TRUE)
+```
+
+<br>
+
+## Table 11: Average Length of Stay on Diversion by Gender
+
+Both measures of LOS on diversion are calculated by DJJ and provided in the `caseload` file -- see codebook page for more information. The two LOS measures are the "Number of days on the workload status "Diversion at Intake" and the "Number of days on the workload status "Diversion Beyond 90 Days"
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+###  mean and median diversion lengths of stay by race/ethnicity
+df_diversion_gender_los <- df_analytic_complaints_disposition_caseload %>% 
   filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
   group_by(gender_clean) %>% 
   dplyr::summarise(`Mean Diversion LOS (at intake)` = mean(div_at_int,
@@ -957,7 +865,7 @@ df_diversion_gender_los <- caseload_clean %>%
   dplyr::rename(`Gender` = gender_clean)
 
 ### overall mean and median diversion lengths of stay
-df_diversion_overall_los <- caseload_clean %>% 
+df_diversion_overall_los <- df_analytic_complaints_disposition_caseload %>% 
   filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
   dplyr::summarise(`Mean Diversion LOS (at intake)` = mean(div_at_int,
                                            na.rm=TRUE),
@@ -986,536 +894,3 @@ kable(df_diversion_gender_los_final,
 ```
 
 <br><br>
-
-# Visuals
-
-```{r include=FALSE,message=FALSE,warning=FALSE}
-### read in census/acs api key from environmnent
-### this allows us to pull census/acs data via the tidycensus package
-readRenviron("~/.Renviron")
-
-### read in va county-level shape file and keep geometry for mapping
-### from kyle walker/tidycensus: specify cb = TRUE which defaults to the Census Bureau’s cartographic boundary shapefiles. Cartographic boundary shapefiles are preferred to the core TIGER/Line shapefiles in tidycensus as their smaller size speeds up processing and because they are pre-clipped to the US coastline.
-va_county_shoreline_clipped <- get_acs(
-  geography = "county",
-  variables = "B19013_001",
-  state = "VA",
-  year = 2020,
-  geometry = TRUE,
-  cb = TRUE
-  ) %>%
-  clean_names() %>%
-  # mutate(county = word(NAME, 1)) %>% 
-  group_by(geoid) %>%
-  summarize(geometry = st_union(geometry)) %>%
-  ungroup() %>% 
-  mutate(state = "VA")
-
-# ### use group_by and st_union to create statewide polygon using the county-level geography
-# ### we'll use this shapefile for a state border when mapping
-# va_state_shoreline_clipped <- va_county_shoreline_clipped %>%
-#   group_by(state) %>%
-#   summarize(geometry = st_union(geometry)) %>%
-#   ungroup()
-
-### read in va county-level shape file with fips codes to use as lookup table
-va_county_shape <- read_sf("C:\\Users\\abyrum\\OneDrive - The Council of State Governments\\Geospatial_Mapping\\US County Geo Data\\tl_2019_us_county\\tl_2019_us_county.shp") %>%
-  clean_names() %>%
-  filter(statefp=="51") %>% ### filter by state fip code
-  dplyr::select(county=name,
-               county_fip=countyfp,
-               geoid)
-
-### lose geometry as this is just a lookup table
-va_county_lookup <- as.data.frame(va_county_shape) %>% 
-    dplyr::select(-(geometry))
-
-### now join va_county_shoreline_clipped and va_county_lookup
-va_county_shoreline_clipped_final <- left_join(va_county_shoreline_clipped,
-                                               va_county_lookup,
-                                               by = "geoid")
-
-
-```
-
-```{r include=FALSE,message=FALSE,warning=FALSE}
-### set constants for mapping
-default_font_color <- "#4e4d47"
-default_font_family <- "Franklin Gothic Book"
-```
-
-```{r include=FALSE,message=FALSE,warning=FALSE}
-### create static map theme (based on https://timogrossenbacher.ch/2019/04/bivariate-maps-with-ggplot2-and-sf/)
-theme_map <- function(...) {
-  theme_minimal() +
-  theme(
-    text = element_text(family = default_font_family,
-                        color = default_font_color),
-    # remove all axes
-    axis.line = element_blank(),
-    axis.text.x = element_blank(),
-    axis.text.y = element_blank(),
-    axis.ticks = element_blank(),
-    # add a subtle grid
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    # borders and margins
-    plot.margin = unit(c(.5, .5, .2, .5), "cm"),
-    panel.border = element_blank(),
-    panel.spacing = unit(c(-.1, 0.2, .2, 0.2), "cm"),
-    # titles
-    legend.title = element_text(size = 11),
-    legend.text = element_text(size = 9, hjust = 0,
-                               color = default_font_color),
-    plot.title = element_text(size = 15, hjust = 0.5,
-                              color = default_font_color),
-    # plot.subtitle = element_text(size = 10, hjust = 0.5,
-    #                              color = default_font_color,
-    #                              margin = margin(b = -0.1,
-    #                                              t = -0.1,
-    #                                              l = 2,
-    #                                              unit = "cm"),
-    #                              debug = F),
-    # # captions
-    # plot.caption = element_text(size = 7,
-    #                             hjust = .5,
-    #                             margin = margin(t = 0.2,
-    #                                             b = 0,
-    #                                             unit = "cm"),
-    #                             color = default_font_color),
-    ...
-  )
-}
-```
-
-```{r include=FALSE,message=FALSE,warning=FALSE}
-### set sharepoint path using csgjcr function
-sharepoint_ojjdp_va_analysis_geo_data <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Data/VA/analysis/geo"))
-
-# ### group diversion rate and geometry by county
-# df_complaints_youth_intake_decision_county_to_join <- df_complaints_youth_intake_decision_csu %>%
-#   mutate(fips_code = ifelse(fips_code=="X71",
-#                             "071",fips_code),
-#          fips_code = ifelse(fips_code=="X21",
-#                             "021",fips_code)) %>% 
-#   dplyr::group_by(fips_code) %>%
-#   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-#                    `Complaints Diverted (row %)` = n_distinct(unique_complaint_id[intake_diverted_flag=="Yes"])/`All Complaints (N)`) %>%
-#   ungroup()
-# 
-# df_county_level_intake_summary_geo <- left_join(va_county_shoreline_clipped_final,
-#                                                      df_complaints_youth_intake_decision_county_to_join,
-#                                                      by = c("county_fip"="fips_code"))
-# 
-# ### write out as rds file (to save time)
-# write_rds(df_county_level_intake_summary_geo,
-#           file.path(sharepoint_ojjdp_va_analysis_geo_data,"df_county_level_intake_summary_geo.rds"))
-
-### read in rds file for diversion rate and geometry by county
-df_county_level_intake_summary_geo <- read_rds(file.path(sharepoint_ojjdp_va_analysis_geo_data,"df_county_level_intake_summary_geo.rds"))
-
-# ### group diversion rate and geometry by csu
-# df_csu_level_intake_summary_geo <- df_county_level_intake_complaints_summary_geo %>% 
-#   dplyr::group_by(csu) %>% 
-#   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-#                    `Complaints Diverted (row %)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"])/`All Complaints (N)`,
-#                    geometry = st_union(geometry)) %>% 
-#   ungroup() 
-# 
-# ### write out as rds file (to save time)
-# write_rds(df_csu_level_intake_summary_geo,
-#           file.path(sharepoint_ojjdp_va_analysis_geo_data,"df_csu_level_intake_summary_geo.rds"))
-
-### read in rds file for diversion rate and geometry by csu
-df_csu_level_intake_summary_geo <- read_rds(file.path(sharepoint_ojjdp_va_analysis_geo_data,"df_csu_level_intake_summary_geo.rds"))
-
-# ### group diversion rate and geometry by csu region
-# ### we will initially use this file to add a region layer/label to the map
-# df_csu_region_level_intake_summary_geo <- df_county_level_intake_complaints_summary_geo %>% 
-#   dplyr::group_by(csu_region) %>% 
-#   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-#                    `Complaints Diverted (row %)` = n_distinct(unique_complaint_id[diverted_flag=="Yes"])/`All Complaints (N)`,
-#                    geometry = st_union(geometry)) %>% 
-#   ungroup() 
-# 
-# ### write out as rds file (to save time)
-# write_rds(df_csu_region_level_intake_summary_geo,
-#           file.path(sharepoint_ojjdp_va_analysis_geo_data,"df_csu_region_level_intake_summary_geo.rds"))
-
-### read in rds file for diversion rate and geometry by csu region
-df_csu_region_level_intake_summary_geo <- read_rds(file.path(sharepoint_ojjdp_va_analysis_geo_data,"df_csu_region_level_intake_summary_geo.rds"))
-
-```
-
-
-## Figure 1: % of all Complaints Diverted by County
-
-```{r echo=FALSE,message=FALSE,warning=FALSE}
-#| column: page-right
-#| out-width: 100%
-
-### create quantiles object
-no_classes <- 4
-
-### extract quantiles from var we're mapping
-quantiles <- df_county_level_intake_summary_geo %>%
-  pull(`Complaints Diverted (row %)`) %>%
-  quantile(probs = seq(0, 1, length.out = no_classes + 1), na.rm=TRUE) %>%
-  as.vector() 
-
-### make labels for map's legend
-label_diversion_rate <- c("27% to 56%","20% to 27%","13% to 20%","2% to 13%")
-
-### create a new variable with the specified quantiles
-df_county_level_intake_summary_geo_to_map <- df_county_level_intake_summary_geo %>%
-  mutate(percent_diversion_quartile = cut(-`Complaints Diverted (row %)`,
-                               breaks = -quantiles,
-                               right = TRUE,
-                               labels = label_diversion_rate,
-                               include.lowest = T)) 
-
-
-### map via ggplot 
-ggplot(
-  # define main data source
-  data = df_county_level_intake_summary_geo_to_map
-) +
-  scale_alpha(name = "",
-              range = c(0.6, 0),
-              guide = F) + # suppress legend
-  # add main fill aesthetic
-  geom_sf(
-    mapping = aes(
-      fill = percent_diversion_quartile
-      ),
-    color = "white",
-    size = 0.1
-  ) +
-  #   scale_fill_distiller(
-  #   labels = scales::percent_format(accuracy=1),
-  #   direction = 1,
-  #   name = "% Bookings with Drug/Alcohol\n Charges"
-  # ) +
-  ### use jr palette here
-    # scale_colour_gradientn(colours = c("#D7EBF1","#AFD6E2","#87C2D4","#2F7084","#1F4A58")) +
- scale_fill_manual(
-    values = c("#1F4A58","#2F7084","#87C2D4","#AFD6E2"),
-    name = "% of Complaints Diverted",
-    na.value = "grey50",
-    guide = guide_legend(
-     keyheight = unit(7.5, units = "mm"),
-     title.position = "top",
-     reverse = F # display highest on top
-  )) +
-  # use white stroke borders for county boundaries
-  geom_sf(
-    data = df_county_level_intake_summary_geo_to_map,
-    fill = "transparent",
-    color = "white",
-    size = .05
-  )  +
-  # use additional csu-level shapefile for region border
-  geom_sf(
-    data = df_csu_level_intake_summary_geo,
-    fill = "transparent",
-    color = "white",
-    size = .65
-  )  +
- # geom_label(
- #     data = df_csu_region_level_intake_summary_geo,
- #     aes(geometry = geometry,
- #         label = paste0(csu_region,"\n"," Region")),
- # family = "Franklin Gothic Demi",
- # color = "gray25",
- # size = 2.25,
- # fontface = "bold",
- # stat = "sf_coordinates") +
-  # guides(fill = guide_colorbar(barwidth = 8),
-  #          direction = "horizontal",
-  #     barheight = unit(2, units = "mm"),
-  #     barwidth = unit(50, units = "mm"),
-  #     draw.ulim = F,
-  #     title.position = 'top',
-  #     # some shifting around
-  #     title.hjust = 0.5,
-  #     label.hjust = 0.5) +
-  labs(
-    title = NULL,
-    subtitle = NULL,
-    x = NULL,
-    y = NULL,
-    fill = NULL,
-    caption = NULL
-  ) +
-  # add theme
-  theme_map() 
-# +
-#   theme(
-#     # plot.margin = margin(),
-#     panel.grid = element_blank(),
-#     axis.text.x = element_blank(),
-#     axis.text.y = element_blank(),
-#     legend.position = "bottom",
-#     legend.justification = c(0.5, 0.5),
-#     legend.text = element_text(size = 11)) 
-
-
-# ### write out
-# ggsave(
-#     filename = file.path(sp_viz_output_path, "charge_type_percent_drug_alcohol_by_jail_non_pc.png"),
-#     plot = last_plot(),
-#     device = ragg::agg_png,
-#     dpi = 300,
-#     height = 5.25,
-#     width = 10,
-#     units = "in",
-#     bg = "transparent"
-#   )
-```
-
-<br>
-
-## Figure 2: % of all Complaints Diverted by Court Service Unit (CSU)
-
-```{r echo=FALSE,message=FALSE,warning=FALSE}
-#| column: page-right
-#| out-width: 100%
-
-### create quantiles object
-no_classes <- 4
-
-### extract quantiles from var we're mapping
-quantiles <- df_csu_level_intake_summary_geo %>%
-  pull(`Complaints Diverted (row %)`) %>%
-  quantile(probs = seq(0, 1, length.out = no_classes + 1), na.rm=TRUE) %>%
-  as.vector() 
-
-### make labels for map's legend
-label_diversion_rate <- c("25% to 34%","18% to 25%","12% to 18%","5% to 12%")
-
-### create a new variable with the specified quantiles
-df_csu_level_intake_summary_geo_to_map <- df_csu_level_intake_summary_geo %>%
-  mutate(percent_diversion_quartile = cut(-`Complaints Diverted (row %)`,
-                               breaks = -quantiles,
-                               right = TRUE,
-                               labels = label_diversion_rate,
-                               include.lowest = T)) 
-
-
-### map via ggplot 
-ggplot(
-  # define main data source
-  data = df_csu_level_intake_summary_geo_to_map
-) +
-  scale_alpha(name = "",
-              range = c(0.6, 0),
-              guide = F) + # suppress legend
-  # add main fill aesthetic
-  geom_sf(
-    mapping = aes(
-      fill = percent_diversion_quartile
-      ),
-    color = "white",
-    size = 0.1
-  ) +
-  #   scale_fill_distiller(
-  #   labels = scales::percent_format(accuracy=1),
-  #   direction = 1,
-  #   name = "% Bookings with Drug/Alcohol\n Charges"
-  # ) +
-  ### use jr palette here
-    # scale_colour_gradientn(colours = c("#D7EBF1","#AFD6E2","#87C2D4","#2F7084","#1F4A58")) +
- scale_fill_manual(
-    values = c("#1F4A58","#2F7084","#87C2D4","#AFD6E2"),
-    name = "% of Complaints Diverted",
-    na.value = "grey50",
-    guide = guide_legend(
-     keyheight = unit(7.5, units = "mm"),
-     title.position = "top",
-     reverse = F # display highest on top
-  )) +
-  # use white stroke borders for county boundaries
-  geom_sf(
-    data = df_county_level_intake_summary_geo_to_map,
-    fill = "transparent",
-    color = "white",
-    size = .05
-  ) +
-  # use white stroke borders for csu boundaries
-  geom_sf(
-    data = df_csu_level_intake_summary_geo_to_map,
-    fill = "transparent",
-    color = "white",
-    size = .65
-  )  +
-  # use additional csu region-level shapefile for region border
-  # geom_sf(
-  #   data = df_csu_region_level_intake_summary_geo,
-  #   fill = "transparent",
-  #   color = "grey20",
-  #   size = .35
-  # )  + 
- # geom_label(
- #     data = df_csu_level_intake_summary_geo_to_map,
- #     aes(geometry = geometry,
- #         label = paste0(csu)),
- # family = "Franklin Gothic Demi",
- # color = "gray25",
- # size = 3,
- # fontface = "bold",
- # stat = "sf_coordinates") +
- # guides(fill = guide_colorbar(barwidth = 8),
- #          direction = "horizontal",
- #     barheight = unit(2, units = "mm"),
- #     barwidth = unit(50, units = "mm"),
- #     draw.ulim = F,
- #     title.position = 'top',
- #     # some shifting around
- #     title.hjust = 0.5,
- #     label.hjust = 0.5) +
- #  labs(
- #    title = NULL,
- #    subtitle = NULL,
- #    x = NULL,
- #    y = NULL,
- #    fill = NULL,
- #    caption = NULL
- #  ) +
-  # add theme
-  theme_map() 
-# +
-#   theme(
-#     # plot.margin = margin(),
-#     panel.grid = element_blank(),
-#     axis.text.x = element_blank(),
-#     axis.text.y = element_blank(),
-#     legend.position = "bottom",
-#     legend.justification = c(0.5, 0.5),
-#     legend.text = element_text(size = 11)) 
-
-# ### write out
-# ggsave(
-#     filename = file.path(sharepoint_ojjdp_va_viz, "csu_level_diversion_rate_map.png"),
-#     plot = last_plot(),
-#     device = ragg::agg_png,
-#     dpi = 300,
-#     height = 5.25,
-#     width = 10,
-#     units = "in",
-#     bg = "transparent"
-#   )
-```
-
-<br>
-
-## Figure 3: % of all Complaints Diverted by Court Service Unit (CSU) (continuous scale)
-
-```{r echo=FALSE,message=FALSE,warning=FALSE}
-#| column: page-right
-#| out-width: 100%
-
-### map via ggplot 
-ggplot(
-  # define main data source
-  data = df_csu_level_intake_summary_geo_to_map
-) +
-  scale_alpha(name = "",
-              range = c(0.6, 0),
-              guide = F) + # suppress legend
-  # add main fill aesthetic
-  geom_sf(
-    mapping = aes(
-      fill = `Complaints Diverted (row %)`
-      ),
-    color = "white",
-    size = 0.1
-  ) +
-    scale_fill_distiller(
-    labels = scales::percent_format(accuracy=1),
-    direction = 1,
-    name = "% of Complaints Diverted"
-  ) +
-  ### use jr palette here
-    scale_colour_gradientn(colours = c("#D7EBF1","#AFD6E2","#87C2D4","#2F7084","#1F4A58")) +
- # scale_fill_manual(
- #    values = c("#1F4A58","#2F7084","#87C2D4","#AFD6E2"),
- #    name = "% of Complaints Diverted",
- #    na.value = "grey50",
- #    guide = guide_legend(
- #     keyheight = unit(7.5, units = "mm"),
- #     title.position = "top",
- #     reverse = F # display highest on top
-  # )) +
-  # use white stroke borders for county boundaries
-  geom_sf(
-    data = df_county_level_intake_summary_geo_to_map,
-    fill = "transparent",
-    color = "white",
-    size = .05
-  ) +
-  # use white stroke borders for csu boundaries
-  geom_sf(
-    data = df_csu_level_intake_summary_geo_to_map,
-    fill = "transparent",
-    color = "white",
-    size = .65
-  )  +
-  # use additional csu region-level shapefile for region border
-  # geom_sf(
-  #   data = df_csu_region_level_intake_summary_geo,
-  #   fill = "transparent",
-  #   color = "grey20",
-  #   size = .35
-  # )  + 
- # geom_label(
- #     data = df_csu_level_intake_summary_geo_to_map,
- #     aes(geometry = geometry,
- #         label = paste0(csu)),
- # family = "Franklin Gothic Demi",
- # color = "gray25",
- # size = 3,
- # fontface = "bold",
- # stat = "sf_coordinates") +
- guides(fill = guide_colorbar(barwidth = 8),
-          direction = "horizontal",
-     barheight = unit(2, units = "mm"),
-     barwidth = unit(50, units = "mm"),
-     draw.ulim = F,
-     title.position = 'top',
-     # some shifting around
-     title.hjust = 0.5,
-     label.hjust = 0.5) +
- #  labs(
- #    title = NULL,
- #    subtitle = NULL,
- #    x = NULL,
- #    y = NULL,
- #    fill = NULL,
- #    caption = NULL
- #  ) +
-  # add theme
-  theme_map() +
-  theme(
-    # plot.margin = margin(),
-    panel.grid = element_blank(),
-    axis.text.x = element_blank(),
-    axis.text.y = element_blank(),
-    legend.position = "bottom",
-    legend.justification = c(0.5, 0.5),
-    legend.text = element_text(size = 11))
-
-# ### write out
-# ggsave(
-#     filename = file.path(sharepoint_ojjdp_va_viz, "csu_level_diversion_rate_map.png"),
-#     plot = last_plot(),
-#     device = ragg::agg_png,
-#     dpi = 300,
-#     height = 5.25,
-#     width = 10,
-#     units = "in",
-#     bg = "transparent"
-#   )
-```
-
-<br><br>
-
