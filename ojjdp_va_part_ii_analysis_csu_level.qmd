@@ -971,8 +971,7 @@ kable(df_complaints_youth_intake_decision_pet_desc_rate_csu,
                                        "hover", 
                                        "condensed", 
                                        "responsive"), 
-                 row_label_position = "l") %>% 
-  row_spec(32, bold = TRUE)
+                 row_label_position = "l") 
 ```
 
 <br><br>
