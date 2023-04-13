@@ -736,7 +736,7 @@ kable(df_complaints_disposition_outcome_table_risk_score_final_csu,
 
 <br>
 
-## Table 7: Disposition Outcomes by YASI Risk Level
+## Table 7: Disposition Outcomes by YASI Risk Level (probation/supervision only)
 
 **TO DO:** Double check that I’m using correct YASI assessment for dispo exploration (does it matter if it is initial, case closure, etc.?)
 
@@ -895,82 +895,76 @@ kable(df_complaints_youth_intake_decision_table_pet_desc_csu_final,
 
 <br>
 
-## Table 9: TO DO: Intake Decisions by Petitioner Type/Referral Source (per 10k youth by CSU) (petitioned and diverted only)
+## Table 9: Intake Decisions by Petitioner Type/Referral Source Rate (per 10k youth by CSU) (petitioned and diverted only)
 
+**Question:** Should we use unique youth instead of complaints for rates?
 
 **Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'), and "REQ'D TO PARTICIPATE-DIVERSION" (code of '7'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
 **Also:** for this CSU-level analysis, I've further collapsed the petitioner/referral source categories for ease of interpretation. Here are the categories I'm currently using: school (including SRO), law enforcement (including probation officer), and other
 
-```{r eval=FALSE,include=FALSE,message=FALSE,warning=FALSE}
+```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
-### unique complaints split out
-df_complaints_youth_intake_decision_table_pet_desc_csu <- df_analytic_complaints_disposition_caseload %>% 
+#### read in county-level youth population data from ezapop
+df_acs_bridged_age_race_sex_15_19_final_va <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_acs_bridged_age_race_sex_15_19_final_va.rds"))
+
+### create lookup table of county fips code and csu to join to df_acs_bridged_age_race_sex_15_19_final_va
+df_county_fips_csu_lookup <- df_analytic_complaints_disposition_caseload %>%
+  mutate(fips_code = ifelse(fips_code=="X71",
+                            "071",fips_code),
+         fips_code = ifelse(fips_code=="X21",
+                            "021",fips_code)) %>%
+  distinct(fips_code,
+           .keep_all = TRUE) %>% 
+  dplyr::select(county_code=fips_code,
+                csu)
+
+### join df_acs_bridged_age_race_sex_15_19_final_va and df_county_fips_csu_lookup 
+### summarize raw population count by csu
+df_va_csu_youth_population_8_17 <- left_join(df_acs_bridged_age_race_sex_15_19_final_va,
+                                              df_county_fips_csu_lookup,
+                                             by = "county_code") %>% 
+  dplyr::group_by(csu) %>% 
+  dplyr::summarise(overall_8_17_population = sum(overall_8_17_population,
+                                                 na.rm = TRUE)) %>% 
+  ungroup()
+
+### Intake Decisions by Petitioner Type/Referral Source (per 10k youth by CSU)
+df_complaints_youth_intake_decision_pet_desc_rate_csu <- df_analytic_complaints_disposition_caseload %>% 
   filter(!is.na(referral_source_clean_csu_level_categories)==TRUE) %>% 
   dplyr::group_by(csu) %>% 
    dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints, School (N)` = n_distinct(unique_complaint_id[referral_source_clean_csu_level_categories=="School"]),
-                   `All Complaints, School (row %)` = scales::percent(`All Complaints, School (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
                    `All Complaints, Law Enforcement (N)` = n_distinct(unique_complaint_id[referral_source_clean_csu_level_categories=="Law Enforcement"]),
-                  `All Complaints, Law Enforcement (row %)` = scales::percent(`All Complaints, Law Enforcement (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                   
                    `All Complaints, Other (N)` = n_distinct(unique_complaint_id[referral_source_clean_csu_level_categories=="Other"]),
-                  `All Complaints, Other (row %)` = scales::percent(`All Complaints, Other (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                  `Complaints Petitioned, School (row %)` = scales::percent(n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned" & referral_source_clean_csu_level_categories=="School"])/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                  `Complaints Petitioned, Law Enforcement (row %)` = scales::percent(n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned" & referral_source_clean_csu_level_categories=="Law Enforcement"])/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                  `Complaints Petitioned, Other (row %)` = scales::percent(n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned" & referral_source_clean_csu_level_categories=="Other"])/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Complaints Diverted, School (row %)` = scales::percent(n_distinct(unique_complaint_id[intake_decision_clean=="Diverted" & referral_source_clean_csu_level_categories=="School"])/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                  `Complaints Diverted, Law Enforcement (row %)` = scales::percent(n_distinct(unique_complaint_id[intake_decision_clean=="Diverted" & referral_source_clean_csu_level_categories=="Law Enforcement"])/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                  `Complaints Diverted, Other (row %)` = scales::percent(n_distinct(unique_complaint_id[intake_decision_clean=="Diverted" & referral_source_clean_csu_level_categories=="Other"])/`All Complaints (N)`,
-                                                                       accuracy = .1)) %>% 
+                  `Complaints Petitioned, School (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned" & referral_source_clean_csu_level_categories=="School"]),
+                  `Complaints Petitioned, Law Enforcement (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned" & referral_source_clean_csu_level_categories=="Law Enforcement"]),
+                  `Complaints Petitioned, Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned" & referral_source_clean_csu_level_categories=="Other"]),
+                   `Complaints Diverted, School (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted" & referral_source_clean_csu_level_categories=="School"]),
+                  `Complaints Diverted, Law Enforcement (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted" & referral_source_clean_csu_level_categories=="Law Enforcement"]),
+                  `Complaints Diverted, Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted" & referral_source_clean_csu_level_categories=="Other"])) %>% 
   ungroup() %>% 
+  left_join(df_va_csu_youth_population_8_17,
+            by = "csu") %>% 
+  dplyr::group_by(csu) %>% 
+   dplyr::summarise(`All Complaints Rate (per 10k youth)` = `All Complaints (N)`/overall_8_17_population*10000,
+                   `All Complaints, School Rate (per 10k youth)` = `All Complaints, School (N)`/overall_8_17_population*10000,
+                   `All Complaints, Law Enforcement Rate (per 10k youth)` = `All Complaints, Law Enforcement (N)`/overall_8_17_population*10000,
+                   `All Complaints, Other Rate (per 10k youth)` = `All Complaints, Other (N)`/overall_8_17_population*10000,
+                  `Complaints Petitioned, School Rate (per 10k youth)` = `Complaints Petitioned, School (N)`/overall_8_17_population*10000,
+                  `Complaints Petitioned, Law Enforcement Rate (per 10k youth)` = `Complaints Petitioned, Law Enforcement (N)`/overall_8_17_population*10000,
+                  `Complaints Petitioned, Other Rate (per 10k youth)` = `Complaints Petitioned, Other (N)`/overall_8_17_population*10000,
+                   `Complaints Diverted, School Rate (per 10k youth)` = `Complaints Diverted, School (N)`/overall_8_17_population*10000,
+                  `Complaints Diverted, Law Enforcement Rate (per 10k youth)` = `Complaints Diverted, Law Enforcement (N)`/overall_8_17_population*10000,
+                  `Complaints Diverted, Other Rate (per 10k youth)` = `Complaints Diverted, Other (N)`/overall_8_17_population*10000) %>% 
   dplyr::rename(`CSU` = csu) 
 
-### unique complaints statewide
-df_complaints_youth_intake_decision_table_overall <- df_analytic_complaints_disposition_caseload %>% 
-  filter(!is.na(referral_source_clean_csu_level_categories)==TRUE) %>% 
-   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints, School (N)` = n_distinct(unique_complaint_id[referral_source_clean_csu_level_categories=="School"]),
-                   `All Complaints, School (row %)` = scales::percent(`All Complaints, School (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                   `All Complaints, Law Enforcement (N)` = n_distinct(unique_complaint_id[referral_source_clean_csu_level_categories=="Law Enforcement"]),
-                  `All Complaints, Law Enforcement (row %)` = scales::percent(`All Complaints, Law Enforcement (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                   
-                   `All Complaints, Other (N)` = n_distinct(unique_complaint_id[referral_source_clean_csu_level_categories=="Other"]),
-                  `All Complaints, Other (row %)` = scales::percent(`All Complaints, Other (N)`/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                  `Complaints Petitioned, School (row %)` = scales::percent(n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned" & referral_source_clean_csu_level_categories=="School"])/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                  `Complaints Petitioned, Law Enforcement (row %)` = scales::percent(n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned" & referral_source_clean_csu_level_categories=="Law Enforcement"])/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                  `Complaints Petitioned, Other (row %)` = scales::percent(n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned" & referral_source_clean_csu_level_categories=="Other"])/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                   `Complaints Diverted, School (row %)` = scales::percent(n_distinct(unique_complaint_id[intake_decision_clean=="Diverted" & referral_source_clean_csu_level_categories=="School"])/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                  `Complaints Diverted, Law Enforcement (row %)` = scales::percent(n_distinct(unique_complaint_id[intake_decision_clean=="Diverted" & referral_source_clean_csu_level_categories=="Law Enforcement"])/`All Complaints (N)`,
-                                                                       accuracy = .1),
-                  `Complaints Diverted, Other (row %)` = scales::percent(n_distinct(unique_complaint_id[intake_decision_clean=="Diverted" & referral_source_clean_csu_level_categories=="Other"])/`All Complaints (N)`,
-                                                                       accuracy = .1)) %>% 
-  dplyr::mutate(`CSU` = "Overall") 
-
-### combine two dataframes for table
-df_complaints_youth_intake_decision_table_pet_desc_csu_final <- rbind(df_complaints_youth_intake_decision_table_pet_desc_csu,
-                                                             df_complaints_youth_intake_decision_table_overall)
 
 
 ### print table via kableextra
-kable(df_complaints_youth_intake_decision_table_pet_desc_csu_final, 
+kable(df_complaints_youth_intake_decision_pet_desc_rate_csu, 
       format.args = list(big.mark = ","), 
       align=rep('c')) %>%
   kable_styling(bootstrap_options = c("striped", 
@@ -978,7 +972,7 @@ kable(df_complaints_youth_intake_decision_table_pet_desc_csu_final,
                                        "condensed", 
                                        "responsive"), 
                  row_label_position = "l") %>% 
-  row_spec(33, bold = TRUE)
+  row_spec(32, bold = TRUE)
 ```
 
 <br><br>
