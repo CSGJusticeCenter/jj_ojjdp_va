@@ -315,6 +315,18 @@ df_complaints_youth_intake_decision <- df_djj_intake_complaints_clean %>%
 #                     "14 to 15",
 #                     "16 to 20"))) 
 
+#############################################
+### clean and de-dup df_djj_intake_complaints_raw dataframe for complaints that are petitioned
+### we will use this file ensure we only keep disposition data for complaints/cases that are actually petitioned
+### here are the intake decisions that I am considering as "petitioned" -- meaning they should have disposition data:
+### "PETITION FILED", "PETITION/DETENTION ORDER FILED","COURT SUMMONS","PETITION/SHELTER CARE FILED","UNSUCCESSFUL DIVERSION/PETITION FILED"
+#############################################
+df_djj_intake_petitioned_only <- df_complaints_youth_intake_decision %>%
+  filter(intake_decision_label%in%c("PETITION FILED", "PETITION/DETENTION ORDER FILED","COURT SUMMONS","PETITION/SHELTER CARE FILED","UNSUCCESSFUL DIVERSION/PETITION FILED")) %>% 
+  distinct(juvenile_number,
+           case_number,
+           offense_number)  ### no records dropped
+
 ########################################
 ### clean and de-dup disposition dataframe
 ########################################
@@ -352,7 +364,12 @@ disposition_clean <- disposition %>%
                     "12 to 13",
                     "14 to 15",
                     "16 to 20"))) %>% 
-  dplyr::rename(dispo_description = description)
+  dplyr::rename(dispo_description = description) %>% 
+  ### only keep disposition records with intake records that were petitioned
+  inner_join(df_djj_intake_petitioned_only,
+             by = c("juvenile_number",
+                    "case_number",
+                    "offense_number"))
   
 
 ########################################
@@ -396,6 +413,9 @@ caseload_clean <- caseload %>%
 #############################################################################################
 
 ### first, left join df_complaints_youth_intake_decision and disposition_clean
+### we have already dropped disposition records without accompanying intake records which were petitioned
+### so any disposition missingness indicates that case wasn't petitioned
+### TO DO: double check this logic with team
 df_complaints_disposition_clean_1 <- left_join(df_complaints_youth_intake_decision,
                                                disposition_clean,
                                                by = c("juvenile_number",
