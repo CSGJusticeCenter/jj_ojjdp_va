@@ -36,7 +36,7 @@ We will conduct a descriptive analysis of the front end of the system from intak
 ```{r include=FALSE}
 ### call libraries
 library(easypackages)
-libraries("tidyverse","foreign","lubridate","reshape2", "ggplot2","RColorBrewer","knitr","forcats","openxlsx","statar","svDialogs","xlsx", "magrittr","stringr", "data.table","janitor","kableExtra","leaflet", "readr", "rmarkdown","rowr", "gganimate", "gifski","tidycensus","sf","htmltools","acs","tigris","mapview","rgeos", "ggrepel", "censusxy","gdata","lavaan","mclust","tmap", "raster","rgeos","gmapsdistance","viridis","cowplot","lintr","leaflet.extras","censusapi","data.table","gridGraphics","readxl","haven","ggridges","extrafont","extrafontdb","datamodelr","Lahman","DiagrammeR","fs","readxl","rsvg","V8","csgjcr","DataExplorer","tidylog")
+libraries("tidyverse","foreign","lubridate","reshape2", "ggplot2","RColorBrewer","knitr","forcats","openxlsx","statar","svDialogs","xlsx", "magrittr","stringr", "data.table","janitor","kableExtra","leaflet", "readr", "rmarkdown","rowr", "gganimate", "gifski","tidycensus","sf","htmltools","acs","tigris","mapview","rgeos", "ggrepel", "censusxy","gdata","lavaan","mclust","tmap", "raster","rgeos","gmapsdistance","viridis","cowplot","lintr","leaflet.extras","censusapi","data.table","gridGraphics","readxl","haven","ggridges","extrafont","extrafontdb","datamodelr","Lahman","DiagrammeR","fs","readxl","rsvg","V8","csgjcr","DataExplorer","tidylog","ggpattern","scales")
 ```
 
 ```{r include=FALSE,message=FALSE,warning=FALSE}
@@ -78,7 +78,7 @@ unique_youth_sample_denom <- n_distinct(df_analytic_complaints_disposition_casel
 ```
 
 
-# Tables
+# Tables (Descriptives)
 
 ## Table 1: Intake Decisions by Race/Ethnicity
 
@@ -246,7 +246,7 @@ kable(df_complaints_disposition_outcome_table_race_final,
 
 <br>
 
-## Table : Average Length of Stay on Diversion by Race/Ethnicity
+## Table 3: Average Length of Stay on Diversion by Race/Ethnicity
 
 Both measures of LOS on diversion are calculated by DJJ and provided in the `caseload` file -- see codebook page for more information. The two LOS measures are the "Number of days on the workload status "Diversion at Intake" and the "Number of days on the workload status "Diversion Beyond 90 Days"
 
@@ -296,6 +296,560 @@ kable(df_diversion_race_eth_los_final,
                                        "responsive"), 
                  row_label_position = "l") %>% 
   row_spec(8, bold = TRUE)
+```
+
+<br>
+
+# Tables (Unadjusted Relative Rate Indices)
+
+The Relative Rate Index (RRI) provides a measure of disparity or disproportionality in outcomes by comparing the rates at which individuals of different races/ethnic groups experience supervision and revocation. To calculate the RRI, the rate of each outcome of interest for youth who are Black and Hispanic is divided by the rate at which the outcome occurs for youth who are White. 
+
+A RRI of 1 indicates no disparity. RRIs greater than 1 indicate the outcome occurs more frequently for youth who are Black or Hispanic, and an RRI less than 1 indicates an outcome occurs less frequently than for youth who are White. All rates are calculated at the individual level (should we limit to youth with no prior JJ history if we keep this analysis at the individual-level as opposed to complaint/case-level?).
+
+
+* Relative rate index, JJ population (using Virginia youth population data as denominator)
+
+* Relative rate index, diversion and petition (using overall Virginia JJ sample data as denominator)
+
+* Relative rate index, informal diversion (i.e. referred to other agency) and dismissal (using overall Virginia JJ sample data as denominator)
+
+* Relative rate index, diversion outcomes (using Virginia JJ diversion sample data as denominator)
+
+<br>
+
+## Table 4: Overall JJ Population, RRI
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+### read in state-level youth population data from ezapop
+df_va_state_youth_population_8_17 <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_acs_bridged_age_race_sex_15_19_final_state_aggregated_va.rds")) %>% 
+   pivot_longer(hispanic_any_race:not_hispanic_white,
+               names_to = "race_ezapop",
+               values_to = "race_eth_8_17_population") %>%  ### pivot wide for join
+  ### clean race/ethnicity to align with categories used in analysis
+  ### use factor function to assign labels to values
+  mutate(race_clean = case_when(
+    race_ezapop=="not_hispanic_am_in_ak_native" ~ 1,
+    race_ezapop=="not_hispanic_asian_pi" ~ 2,
+    race_ezapop=="not_hispanic_black" ~ 3,
+    race_ezapop=="hispanic_any_race" ~ 4,
+    race_ezapop=="not_hispanic_white" ~ 5,
+    TRUE ~ 6),
+    race_clean = factor(race_clean,
+         levels = c(1,2,3,4,5,6),
+         labels = c("American Indian","Asian", "Black", "Hispanic", "White", "Other"))) %>% 
+  dplyr::select(race_clean,race_eth_8_17_population,overall_8_17_population)
+
+
+### overall counts, rates, and RRI for JJ-involved white youth in sample
+df_rri_overall_jj_white <- df_analytic_complaints_disposition_caseload %>% 
+  filter(!is.na(race_clean)==TRUE,
+         race_clean=="White") %>% 
+  ### join ezapop virginia statewide youth population estimates
+  left_join(df_va_state_youth_population_8_17,
+            by = "race_clean") %>%
+  dplyr::group_by(race_clean) %>% 
+   dplyr::summarise(`Unique Youth (N)` = n_distinct(juvenile_number),
+                    `JJ-involved Rate (per 10k youth)` = `Unique Youth (N)`/race_eth_8_17_population*10000,
+                    `JJ-involved RRI (to white youth)` = NA) %>% 
+  ungroup() %>% 
+  distinct()
+ 
+### overall counts, rates, and RRI for JJ-involved non-white youth in sample
+df_rri_overall_jj_non_white <- df_analytic_complaints_disposition_caseload %>% 
+  filter(!is.na(race_clean)==TRUE,
+         race_clean!="White") %>% 
+  ### join ezapop virginia statewide youth population estimates
+  left_join(df_va_state_youth_population_8_17,
+            by = "race_clean") %>%
+  dplyr::group_by(race_clean) %>% 
+   dplyr::summarise(`Unique Youth (N)` = n_distinct(juvenile_number),
+                    `JJ-involved Rate (per 10k youth)` = `Unique Youth (N)`/race_eth_8_17_population*10000,
+                    `JJ-involved RRI (to white youth)` = round(`JJ-involved Rate (per 10k youth)`/df_rri_overall_jj_white$`JJ-involved Rate (per 10k youth)`, digits = 2)) %>% 
+  ungroup() %>% 
+  distinct()
+
+### merge tables together
+df_rri_overall_jj_final <- rbind(df_rri_overall_jj_white,df_rri_overall_jj_non_white) %>% 
+  dplyr::rename(`Race/Ethnicity` = race_clean)
+
+
+### print table via kableextra
+kable(df_rri_overall_jj_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") 
+```
+
+<br>
+
+## Table 5: Diversion and Petition Rate, RRI
+
+**Question:** Should we limit to youth with no prior JJ history if we keep this analysis at the individual-level as opposed to complaint/case-level? Otherwise, how would we create a youth-level measure of diversion decisions? I am currently filtering on youth with no prior JJ history. I have also filtered out youth whose charge is a technical violation (not sure why they are listed as not having JJ history?)
+
+**NOTE:** I am currently only include "formal" diversions in the count of unique youth diverted. The denominator used is all youth in the DJJ sample without prior JJ history.
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+
+### overall counts, rates, and RRI for diversion and petition rates for white youth in sample
+df_rri_diversion_petition_rate_jj_white <- df_analytic_complaints_disposition_caseload %>% 
+  filter(!is.na(race_clean)==TRUE,
+         race_clean=="White",
+         jj_history_clean=="No Prior JJ History",
+         flg_category!="Technical") %>% 
+  dplyr::group_by(race_clean) %>% 
+   dplyr::summarise(`Unique Youth, no prior JJ history (N)` = n_distinct(juvenile_number),
+                    `Unique Youth Diverted, no prior JJ history (N)` = n_distinct(juvenile_number[intake_decision_clean=="Diverted"]),
+                    `Diversion Rate (per 10k JJ-involved youth w/ no prior JJ history)` = `Unique Youth Diverted, no prior JJ history (N)`/`Unique Youth, no prior JJ history (N)`*10000,
+                    `Diversion RRI (to white youth)` = NA,
+                    `Unique Youth Petitioned, no prior JJ history (N)` = n_distinct(juvenile_number[intake_decision_clean=="Petitioned"]),
+                    `Petition Rate (per 10k JJ-involved youth w/ no prior JJ history)` = `Unique Youth Petitioned, no prior JJ history (N)`/`Unique Youth, no prior JJ history (N)`*10000,
+                    `Petition RRI (to white youth)` = NA) %>% 
+  ungroup() %>% 
+  distinct()
+ 
+### overall counts, rates, and RRI for diversion and petition rates for non-white youth in sample
+df_rri_diversion_petition_rate_jj_non_white <- df_analytic_complaints_disposition_caseload %>% 
+  filter(!is.na(race_clean)==TRUE,
+         race_clean!="White",
+         jj_history_clean=="No Prior JJ History",
+         flg_category!="Technical") %>% 
+  dplyr::group_by(race_clean) %>% 
+   dplyr::summarise(`Unique Youth, no prior JJ history (N)` = n_distinct(juvenile_number),
+                    `Unique Youth Diverted, no prior JJ history (N)` = n_distinct(juvenile_number[intake_decision_clean=="Diverted"]),
+                    `Diversion Rate (per 10k JJ-involved youth w/ no prior JJ history)` = `Unique Youth Diverted, no prior JJ history (N)`/`Unique Youth, no prior JJ history (N)`*10000,
+                    `Diversion RRI (to white youth)` = round(`Diversion Rate (per 10k JJ-involved youth w/ no prior JJ history)`/df_rri_diversion_petition_rate_jj_white$`Diversion Rate (per 10k JJ-involved youth w/ no prior JJ history)`, digits = 2),
+                    `Unique Youth Petitioned, no prior JJ history (N)` = n_distinct(juvenile_number[intake_decision_clean=="Petitioned"]),
+                    `Petition Rate (per 10k JJ-involved youth w/ no prior JJ history)` = `Unique Youth Petitioned, no prior JJ history (N)`/`Unique Youth, no prior JJ history (N)`*10000,
+                    `Petition RRI (to white youth)` = round(`Petition Rate (per 10k JJ-involved youth w/ no prior JJ history)`/df_rri_diversion_petition_rate_jj_white$`Petition Rate (per 10k JJ-involved youth w/ no prior JJ history)`, digits = 2)) %>% 
+  ungroup() %>% 
+  distinct()
+
+### merge tables together
+df_rri_diversion_petition_rate_jj_final <- rbind(df_rri_diversion_petition_rate_jj_white,df_rri_diversion_petition_rate_jj_non_white) %>% 
+  dplyr::rename(`Race/Ethnicity` = race_clean) %>% 
+  arrange(`Race/Ethnicity`)
+
+
+### print table via kableextra
+kable(df_rri_diversion_petition_rate_jj_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") 
+```
+
+<br>
+
+## Table 6: Informal Diversion and Resolved/Dismissed Rate, RRI
+
+**Question:** Should we limit to youth with no prior JJ history if we keep this analysis at the individual-level as opposed to complaint/case-level? Otherwise, how would we create a youth-level measure of diversion decisions? I am currently filtering on youth with no prior JJ history. I have also filtered out youth whose charge is a technical violation (not sure why they are listed as not having JJ history?)
+
+**NOTE:** I am currently only include "formal" diversions in the count of unique youth diverted. The denominator used is all youth in the DJJ sample without prior JJ history.
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+
+### overall counts, rates, and RRI for diversion and petition rates for white youth in sample
+df_rri_informal_diversion_dismissal_rate_jj_white <- df_analytic_complaints_disposition_caseload %>% 
+  filter(!is.na(race_clean)==TRUE,
+         race_clean=="White",
+         jj_history_clean=="No Prior JJ History",
+         flg_category!="Technical") %>% 
+  dplyr::group_by(race_clean) %>% 
+   dplyr::summarise(`Unique Youth, no prior JJ history (N)` = n_distinct(juvenile_number),
+                    `Unique Youth Diverted (Informal), no prior JJ history (N)` = n_distinct(juvenile_number[intake_decision_clean=="Diverted (Informal)"]),
+                    `Diversion (Informal) Rate (per 10k JJ-involved youth w/ no prior JJ history)` = `Unique Youth Diverted (Informal), no prior JJ history (N)`/`Unique Youth, no prior JJ history (N)`*10000,
+                    `Diversion (Informal) RRI (to white youth)` = NA,
+                    `Unique Youth Resolved/Dismissed, no prior JJ history (N)` = n_distinct(juvenile_number[intake_decision_clean=="Resolved/Dismissed"]),
+                    `Resolved/Dismissed Rate (per 10k JJ-involved youth w/ no prior JJ history)` = `Unique Youth Resolved/Dismissed, no prior JJ history (N)`/`Unique Youth, no prior JJ history (N)`*10000,
+                    `Resolved/Dismissed RRI (to white youth)` = NA) %>% 
+  ungroup() %>% 
+  distinct()
+ 
+### overall counts, rates, and RRI for diversion and petition rates for non-white youth in sample
+df_rri_informal_diversion_dismissal_rate_jj_non_white <- df_analytic_complaints_disposition_caseload %>% 
+  filter(!is.na(race_clean)==TRUE,
+         race_clean!="White",
+         jj_history_clean=="No Prior JJ History",
+         flg_category!="Technical") %>% 
+  dplyr::group_by(race_clean) %>% 
+   dplyr::summarise(`Unique Youth, no prior JJ history (N)` = n_distinct(juvenile_number),
+                    `Unique Youth Diverted (Informal), no prior JJ history (N)` = n_distinct(juvenile_number[intake_decision_clean=="Diverted (Informal)"]),
+                    `Diversion (Informal) Rate (per 10k JJ-involved youth w/ no prior JJ history)` = `Unique Youth Diverted (Informal), no prior JJ history (N)`/`Unique Youth, no prior JJ history (N)`*10000,
+                    `Diversion (Informal) RRI (to white youth)` = round(`Diversion (Informal) Rate (per 10k JJ-involved youth w/ no prior JJ history)`/df_rri_informal_diversion_dismissal_rate_jj_white$`Diversion (Informal) Rate (per 10k JJ-involved youth w/ no prior JJ history)`, digits = 2),
+                    `Unique Youth Resolved/Dismissed, no prior JJ history (N)` = n_distinct(juvenile_number[intake_decision_clean=="Resolved/Dismissed"]),
+                    `Resolved/Dismissed Rate (per 10k JJ-involved youth w/ no prior JJ history)` = `Unique Youth Resolved/Dismissed, no prior JJ history (N)`/`Unique Youth, no prior JJ history (N)`*10000,
+                    `Resolved/Dismissed RRI (to white youth)` = round(`Resolved/Dismissed Rate (per 10k JJ-involved youth w/ no prior JJ history)`/df_rri_informal_diversion_dismissal_rate_jj_white$`Resolved/Dismissed Rate (per 10k JJ-involved youth w/ no prior JJ history)`, digits = 2)) %>% 
+  ungroup() %>% 
+  distinct()
+
+### merge tables together
+df_rri_informal_diversion_dismissal_rate_jj_final <- rbind(df_rri_informal_diversion_dismissal_rate_jj_white,df_rri_informal_diversion_dismissal_rate_jj_non_white) %>% 
+  dplyr::rename(`Race/Ethnicity` = race_clean) %>% 
+  arrange(`Race/Ethnicity`)
+
+
+### print table via kableextra
+kable(df_rri_informal_diversion_dismissal_rate_jj_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") 
+```
+
+<br>
+
+## Table 7: Diversion Outcomes, RRI
+
+**Question:** Should we limit to youth with no prior JJ history if we keep this analysis at the individual-level as opposed to complaint/case-level? Otherwise, how would we create a youth-level measure of diversion decisions? I am currently filtering on youth with no prior JJ history. I have also filtered out youth whose charge is a technical violation (not sure why they are listed as not having JJ history?)
+
+**NOTE:** I am currently only include "formal" diversions in the count of unique youth diverted. The denominator used is all youth in the DJJ sample without prior JJ history and who were diverted.
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+
+### overall counts, rates, and RRI for diversion outcomes for white youth in sample
+df_rri_diversion_outcome_jj_white <- df_analytic_complaints_disposition_caseload %>% 
+  filter(!is.na(race_clean)==TRUE,
+         race_clean=="White",
+         jj_history_clean=="No Prior JJ History",
+         flg_category!="Technical",
+         intake_decision_clean=="Diverted") %>% 
+  dplyr::group_by(race_clean) %>% 
+   dplyr::summarise(`Unique Youth Diverted, no prior JJ history (N)` = n_distinct(juvenile_number),
+                    `Unique Youth w/ Successful Diversion (N)` = n_distinct(juvenile_number[diversion_successful_flag==1]),
+                    `Successful Diversion Rate (per 10k diverted youth)` = `Unique Youth w/ Successful Diversion (N)`/`Unique Youth Diverted, no prior JJ history (N)`*10000,
+                    `Successful Diversion RRI (to white youth)` = NA,
+                    `Unique Youth w/ Unsuccessful Diversion (no petition) (N)` = n_distinct(juvenile_number[diversion_not_successful_no_petition_flag==1]),
+                    `Unsuccessful Diversion (no petition) Rate (per 10k diverted youth)` = `Unique Youth w/ Unsuccessful Diversion (no petition) (N)`/`Unique Youth Diverted, no prior JJ history (N)`*10000,
+                    `Unsuccessful Diversion (no petition) RRI (to white youth)` = NA,
+                    `Unique Youth w/ Unsuccessful Diversion (with petition) (N)` = n_distinct(juvenile_number[diversion_not_successful_petition_flag==1]),
+                    `Unsuccessful Diversion (with petition) Rate (per 10k diverted youth)` = `Unique Youth w/ Unsuccessful Diversion (with petition) (N)`/`Unique Youth Diverted, no prior JJ history (N)`*10000,
+                    `Unsuccessful Diversion (with petition) RRI (to white youth)` = NA) %>% 
+  ungroup() %>% 
+  distinct()
+ 
+### overall counts, rates, and RRI for diversion outcomes for non-white youth in sample
+df_rri_diversion_outcome_jj_non_white <- df_analytic_complaints_disposition_caseload %>% 
+  filter(!is.na(race_clean)==TRUE,
+         race_clean!="White",
+         jj_history_clean=="No Prior JJ History",
+         flg_category!="Technical",
+         intake_decision_clean=="Diverted") %>% 
+  dplyr::group_by(race_clean) %>% 
+  dplyr::summarise(`Unique Youth Diverted, no prior JJ history (N)` = n_distinct(juvenile_number),
+                    `Unique Youth w/ Successful Diversion (N)` = n_distinct(juvenile_number[diversion_successful_flag==1]),
+                    `Successful Diversion Rate (per 10k diverted youth)` = `Unique Youth w/ Successful Diversion (N)`/`Unique Youth Diverted, no prior JJ history (N)`*10000,
+                    `Successful Diversion RRI (to white youth)` = round(`Successful Diversion Rate (per 10k diverted youth)`/df_rri_diversion_outcome_jj_white$`Successful Diversion Rate (per 10k diverted youth)`, digits = 2),
+                    `Unique Youth w/ Unsuccessful Diversion (no petition) (N)` = n_distinct(juvenile_number[diversion_not_successful_no_petition_flag==1]),
+                    `Unsuccessful Diversion (no petition) Rate (per 10k diverted youth)` = `Unique Youth w/ Unsuccessful Diversion (no petition) (N)`/`Unique Youth Diverted, no prior JJ history (N)`*10000,
+                    `Unsuccessful Diversion (no petition) RRI (to white youth)` = round(`Unsuccessful Diversion (no petition) Rate (per 10k diverted youth)`/df_rri_diversion_outcome_jj_white$`Unsuccessful Diversion (no petition) Rate (per 10k diverted youth)`, digits = 2),
+                    `Unique Youth w/ Unsuccessful Diversion (with petition) (N)` = n_distinct(juvenile_number[diversion_not_successful_petition_flag==1]),
+                    `Unsuccessful Diversion (with petition) Rate (per 10k diverted youth)` = `Unique Youth w/ Unsuccessful Diversion (with petition) (N)`/`Unique Youth Diverted, no prior JJ history (N)`*10000,
+                    `Unsuccessful Diversion (with petition) RRI (to white youth)` = round(`Unsuccessful Diversion (with petition) Rate (per 10k diverted youth)`/df_rri_diversion_outcome_jj_white$`Unsuccessful Diversion (with petition) Rate (per 10k diverted youth)`, digits = 2)) %>% 
+  ungroup() %>% 
+  distinct()  
+  
+### merge tables together
+df_rri_diversion_outcome_jj_final <- rbind(df_rri_diversion_outcome_jj_white,df_rri_diversion_outcome_jj_non_white) %>% 
+  dplyr::rename(`Race/Ethnicity` = race_clean) %>% 
+  arrange(`Race/Ethnicity`)
+
+
+### print table via kableextra
+kable(df_rri_diversion_outcome_jj_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") 
+```
+
+<br>
+
+# Tables (Adjusted Relative Rate Indices)
+
+**NOTE:** I am currently running the regression on youth with no prior JJ history -- also filtering on intakes labelled as either "Delinquent" or "Status" (why is no prior JJ history not enough?). Predictors included in preliminary model are race, gender, age at intake, CSU, referral/petitioner source (most collapsed version), category of offense, and year of petition. The outcome variable is a diversion flag (where any intake decision other than diversion is coded as '0' -- including informal diversion, petition, dismissal, or other)
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+library(sjPlot)
+library(sjmisc)
+library(sjlabelled)
+library(marginaleffects)
+
+intake_complaints_no_prior_jj_to_model <- df_analytic_complaints_disposition_caseload %>%
+  filter(jj_history_clean=="No Prior JJ History",
+         flg_category%in%c("Deliquent","Status")) %>% 
+  mutate(race = fct_relevel(race_clean, "White"),
+         gender = fct_relevel(gender_clean, "Male"),
+         referral_source_clean = fct_relevel(referral_source_clean, "Other"),
+         date_opened_year = fct_relevel(as.character(date_opened_year), "2015"),
+         intake_diverted_flag_num = ifelse(intake_diverted_flag=="Yes",
+                                           1,0)) %>% 
+  distinct(juvenile_number,
+           .keep_all=TRUE)
+
+va_diversion_model <- glm(
+  intake_diverted_flag_num ~ race + gender + intake_age + csu + referral_source_clean + dai + date_opened_year,
+  family = "binomial", data = intake_complaints_no_prior_jj_to_model
+  )
+
+tab_model(va_diversion_model) 
+```
+
+<br><br>
+
+### Adjusted RRI: Diversion
+
+**NOTE:** Difference is statistically significant for Black youth (<0.001)
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+pred_prob_diversion_race_overall <- predictions(va_diversion_model, variables = c("race")) %>%
+  mutate(
+    rri = predicted / predicted[race == "White"]) %>% 
+  filter(race%in%c("Black","Hispanic","Asian")) %>% 
+  ### create value for reference group for shading in ggplot (white youth)
+  mutate(reference = 1)
+
+ggplot(data = pred_prob_diversion_race_overall, aes(y = rri, x = race, fill = forcats::fct_rev(race))) + 
+  geom_bar(stat = "identity", 
+           position = "dodge", 
+           color = "gray80") +
+    # geom_col_pattern(aes(y=reference),
+    #                pattern_color = NA,
+    #                pattern_fill = "gray80",
+    #                pattern = "stripe") +  
+  geom_abline(slope=0, intercept=1,  col = "#000000", size = 1.5, linetype="dashed") +
+  scale_x_discrete(limits = rev) +
+  scale_y_continuous(limits=c(min(0), 
+                                           max(1.25))) +
+  scale_fill_manual(values = rev(c("#1F4A58","#2F7084","#87C2D4"))) +
+  guides(fill = guide_legend(reverse = TRUE,
+                             title.position = "top",
+                             label.position = "bottom",
+                             keywidth = 3,
+                             nrow = 1)) +
+   labs(y = "Relative Rate Index (RRI)", 
+         x = NULL,
+      caption = NULL,
+      title = NULL,
+      subtitle = NULL,
+      fill = NULL) +
+  theme(legend.position = "top",
+        legend.title.align=0.5,
+        axis.text.y = element_text(face = "bold", hjust = 1, size = 12),
+        plot.caption = element_text(hjust = 0.5),
+        axis.ticks.length = unit(0, "cm")) +
+    coord_flip() +
+ guides(fill = FALSE) +
+  geom_label_repel(aes(label = format(round(as.numeric(rri), digits = 2), nsmall=2), group = forcats::fct_rev(race)),
+                  position = position_dodge(1),
+                  direction = 'x',
+                  hjust = 0.45,
+                  label.padding = 0.4,
+                  box.padding = 0.2,
+                  fill = "white",
+                  color = "gray40",
+                  fontface = "bold",
+                  na.rm = TRUE,
+                  show.legend = FALSE) +
+  annotate("text", x = 2.25, y = 1.17, label = "This line represents\nWhite youth\n(reference group)", colour = "#000000", size = 3.5, fontface = 2)
+
+### set sharepoint path using csgjcr::csg_sp_path function
+# sharepoint_viz_path <- csg_sp_path()
+
+# ### save out as png
+# ggsave(
+#     filename = file.path(sharepoint_viz_path, "rri_pred_prob_revocation_race_overall_green_second_district.png"),
+#     plot = last_plot(),
+#     device = ragg::agg_png,
+#     dpi = 300,
+#     height = 5.25,
+#     width = 10,
+#     units = "in",
+#     bg = "transparent"
+#   )
+```
+
+<br>
+
+### Predicted Probabilities of Diversion by Referral Source
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+pred_prob_diversion_race_by_referral_type <- predictions(va_diversion_model, variables = c("race","referral_source_clean")) %>%
+  group_by(referral_source_clean) %>% 
+  mutate(
+    rri = predicted / predicted[race == "White"]) %>% 
+  ungroup() %>% 
+  filter(race%in%c("Black","White"))
+
+pred_prob_diversion_race_by_referral_type %>%
+  mutate(referral_source_clean = fct_reorder(referral_source_clean, predicted, max)) %>%
+  ggplot(aes(predicted, referral_source_clean, color = race)) +
+  geom_point(size = 6.5, alpha = 0.75) +
+  scale_colour_manual(values = rev(c("#1F4A58","#2F7084"))) +
+  scale_x_continuous(
+    expand = expansion(mult = c(0.1, 0.1)),
+    labels = label_percent(1),
+    breaks = seq(0, 1, by = 0.15)
+  ) +
+  guides(color = guide_legend(reverse = TRUE)) +
+  expand_limits(x = 0) +
+  labs(
+    title = NULL,
+    x = "Predicted Probability of Diversion",
+    y = NULL,
+    color = NULL
+  ) +
+  theme(
+    plot.title = element_text(size = 16),
+    axis.text.y = element_text(size = 16),
+    axis.title.x = element_text(vjust=-0.5)
+  )
+
+# ### save out as png
+# ggsave(
+#     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
+#     plot = last_plot(),
+#     device = ragg::agg_png,
+#     dpi = 300,
+#     height = 5.25,
+#     width = 10,
+#     units = "in",
+#     bg = "transparent"
+#   )
+```
+
+<br>
+
+### Predicted Probabilities of Diversion by CSU 
+
+**NOTE:** We will likely want to exclude CSU's with small N sizes -- I haven't yet done that. 
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+pred_prob_diversion_race_by_csu <- predictions(va_diversion_model, variables = c("race","csu")) %>%
+  group_by(csu) %>% 
+  mutate(rri = predicted / predicted[race == "White"]) %>% 
+  ungroup() %>% 
+  filter(race%in%c("Black",
+                   "White"))
+
+pred_prob_diversion_race_by_csu %>%
+  mutate(csu = fct_reorder(csu, predicted, max)) %>%
+  ggplot(aes(predicted, csu, color = race)) +
+  geom_point(size = 3.5, alpha = 0.85) +
+  scale_colour_manual(values = rev(c("#1F4A58","#2F7084"))) +
+  scale_x_continuous(
+    expand = expansion(mult = c(0.1, 0.1)),
+    labels = label_percent(1),
+    breaks = seq(0, 1, by = 0.15)) +
+  guides(color = guide_legend(reverse = TRUE)) +
+  expand_limits(x = 0) +
+  labs(
+    title = NULL,
+    x = "Predicted Probability of Diversion",
+    y = NULL,
+    color = NULL) +
+  theme(
+    plot.title = element_text(size = 16),
+    axis.text.y = element_text(size = 8),
+    axis.title.x = element_text(vjust=-0.5))
+
+# ### save out as png
+# ggsave(
+#     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
+#     plot = last_plot(),
+#     device = ragg::agg_png,
+#     dpi = 300,
+#     height = 5.25,
+#     width = 10,
+#     units = "in",
+#     bg = "transparent"
+#   )
+```
+
+<br>
+
+### Predicted Probabilities of Diversion by Charge Type 
+
+**NOTE:** Status offenses likely have relatively lower predicted probability of diversion b/c they are more likely to be dismissed. This is a drawback of the current model (where all intake decisions are included and coded into either diversion or not diversion)
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+pred_prob_diversion_race_by_dai <- predictions(va_diversion_model, variables = c("race","dai")) %>%
+  group_by(dai) %>% 
+  mutate(rri = predicted / predicted[race == "White"]) %>% 
+  ungroup() %>% 
+  filter(race%in%c("Black",
+                   "White"))
+
+pred_prob_diversion_race_by_dai %>%
+  mutate(dai = fct_reorder(dai, predicted, max)) %>%
+  ggplot(aes(predicted, dai, color = race)) +
+  geom_point(size = 3.5, alpha = 0.85) +
+  scale_colour_manual(values = rev(c("#1F4A58","#2F7084"))) +
+  scale_x_continuous(
+    expand = expansion(mult = c(0.1, 0.1)),
+    labels = label_percent(1),
+    breaks = seq(0, 1, by = 0.15)) +
+  guides(color = guide_legend(reverse = TRUE)) +
+  expand_limits(x = 0) +
+  labs(
+    title = NULL,
+    x = "Predicted Probability of Diversion",
+    y = NULL,
+    color = NULL) +
+  theme(
+    plot.title = element_text(size = 16),
+    axis.text.y = element_text(size = 8),
+    axis.title.x = element_text(vjust=-0.5))
+
+# ### save out as png
+# ggsave(
+#     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
+#     plot = last_plot(),
+#     device = ragg::agg_png,
+#     dpi = 300,
+#     height = 5.25,
+#     width = 10,
+#     units = "in",
+#     bg = "transparent"
+#   )
 ```
 
 <br>
