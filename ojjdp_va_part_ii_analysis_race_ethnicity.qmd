@@ -100,8 +100,8 @@ df_complaints_youth_intake_decision_table_race <- df_analytic_complaints_disposi
                    `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
                    `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                   `Complaints Resolved/Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Resolved/Dismissed"]),
+                   `Complaints Resolved/Dismissed (row %)` = scales::percent(`Complaints Resolved/Dismissed (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
                    `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
                    `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
@@ -120,8 +120,8 @@ df_complaints_youth_intake_decision_table_overall <- df_analytic_complaints_disp
                    `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
                    `Complaints Diverted (row %)` = scales::percent(`Complaints Diverted (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
-                   `Complaints Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Dismissed"]),
-                   `Complaints Dismissed (row %)` = scales::percent(`Complaints Dismissed (N)`/`All Complaints (N)`,
+                   `Complaints Resolved/Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Resolved/Dismissed"]),
+                   `Complaints Resolved/Dismissed (row %)` = scales::percent(`Complaints Resolved/Dismissed (N)`/`All Complaints (N)`,
                                                                        accuracy = .1),
                    `Other (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Other"]),
                    `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
@@ -453,7 +453,7 @@ kable(df_rri_diversion_petition_rate_jj_final,
 
 <br>
 
-## Table 6: Informal Diversion and Resolved/Dismissed Rate, RRI
+## Table 6: Informal Diversion and Resolved/Resolved/Dismissed Rate, RRI
 
 **Question:** Should we limit to youth with no prior JJ history if we keep this analysis at the individual-level as opposed to complaint/case-level? Otherwise, how would we create a youth-level measure of diversion decisions? I am currently filtering on youth with no prior JJ history. I have also filtered out youth whose charge is a technical violation (not sure why they are listed as not having JJ history?)
 
@@ -475,9 +475,9 @@ df_rri_informal_diversion_dismissal_rate_jj_white <- df_analytic_complaints_disp
                     `Unique Youth Diverted (Informal), no prior JJ history (N)` = n_distinct(juvenile_number[intake_decision_clean=="Diverted (Informal)"]),
                     `Diversion (Informal) Rate (per 10k JJ-involved youth w/ no prior JJ history)` = `Unique Youth Diverted (Informal), no prior JJ history (N)`/`Unique Youth, no prior JJ history (N)`*10000,
                     `Diversion (Informal) RRI (to white youth)` = NA,
-                    `Unique Youth Resolved/Dismissed, no prior JJ history (N)` = n_distinct(juvenile_number[intake_decision_clean=="Resolved/Dismissed"]),
-                    `Resolved/Dismissed Rate (per 10k JJ-involved youth w/ no prior JJ history)` = `Unique Youth Resolved/Dismissed, no prior JJ history (N)`/`Unique Youth, no prior JJ history (N)`*10000,
-                    `Resolved/Dismissed RRI (to white youth)` = NA) %>% 
+                    `Unique Youth Resolved/Resolved/Dismissed, no prior JJ history (N)` = n_distinct(juvenile_number[intake_decision_clean=="Resolved/Resolved/Dismissed"]),
+                    `Resolved/Resolved/Dismissed Rate (per 10k JJ-involved youth w/ no prior JJ history)` = `Unique Youth Resolved/Resolved/Dismissed, no prior JJ history (N)`/`Unique Youth, no prior JJ history (N)`*10000,
+                    `Resolved/Resolved/Dismissed RRI (to white youth)` = NA) %>% 
   ungroup() %>% 
   distinct()
  
@@ -492,9 +492,9 @@ df_rri_informal_diversion_dismissal_rate_jj_non_white <- df_analytic_complaints_
                     `Unique Youth Diverted (Informal), no prior JJ history (N)` = n_distinct(juvenile_number[intake_decision_clean=="Diverted (Informal)"]),
                     `Diversion (Informal) Rate (per 10k JJ-involved youth w/ no prior JJ history)` = `Unique Youth Diverted (Informal), no prior JJ history (N)`/`Unique Youth, no prior JJ history (N)`*10000,
                     `Diversion (Informal) RRI (to white youth)` = round(`Diversion (Informal) Rate (per 10k JJ-involved youth w/ no prior JJ history)`/df_rri_informal_diversion_dismissal_rate_jj_white$`Diversion (Informal) Rate (per 10k JJ-involved youth w/ no prior JJ history)`, digits = 2),
-                    `Unique Youth Resolved/Dismissed, no prior JJ history (N)` = n_distinct(juvenile_number[intake_decision_clean=="Resolved/Dismissed"]),
-                    `Resolved/Dismissed Rate (per 10k JJ-involved youth w/ no prior JJ history)` = `Unique Youth Resolved/Dismissed, no prior JJ history (N)`/`Unique Youth, no prior JJ history (N)`*10000,
-                    `Resolved/Dismissed RRI (to white youth)` = round(`Resolved/Dismissed Rate (per 10k JJ-involved youth w/ no prior JJ history)`/df_rri_informal_diversion_dismissal_rate_jj_white$`Resolved/Dismissed Rate (per 10k JJ-involved youth w/ no prior JJ history)`, digits = 2)) %>% 
+                    `Unique Youth Resolved/Resolved/Dismissed, no prior JJ history (N)` = n_distinct(juvenile_number[intake_decision_clean=="Resolved/Resolved/Dismissed"]),
+                    `Resolved/Resolved/Dismissed Rate (per 10k JJ-involved youth w/ no prior JJ history)` = `Unique Youth Resolved/Resolved/Dismissed, no prior JJ history (N)`/`Unique Youth, no prior JJ history (N)`*10000,
+                    `Resolved/Resolved/Dismissed RRI (to white youth)` = round(`Resolved/Resolved/Dismissed Rate (per 10k JJ-involved youth w/ no prior JJ history)`/df_rri_informal_diversion_dismissal_rate_jj_white$`Resolved/Resolved/Dismissed Rate (per 10k JJ-involved youth w/ no prior JJ history)`, digits = 2)) %>% 
   ungroup() %>% 
   distinct()
 

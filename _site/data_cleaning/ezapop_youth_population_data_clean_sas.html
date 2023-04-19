@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>OJJDP Juvenile Justice System Reform Initiative: Virginia - ezapop_jj_base_clean_sas</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../img/favicon.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">OJJDP Juvenile Justice System Reform Initiative: Virginia</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html">
+ <span class="menu-text">Project and Analysis Plan</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-part-i-analysis" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Part I Analysis</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-part-i-analysis">    
+        <li>
+    <a class="dropdown-item" href="../ojjdp_va_part_i_analysis_overview.html">
+ <span class="dropdown-text">Descriptive Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../ojjdp_va_part_ii_analysis_regression.html">
+ <span class="dropdown-text">Regression Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../ojjdp_va_part_i_analysis_csu_level.html">
+ <span class="dropdown-text">CSU-level Analysis</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-part-ii-analysis" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Part II Analysis</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-part-ii-analysis">    
+        <li>
+    <a class="dropdown-item" href="../ojjdp_va_part_ii_analysis_diversion.html">
+ <span class="dropdown-text">Diversion Trends</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../ojjdp_va_part_ii_analysis_dispo.html">
+ <span class="dropdown-text">Disposition Trends</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../ojjdp_va_part_ii_analysis_race_ethnicity.html">
+ <span class="dropdown-text">Race/Ethnicity</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../ojjdp_va_part_ii_analysis_csu_level.html">
+ <span class="dropdown-text">CSU-level Analysis</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../ojjdp_va_questions_updates.html">
+ <span class="menu-text">Questions and Updates</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../ojjdp_va_create_analytic_files.html">
+ <span class="menu-text">Analytic File Prep</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-sample-descriptives" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Sample Descriptives</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-sample-descriptives">    
+        <li>
+    <a class="dropdown-item" href="../ojjdp_va_preliminary_descriptives.html">
+ <span class="dropdown-text">Basic Descriptive Statistics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../ojjdp_va_data_codebooks.html">
+ <span class="dropdown-text">Codebooks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../ojjdp_va_data_diagram_viz.html">
+ <span class="dropdown-text">Data Diagram</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/CSGJusticeCenter/jj_ojjdp_va"><i class="bi bi-fab fa-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">ezapop_jj_base_clean_sas</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Purpose of syntax: To create a county-level juvenile population lookup table w/ race/ethnicity and gender for state of interest. The American Community Survey does not publicly report out population estimates for youth 10-17 (or 10-16 when relevant) at the county level and disaggregated by race/ethnicity and gender. Instead, I am pulling from Census Bureau ACS data provided to the CDC/National Center for Health Statistics which provides single year-of-age- estimate at the county level “to meet programmatic needs such as the creation of age groupings that differ from the standard groupings used by the Census Bureau.” This is also the source used by Ezapop, which was developed by OJJDP and NCJJ: https://www.ojjdp.gov/ojstatbb/ezapop/asp/source.asp</p>
+<p>Because of concerns about reliability of single year-of-age estimates at the county-level, I am grouping age together (usually 10-17) and pulling estimates from 5 years of data (taking the mean across the five years), 2015-2019</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">### pull in raw sas files from: https://www.cdc.gov/nchs/nvss/bridged_race/data_documentation.htm#vintage2019</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="do">### file documentation here: https://www.cdc.gov/nchs/nvss/bridged_race/Documentation-BridgedPostcenV2019.pdf</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="do">### </span><span class="al">NOTE</span><span class="do">: we're pulling 5 years of data and then averaging across all files -- this is the approach that the american community survey takes for making more reliable estimates at the county/tract level (see more explanation/rationale here: https://www.census.gov/programs-surveys/acs/guidance/estimates.html)</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="do">### soft code state for easy substitution of new states, using fips code (e.g. indiana is 18, michigan is 26, etc.)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>state_to_pull <span class="ot">&lt;-</span> <span class="dv">51</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># svDialogs::dlg_input(message = "Enter state FIPS code", default = "")$res</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="do">### soft code state abbreviation for easy substitution into file output name</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>state_name_abbr <span class="ot">&lt;-</span> <span class="st">"va"</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># svDialogs::dlg_input(message = "Enter state abbreviation", default = "")$res</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="do">### pull 2019 flat file</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>df_acs_bridged_age_race_sex_19 <span class="ot">&lt;-</span> haven<span class="sc">::</span><span class="fu">read_sas</span>(<span class="st">"C:</span><span class="sc">\\</span><span class="st">Users</span><span class="sc">\\</span><span class="st">abyrum</span><span class="sc">\\</span><span class="st">The Council of State Governments</span><span class="sc">\\</span><span class="st">JC Research - JJ_Indiana - JJ_Indiana</span><span class="sc">\\</span><span class="st">Data</span><span class="sc">\\</span><span class="st">Syntax</span><span class="sc">\\</span><span class="st">ezapop_raw_data_file</span><span class="sc">\\</span><span class="st">pcen_v2019_y19.sas7bdat"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">zap_label</span>() <span class="sc">%&gt;%</span>  <span class="do">### remove sas column labels </span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(st_fips <span class="sc">==</span> <span class="fu">as.numeric</span>(state_to_pull)) <span class="do">### this is where we filter on state</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="do">### pull 2018 flat file</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>df_acs_bridged_age_race_sex_18 <span class="ot">&lt;-</span> haven<span class="sc">::</span><span class="fu">read_sas</span>(<span class="st">"C:</span><span class="sc">\\</span><span class="st">Users</span><span class="sc">\\</span><span class="st">abyrum</span><span class="sc">\\</span><span class="st">The Council of State Governments</span><span class="sc">\\</span><span class="st">JC Research - JJ_Indiana - JJ_Indiana</span><span class="sc">\\</span><span class="st">Data</span><span class="sc">\\</span><span class="st">Syntax</span><span class="sc">\\</span><span class="st">ezapop_raw_data_file</span><span class="sc">\\</span><span class="st">pcen_v2019_y18.sas7bdat"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">zap_label</span>() <span class="sc">%&gt;%</span>  <span class="do">### remove sas column labels </span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(st_fips <span class="sc">==</span> <span class="fu">as.numeric</span>(state_to_pull)) <span class="do">### this is where we filter on state</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="do">### pull 2017 flat file</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>df_acs_bridged_age_race_sex_17 <span class="ot">&lt;-</span> haven<span class="sc">::</span><span class="fu">read_sas</span>(<span class="st">"C:</span><span class="sc">\\</span><span class="st">Users</span><span class="sc">\\</span><span class="st">abyrum</span><span class="sc">\\</span><span class="st">The Council of State Governments</span><span class="sc">\\</span><span class="st">JC Research - JJ_Indiana - JJ_Indiana</span><span class="sc">\\</span><span class="st">Data</span><span class="sc">\\</span><span class="st">Syntax</span><span class="sc">\\</span><span class="st">ezapop_raw_data_file</span><span class="sc">\\</span><span class="st">pcen_v2019_y17.sas7bdat"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">zap_label</span>() <span class="sc">%&gt;%</span>  <span class="do">### remove sas column labels </span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(st_fips <span class="sc">==</span> <span class="fu">as.numeric</span>(state_to_pull)) <span class="do">### this is where we filter on state</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="do">### pull 2016 flat file</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>df_acs_bridged_age_race_sex_16 <span class="ot">&lt;-</span> haven<span class="sc">::</span><span class="fu">read_sas</span>(<span class="st">"C:</span><span class="sc">\\</span><span class="st">Users</span><span class="sc">\\</span><span class="st">abyrum</span><span class="sc">\\</span><span class="st">The Council of State Governments</span><span class="sc">\\</span><span class="st">JC Research - JJ_Indiana - JJ_Indiana</span><span class="sc">\\</span><span class="st">Data</span><span class="sc">\\</span><span class="st">Syntax</span><span class="sc">\\</span><span class="st">ezapop_raw_data_file</span><span class="sc">\\</span><span class="st">pcen_v2019_y16.sas7bdat"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">zap_label</span>() <span class="sc">%&gt;%</span>  <span class="do">### remove sas column labels </span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(st_fips <span class="sc">==</span> <span class="fu">as.numeric</span>(state_to_pull)) <span class="do">### this is where we filter on state</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="do">### pull 2015 flat file</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>df_acs_bridged_age_race_sex_15 <span class="ot">&lt;-</span> haven<span class="sc">::</span><span class="fu">read_sas</span>(<span class="st">"C:</span><span class="sc">\\</span><span class="st">Users</span><span class="sc">\\</span><span class="st">abyrum</span><span class="sc">\\</span><span class="st">The Council of State Governments</span><span class="sc">\\</span><span class="st">JC Research - JJ_Indiana - JJ_Indiana</span><span class="sc">\\</span><span class="st">Data</span><span class="sc">\\</span><span class="st">Syntax</span><span class="sc">\\</span><span class="st">ezapop_raw_data_file</span><span class="sc">\\</span><span class="st">pcen_v2019_y15.sas7bdat"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">zap_label</span>() <span class="sc">%&gt;%</span>  <span class="do">### remove sas column labels </span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(st_fips <span class="sc">==</span> <span class="fu">as.numeric</span>(state_to_pull)) <span class="do">### this is where we filter on state</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="do">### combine all five years for averaging -- stacking all five dataframes together</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="do">### documentation for race, ethnicity, sex recoding:</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="do">### racesex: 1=White male; 2=White female; 3=Black male; 4=Black female; 5=American Indian or Alaska Native male; 6=American Indian or Alaska Native female; 7=Asian or Pacific Islander male; 8=Asian or Pacific Islander female</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="do">### hisp: 1=not Hispanic or Latino; 2=Hispanic or Latino</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>df_acs_bridged_age_race_sex_15_19_raw <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">bind_rows</span>(df_acs_bridged_age_race_sex_15,df_acs_bridged_age_race_sex_16,df_acs_bridged_age_race_sex_17,df_acs_bridged_age_race_sex_18,df_acs_bridged_age_race_sex_19) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age<span class="sc">&lt;</span><span class="dv">18</span> <span class="sc">&amp;</span> age<span class="sc">&gt;=</span><span class="dv">8</span>) <span class="sc">%&gt;%</span> <span class="do">### filter file off juvenile base population of interest -- youth ages 8 to 17 </span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">racesex =</span> <span class="fu">factor</span>(racesex,</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>         <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>),</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>         <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"white_male"</span>, <span class="st">"white_female"</span>, <span class="st">"black_male"</span>, <span class="st">"black_female"</span>,<span class="st">"am_in_ak_native_male"</span>,<span class="st">"am_in_ak_native_female"</span>,<span class="st">"asian_pi_male"</span>,<span class="st">"asian_pi_female"</span>)),</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>         <span class="at">hisp =</span> <span class="fu">factor</span>(hisp,</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>         <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>),</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>         <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"not_hispanic"</span>, <span class="st">"hispanic"</span>))) <span class="sc">%&gt;%</span> <span class="do">### use factor function to assign labels to values)  </span><span class="al">###</span><span class="do"> use factor function to assign labels to values</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(race4,vintage,st_fips,month))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">### average pop totals across ages and years, rounding to nearest whole number</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df_acs_bridged_age_race_sex_15_19_grouped <span class="ot">&lt;-</span> df_acs_bridged_age_race_sex_15_19_raw <span class="sc">%&gt;%</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(co_fips,hisp,racesex) <span class="sc">%&gt;%</span> <span class="do">### group by co_fips, hisp, and racesex to group across age and year</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">pop =</span> <span class="fu">round</span>(<span class="fu">sum</span>(pop)<span class="sc">/</span><span class="dv">5</span>, <span class="at">digits =</span> <span class="dv">0</span>)) <span class="sc">%&gt;%</span> <span class="do">### sum across ages and years divided by 5 years of data to reach mean 10-17 population per year from 2015-2019</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'co_fips', 'hisp'. You can override using
+the `.groups` argument.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">### pivot stacked dataframe wide by age, year, and co_fips to see all race, ethnicity, and sex breakdowns by county, year, and age to sum across subgroups</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df_acs_bridged_age_race_sex_15_19_wide <span class="ot">&lt;-</span> df_acs_bridged_age_race_sex_15_19_grouped <span class="sc">%&gt;%</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="fu">c</span>(hisp,racesex), <span class="at">values_from =</span> pop) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">state =</span> <span class="fu">paste0</span>(state_name_abbr))</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="do">### combine race and sex columns into several new overall columns for race/ethnicity overall, race overall w/o ethnicity, and sex overall</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>df_acs_bridged_age_race_sex_15_19_final <span class="ot">&lt;-</span> df_acs_bridged_age_race_sex_15_19_wide <span class="sc">%&gt;%</span> </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">not_hispanic_white =</span> not_hispanic_white_male <span class="sc">+</span> not_hispanic_white_female,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">not_hispanic_black =</span> not_hispanic_black_male <span class="sc">+</span> not_hispanic_black_female,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">not_hispanic_am_in_ak_native =</span> not_hispanic_am_in_ak_native_male <span class="sc">+</span> not_hispanic_am_in_ak_native_female,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">not_hispanic_asian_pi =</span> not_hispanic_asian_pi_male <span class="sc">+</span> not_hispanic_asian_pi_female,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">hispanic_white =</span> hispanic_white_male <span class="sc">+</span> hispanic_white_female,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">hispanic_black =</span> hispanic_black_male <span class="sc">+</span> hispanic_black_female,</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">hispanic_am_in_ak_native =</span> hispanic_am_in_ak_native_male <span class="sc">+</span> hispanic_am_in_ak_native_female,</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">hispanic_asian_pi =</span> hispanic_asian_pi_male <span class="sc">+</span> hispanic_asian_pi_female,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">hispanic_any_race =</span> hispanic_white <span class="sc">+</span> hispanic_black <span class="sc">+</span> hispanic_am_in_ak_native <span class="sc">+</span> hispanic_asian_pi,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">overall_white =</span> not_hispanic_white <span class="sc">+</span> hispanic_white,</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>         <span class="at">overall_black =</span> not_hispanic_black <span class="sc">+</span> hispanic_black,</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>         <span class="at">overall_am_in_ak_native =</span> not_hispanic_am_in_ak_native <span class="sc">+</span> hispanic_am_in_ak_native,</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>         <span class="at">overall_asian_pi =</span> not_hispanic_asian_pi <span class="sc">+</span> hispanic_asian_pi,</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>         <span class="at">overall_male =</span> not_hispanic_white_male <span class="sc">+</span> not_hispanic_black_male <span class="sc">+</span> not_hispanic_am_in_ak_native_male <span class="sc">+</span> not_hispanic_asian_pi_male <span class="sc">+</span> hispanic_white_male <span class="sc">+</span> hispanic_black_male <span class="sc">+</span> hispanic_am_in_ak_native_male <span class="sc">+</span> hispanic_asian_pi_male,</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>         <span class="at">overall_female =</span> not_hispanic_white_female <span class="sc">+</span> not_hispanic_black_female <span class="sc">+</span> not_hispanic_am_in_ak_native_female <span class="sc">+</span> not_hispanic_asian_pi_female <span class="sc">+</span> hispanic_white_female <span class="sc">+</span> hispanic_black_female <span class="sc">+</span> hispanic_am_in_ak_native_female <span class="sc">+</span> hispanic_asian_pi_female,</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>         <span class="at">overall_8_17_population =</span> overall_male <span class="sc">+</span> overall_female) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(co_fips,overall_8_17_population,overall_female,overall_male,overall_asian_pi,overall_am_in_ak_native,overall_black,overall_white,hispanic_asian_pi,hispanic_am_in_ak_native,hispanic_black,hispanic_white,hispanic_any_race,not_hispanic_asian_pi,not_hispanic_am_in_ak_native,not_hispanic_black,not_hispanic_white)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="do">### aggregate to state level</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="do">### combine race and sex columns into several new overall columns for race/ethnicity overall, race overall w/o ethnicity, and sex overall</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>df_acs_bridged_age_race_sex_15_19_final_state_agg <span class="ot">&lt;-</span> df_acs_bridged_age_race_sex_15_19_wide <span class="sc">%&gt;%</span> </span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(state) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">not_hispanic_white =</span> <span class="fu">sum</span>(not_hispanic_white_male <span class="sc">+</span> not_hispanic_white_female),</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>         <span class="at">not_hispanic_black =</span> <span class="fu">sum</span>(not_hispanic_black_male <span class="sc">+</span> not_hispanic_black_female),</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>         <span class="at">not_hispanic_am_in_ak_native =</span> <span class="fu">sum</span>(not_hispanic_am_in_ak_native_male <span class="sc">+</span> not_hispanic_am_in_ak_native_female),</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>         <span class="at">not_hispanic_asian_pi =</span> <span class="fu">sum</span>(not_hispanic_asian_pi_male <span class="sc">+</span> not_hispanic_asian_pi_female),</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>         <span class="at">hispanic_white =</span> <span class="fu">sum</span>(hispanic_white_male <span class="sc">+</span> hispanic_white_female),</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>         <span class="at">hispanic_black =</span> <span class="fu">sum</span>(hispanic_black_male <span class="sc">+</span> hispanic_black_female),</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>         <span class="at">hispanic_am_in_ak_native =</span> <span class="fu">sum</span>(hispanic_am_in_ak_native_male <span class="sc">+</span> hispanic_am_in_ak_native_female),</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>         <span class="at">hispanic_asian_pi =</span> <span class="fu">sum</span>(hispanic_asian_pi_male <span class="sc">+</span> hispanic_asian_pi_female),</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>         <span class="at">hispanic_any_race =</span> <span class="fu">sum</span>(hispanic_white <span class="sc">+</span> hispanic_black <span class="sc">+</span> hispanic_am_in_ak_native <span class="sc">+</span> hispanic_asian_pi),</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>         <span class="at">overall_white =</span> <span class="fu">sum</span>(not_hispanic_white <span class="sc">+</span> hispanic_white),</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>         <span class="at">overall_black =</span> <span class="fu">sum</span>(not_hispanic_black <span class="sc">+</span> hispanic_black),</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>         <span class="at">overall_am_in_ak_native =</span> <span class="fu">sum</span>(not_hispanic_am_in_ak_native <span class="sc">+</span> hispanic_am_in_ak_native),</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>         <span class="at">overall_asian_pi =</span> <span class="fu">sum</span>(not_hispanic_asian_pi <span class="sc">+</span> hispanic_asian_pi),</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>         <span class="at">overall_male =</span> <span class="fu">sum</span>(not_hispanic_white_male <span class="sc">+</span> not_hispanic_black_male <span class="sc">+</span> not_hispanic_am_in_ak_native_male <span class="sc">+</span> not_hispanic_asian_pi_male <span class="sc">+</span> hispanic_white_male <span class="sc">+</span> hispanic_black_male <span class="sc">+</span> hispanic_am_in_ak_native_male <span class="sc">+</span> hispanic_asian_pi_male),</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>         <span class="at">overall_female =</span> <span class="fu">sum</span>(not_hispanic_white_female <span class="sc">+</span> not_hispanic_black_female <span class="sc">+</span> not_hispanic_am_in_ak_native_female <span class="sc">+</span> not_hispanic_asian_pi_female <span class="sc">+</span> hispanic_white_female <span class="sc">+</span> hispanic_black_female <span class="sc">+</span> hispanic_am_in_ak_native_female <span class="sc">+</span> hispanic_asian_pi_female),</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>         <span class="at">overall_8_17_population =</span> <span class="fu">sum</span>(overall_male <span class="sc">+</span> overall_female)) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(state,overall_8_17_population,overall_female,overall_male,hispanic_any_race,not_hispanic_asian_pi,not_hispanic_am_in_ak_native,not_hispanic_black,not_hispanic_white) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="do">### aggregate to state level</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="do">### combine race and sex columns into several new overall columns for race/ethnicity overall, race overall w/o ethnicity, and sex overall</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>df_acs_bridged_age_race_sex_15_19_final_state_aggregated_va <span class="ot">&lt;-</span> df_acs_bridged_age_race_sex_15_19_wide <span class="sc">%&gt;%</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(state) <span class="sc">%&gt;%</span></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">not_hispanic_white =</span> <span class="fu">sum</span>(not_hispanic_white_male <span class="sc">+</span> not_hispanic_white_female),</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>         <span class="at">not_hispanic_black =</span> <span class="fu">sum</span>(not_hispanic_black_male <span class="sc">+</span> not_hispanic_black_female),</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>         <span class="at">not_hispanic_am_in_ak_native =</span> <span class="fu">sum</span>(not_hispanic_am_in_ak_native_male <span class="sc">+</span> not_hispanic_am_in_ak_native_female),</span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>         <span class="at">not_hispanic_asian_pi =</span> <span class="fu">sum</span>(not_hispanic_asian_pi_male <span class="sc">+</span> not_hispanic_asian_pi_female),</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>         <span class="at">hispanic_white =</span> <span class="fu">sum</span>(hispanic_white_male <span class="sc">+</span> hispanic_white_female),</span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>         <span class="at">hispanic_black =</span> <span class="fu">sum</span>(hispanic_black_male <span class="sc">+</span> hispanic_black_female),</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>         <span class="at">hispanic_am_in_ak_native =</span> <span class="fu">sum</span>(hispanic_am_in_ak_native_male <span class="sc">+</span> hispanic_am_in_ak_native_female),</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>         <span class="at">hispanic_asian_pi =</span> <span class="fu">sum</span>(hispanic_asian_pi_male <span class="sc">+</span> hispanic_asian_pi_female),</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>         <span class="at">hispanic_any_race =</span> <span class="fu">sum</span>(hispanic_white <span class="sc">+</span> hispanic_black <span class="sc">+</span> hispanic_am_in_ak_native <span class="sc">+</span> hispanic_asian_pi),</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>         <span class="at">overall_white =</span> <span class="fu">sum</span>(not_hispanic_white <span class="sc">+</span> hispanic_white),</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>         <span class="at">overall_black =</span> <span class="fu">sum</span>(not_hispanic_black <span class="sc">+</span> hispanic_black),</span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>         <span class="at">overall_am_in_ak_native =</span> <span class="fu">sum</span>(not_hispanic_am_in_ak_native <span class="sc">+</span> hispanic_am_in_ak_native),</span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>         <span class="at">overall_asian_pi =</span> <span class="fu">sum</span>(not_hispanic_asian_pi <span class="sc">+</span> hispanic_asian_pi),</span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>         <span class="at">overall_male =</span> <span class="fu">sum</span>(not_hispanic_white_male <span class="sc">+</span> not_hispanic_black_male <span class="sc">+</span> not_hispanic_am_in_ak_native_male <span class="sc">+</span> not_hispanic_asian_pi_male <span class="sc">+</span> hispanic_white_male <span class="sc">+</span> hispanic_black_male <span class="sc">+</span> hispanic_am_in_ak_native_male <span class="sc">+</span> hispanic_asian_pi_male),</span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>         <span class="at">overall_female =</span> <span class="fu">sum</span>(not_hispanic_white_female <span class="sc">+</span> not_hispanic_black_female <span class="sc">+</span> not_hispanic_am_in_ak_native_female <span class="sc">+</span> not_hispanic_asian_pi_female <span class="sc">+</span> hispanic_white_female <span class="sc">+</span> hispanic_black_female <span class="sc">+</span> hispanic_am_in_ak_native_female <span class="sc">+</span> hispanic_asian_pi_female),</span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>         <span class="at">overall_8_17_population =</span> <span class="fu">sum</span>(overall_male <span class="sc">+</span> overall_female)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(state,overall_8_17_population,overall_female,overall_male,hispanic_any_race,not_hispanic_asian_pi,not_hispanic_am_in_ak_native,not_hispanic_black,not_hispanic_white) <span class="sc">%&gt;%</span></span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">### pull in state + county fips lookup table to add county name to datafile via tidycensus function fips_codes</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df_fips_lookup <span class="ot">&lt;-</span> fips_codes <span class="sc">%&gt;%</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(state_code <span class="sc">==</span> <span class="fu">as.numeric</span>(state_to_pull)) <span class="sc">%&gt;%</span> <span class="do">### this is where we filter on state</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">co_fips =</span> <span class="fu">as.numeric</span>(county_code)) <span class="sc">%&gt;%</span> <span class="do">### create co_fips for merge with df_acs_bridged_age_race_sex_15_19_final</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">county_name =</span> county)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="do">### left join fips_lookup and df_acs_bridged_age_race_sex_15_19_final (left joining df_acs_bridged_age_race_sex_15_19_final b/c there may be cases where a county is missing demographic acs data but we'd want to include the county name/fips code in the final file anyways; the lookup will have all counties regardless of missingness)</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>df_acs_bridged_age_race_sex_15_19_final <span class="ot">&lt;-</span> <span class="fu">left_join</span>(df_fips_lookup, df_acs_bridged_age_race_sex_15_19_final, <span class="at">by =</span> <span class="st">"co_fips"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">### write out final file for incorporation into base juvenile population rate calculations</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="do">### set sharepoint path using csgjcr function</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>sharepoint_ojjdp_va_analysis_analytic_data <span class="ot">&lt;-</span> csgjcr<span class="sc">::</span><span class="fu">csg_sp_path</span>(<span class="fu">file.path</span>(<span class="st">"JJ_OJJDP/Data/VA/analysis/analytic"</span>))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">###</span><span class="co"> write out df_analytic_complaints_disposition_caseload file for analysis (txt file for analysis in stata)</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># readr::write_delim(df_analytic_complaints_disposition_caseload,</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#           file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_analytic_complaints_disposition_caseload.txt"),</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#           delim = "|")</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="do">### write out df_acs_bridged_age_race_sex_15_19_final_state_aggregated_va file for analysis</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(df_acs_bridged_age_race_sex_15_19_final_state_aggregated_va,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>          <span class="fu">file.path</span>(sharepoint_ojjdp_va_analysis_analytic_data,<span class="st">"df_acs_bridged_age_race_sex_15_19_final_state_aggregated_va.rds"</span>))</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="do">### write out df_acs_bridged_age_race_sex_15_19_final file for analysis</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(df_acs_bridged_age_race_sex_15_19_final,</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>          <span class="fu">file.path</span>(sharepoint_ojjdp_va_analysis_analytic_data,<span class="st">"df_acs_bridged_age_race_sex_15_19_final_va.rds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
