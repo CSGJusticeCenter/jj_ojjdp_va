@@ -453,7 +453,7 @@ kable(df_rri_diversion_petition_rate_jj_final,
 
 <br>
 
-## Table 6: Informal Diversion and Resolved/Resolved/Dismissed Rate, RRI
+## Table 6: Informal Diversion and Resolved/Dismissed Rate, RRI
 
 **Question:** Should we limit to youth with no prior JJ history if we keep this analysis at the individual-level as opposed to complaint/case-level? Otherwise, how would we create a youth-level measure of diversion decisions? I am currently filtering on youth with no prior JJ history. I have also filtered out youth whose charge is a technical violation (not sure why they are listed as not having JJ history?)
 
