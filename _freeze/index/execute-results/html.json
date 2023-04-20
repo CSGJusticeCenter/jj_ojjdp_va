@@ -1,7 +1,7 @@
 {
-  "hash": "f9d89cce56b3730e5406862ddcf6ee57",
+  "hash": "7110b2ccf339f94fc46b277d87b43642",
   "result": {
-    "markdown": "---\nformat:\n  html:\n    css: styles.css\nexecute:\n  echo: false\n  warning: false\n  message: false\n---\n\n::: {.cell}\n::: {.cell-output-display}\n![](img/csg-logo.png){width=70%}\n:::\n:::\n\n\n\nThis is the OJJDP Virginia project website FOR INTERNAL CSG JC USE ONLY.\n\n\n**Project Goals:** Assess statewide referral and diversion policies and practices, and identify opportunities to align DJJ diversion policies, practices, and resource allocation strategies with what research shows works to improve public safety and youth outcomes\n\n<br>\n\n**Research Questions and Timeline:**\n\n\n<iframe src=\"https://csgorg.sharepoint.com/sites/Team-JC-Research/_layouts/15/Doc.aspx?sourcedoc={2675daca-cdb9-4bcb-ac84-3b01ba8dcd7f}&amp;action=embedview\" width=\"1024px\" height=\"800px\" frameborder=\"0\"></iframe>\n\n\n[View on SharePoint](https://csgorg.sharepoint.com/:w:/s/Team-JC-Research/EcradSa5zctLrIQ7AbqNzX8BnHnrUaevq1uQGYZ_l40SqQ?e=wGehwS)\n\n<br>\n",
+    "markdown": "---\nformat:\n  html:\n    css: styles.css\nexecute:\n  echo: false\n  warning: false\n  message: false\n---\n\n::: {.cell}\n::: {.cell-output-display}\n![](img/csg-logo.png){width=70%}\n:::\n:::\n\n\n\nThis is the OJJDP Virginia project website FOR INTERNAL CSG JC USE ONLY.\n\n<br>\n\n**Research Plan and Timeline:**\n\n\n<iframe src=\"https://csgorg.sharepoint.com/sites/Team-JC-Research/_layouts/15/Doc.aspx?sourcedoc={2675daca-cdb9-4bcb-ac84-3b01ba8dcd7f}&amp;action=embedview\" width=\"1024px\" height=\"800px\" frameborder=\"0\"></iframe>\n\n\n[View on SharePoint](https://csgorg.sharepoint.com/:w:/s/Team-JC-Research/EcradSa5zctLrIQ7AbqNzX8BnHnrUaevq1uQGYZ_l40SqQ?e=wGehwS)\n\n<br>\n",
     "supporting": [],
     "filters": [
       "rmarkdown/pagebreak.lua"

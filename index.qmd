@@ -15,12 +15,9 @@ knitr::include_graphics("img/csg-logo.png")
 
 This is the OJJDP Virginia project website FOR INTERNAL CSG JC USE ONLY.
 
-
-**Project Goals:** Assess statewide referral and diversion policies and practices, and identify opportunities to align DJJ diversion policies, practices, and resource allocation strategies with what research shows works to improve public safety and youth outcomes
-
 <br>
 
-**Research Questions and Timeline:**
+**Research Plan and Timeline:**
 
 
 <iframe src="https://csgorg.sharepoint.com/sites/Team-JC-Research/_layouts/15/Doc.aspx?sourcedoc={2675daca-cdb9-4bcb-ac84-3b01ba8dcd7f}&amp;action=embedview" width="1024px" height="800px" frameborder="0"></iframe>
