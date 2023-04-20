@@ -13,140 +13,19 @@ knitr::include_graphics("img/csg-logo.png")
 ```
 
 
-
-This is the OJJDP Virginia project databook. FOR INTERNAL CSG JC USE ONLY. See most up-to-date research plan here: https://csgorg.sharepoint.com/:w:/s/Team-JC-Research/EcradSa5zctLrIQ7AbqNzX8BnHnrUaevq1uQGYZ_l40SqQ?e=wGehwS
+This is the OJJDP Virginia project website FOR INTERNAL CSG JC USE ONLY.
 
 
 **Project Goals:** Assess statewide referral and diversion policies and practices, and identify opportunities to align DJJ diversion policies, practices, and resource allocation strategies with what research shows works to improve public safety and youth outcomes
 
 <br>
 
-**Research Questions:**
+**Research Questions and Timeline:**
 
 
-**Part I:** Using a cohort of first-time system involved youth, look at adjusted differences in likelihood of being diverted and likelihood of a re-complaint for diverted vs. non-diverted youth.
+<iframe src="https://csgorg.sharepoint.com/sites/Team-JC-Research/_layouts/15/Doc.aspx?sourcedoc={2675daca-cdb9-4bcb-ac84-3b01ba8dcd7f}&amp;action=embedview" width="1024px" height="800px" frameborder="0"></iframe>
 
-A. How does the likelihood of being diverted differ by race, sex, and geography?
 
-B. For youth who are diverted, how likely are they to come back into the system with a new complaint or new petition within a year of the initial intake decision? 
-
-*Old (PSM): C. What is the impact of a diversion vs probation on a youth’s likelihood of coming back into the system with a new complaint or new petition within a year of the initial intake decision?*
-
-
-**Part II:** Conduct a front-end system assessment from intake through petition for all complaints 2016-2021.
-
-<br>
-
-**Methods:**
-
-
-**Part I:** For research question (A) we will build a series of logistic regression models, adjusting for race/ethnicity, age, offense, risk level, and other factors that may also be related to a decision to divert. Our outcome variable will be diversion/petition (0/1) and our independent variables of interest will be race, sex, and CSU. For research question (B) we will take a similar methodological approach, but restrict our cohort to diverted youth and focus on likelihood of a re-complaint within a year of diversion while adjusting for demographics, offense, risk level, etc. For research question (B) our outcome variable will be re-complaint within a year of the initial intake decision date (0/1) and our independent variables of interest will be race, sex, and CSU.
-
-*Cohort:* first time system involved youth (no prior complaints), 2016-2021
-
-*Method:* Logistic Regression, which allows us to look at the relationship between two variables (like race and decision to divert) while adjusting for other factors that may also be related to our outcome (like offense, risk, etc.). 
-
-**Part II:** We will conduct a descriptive analysis of the front end of the system from intake through petition, provide unadjusted counts, RRI’s and means tests where applicable, by race, sex, offense, risk, CSU, and year for:
-
-*	Complaints
-
-*	Intake decisions: divert, resolve, petition, other
-
-*	Average LOS on diversion 
-
-*	Diversion completions: successful, unsuccessful, other
-
-*	Dispositions on petitioned cases
-
-*Cohort:* All complaints from 2016-2021  
-
-<br>
-
-**Research Timeline**
-
-<br>
-
-**DATA ACQUISITION**
-
-*Research Plan Development (COMPLETE)*
-
-* August 2023 
-
-*Data calls/DUA pre (COMPLETE)p* 
-
-* September 2023 
-
-*Data request submitted/revised (COMPLETE)* 
-
-* September-October 2023 
-
-*Data request approved (COMPLETE)* 
-
-* 11/7/2023 
-
-*Data files received (COMPLETE)* 
-
-* 2/7/2023 
-
-<br>
-
-**DATA PREPARATION AND ANALYSIS** 
-
-*Prepare Analysis files (IN PROGRESS)* 
-
-* 2/10-3/17 
-
-*Preliminary data cleaning and descriptives for internal review (COMPLETE)*
-
-* By 2/17 
-
-*Review Research Plan with Policy (COMPLETE)* 
-
-* 3/1 
-
-*Data call with VA (COMPLETE)* 
-
-* By 3/10 rescheduled to 3/20 
-
-*Build analytic file for Part I A* 
-
-* By 3/17 
-
-*Build analytic file for Part I B* 
-
-* By 3/17 
-
-*Build analytic file for Part II*  
-
-* By 3/17 
-
-*Part II (front end assessment) preliminary findings to share with policy* 
-
-* April 7 
-
-*Part I internal research review* 
-
-* By April 7 
-
-*Part I preliminary findings to share with policy* 
-
-* April 14 
-
-*QA & Revisions* 
-
-* need to schedule QA 
-
-*Share preliminary data findings with VA* 
-
-* By April 28 
-
-*Data slide development for final presentation*
-
-* By May 12 
-
-*Final presentation* 
-
-* Late May 
-
+[View on SharePoint](https://csgorg.sharepoint.com/:w:/s/Team-JC-Research/EcradSa5zctLrIQ7AbqNzX8BnHnrUaevq1uQGYZ_l40SqQ?e=wGehwS)
 
 <br>

@@ -66,11 +66,7 @@ sharepoint_ojjdp_va_viz <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Output/VA/r_v
 # caseload_clean <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"caseload_clean.rds"))
 
 ### read in df_analytic_complaints_disposition_caseload file for analysis
-df_analytic_complaints_disposition_caseload <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_analytic_complaints_disposition_caseload.rds")) %>% 
-  ### recode "missing" as NA for regression modeling
-  mutate(race_clean = ifelse(race_clean=="Missing",
-                             NA,
-                             race_clean))
+df_analytic_complaints_disposition_caseload <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_analytic_complaints_disposition_caseload.rds")) 
 ```
 
 ```{r include=FALSE,warning=FALSE,include=FALSE}
@@ -597,12 +593,12 @@ kable(df_rri_diversion_outcome_jj_final,
 
 <br>
 
-## Petition 
+## Adjusted: Petition 
 
 In the following analysis, the outcome variable is binary -- split into petition (meaning complaint was petitioned at intake) and non-petition (diversion, resolved/dismissed, and other)
 
 
-# Tables (Adjusted Relative Rate Indices)
+### Tables (Adjusted Relative Rate Indices)
 
 **NOTE:** I am currently running the regression on youth with no prior JJ history -- also filtering on intakes labelled as either "Delinquent" or "Status" (we probably need to ask Nina why there are youth with no prior JJ history, but violations). Predictors included in preliminary model are race, gender, age at intake, CSU, referral/petitioner source, category of offense, and year of petition. The outcome variable is a petition flag (where any intake decision other than diversion is coded as '0' -- including informal diversion, petition, dismissal, or other)
 
@@ -655,7 +651,7 @@ tab_model(va_petition_model,
 
 <br>
 
-### Predicted Probabilities and Adjusted RRIs, Petition
+#### Predicted Probabilities and Adjusted RRIs, Petition
 
 **TO DO:** Double check predicted probability interpretation with categorical variables in model
 
@@ -684,9 +680,9 @@ kable(pred_prob_petition_race_overall,
 
 <br><br>
 
-### Adjusted RRI: Petition
+#### Adjusted RRI: Petition
 
-**NOTE:** Difference is statistically significant for Black youth (<0.001)
+**NOTE:** Difference is statistically significant for both Asian (<0.001) and Black youth (<0.01)
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -761,7 +757,7 @@ ggplot(data = pred_prob_petition_race_overall_viz, aes(y = rri, x = race, fill =
 
 <br>
 
-### Predicted Probabilities of Petition by Referral Source
+#### Predicted Probabilities of Petition by Referral Source
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -813,7 +809,7 @@ pred_prob_petition_race_by_referral_type %>%
 
 <br>
 
-### Predicted Probabilities of Petition by CSU 
+#### Predicted Probabilities of Petition by CSU 
 
 **NOTE:** We will likely want to exclude CSU's with small N sizes -- I haven't yet done that. 
 
@@ -864,9 +860,9 @@ pred_prob_petition_race_by_csu %>%
 
 <br>
 
-### Predicted Probabilities of Petition by Charge Type 
+#### Predicted Probabilities of Petition by Charge Type 
 
-**NOTE:** Status offenses likely have relatively lower predicted probability of diversion b/c they are more likely to be dismissed. This is a drawback of the current model (where all intake decisions are included and coded into either diversion or not diversion)
+**Question:** Do status offenses have relatively lower predicted probability of diversion b/c they are more likely to be dismissed? This could be a drawback of the current model (where all intake decisions are included and coded into either diversion or not diversion)
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -915,12 +911,12 @@ pred_prob_petition_race_by_dai %>%
 
 <br><br>
 
-## Diversion versus Resolved/Dismissed 
+## Adjusted: Diversion versus Resolved/Dismissed 
 
-In the following analysis, the outcome variable is binary -- split into diverted (meaning complaint was diverted at intake) and resolved/dismissed (either "complaint unfounded" or "resolved"). All records with other intake complaint decisions are excluded
+In the following analysis, the outcome variable is binary -- split into diverted (meaning complaint was diverted at intake) and resolved/dismissed (either "complaint unfounded" or "resolved"). All records with other intake complaint decisions are excluded.
 
 
-# Tables (Adjusted Relative Rate Indices)
+### Tables (Adjusted Relative Rate Indices)
 
 **NOTE:** I am currently running the regression on youth with no prior JJ history -- also filtering on intakes labelled as either "Delinquent" or "Status" (we probably need to ask Nina why there are youth with no prior JJ history, but violations). Predictors included in preliminary model are race, gender, age at intake, CSU, referral/petitioner source, category of offense, and year of petition. The outcome variable is a petition flag (where any intake decision other than diversion is coded as '0' -- including informal diversion, petition, dismissal, or other)
 
@@ -961,7 +957,7 @@ tab_model(va_diversion_resolved_model,
 
 <br>
 
-### Predicted Probablities and Adjusted RRIs, Diverted (compared to Dismissed/Resolved)
+#### Predicted Probablities and Adjusted RRIs, Diverted (compared to Dismissed/Resolved)
 
 **TO DO:** Double check predicted probability interpretation with categorical variables in model
 
@@ -990,9 +986,9 @@ kable(pred_prob_diversion_race_overall,
 
 <br><br>
 
-### Adjusted RRI: Diverted (compared to Dismissed/Resolved)
+#### Adjusted RRI: Diverted (compared to Dismissed/Resolved)
 
-**NOTE:** Difference is statistically significant for Black youth (<0.001)
+**NOTE:** Difference is statistically significant for both Asian (<0.05) and Black youth (<0.001)
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -1067,7 +1063,7 @@ ggplot(data = pred_prob_diversion_race_overall_viz, aes(y = rri, x = race, fill 
 
 <br>
 
-### Predicted Probabilities of Diversion by Referral Source
+#### Predicted Probabilities of Diversion by Referral Source
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -1119,7 +1115,7 @@ pred_prob_diversion_race_by_referral_type %>%
 
 <br>
 
-### Predicted Probabilities of Diversion by CSU 
+#### Predicted Probabilities of Diversion by CSU 
 
 **NOTE:** We will likely want to exclude CSU's with small N sizes -- I haven't yet done that. 
 
@@ -1170,9 +1166,9 @@ pred_prob_diversion_race_by_csu %>%
 
 <br>
 
-### Predicted Probabilities of Diversion by Charge Type 
+#### Predicted Probabilities of Diversion by Charge Type 
 
-**NOTE:** Status offenses likely have relatively lower predicted probability of diversion b/c they are more likely to be dismissed. This is a drawback of the current model (where all intake decisions are included and coded into either diversion or not diversion)
+**Question:** Do status offenses have the lowest predicted probability of diversion b/c they are more likely to be dismissed? How should we treat this so as not to claim that VA diverts too few youth with status complaints -- if many are just being dismissed/resolved?
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
