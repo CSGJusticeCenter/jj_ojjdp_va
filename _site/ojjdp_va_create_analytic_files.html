@@ -443,10 +443,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    hispanic<span class="sc">==</span><span class="st">"Y"</span> <span class="sc">~</span> <span class="dv">4</span>,</span>
 <span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    race<span class="sc">==</span><span class="st">"W"</span> <span class="sc">&amp;</span> hispanic<span class="sc">!=</span><span class="st">"Y"</span> <span class="sc">~</span> <span class="dv">5</span>,</span>
 <span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    race <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"X"</span>,<span class="st">"O"</span>) <span class="sc">&amp;</span> hispanic<span class="sc">!=</span><span class="st">"Y"</span> <span class="sc">~</span> <span class="dv">6</span>,</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">7</span>),</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="fu">as.numeric</span>(<span class="cn">NA</span>)),</span>
 <span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">race_clean =</span> <span class="fu">factor</span>(race_clean,</span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>         <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>),</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>         <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"American Indian"</span>,<span class="st">"Asian"</span>, <span class="st">"Black"</span>, <span class="st">"Hispanic"</span>, <span class="st">"White"</span>, <span class="st">"Other"</span>,<span class="st">"Missing"</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>         <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>),</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>         <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"American Indian"</span>,<span class="st">"Asian"</span>, <span class="st">"Black"</span>, <span class="st">"Hispanic"</span>, <span class="st">"White"</span>, <span class="st">"Other"</span>))) <span class="sc">%&gt;%</span> </span>
 <span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gender_clean =</span> <span class="fu">case_when</span>(</span>
 <span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    sex<span class="sc">==</span><span class="st">"F"</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
 <span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    sex<span class="sc">==</span><span class="st">"M"</span> <span class="sc">~</span> <span class="dv">2</span>,</span>
@@ -501,7 +501,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>distinct: removed 15,314 rows (7%), 199,651 rows remaining</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>mutate: new variable 'race_clean' (factor) with 7 unique values and 0% NA</code></pre>
+<pre><code>mutate: new variable 'race_clean' (factor) with 7 unique values and 1% NA</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>mutate: new variable 'gender_clean' (factor) with 2 unique values and 0% NA</code></pre>

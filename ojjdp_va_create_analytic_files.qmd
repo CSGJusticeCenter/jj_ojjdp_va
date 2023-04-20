@@ -121,10 +121,10 @@ df_djj_intake_complaints_clean <- df_djj_intake_complaints_raw %>%
     hispanic=="Y" ~ 4,
     race=="W" & hispanic!="Y" ~ 5,
     race %in% c("X","O") & hispanic!="Y" ~ 6,
-    TRUE ~ 7),
+    TRUE ~ as.numeric(NA)),
     race_clean = factor(race_clean,
-         levels = c(1,2,3,4,5,6,7),
-         labels = c("American Indian","Asian", "Black", "Hispanic", "White", "Other","Missing"))) %>% 
+         levels = c(1,2,3,4,5,6),
+         labels = c("American Indian","Asian", "Black", "Hispanic", "White", "Other"))) %>% 
   mutate(gender_clean = case_when(
     sex=="F" ~ 1,
     sex=="M" ~ 2,

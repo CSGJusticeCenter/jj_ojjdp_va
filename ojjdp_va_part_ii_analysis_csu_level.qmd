@@ -664,7 +664,7 @@ kable(df_complaints_youth_intake_decision_table_offense_status_final,
 
 <br>
 
-## Table 7: Disposition Outcomes by YASI Risk Level
+## Table 7a: Disposition Outcomes by YASI Risk Level
 
 **TO DO:** Double check that I’m using correct YASI assessment for dispo exploration (does it matter if it is initial, case closure, etc.?)
 
@@ -736,7 +736,7 @@ kable(df_complaints_disposition_outcome_table_risk_score_final_csu,
 
 <br>
 
-## Table 7: Disposition Outcomes by YASI Risk Level (probation/supervision only)
+## Table 7b: Disposition Outcomes by YASI Risk Level (probation/supervision only)
 
 **TO DO:** Double check that I’m using correct YASI assessment for dispo exploration (does it matter if it is initial, case closure, etc.?)
 
