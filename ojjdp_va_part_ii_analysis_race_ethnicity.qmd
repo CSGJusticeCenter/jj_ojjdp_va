@@ -911,7 +911,7 @@ Another control we could add is something on how rural/urban each county is...
 #| out-width: 85%
 
 intake_complaints_no_prior_jj_to_model_diversion_resolved <- df_analytic_complaints_disposition_caseload %>%
-  filter(intake_decision_clean%in%c("Diverted","Dismissed/Resolved"),
+  filter(intake_decision_clean%in%c("Diverted","Resolved/Dismissed"),
          jj_history_clean=="No Prior JJ History",
          flg_category%in%c("Deliquent","Status")) %>% 
   mutate(race = fct_relevel(race_clean, "White"),
@@ -1328,7 +1328,7 @@ ggplot(data = pred_prob_diversion_petition_race_overall_viz, aes(y = rri, x = ra
                   fontface = "bold",
                   na.rm = TRUE,
                   show.legend = FALSE) +
-  annotate("text", x = 2.85, y = 1.17, label = "This line represents\nWhite youth\n(reference group)", colour = "#000000", size = 3.5, fontface = 2)
+  annotate("text", x = 1.85, y = 1.17, label = "This line represents\nWhite youth\n(reference group)", colour = "#000000", size = 3.5, fontface = 2)
 
 ### set sharepoint path using csgjcr::csg_sp_path function
 # sharepoint_viz_path <- csg_sp_path()
