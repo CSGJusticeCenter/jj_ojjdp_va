@@ -597,7 +597,7 @@ kable(df_rri_diversion_outcome_jj_final,
 
 In the following analysis, the outcome variable is binary -- split into petition (meaning complaint was petitioned at intake) and non-petition (diversion, resolved/dismissed, and other)
 
-**NOTE:** I am currently running the regression on youth with no prior JJ history -- also filtering on intakes labelled as either "Delinquent" or "Status" (we probably need to ask Nina why there are youth with no prior JJ history, but violations). Predictors included in preliminary model are race, gender, age at intake, CSU, referral/petitioner source, category of offense, and year of petition. The outcome variable is a petition flag (where any intake decision other than diversion is coded as '0' -- including informal diversion, petition, dismissal, or other)
+**NOTE:** I am currently running the regression on youth with no prior JJ history -- also filtering on intakes labelled as either "Delinquent" or "Status" (we probably need to ask Nina why there are youth with no prior JJ history, but violations). Predictors included in preliminary model are race, gender, age at intake, CSU, referral/petitioner source, category of offense, and year of petition. 
 
 Another control we could add is something on how rural/urban each county is...
 
@@ -902,7 +902,7 @@ pred_prob_petition_race_by_dai %>%
 
 In the following analysis, the outcome variable is binary -- split into diverted (meaning complaint was diverted at intake) and resolved/dismissed (either "complaint unfounded" or "resolved"). All records with other intake complaint decisions are excluded.
 
-**NOTE:** I am currently running the regression on youth with no prior JJ history -- also filtering on intakes labelled as either "Delinquent" or "Status" (we probably need to ask Nina why there are youth with no prior JJ history, but violations). Predictors included in preliminary model are race, gender, age at intake, CSU, referral/petitioner source, category of offense, and year of petition. The outcome variable is a petition flag (where any intake decision other than diversion is coded as '0' -- including informal diversion, petition, dismissal, or other)
+**NOTE:** I am currently running the regression on youth with no prior JJ history -- also filtering on intakes labelled as either "Delinquent" or "Status" (we probably need to ask Nina why there are youth with no prior JJ history, but violations). Predictors included in preliminary model are race, gender, age at intake, CSU, referral/petitioner source, category of offense, and year of petition. 
 
 Another control we could add is something on how rural/urban each county is...
 
@@ -1196,14 +1196,13 @@ pred_prob_diversion_race_by_dai %>%
 ```
 
 
-
 <br><br>
 
 ## 3. Adjusted: Diversion versus Petitioned
 
 In the following analysis, the outcome variable is binary -- split into petitioned at intake (excluding court summons) and formally diverted (meaning complaint was diverted at intake). All records with other intake complaint decisions are excluded.
 
-**NOTE:** I am currently running the regression on youth with no prior JJ history -- also filtering on intakes labelled as either "Delinquent" or "Status" (we probably need to ask Nina why there are youth with no prior JJ history, but violations). Predictors included in preliminary model are race, gender, age at intake, CSU, referral/petitioner source, category of offense, and year of petition. The outcome variable is a petition flag (where any intake decision other than diversion is coded as '0' -- including informal diversion, petition, dismissal, or other)
+**NOTE:** I am currently running the regression on youth with no prior JJ history -- also filtering on intakes labelled as either "Delinquent" or "Status" (we probably need to ask Nina why there are youth with no prior JJ history, but violations). Predictors included in preliminary model are race, gender, age at intake, CSU, referral/petitioner source, category of offense, and year of petition. 
 
 Another control we could add is something on how rural/urban each county is...
 

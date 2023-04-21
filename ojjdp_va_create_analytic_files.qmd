@@ -94,8 +94,36 @@ central_region <- c("009",
 ```
 
 ```{r }
+#####################################
+### first explore how mso_flag (which flags most serious offense per case) is created b/c this is 
+### how we will de-dup the complaints file and DJJ noted that one case may have two offenses flagged as "Yes" with the mso_flag if the severity rankings tie
+### looking at the df produced here, the severity hierarchy appears to be created using vcc code (The Virginia Crime Code of the offense) 
+### so by de-duping using mso_flag, we won't lose any offense-level data
+### since we are calculating case-level counts of offenses by each category, this de-duping strategy 
+### seems good to go
+######################################################################################################
+df_djj_intake_complaints_raw_mso_flag_dups_explore <- df_djj_intake_complaints_raw %>% 
+  dplyr::filter(mso_flag == "Y") %>% 
+  group_by(juvenile_number,
+           case_number,
+           mso_flag) %>% 
+  mutate(sequence = row_number(),
+         dup_mso=n()>1) %>% 
+  ungroup() %>% 
+  filter(dup_mso==TRUE) %>% 
+  dplyr::select(juvenile_number,
+           case_number,
+           offense_number,
+           mso_flag,
+           dup_mso,
+           sequence,
+           vcc_code,
+           description,
+           dai,
+           flg_category)
+
 #############################################
-### clean and de-dup df_djj_intake_complaints_raw dataframe by complaint and offense
+### clean and de-dup df_djj_intake_complaints_raw dataframe by complaint/case (keeping most serious offense)
 ### this is our base complaint/offense-level file for the sample
 #############################################
 df_djj_intake_complaints_clean <- df_djj_intake_complaints_raw %>% 
@@ -103,12 +131,24 @@ df_djj_intake_complaints_clean <- df_djj_intake_complaints_raw %>%
            case_number,
            offense_number,
            .keep_all=TRUE) %>% ### no records dropped
+  ### create counts vars by charge category before de-duping with mso_flag (keeping the most serious offense)
+  group_by(juvenile_number,
+           case_number) %>% 
+  mutate(count_felony_with_case = n_distinct(offense_number[dai%in%c("Felony against Persons",
+                                                                     "Felony Weapons and Felony Narcotics Distribution",
+                                                                     "Other Felony")]),
+         count_misd_with_case = n_distinct(offense_number[dai%in%c("Class 1 Misdemeanor Against Persons",
+                                                                     "Other Class 1 Misdemeanor")]),
+         count_status_with_case = n_distinct(offense_number[dai%in%c("Status Offense")]),
+         count_violation_with_case = n_distinct(offense_number[dai%in%c("Other Violation",
+                                                                        "Court Order Violation",
+                                                                        "Prob./Parole Violation")])) %>%
+  ungroup() %>% 
   ### keep most serious offense associated with intake case/complaint
   dplyr::filter(mso_flag == "Y") %>% 
   ### according to DJJ documentation, multiple offenses may have mso flag of 1 if
-  ### severity ranking is tied; so now de-dup those instances 
-  ### note: if we decide to further explore counts of offenses/types of status offenses
-  ### we will want the full dataframe duplicated by complaint/intake/offense
+  ### severity ranking is tied; it appears that ties only occur with identical vcc codes
+  ### but will confirm with Nina
   distinct(juvenile_number,
            case_number,
            .keep_all=TRUE) %>% 
@@ -190,9 +230,9 @@ df_complaints_youth_intake_decision <- df_djj_intake_complaints_clean %>%
   ### create flags for (NOTE:THIS IS PRELIMINARY AND PENDING CONFIRMATION WITH DJJ RESEARCH STAFF)
   # intake decisions (petitioned, diverted, dismissed, other)
   # diversion (yes or no)
-  # diversion outcome (successful, not successful and petitioned, not successful and not petitioned); what to do with "REQ'D TO PARTICIPATE-DIVERSION"?
+  # diversion outcome (successful, not successful and petitioned, not successful and not petitioned)
   # disposition outcomes (where intake complaint is petitioned)
-  ### create unique complaint-level ID
+  ### also create unique complaint-level ID
   mutate(intake_decision_clean = case_when(
     intake_decision_label%in%c("UNSUCCESSFUL DIVERSION/PETITION FILED", "SUCCESSFUL DIVERSION","UNSUCCESSFUL DIVERSION/NO PETITION FILED","REQ'D TO PARTICIPATE-DIVERSION") ~ "Diverted",
     intake_decision_label%in%c("REFERRED TO ANOTHER AGY FOR SV","UNOFFICIAL COUNSELING-FAMILY C") ~ "Diverted (Informal)",
@@ -324,13 +364,25 @@ df_complaints_youth_intake_decision <- df_djj_intake_complaints_clean %>%
 df_djj_intake_petitioned_only <- df_complaints_youth_intake_decision %>%
   filter(intake_decision_label%in%c("PETITION FILED", "PETITION/DETENTION ORDER FILED","COURT SUMMONS","PETITION/SHELTER CARE FILED","UNSUCCESSFUL DIVERSION/PETITION FILED")) %>% 
   distinct(juvenile_number,
-           case_number,
-           offense_number)  ### no records dropped
+           case_number) ### no records dropped
 
 ########################################
 ### clean and de-dup disposition dataframe
 ########################################
 ### note: disposition file is unique by youth, case number, offense number, disposition, and days from intake to disposition
+
+
+### prelim hierarchy for de-duping disposition by severity (confirm with JJ team):
+# Commitment
+# Detention
+# Probation/Supervision
+# Community Service
+# Restitution
+# Fine
+# Other
+# Deferral
+# No further action/none
+
 disposition_clean <- disposition %>% 
   ### remove records with missing disposition -- waiting on answer from DJJ on how to interpret this
   filter(!is.na(description)==TRUE) %>% 
@@ -339,18 +391,57 @@ disposition_clean <- disposition %>%
            offense_number,
            description,
            .keep_all=TRUE) %>% ### no records dropped
+  ### create unique disposition ID for counts
+  mutate(dispo_id = paste0(juvenile_number,
+                           case_number,
+                           offense_number,
+                           description)) %>% 
   ### preliminary options for grouping dispositions are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other
   mutate(dispo_description_clean = case_when(
-    description%in%c("COMMIT TO DJJ (16.1-278.8.14)","SERIOUS OFFENDER COMMITMENT TO DJJ (16.1-278.8.17) (16.1-285.1)") ~ "Commitment",
-    description%in%c("POST-DISPOSITIONAL DETENTION (16.1-278.8.16) (16.1-284.1)","SENTENCED TO DETENTION") ~ "Detention",
-    description%in%c("COURT ORDER CONDITIONS AND LIMITATIONS (16.1-278.8.2)", "DEFER FINDING AND DISPOSITION W/PROBATION SUPERVISION (16.1-278.8.5)","PROBATION (16.1-278.8.7)","PROBATION AND COURT ORDERED ALCOHOL OR DRUG ABUSE TREATMENT (16.1-278.8.7a","(EXPIRED) DEFER DISPOSTION AND PLACE IN BOOT CAMP (16.1-278.8.4a)", "COURT ORDER GANG ACTIVITY PREVENTION PROGRAM (16.1-278.8.19)","FIRST OFFENSE DRUG VIOLATION, MANDATORY TREATMENT (16.1-278.8:01)","SUSPENDED COMMITMENT TO DJJ","SUSPENDED COMMITMENT TO DETENTION") ~ "Probation/Supervision",
-    description%in%c("DEFER DISPOSITION ON CONDITION OF GOOD BEHAVIOR") ~ "Deferral",
-    description%in%c("NO FURTHER ACTION") ~ "No further action/none",
-    description%in%c("COMMUNITY SERVICE (16.1-278.8.11)") ~ "Community Service",
-    description%in%c("FINE NOT TO EXCEED $500 (16.1-278.8.8)") ~ "Fine",
-    description%in%c("RESTITUTION (16.1-278.8.10)") ~ "Restitution",
-    description%in%c("LOSS OF DRIVING PRIVS FOR ALCOHOL,FIREARM,OR TRUANCY(16.1-278.8.18)(16.1-278.9)","SENTENCED IN CIRCUIT COURT","SUSPEND DRIVER'S LICENSE/IMPOSE CURFEW (16.1-278.8.9)","TRAFFIC VIOLATION PENALTIES (16.1-278.8.12)","TRANSFER LEGAL CUSTODY (16.1-278.8.12)","UPHOLDING RULING OF THE LOWER COURT","(EXPIRED) TRANSFER TO CIRCUIT COURT","ADULT SENTENCED FOR JUVENILE OFFENSE (16.1-278.8.15) (16.1-284)","COURT ORDER NON-RESIDENTIAL PARENT PARTICIPATION IN PROGRAMS (16.1-278.8.6)","COURT ORDER PARENT PARTICIPATION IN PROGRAMS...FOR REHABILITATION (16.1-278.8.3)") ~ "Other",
-   TRUE ~ as.character(NA))) %>% 
+    description%in%c("COMMIT TO DJJ (16.1-278.8.14)","SERIOUS OFFENDER COMMITMENT TO DJJ (16.1-278.8.17) (16.1-285.1)") ~ 1,
+    description%in%c("POST-DISPOSITIONAL DETENTION (16.1-278.8.16) (16.1-284.1)","SENTENCED TO DETENTION") ~ 2,
+    description%in%c("COURT ORDER CONDITIONS AND LIMITATIONS (16.1-278.8.2)", "DEFER FINDING AND DISPOSITION W/PROBATION SUPERVISION (16.1-278.8.5)","PROBATION (16.1-278.8.7)","PROBATION AND COURT ORDERED ALCOHOL OR DRUG ABUSE TREATMENT (16.1-278.8.7a","(EXPIRED) DEFER DISPOSTION AND PLACE IN BOOT CAMP (16.1-278.8.4a)", "COURT ORDER GANG ACTIVITY PREVENTION PROGRAM (16.1-278.8.19)","FIRST OFFENSE DRUG VIOLATION, MANDATORY TREATMENT (16.1-278.8:01)","SUSPENDED COMMITMENT TO DJJ","SUSPENDED COMMITMENT TO DETENTION") ~ 3,
+    description%in%c("COMMUNITY SERVICE (16.1-278.8.11)") ~ 4,
+    description%in%c("RESTITUTION (16.1-278.8.10)") ~ 5,
+    description%in%c("FINE NOT TO EXCEED $500 (16.1-278.8.8)") ~ 6,
+    description%in%c("LOSS OF DRIVING PRIVS FOR ALCOHOL,FIREARM,OR TRUANCY(16.1-278.8.18)(16.1-278.9)","SENTENCED IN CIRCUIT COURT","SUSPEND DRIVER'S LICENSE/IMPOSE CURFEW (16.1-278.8.9)","TRAFFIC VIOLATION PENALTIES (16.1-278.8.12)","TRANSFER LEGAL CUSTODY (16.1-278.8.12)","UPHOLDING RULING OF THE LOWER COURT","(EXPIRED) TRANSFER TO CIRCUIT COURT","ADULT SENTENCED FOR JUVENILE OFFENSE (16.1-278.8.15) (16.1-284)","COURT ORDER NON-RESIDENTIAL PARENT PARTICIPATION IN PROGRAMS (16.1-278.8.6)","COURT ORDER PARENT PARTICIPATION IN PROGRAMS...FOR REHABILITATION (16.1-278.8.3)") ~ 7,
+    description%in%c("DEFER DISPOSITION ON CONDITION OF GOOD BEHAVIOR") ~ 8,
+    description%in%c("NO FURTHER ACTION") ~ 9,
+   TRUE ~ as.numeric(NA))) %>% 
+  ### use factor function to assign labels to values
+  ### we'll use this to de-dup file and keep most severe disposition 
+  mutate(dispo_description_clean = factor(dispo_description_clean,
+         levels = c(1,2,3,4,5,6,7,8,9),
+         labels = c("Commitment",
+                    "Detention",
+                    "Probation/Supervision",
+                    "Community Service",
+                    "Restitution",
+                    "Fine",
+                    "Other",
+                    "Deferral",
+                    "No further action/none"))) %>%
+   ### create counts vars by disposition category before de-duping by case/complaint (keeping the most serious disposition)
+  group_by(juvenile_number,
+           case_number) %>% 
+  mutate(count_commitment_dispo = n_distinct(dispo_id[dispo_description_clean=="Commitment"]),
+         count_detention_dispo = n_distinct(dispo_id[dispo_description_clean=="Detention"]),
+         count_probation_supervision_dispo = n_distinct(dispo_id[dispo_description_clean=="Probation/Supervision"]),
+         count_comm_service_dispo = n_distinct(dispo_id[dispo_description_clean=="Community Service"]),
+         count_restitution_dispo = n_distinct(dispo_id[dispo_description_clean=="Restitution"]),
+         count_fine_dispo = n_distinct(dispo_id[dispo_description_clean=="Fine"]),
+         count_other_dispo = n_distinct(dispo_id[dispo_description_clean=="Other"]),
+         count_deferral_dispo = n_distinct(dispo_id[dispo_description_clean=="Deferral"]),
+         count_no_further_action_dispo = n_distinct(dispo_id[dispo_description_clean=="No further action/none"])) %>%
+  ungroup() %>% 
+  ### now order disposition by severity (by case_number)
+  ### and keep record with most serious disposition based on above hierarchy
+  arrange(juvenile_number,
+          case_number,
+          dispo_description_clean) %>% 
+  distinct(juvenile_number,
+           case_number,
+           .keep_all = TRUE) %>% 
     ### temp cleaning of age -- pending feedback from DJJ
   mutate(dispo_age_clean = case_when(
     court_disp_age < 12 ~ 1,
@@ -365,11 +456,12 @@ disposition_clean <- disposition %>%
                     "14 to 15",
                     "16 to 20"))) %>% 
   dplyr::rename(dispo_description = description) %>% 
-  ### only keep disposition records with intake records that were petitioned
+  ### only keep disposition records with intake records/case IDs that were petitioned
   inner_join(df_djj_intake_petitioned_only,
              by = c("juvenile_number",
-                    "case_number",
-                    "offense_number"))
+                    "case_number")) %>% 
+  ### remove duplicated columns that we'll use from the intake complaints file
+  dplyr::select(-offense_number)
   
 
 ########################################
@@ -389,7 +481,7 @@ disposition_clean <- disposition %>%
 
 ### "The worker selects a caseload status and then associates one or more offenses with it. The youth’s status can change, for example, the youth may be placed on diversion and then abscond and then go back on diversion status. In this scenario, the  youth would have two diversion statuses in the file since it counts the LOS for each status individually."
 
-### BUSINESS RULE: based on this, i think it's best to group by youth ID and offense ID, add LOS values, and then de-duplicate
+### BUSINESS RULE: based on this, i think it's best to group by youth ID and offense ID, add up all LOS values, and then de-duplicate
 #################################################
 
 caseload_clean <- caseload %>% 
@@ -408,19 +500,21 @@ caseload_clean <- caseload %>%
 ```
 
 ```{r }
-#############################################################################################
-### join three files together to create preliminary analytic file for both part I and part II
-#############################################################################################
+######################################################################################################
+### join three files together to create preliminary analytic file for both part I and part II analysis
+######################################################################################################
 
 ### first, left join df_complaints_youth_intake_decision and disposition_clean
 ### we have already dropped disposition records without accompanying intake records which were petitioned
 ### so any disposition missingness indicates that case wasn't petitioned
+
+### also: because we have already de-duped both df_complaints_youth_intake_decision (keeping most serious offense per case/complaint) and disposition_clean (keeping most serious disposition per case/complaint), we can just join by case/complaint as opposed to charge
+### this approach also covers the possibility that the most serious disposition is actually linked by DJJ to a less serious offense; we have separately pulled out the most serious offense and disposition without relying on a join across offense ID
 ### TO DO: double check this logic with team
 df_complaints_disposition_clean_1 <- left_join(df_complaints_youth_intake_decision,
                                                disposition_clean,
                                                by = c("juvenile_number",
-                                                      "case_number",
-                                                      "offense_number"))
+                                                      "case_number"))
 
 ### second, left join df_complaints_disposition_clean_1 and caseload_clean to create preliminary analytic file
 df_analytic_complaints_disposition_caseload <- left_join(df_complaints_disposition_clean_1,
