@@ -122,6 +122,43 @@ df_djj_intake_complaints_raw_mso_flag_dups_explore <- df_djj_intake_complaints_r
            dai,
            flg_category)
 
+
+########################################
+### clean and de-dup caseload dataframe
+### we will then join this file to the intake complaints file, before we de-dup the intake complaints file by case/complaint. b/c the caseload file only contains youth ID and offense ID as unique identifiers, we need to join to intake complaints when the full universe of offense IDs is still present
+### we'll then group by case/complaint to create LOS measures, from caseload, for our analysis
+### first, here is some caseload-specific cleaning we need to do
+########################################
+
+###############################################
+### from Nina on missing values:
+
+### "I verified with the person that wrote the query. If the youth has the juvenile number and offense number filled in but the two diversion columns are blank. It means the youth had another type of caseload status (pre-Dispositional tracking, probation, parole, etc.) or they did not have any caseload statuses. So it is possible to have the number of days for the two diversion codes filled in and also have a blank row because they had another type of status. If we have to rerun the data we can change the rules to exclude the blanks."
+
+### BUSINESS RULE: based on this, I am dropping records with missing values for either div_at_int or div_bey_90
+################################################
+
+################################################
+### from Nina on duplicate youth and offense IDs
+
+### "The worker selects a caseload status and then associates one or more offenses with it. The youth’s status can change, for example, the youth may be placed on diversion and then abscond and then go back on diversion status. In this scenario, the  youth would have two diversion statuses in the file since it counts the LOS for each status individually."
+
+### BUSINESS RULE: based on this, i think it's best to group by youth ID and offense ID, add up all LOS values, and then de-duplicate
+#################################################
+
+caseload_clean <- caseload %>% 
+  filter(!is.na(div_at_int) | !is.na(div_bey_90)) %>% 
+  mutate(div_at_int = as.numeric(div_at_int),
+         div_bey_90 = as.numeric(div_bey_90)) %>% 
+  group_by(juvenile_number,
+           offense_number) %>% 
+  mutate(div_at_int = sum(div_at_int, na.rm = TRUE),
+         div_bey_90 = sum(div_bey_90, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  distinct(juvenile_number,
+           offense_number,
+           .keep_all=TRUE) 
+
 #############################################
 ### clean and de-dup df_djj_intake_complaints_raw dataframe by complaint/case (keeping most serious offense)
 ### this is our base complaint/offense-level file for the sample
@@ -131,6 +168,11 @@ df_djj_intake_complaints_clean <- df_djj_intake_complaints_raw %>%
            case_number,
            offense_number,
            .keep_all=TRUE) %>% ### no records dropped
+  ### we need to join caseload_clean to the intake complaints file before we de-dup the intake complaints file by case/complaint (keeping most serious offense). b/c the caseload file only contains youth ID and offense ID as unique identifiers, we need to join to intake complaints when the full universe of offense IDs is still present
+  ### we'll then group by case/complaint to create LOS measures, from caseload, for our analysis
+    left_join(caseload_clean,
+            by = c("juvenile_number",
+                   "offense_number")) %>% 
   ### create counts vars by charge category before de-duping with mso_flag (keeping the most serious offense)
   group_by(juvenile_number,
            case_number) %>% 
@@ -142,7 +184,9 @@ df_djj_intake_complaints_clean <- df_djj_intake_complaints_raw %>%
          count_status_with_case = n_distinct(offense_number[dai%in%c("Status Offense")]),
          count_violation_with_case = n_distinct(offense_number[dai%in%c("Other Violation",
                                                                         "Court Order Violation",
-                                                                        "Prob./Parole Violation")])) %>%
+                                                                        "Prob./Parole Violation")]),
+         div_at_int = sum(div_at_int, na.rm = TRUE),
+         div_bey_90 = sum(div_bey_90, na.rm = TRUE)) %>%
   ungroup() %>% 
   ### keep most serious offense associated with intake case/complaint
   dplyr::filter(mso_flag == "Y") %>% 
@@ -242,7 +286,7 @@ df_complaints_youth_intake_decision <- df_djj_intake_complaints_clean %>%
    TRUE ~ as.character(NA)),
    intake_decision_clean = factor(intake_decision_clean,
                               levels = c("Petitioned","Diverted","Diverted (Informal)","Resolved/Dismissed","Other")),
-   petition_court_summons_flags = ifelse(intake_decision_label=="COURT SUMMONS",
+   petition_court_summons_flag = ifelse(intake_decision_label=="COURT SUMMONS",
                                 1,0),
    intake_diverted_flag = ifelse(intake_decision_label%in%c("UNSUCCESSFUL DIVERSION/PETITION FILED", "SUCCESSFUL DIVERSION","UNSUCCESSFUL DIVERSION/NO PETITION FILED","REQ'D TO PARTICIPATE-DIVERSION"),
                                 1,0),
@@ -372,7 +416,7 @@ df_djj_intake_petitioned_only <- df_complaints_youth_intake_decision %>%
 ### note: disposition file is unique by youth, case number, offense number, disposition, and days from intake to disposition
 
 
-### prelim hierarchy for de-duping disposition by severity (confirm with JJ team):
+### current hierarchy for de-duping disposition by severity (confirm with JJ team):
 # Commitment
 # Detention
 # Probation/Supervision
@@ -396,7 +440,7 @@ disposition_clean <- disposition %>%
                            case_number,
                            offense_number,
                            description)) %>% 
-  ### preliminary options for grouping dispositions are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other
+  ### current options for grouping dispositions are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, Treatment/Programming, No further action/none, Restitution, Other
   mutate(dispo_description_clean = case_when(
     description%in%c("COMMIT TO DJJ (16.1-278.8.14)","SERIOUS OFFENDER COMMITMENT TO DJJ (16.1-278.8.17) (16.1-285.1)") ~ 1,
     description%in%c("POST-DISPOSITIONAL DETENTION (16.1-278.8.16) (16.1-284.1)","SENTENCED TO DETENTION") ~ 2,
@@ -425,7 +469,7 @@ disposition_clean <- disposition %>%
   group_by(juvenile_number,
            case_number) %>% 
   mutate(count_commitment_dispo = n_distinct(dispo_id[dispo_description_clean=="Commitment"]),
-         count_detention_dispo = n_distinct(dispo_id[dispo_description_clean=="Detention"]),
+         count_commitment_dispo = n_distinct(dispo_id[dispo_description_clean=="Detention"]),
          count_probation_supervision_dispo = n_distinct(dispo_id[dispo_description_clean=="Probation/Supervision"]),
          count_comm_service_dispo = n_distinct(dispo_id[dispo_description_clean=="Community Service"]),
          count_restitution_dispo = n_distinct(dispo_id[dispo_description_clean=="Restitution"]),
@@ -463,40 +507,6 @@ disposition_clean <- disposition %>%
   ### remove duplicated columns that we'll use from the intake complaints file
   dplyr::select(-offense_number)
   
-
-########################################
-### clean and de-dup caseload dataframe
-########################################
-
-###############################################
-### from Nina on missing values:
-
-### "I verified with the person that wrote the query. If the youth has the juvenile number and offense number filled in but the two diversion columns are blank. It means the youth had another type of caseload status (pre-Dispositional tracking, probation, parole, etc.) or they did not have any caseload statuses. So it is possible to have the number of days for the two diversion codes filled in and also have a blank row because they had another type of status. If we have to rerun the data we can change the rules to exclude the blanks."
-
-### BUSINESS RULE: based on this, I am dropping records with missing values for either div_at_int or div_bey_90
-################################################
-
-################################################
-### from Nina on duplicate youth and offense IDs
-
-### "The worker selects a caseload status and then associates one or more offenses with it. The youth’s status can change, for example, the youth may be placed on diversion and then abscond and then go back on diversion status. In this scenario, the  youth would have two diversion statuses in the file since it counts the LOS for each status individually."
-
-### BUSINESS RULE: based on this, i think it's best to group by youth ID and offense ID, add up all LOS values, and then de-duplicate
-#################################################
-
-caseload_clean <- caseload %>% 
-  filter(!is.na(div_at_int) | !is.na(div_bey_90)) %>% 
-  mutate(div_at_int = as.numeric(div_at_int),
-         div_bey_90 = as.numeric(div_bey_90)) %>% 
-  group_by(juvenile_number,
-           offense_number) %>% 
-  mutate(div_at_int = sum(div_at_int, na.rm = TRUE),
-         div_bey_90 = sum(div_bey_90, na.rm = TRUE)) %>% 
-  ungroup() %>% 
-  distinct(juvenile_number,
-           offense_number,
-           .keep_all=TRUE) 
-
 ```
 
 ```{r }
@@ -510,17 +520,16 @@ caseload_clean <- caseload %>%
 
 ### also: because we have already de-duped both df_complaints_youth_intake_decision (keeping most serious offense per case/complaint) and disposition_clean (keeping most serious disposition per case/complaint), we can just join by case/complaint as opposed to charge
 ### this approach also covers the possibility that the most serious disposition is actually linked by DJJ to a less serious offense; we have separately pulled out the most serious offense and disposition without relying on a join across offense ID
-### TO DO: double check this logic with team
-df_complaints_disposition_clean_1 <- left_join(df_complaints_youth_intake_decision,
+df_analytic_complaints_disposition_caseload <- left_join(df_complaints_youth_intake_decision,
                                                disposition_clean,
                                                by = c("juvenile_number",
                                                       "case_number"))
 
-### second, left join df_complaints_disposition_clean_1 and caseload_clean to create preliminary analytic file
-df_analytic_complaints_disposition_caseload <- left_join(df_complaints_disposition_clean_1,
-                                                         caseload_clean,
-                                                         by = c("juvenile_number",
-                                                                "offense_number"))
+# ### second, left join df_complaints_disposition_clean_1 and caseload_clean to create preliminary analytic file
+# df_analytic_complaints_disposition_caseload <- left_join(df_complaints_disposition_clean_1,
+#                                                          caseload_clean,
+#                                                          by = c("juvenile_number",
+#                                                                 "offense_number"))
 
 
 ```
