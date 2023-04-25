@@ -10,12 +10,8 @@ website:
         href: index.html
       - text: "Part I Analysis"
         menu:
-          - text: "Descriptive Overview"
-            href: ojjdp_va_part_i_analysis_overview.html
           - text: "Regression Analysis"
-            href: ojjdp_va_part_ii_analysis_regression.html
-          - text: "CSU-level Analysis"
-            href: ojjdp_va_part_i_analysis_csu_level.html
+            href: ojjdp_va_part_i_analysis_regression.html
       - text: "Part II Analysis"
         menu:
           - text: "Diversion Trends"
