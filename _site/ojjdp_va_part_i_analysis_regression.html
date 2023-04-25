@@ -20,6 +20,69 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -59,6 +122,9 @@ ul.task-list li input[type="checkbox"] {
     "search-submit-button-title": "Submit"
   }
 }</script>
+
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
 
 <link rel="stylesheet" href="styles.css">
@@ -168,13 +234,30 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
-    
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#outcome-variable-petition" id="toc-outcome-variable-petition" class="nav-link active" data-scroll-target="#outcome-variable-petition">Outcome Variable: Petition</a>
+  <ul class="collapse">
+  <li><a href="#table-1.-model-output" id="toc-table-1.-model-output" class="nav-link" data-scroll-target="#table-1.-model-output">Table 1. Model Output</a></li>
+  <li><a href="#table-2-predicted-probablities-by-raceethnicity" id="toc-table-2-predicted-probablities-by-raceethnicity" class="nav-link" data-scroll-target="#table-2-predicted-probablities-by-raceethnicity">Table 2: Predicted Probablities by Race/Ethnicity</a></li>
+  <li><a href="#figure-1-predicted-probablities-by-raceethnicity" id="toc-figure-1-predicted-probablities-by-raceethnicity" class="nav-link" data-scroll-target="#figure-1-predicted-probablities-by-raceethnicity">Figure 1: Predicted Probablities by Race/Ethnicity</a></li>
+  <li><a href="#table-3-predicted-probablities-by-gender" id="toc-table-3-predicted-probablities-by-gender" class="nav-link" data-scroll-target="#table-3-predicted-probablities-by-gender">Table 3: Predicted Probablities by Gender</a></li>
+  <li><a href="#figure-2-predicted-probablities-by-gender" id="toc-figure-2-predicted-probablities-by-gender" class="nav-link" data-scroll-target="#figure-2-predicted-probablities-by-gender">Figure 2: Predicted Probablities by Gender</a></li>
+  <li><a href="#table-4-predicted-probablities-by-csu" id="toc-table-4-predicted-probablities-by-csu" class="nav-link" data-scroll-target="#table-4-predicted-probablities-by-csu">Table 4: Predicted Probablities by CSU</a></li>
+  <li><a href="#figure-3-predicted-probablities-by-csu" id="toc-figure-3-predicted-probablities-by-csu" class="nav-link" data-scroll-target="#figure-3-predicted-probablities-by-csu">Figure 3: Predicted Probablities by CSU</a></li>
+  <li><a href="#table-4-predicted-probablities-by-charge-type" id="toc-table-4-predicted-probablities-by-charge-type" class="nav-link" data-scroll-target="#table-4-predicted-probablities-by-charge-type">Table 4: Predicted Probablities by Charge Type</a></li>
+  <li><a href="#figure-3-predicted-probablities-by-charge-type" id="toc-figure-3-predicted-probablities-by-charge-type" class="nav-link" data-scroll-target="#figure-3-predicted-probablities-by-charge-type">Figure 3: Predicted Probablities by Charge Type</a></li>
+  </ul></li>
+  </ul>
+</nav>
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -203,9 +286,826 @@ ul.task-list li input[type="checkbox"] {
 <p><em>Cohort:</em> first time system involved youth (no prior complaints), 2016-2021</p>
 <p><em>Method:</em> Logistic Regression, which allows us to look at the relationship between two variables (like race and decision to divert) while adjusting for other factors that may also be related to our outcome (like offense, risk, etc.).</p>
 <p><br></p>
+<section id="outcome-variable-petition" class="level1 page-columns page-full">
+<h1>Outcome Variable: Petition</h1>
 <p><br></p>
+<section id="table-1.-model-output" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="table-1.-model-output">Table 1. Model Output</h2>
+<p>In the following analysis, the outcome variable is binary – split into petitioned at intake (excluding court summons) and either diverted, resolved, or referred to another agency. All records with other intake complaint decisions are excluded from this analysis.</p>
+<p><strong>NOTE:</strong> I am currently running the regression on youth with no prior JJ history – also filtering on intakes labelled as either “Delinquent” or “Status” (we probably need to ask Nina why there are youth with no prior JJ history, but violations). Predictors included in preliminary model are:</p>
+<ul>
+<li><p>race</p></li>
+<li><p>gender</p></li>
+<li><p>age at intake</p></li>
+<li><p>CSU</p></li>
+<li><p>referral/petitioner source</p></li>
+<li><p>category of offense</p></li>
+<li><p>year of petition</p></li>
+<li><p>counts of felony, misdemeanor, status, and violation charges associated with intake/complaint</p></li>
+</ul>
+<p>Another control we could add is something on how rural/urban each county is…</p>
+<div class="cell page-columns page-full">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sjPlot)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sjmisc)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sjlabelled)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>intake_complaints_no_prior_jj_to_model_diversion_petitioned <span class="ot">&lt;-</span> df_analytic_complaints_disposition_caseload <span class="sc">%&gt;%</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(intake_decision_clean<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"Diverted"</span>,<span class="st">"Petitioned"</span>),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>         jj_history_clean<span class="sc">==</span><span class="st">"No Prior JJ History"</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>         flg_category<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"Deliquent"</span>,<span class="st">"Status"</span>),</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">is.na</span>(intake_decision_regression_model_petition)<span class="sc">==</span><span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">race =</span> <span class="fu">fct_relevel</span>(race_clean, <span class="st">"White"</span>),</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">gender =</span> <span class="fu">fct_relevel</span>(gender_clean, <span class="st">"Male"</span>),</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">referral_source_clean =</span> <span class="fu">fct_relevel</span>(referral_source_clean, <span class="st">"Other"</span>),</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">date_opened_year =</span> <span class="fu">fct_relevel</span>(<span class="fu">as.character</span>(date_opened_year), <span class="st">"2015"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(juvenile_number,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>           <span class="at">.keep_all=</span><span class="cn">TRUE</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>va_diversion_petition_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  intake_decision_regression_model_petition <span class="sc">~</span> race <span class="sc">+</span> gender <span class="sc">+</span> intake_age <span class="sc">+</span> csu <span class="sc">+</span> referral_source_clean <span class="sc">+</span> dai <span class="sc">+</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    date_opened_year <span class="sc">+</span> count_misd_with_case <span class="sc">+</span> count_felony_with_case <span class="sc">+</span> count_status_with_case <span class="sc">+</span> count_violation_with_case,</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">"binomial"</span>, </span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> intake_complaints_no_prior_jj_to_model_diversion_petitioned)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">tab_model</span>(va_diversion_petition_model,</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>          <span class="at">p.style =</span> <span class="st">"numeric_stars"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display column-page-right">
+
+<table style="border-collapse:collapse; border:none;">
+<tbody><tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">&nbsp;</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">intake decision<br>regression model petition</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">Predictors</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">Odds Ratios</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">CI</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">p</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">(Intercept)</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.24 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.19&nbsp;–&nbsp;0.30</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">race [American Indian]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.84 <sup></sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.50&nbsp;–&nbsp;1.39</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.498</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">race [Asian]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.20 <sup></sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.00&nbsp;–&nbsp;1.45</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.053</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">race [Black]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.86 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.82&nbsp;–&nbsp;0.90</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">race [Hispanic]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.96 <sup></sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.89&nbsp;–&nbsp;1.03</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.262</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">race [Other]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.03 <sup></sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.95&nbsp;–&nbsp;1.11</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.505</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">gender [Female]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.07 <sup>**</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.02&nbsp;–&nbsp;1.11</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.003</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">intake age</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.01 <sup>**</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.00&nbsp;–&nbsp;1.02</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.003</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [002]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">3.03 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.55&nbsp;–&nbsp;3.60</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [003]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">3.66 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.93&nbsp;–&nbsp;4.60</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [004]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.79 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.48&nbsp;–&nbsp;2.15</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [005]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">5.02 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">4.09&nbsp;–&nbsp;6.18</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [006]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.30 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.23&nbsp;–&nbsp;0.38</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [007]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.51 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.41&nbsp;–&nbsp;0.62</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [008]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.53 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.43&nbsp;–&nbsp;0.65</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [009]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.14 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.80&nbsp;–&nbsp;2.55</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [010]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.61 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.16&nbsp;–&nbsp;3.15</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [011]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.90 <sup></sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.73&nbsp;–&nbsp;1.11</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.327</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [012]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">12.90 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">10.71&nbsp;–&nbsp;15.57</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [013]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">4.84 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">4.01&nbsp;–&nbsp;5.87</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [014]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.96 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.50&nbsp;–&nbsp;3.51</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [015]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.72 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.32&nbsp;–&nbsp;3.20</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [016]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.74 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.31&nbsp;–&nbsp;3.25</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [017]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.25 <sup>*</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.02&nbsp;–&nbsp;1.52</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.029</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [018]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.35 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.85&nbsp;–&nbsp;2.99</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [019]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.66 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.41&nbsp;–&nbsp;1.96</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [020]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">5.71 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">4.80&nbsp;–&nbsp;6.81</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [021]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">8.16 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">6.42&nbsp;–&nbsp;10.41</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [022]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.49 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.25&nbsp;–&nbsp;1.79</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [023]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">4.04 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">3.40&nbsp;–&nbsp;4.80</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [024]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.69 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.58&nbsp;–&nbsp;0.82</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [025]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.95 <sup></sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.80&nbsp;–&nbsp;1.14</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.611</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [026]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.99 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.69&nbsp;–&nbsp;2.35</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [027]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">6.41 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">5.37&nbsp;–&nbsp;7.67</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [028]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">3.91 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">3.13&nbsp;–&nbsp;4.89</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [029]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.55 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.28&nbsp;–&nbsp;1.87</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [02A]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.79 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.38&nbsp;–&nbsp;2.32</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [030]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">4.01 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">3.29&nbsp;–&nbsp;4.89</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [031]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">9.89 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">8.37&nbsp;–&nbsp;11.71</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">referral source clean<br>[Citizen]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.60 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.41&nbsp;–&nbsp;1.81</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">referral source clean<br>[Court]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.24 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.17&nbsp;–&nbsp;0.34</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">referral source clean<br>[Law Enforcement]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">3.05 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.78&nbsp;–&nbsp;3.34</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">referral source clean<br>[Probation Officer]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.32 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.79&nbsp;–&nbsp;2.99</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">referral source clean<br>[Relative/Spouse/Self]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.94 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.72&nbsp;–&nbsp;2.20</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">referral source clean<br>[School Official]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">3.22 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.88&nbsp;–&nbsp;3.61</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">referral source clean<br>[School Resource Officer]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">8.18 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">7.32&nbsp;–&nbsp;9.14</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">dai [Felony against<br>Persons]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.12 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.10&nbsp;–&nbsp;0.14</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">dai [Felony Weapons and<br>Felony Narcotics<br>Distribution]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.11 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.08&nbsp;–&nbsp;0.14</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">dai [Other Class 1<br>Misdemeanor]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.85 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.73&nbsp;–&nbsp;1.97</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">dai [Other Felony]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.44 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.38&nbsp;–&nbsp;0.52</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">dai [Other Violation]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.74 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.65&nbsp;–&nbsp;0.84</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">dai [Status Offense]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.23 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.19&nbsp;–&nbsp;0.27</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">date opened year [2016]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.17 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.08&nbsp;–&nbsp;1.26</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">date opened year [2017]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.21 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.11&nbsp;–&nbsp;1.31</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">date opened year [2018]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.48 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.36&nbsp;–&nbsp;1.60</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">date opened year [2019]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.82 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.68&nbsp;–&nbsp;1.98</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">date opened year [2020]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.88 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.71&nbsp;–&nbsp;2.06</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">date opened year [2021]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.85 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.65&nbsp;–&nbsp;2.06</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">count misd with case</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.59 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.57&nbsp;–&nbsp;0.62</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">count felony with case</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.44 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.39&nbsp;–&nbsp;0.48</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">count status with case</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.86 <sup>*</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.76&nbsp;–&nbsp;0.99</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.032</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">count violation with case</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.55 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.51&nbsp;–&nbsp;0.60</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">Observations</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">57595</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">R<sup>2</sup> Tjur</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.330</td>
+</tr>
+<tr>
+<td colspan="4" style="font-style:italic; border-top:double black; text-align:right;">* p&lt;0.05&nbsp;&nbsp;&nbsp;** p&lt;0.01&nbsp;&nbsp;&nbsp;*** p&lt;0.001</td>
+</tr>
+
+</tbody></table>
+
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="table-2-predicted-probablities-by-raceethnicity" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="table-2-predicted-probablities-by-raceethnicity">Table 2: Predicted Probablities by Race/Ethnicity</h2>
+<p><strong>TO DO:</strong> Double check predicted probability interpretation with categorical variables in model</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display column-page-right">
+
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:center;"> race_eth </th>
+   <th style="text-align:center;"> predicted_probability </th>
+   <th style="text-align:center;"> std_error </th>
+   <th style="text-align:center;"> rri </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:center;"> White </td>
+   <td style="text-align:center;"> 0.5467789 </td>
+   <td style="text-align:center;"> 0.0202744 </td>
+   <td style="text-align:center;"> 1.0000000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Black </td>
+   <td style="text-align:center;"> 0.5090379 </td>
+   <td style="text-align:center;"> 0.0206148 </td>
+   <td style="text-align:center;"> 0.9309758 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Asian </td>
+   <td style="text-align:center;"> 0.5921605 </td>
+   <td style="text-align:center;"> 0.0298181 </td>
+   <td style="text-align:center;"> 1.0829981 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Other </td>
+   <td style="text-align:center;"> 0.5531511 </td>
+   <td style="text-align:center;"> 0.0215133 </td>
+   <td style="text-align:center;"> 1.0116541 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Hispanic </td>
+   <td style="text-align:center;"> 0.5360907 </td>
+   <td style="text-align:center;"> 0.0209035 </td>
+   <td style="text-align:center;"> 0.9804524 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> American Indian </td>
+   <td style="text-align:center;"> 0.5024524 </td>
+   <td style="text-align:center;"> 0.0685216 </td>
+   <td style="text-align:center;"> 0.9189316 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="figure-1-predicted-probablities-by-raceethnicity" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="figure-1-predicted-probablities-by-raceethnicity">Figure 1: Predicted Probablities by Race/Ethnicity</h2>
+<div class="cell page-columns page-full">
+<div class="cell-output-display column-page-right">
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" style="width:85.0%"></p>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="table-3-predicted-probablities-by-gender" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="table-3-predicted-probablities-by-gender">Table 3: Predicted Probablities by Gender</h2>
+<p><strong>TO DO:</strong> Double check predicted probability interpretation with categorical variables in model</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display column-page-right">
+
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:center;"> gender </th>
+   <th style="text-align:center;"> predicted_probability </th>
+   <th style="text-align:center;"> std_error </th>
+   <th style="text-align:center;"> rri </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:center;"> Male </td>
+   <td style="text-align:center;"> 0.5467789 </td>
+   <td style="text-align:center;"> 0.0202744 </td>
+   <td style="text-align:center;"> 0.9721123 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Female </td>
+   <td style="text-align:center;"> 0.5624647 </td>
+   <td style="text-align:center;"> 0.0203498 </td>
+   <td style="text-align:center;"> 1.0000000 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="figure-2-predicted-probablities-by-gender" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="figure-2-predicted-probablities-by-gender">Figure 2: Predicted Probablities by Gender</h2>
+<div class="cell page-columns page-full">
+<div class="cell-output-display column-page-right">
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" style="width:85.0%"></p>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="table-4-predicted-probablities-by-csu" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="table-4-predicted-probablities-by-csu">Table 4: Predicted Probablities by CSU</h2>
+<p><strong>TO DO:</strong> Double check predicted probability interpretation with categorical variables in model</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display column-page-right">
+
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:center;"> csu </th>
+   <th style="text-align:center;"> predicted_probability </th>
+   <th style="text-align:center;"> std_error </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:center;"> 006 </td>
+   <td style="text-align:center;"> 0.0351243 </td>
+   <td style="text-align:center;"> 0.0042803 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 025 </td>
+   <td style="text-align:center;"> 0.1042145 </td>
+   <td style="text-align:center;"> 0.0083113 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 029 </td>
+   <td style="text-align:center;"> 0.1587517 </td>
+   <td style="text-align:center;"> 0.0120194 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 016 </td>
+   <td style="text-align:center;"> 0.2502486 </td>
+   <td style="text-align:center;"> 0.0156816 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 010 </td>
+   <td style="text-align:center;"> 0.2413495 </td>
+   <td style="text-align:center;"> 0.0170460 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 015 </td>
+   <td style="text-align:center;"> 0.2491435 </td>
+   <td style="text-align:center;"> 0.0146929 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 002 </td>
+   <td style="text-align:center;"> 0.2695824 </td>
+   <td style="text-align:center;"> 0.0169545 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 022 </td>
+   <td style="text-align:center;"> 0.1541209 </td>
+   <td style="text-align:center;"> 0.0115848 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 031 </td>
+   <td style="text-align:center;"> 0.5467789 </td>
+   <td style="text-align:center;"> 0.0202744 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 027 </td>
+   <td style="text-align:center;"> 0.4387067 </td>
+   <td style="text-align:center;"> 0.0212209 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 008 </td>
+   <td style="text-align:center;"> 0.0608959 </td>
+   <td style="text-align:center;"> 0.0057831 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 023 </td>
+   <td style="text-align:center;"> 0.3298246 </td>
+   <td style="text-align:center;"> 0.0186994 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 014 </td>
+   <td style="text-align:center;"> 0.2651626 </td>
+   <td style="text-align:center;"> 0.0164706 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 013 </td>
+   <td style="text-align:center;"> 0.3714172 </td>
+   <td style="text-align:center;"> 0.0220673 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 001 </td>
+   <td style="text-align:center;"> 0.1087060 </td>
+   <td style="text-align:center;"> 0.0098944 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 011 </td>
+   <td style="text-align:center;"> 0.0991423 </td>
+   <td style="text-align:center;"> 0.0092284 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 030 </td>
+   <td style="text-align:center;"> 0.3284862 </td>
+   <td style="text-align:center;"> 0.0213311 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 004 </td>
+   <td style="text-align:center;"> 0.1788440 </td>
+   <td style="text-align:center;"> 0.0138677 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 026 </td>
+   <td style="text-align:center;"> 0.1954487 </td>
+   <td style="text-align:center;"> 0.0126869 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 02A </td>
+   <td style="text-align:center;"> 0.1791161 </td>
+   <td style="text-align:center;"> 0.0194029 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 012 </td>
+   <td style="text-align:center;"> 0.6114021 </td>
+   <td style="text-align:center;"> 0.0217594 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 009 </td>
+   <td style="text-align:center;"> 0.2070373 </td>
+   <td style="text-align:center;"> 0.0139770 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 021 </td>
+   <td style="text-align:center;"> 0.4987502 </td>
+   <td style="text-align:center;"> 0.0301716 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 003 </td>
+   <td style="text-align:center;"> 0.3088896 </td>
+   <td style="text-align:center;"> 0.0240935 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 018 </td>
+   <td style="text-align:center;"> 0.2225116 </td>
+   <td style="text-align:center;"> 0.0210356 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 007 </td>
+   <td style="text-align:center;"> 0.0580985 </td>
+   <td style="text-align:center;"> 0.0057114 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 028 </td>
+   <td style="text-align:center;"> 0.3226485 </td>
+   <td style="text-align:center;"> 0.0241448 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 019 </td>
+   <td style="text-align:center;"> 0.1682280 </td>
+   <td style="text-align:center;"> 0.0115086 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 005 </td>
+   <td style="text-align:center;"> 0.3797469 </td>
+   <td style="text-align:center;"> 0.0244920 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 020 </td>
+   <td style="text-align:center;"> 0.4105419 </td>
+   <td style="text-align:center;"> 0.0206383 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 024 </td>
+   <td style="text-align:center;"> 0.0774431 </td>
+   <td style="text-align:center;"> 0.0061878 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 017 </td>
+   <td style="text-align:center;"> 0.1319057 </td>
+   <td style="text-align:center;"> 0.0112705 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="figure-3-predicted-probablities-by-csu" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="figure-3-predicted-probablities-by-csu">Figure 3: Predicted Probablities by CSU</h2>
+<div class="cell page-columns page-full">
+<div class="cell-output-display column-page-right">
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" style="width:85.0%"></p>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="table-4-predicted-probablities-by-charge-type" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="table-4-predicted-probablities-by-charge-type">Table 4: Predicted Probablities by Charge Type</h2>
+<p><strong>TO DO:</strong> Double check predicted probability interpretation with categorical variables in model</p>
+<div class="cell page-columns page-full">
+<div class="cell-output-display column-page-right">
+
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:center;"> dai </th>
+   <th style="text-align:center;"> predicted_probability </th>
+   <th style="text-align:center;"> std_error </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:center;"> Felony against Persons </td>
+   <td style="text-align:center;"> 0.3896912 </td>
+   <td style="text-align:center;"> 0.0202196 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Other Class 1 Misdemeanor </td>
+   <td style="text-align:center;"> 0.9068264 </td>
+   <td style="text-align:center;"> 0.0052500 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Other Felony </td>
+   <td style="text-align:center;"> 0.6991857 </td>
+   <td style="text-align:center;"> 0.0171720 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Status Offense </td>
+   <td style="text-align:center;"> 0.5467789 </td>
+   <td style="text-align:center;"> 0.0202744 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Class 1 Misdemeanor Against Persons </td>
+   <td style="text-align:center;"> 0.8405273 </td>
+   <td style="text-align:center;"> 0.0085844 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Other Violation </td>
+   <td style="text-align:center;"> 0.7957045 </td>
+   <td style="text-align:center;"> 0.0118828 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Felony Weapons and Felony Narcotics Distribution </td>
+   <td style="text-align:center;"> 0.3606224 </td>
+   <td style="text-align:center;"> 0.0353472 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="figure-3-predicted-probablities-by-charge-type" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="figure-3-predicted-probablities-by-charge-type">Figure 3: Predicted Probablities by Charge Type</h2>
+<div class="cell page-columns page-full">
+<div class="cell-output-display column-page-right">
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" style="width:85.0%"></p>
+</div>
+</div>
+<p><br><br></p>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

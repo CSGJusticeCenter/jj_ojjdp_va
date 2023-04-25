@@ -301,6 +301,12 @@ df_complaints_youth_intake_decision <- df_djj_intake_complaints_clean %>%
                                 1,0),
    diversion_active_at_time_of_pull = ifelse(intake_decision_label=="REQ'D TO PARTICIPATE-DIVERSION",
                                                   1,0),
+   intake_decision_regression_model_petition = case_when(
+         intake_decision_label%in%c("PETITION FILED", "PETITION/DETENTION ORDER FILED","COURT SUMMONS","PETITION/SHELTER CARE FILED") ~ "Petitioned", 
+    intake_decision_label%in%c("UNSUCCESSFUL DIVERSION/PETITION FILED", "SUCCESSFUL DIVERSION","UNSUCCESSFUL DIVERSION/NO PETITION FILED","REQ'D TO PARTICIPATE-DIVERSION","REFERRED TO ANOTHER AGY FOR SV","UNOFFICIAL COUNSELING-FAMILY C","RESOLVED") ~ "Not Petitioned",
+   TRUE ~ as.character(NA)),
+   intake_decision_regression_model_petition = factor(intake_decision_regression_model_petition,
+                              levels = c("Petitioned","Not Petitioned")),
    unique_complaint_id = paste0(juvenile_number,case_number)) %>% 
   ### clean up petitioner type variable based on feedback from team
   mutate(referral_source_clean = case_when(

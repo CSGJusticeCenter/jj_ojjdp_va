@@ -66,7 +66,8 @@ sharepoint_ojjdp_va_viz <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Output/VA/r_v
 # caseload_clean <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"caseload_clean.rds"))
 
 ### read in df_analytic_complaints_disposition_caseload file for analysis
-df_analytic_complaints_disposition_caseload <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_analytic_complaints_disposition_caseload.rds"))
+df_analytic_complaints_disposition_caseload <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_analytic_complaints_disposition_caseload.rds")) %>% 
+  mutate(date_opened_year = as.character(date_opened_year))
 ```
 
 ```{r include=FALSE,warning=FALSE,include=FALSE}
@@ -78,7 +79,7 @@ unique_youth_sample_denom <- n_distinct(df_analytic_complaints_disposition_casel
 ```
 
 
-# Tables
+# Intake Decisions
 
 
 ## Table 1: Overall Intake Decisions, 2015-2021
@@ -673,9 +674,12 @@ kable(df_complaints_youth_intake_decision_table_pet_desc_final,
 
 <br>
 
+# Diversion Length of Stay
+
+
 ## Table 8: Average Length of Stay on Diversion by Status Offense Description (most serious offense is status; mso_flag == "Y")
 
-Both measures of LOS on diversion are calculated by DJJ and provided in the `caseload` file -- see codebook page for more information. The two LOS measures are the "Number of days on the workload status "Diversion at Intake" and the "Number of days on the workload status "Diversion Beyond 90 Days"
+Both measures of LOS on diversion are calculated by DJJ and provided in the `caseload` file -- see codebook page for more information. The two LOS measures are the "Number of days on the workload status "Diversion at Intake" and the "Number of days on the workload status "Diversion Beyond 90 Days". Filtered on cases/complaints diverted only.
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -683,7 +687,8 @@ Both measures of LOS on diversion are calculated by DJJ and provided in the `cas
 
 ###  mean and median diversion lengths of stay by race/ethnicity
 df_diversion_offense_los <- df_analytic_complaints_disposition_caseload %>%
-  filter(dai=="Status Offense") %>% 
+  filter(dai=="Status Offense",
+         intake_decision_clean=="Diverted") %>% 
   filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
   group_by(description) %>% 
   dplyr::summarise(`Mean Diversion LOS (at intake)` = mean(div_at_int,
@@ -699,7 +704,8 @@ df_diversion_offense_los <- df_analytic_complaints_disposition_caseload %>%
 
 ### overall mean and median diversion lengths of stay
 df_diversion_overall_los <- df_analytic_complaints_disposition_caseload %>% 
-  filter(dai=="Status Offense") %>% 
+  filter(dai=="Status Offense",
+         intake_decision_clean=="Diverted") %>% 
   filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
   dplyr::summarise(`Mean Diversion LOS (at intake)` = mean(div_at_int,
                                            na.rm=TRUE),
@@ -739,7 +745,8 @@ Both measures of LOS on diversion are calculated by DJJ and provided in the `cas
 
 ###  mean and median diversion lengths of stay by race/ethnicity
 df_diversion_jj_history_los <- df_analytic_complaints_disposition_caseload %>%
-  filter(!is.na(jj_history_clean)==TRUE) %>% 
+  filter(!is.na(jj_history_clean)==TRUE,
+         intake_decision_clean=="Diverted") %>% 
   filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
   dplyr::group_by(jj_history_clean) %>% 
   dplyr::summarise(`Mean Diversion LOS (at intake)` = mean(div_at_int,
@@ -755,7 +762,8 @@ df_diversion_jj_history_los <- df_analytic_complaints_disposition_caseload %>%
 
 ### overall mean and median diversion lengths of stay
 df_diversion_overall_los <- df_analytic_complaints_disposition_caseload %>% 
-  filter(!is.na(jj_history_clean)==TRUE) %>% 
+  filter(!is.na(jj_history_clean)==TRUE,
+         intake_decision_clean=="Diverted") %>% 
   filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
   dplyr::summarise(`Mean Diversion LOS (at intake)` = mean(div_at_int,
                                            na.rm=TRUE),
@@ -795,7 +803,8 @@ Both measures of LOS on diversion are calculated by DJJ and provided in the `cas
 
 ###  mean and median diversion lengths of stay by race/ethnicity
 df_diversion_referral_source_los <- df_analytic_complaints_disposition_caseload %>%
-  filter(!is.na(referral_source_clean)==TRUE) %>% 
+  filter(!is.na(referral_source_clean)==TRUE,
+         intake_decision_clean=="Diverted") %>% 
   filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
   dplyr::group_by(referral_source_clean) %>% 
   dplyr::summarise(`Mean Diversion LOS (at intake)` = mean(div_at_int,
@@ -811,7 +820,8 @@ df_diversion_referral_source_los <- df_analytic_complaints_disposition_caseload 
 
 ### overall mean and median diversion lengths of stay
 df_diversion_overall_los <- df_analytic_complaints_disposition_caseload %>% 
-  filter(!is.na(referral_source_clean)==TRUE) %>% 
+  filter(!is.na(referral_source_clean)==TRUE,
+         intake_decision_clean=="Diverted") %>% 
   filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
   dplyr::summarise(`Mean Diversion LOS (at intake)` = mean(div_at_int,
                                            na.rm=TRUE),
@@ -851,7 +861,8 @@ Both measures of LOS on diversion are calculated by DJJ and provided in the `cas
 
 ###  mean and median diversion lengths of stay by race/ethnicity
 df_diversion_gender_los <- df_analytic_complaints_disposition_caseload %>% 
-  filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
+  filter((!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE),
+         intake_decision_clean=="Diverted") %>% 
   group_by(gender_clean) %>% 
   dplyr::summarise(`Mean Diversion LOS (at intake)` = mean(div_at_int,
                                            na.rm=TRUE),
@@ -866,7 +877,8 @@ df_diversion_gender_los <- df_analytic_complaints_disposition_caseload %>%
 
 ### overall mean and median diversion lengths of stay
 df_diversion_overall_los <- df_analytic_complaints_disposition_caseload %>% 
-  filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
+  filter((!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE),
+         intake_decision_clean=="Diverted") %>% 
   dplyr::summarise(`Mean Diversion LOS (at intake)` = mean(div_at_int,
                                            na.rm=TRUE),
                    `Median Diversion LOS (at intake)` = median(div_at_int,
@@ -891,6 +903,68 @@ kable(df_diversion_gender_los_final,
                                        "responsive"), 
                  row_label_position = "l") %>% 
   row_spec(3, bold = TRUE)
+```
+
+<br>
+
+# Diversion Outcomes
+
+
+## Table 11: Diversion Outcomes, 2015-2021
+
+**Note:** Options for diversion outcomes include successful, unsuccessful with petition, and unsuccessful without petition
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+### by year
+df_diversion_outcome_year_overall <- df_analytic_complaints_disposition_caseload %>% 
+  filter(intake_decision_clean=="Diverted") %>% 
+  dplyr::group_by(date_opened_year) %>% 
+   dplyr::summarise(`Unique Youth Diverted (N)` = n_distinct(juvenile_number),
+                    `Unique Youth w/ Successful Diversion (N)` = n_distinct(juvenile_number[diversion_successful_flag==1]),
+                    `Successful Diversion Rate (%)` = scales::percent(`Unique Youth w/ Successful Diversion (N)`/`Unique Youth Diverted (N)`,
+                                                                       accuracy = .1),
+                    `Unique Youth w/ Unsuccessful Diversion without petition (N)` = n_distinct(juvenile_number[diversion_not_successful_no_petition_flag==1]),
+                    `Unsuccessful Diversion without petition (%)` = scales::percent(`Unique Youth w/ Unsuccessful Diversion without petition (N)`/`Unique Youth Diverted (N)`,
+                                                                       accuracy = .1),
+                    `Unique Youth w/ Unsuccessful Diversion (with petition) (N)` = n_distinct(juvenile_number[diversion_not_successful_petition_flag==1]),
+                    `Unsuccessful Diversion with petition (%)` = scales::percent(`Unique Youth w/ Unsuccessful Diversion (with petition) (N)`/`Unique Youth Diverted (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`Year` = date_opened_year)
+
+### overall
+df_diversion_outcome_overall <- df_analytic_complaints_disposition_caseload %>% 
+  filter(intake_decision_clean=="Diverted") %>% 
+   dplyr::summarise(`Unique Youth Diverted (N)` = n_distinct(juvenile_number),
+                    `Unique Youth w/ Successful Diversion (N)` = n_distinct(juvenile_number[diversion_successful_flag==1]),
+                    `Successful Diversion Rate (%)` = scales::percent(`Unique Youth w/ Successful Diversion (N)`/`Unique Youth Diverted (N)`,
+                                                                       accuracy = .1),
+                    `Unique Youth w/ Unsuccessful Diversion without petition (N)` = n_distinct(juvenile_number[diversion_not_successful_no_petition_flag==1]),
+                    `Unsuccessful Diversion without petition (%)` = scales::percent(`Unique Youth w/ Unsuccessful Diversion without petition (N)`/`Unique Youth Diverted (N)`,
+                                                                       accuracy = .1),
+                    `Unique Youth w/ Unsuccessful Diversion (with petition) (N)` = n_distinct(juvenile_number[diversion_not_successful_petition_flag==1]),
+                    `Unsuccessful Diversion with petition (%)` = scales::percent(`Unique Youth w/ Unsuccessful Diversion (with petition) (N)`/`Unique Youth Diverted (N)`,
+                                                                       accuracy = .1)) %>% 
+  dplyr::mutate(`Year` = "Overall")
+ 
+
+df_diversion_outcome_year_overall_table <- rbind(df_diversion_outcome_year_overall,
+                                                 df_diversion_outcome_overall)
+
+
+### print table via kableextra
+kable(df_diversion_outcome_year_overall_table, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") %>% 
+  row_spec(8, bold = TRUE)
 ```
 
 <br><br>

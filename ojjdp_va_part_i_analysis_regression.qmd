@@ -25,10 +25,11 @@ For research question (A) we will build a series of logistic regression models, 
 
 <br>
 
+
 ```{r include=FALSE}
 ### call libraries
 library(easypackages)
-libraries("tidyverse","foreign","lubridate","reshape2", "ggplot2","RColorBrewer","knitr","forcats","openxlsx","statar","svDialogs","xlsx", "magrittr","stringr", "data.table","janitor","kableExtra","leaflet", "readr", "rmarkdown","rowr", "gganimate", "gifski","tidycensus","sf","htmltools","acs","tigris","mapview","rgeos", "ggrepel", "censusxy","gdata","lavaan","mclust","tmap", "raster","rgeos","gmapsdistance","viridis","cowplot","lintr","leaflet.extras","censusapi","data.table","gridGraphics","readxl","haven","ggridges","extrafont","extrafontdb","datamodelr","Lahman","DiagrammeR","fs","readxl","rsvg","V8","csgjcr","DataExplorer","tidylog")
+libraries("tidyverse","foreign","lubridate","reshape2", "ggplot2","RColorBrewer","knitr","forcats","openxlsx","statar","svDialogs","xlsx", "magrittr","stringr", "data.table","janitor","kableExtra","leaflet", "readr", "rmarkdown","rowr", "gganimate", "gifski","tidycensus","sf","htmltools","acs","tigris","mapview","rgeos", "ggrepel", "censusxy","gdata","lavaan","mclust","tmap", "raster","rgeos","gmapsdistance","viridis","cowplot","lintr","leaflet.extras","censusapi","data.table","gridGraphics","readxl","haven","ggridges","extrafont","extrafontdb","datamodelr","Lahman","DiagrammeR","fs","readxl","rsvg","V8","csgjcr","DataExplorer","tidylog","ggpattern","scales")
 ```
 
 ```{r include=FALSE,message=FALSE,warning=FALSE}
@@ -40,102 +41,392 @@ knitr::opts_chunk$set(
 
 ### set theme
 theme_set(theme_minimal())
+
+### set sharepoint path using csgjcr function
+sharepoint_ojjdp_va_analysis_analytic_data <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Data/VA/analysis/analytic"))
+
+### set sharepoint path using csgjcr function
+sharepoint_ojjdp_va_viz <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Output/VA/r_viz_output"))
 ```
 
 ```{r include=FALSE}
-### pull in virginia djj data from raw data folder
+### pull in virginia djj analytic files 
 
-### set sharepoint path using csgjcr function
-sharepoint_ojjdp_va_raw_data <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Data/VA/raw"))
+# ### read in df_analytic_complaints_disposition_caseload.rds analytic rds file 
+# df_complaints_youth_intake_decision_csu <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_complaints_youth_intake_decision_csu.rds"))
+# 
+# ### read in caseload_clean.rds analytic rds file 
+# caseload_clean <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"caseload_clean.rds"))
 
-########################################################
-### import first excel file w/ multiple tabs with purrr
-########################################################
-
-### using purrr::map, import list of tabs from excel worksheet
-ojjdp_va_raw_tab_list_file_one <- purrr::map(purrr::set_names(excel_sheets(file.path(sharepoint_ojjdp_va_raw_data,
-                                                              "CSG Front End data 01202023 - pt1 - SENSITIVE.xlsx"))),
-                      read_excel, 
-                      path = file.path(sharepoint_ojjdp_va_raw_data,"CSG Front End data 01202023 - pt1 - SENSITIVE.xlsx")) %>% 
-  purrr::map(janitor::clean_names)
-
-### clean names of all imported tabs before converting to dataframes
-names(ojjdp_va_raw_tab_list_file_one) <- janitor::make_clean_names(names(ojjdp_va_raw_tab_list_file_one))
-
-### then convert list of tabs to distinct dataframes with names from tabs
-purrr::map(names(ojjdp_va_raw_tab_list_file_one),
-           ~assign(.x, 
-                   ojjdp_va_raw_tab_list_file_one[[.x]], 
-        envir = .GlobalEnv)) 
-
-########################################################
-### now import second file from djj -- with only one tab
-########################################################
-df_djj_intake_complaints_raw <- openxlsx::read.xlsx(file.path(sharepoint_ojjdp_va_raw_data,
-                                                              "CSG Front End data 01202023 - pt2 - SENSITIVE.xlsx"),
-                                                    sheet = 1) %>% 
-  clean_names()
+### read in df_analytic_complaints_disposition_caseload file for analysis
+df_analytic_complaints_disposition_caseload <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_analytic_complaints_disposition_caseload.rds")) 
 ```
 
-```{r include=FALSE, message=FALSE, warning=FALSE}
-#############################################
-### clean and de-dup df_djj_intake_complaints_raw dataframe
-### this is our base file for the sample
-#############################################
-df_djj_intake_complaints_clean <- df_djj_intake_complaints_raw %>% 
-  distinct(juvenile_number,
-           case_number,
-           offense_number,
-           .keep_all=TRUE) %>% ### no records dropped
-  ### clean race/ethnicity and gender
-  ### use factor function to assign labels to values
-  mutate(race_clean = case_when(
-    race=="I" & hispanic!="Y" ~ 1,
-    race=="A" & hispanic!="Y" ~ 2,
-    race=="B" & hispanic!="Y" ~ 3,
-    hispanic=="Y" ~ 4,
-    race=="W" & hispanic!="Y" ~ 5,
-    race %in% c("X","O") & hispanic!="Y" ~ 6,
-    TRUE ~ 7),
-    race_clean = factor(race_clean,
-         levels = c(1,2,3,4,5,6,7),
-         labels = c("American Indian", "Asian", "Black", "Hispanic", "White", "Other","Missing"))) %>% 
-  mutate(gender_clean = case_when(
-    sex=="F" ~ 1,
-    sex=="M" ~ 2,
-    TRUE ~ as.numeric(NA)),
-    gender_clean = factor(gender_clean,
-         levels = c(1,2),
-         labels = c("Female", "Male"))) %>%   
-### clean dates and create year for potential grouping in future trend analysis
-  mutate(date_opened = ymd(as_date(excel_numeric_to_date(as.numeric(as.character(date_opened)), 
-                                                  date_system = "modern"))),
-         ysai_date = ymd(as_date(ysai_date)),
-         date_opened_year = year(date_opened)) 
+# Outcome Variable: Petition
 
-########################################
-### clean and de-dup disposition dataframe
-########################################
-### note: disposition file is unique by youth, case number, offense number, disposition, amd days from intake to disposition
-disposition_clean <- disposition %>% 
-  distinct(juvenile_number,
-           case_number,
-           offense_number,
-           description,
-           .keep_all=TRUE) ### no records dropped
-  
-  ### next step: de-dup by disposition -- keeping most serious?
-  
+<br>
 
-########################################
-### clean and de-dup caseload dataframe
-########################################
-caseload_clean <- caseload %>% 
+## Table 1. Model Output
+
+In the following analysis, the outcome variable is binary -- split into petitioned at intake (excluding court summons) and either diverted, resolved, or referred to another agency. All records with other intake complaint decisions are excluded from this analysis.
+
+**NOTE:** I am currently running the regression on youth with no prior JJ history -- also filtering on intakes labelled as either "Delinquent" or "Status" (we probably need to ask Nina why there are youth with no prior JJ history, but violations). Predictors included in preliminary model are:
+
+* race
+
+* gender
+
+* age at intake
+
+* CSU
+
+* referral/petitioner source
+
+* category of offense
+
+* year of petition
+
+* counts of felony, misdemeanor, status, and violation charges associated with intake/complaint
+
+
+Another control we could add is something on how rural/urban each county is...
+
+```{r message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+library(sjPlot)
+library(sjmisc)
+library(sjlabelled)
+library(marginaleffects)
+
+intake_complaints_no_prior_jj_to_model_diversion_petitioned <- df_analytic_complaints_disposition_caseload %>%
+  filter(intake_decision_clean%in%c("Diverted","Petitioned"),
+         jj_history_clean=="No Prior JJ History",
+         flg_category%in%c("Deliquent","Status"),
+         !is.na(intake_decision_regression_model_petition)==TRUE) %>% 
+  mutate(race = fct_relevel(race_clean, "White"),
+         gender = fct_relevel(gender_clean, "Male"),
+         referral_source_clean = fct_relevel(referral_source_clean, "Other"),
+         date_opened_year = fct_relevel(as.character(date_opened_year), "2015")) %>% 
   distinct(juvenile_number,
-           offense_number,
-           .keep_all=TRUE) ### need to look into duplicates
+           .keep_all=TRUE)
+
+va_diversion_petition_model <- glm(
+  intake_decision_regression_model_petition ~ race + gender + intake_age + csu + referral_source_clean + dai +
+    date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_violation_with_case,
+  family = "binomial", 
+  data = intake_complaints_no_prior_jj_to_model_diversion_petitioned)
+
+
+tab_model(va_diversion_petition_model,
+          p.style = "numeric_stars")
 
 ```
 
 <br>
 
+## Table 2: Predicted Probablities by Race/Ethnicity
+
+**TO DO:** Double check predicted probability interpretation with categorical variables in model
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+pred_prob_diversion_petition_race_overall <- predictions(va_diversion_petition_model, 
+                                                variables = c("race")) %>%
+  mutate(rri = predicted / predicted[race == "White"]) %>% 
+  dplyr::select(race_eth=race,
+                predicted_probability=predicted,
+                std_error=std.error,
+                rri)
+
+### print table via kableextra
+kable(pred_prob_diversion_petition_race_overall, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") 
+```
+
+<br>
+
+## Figure 1: Predicted Probablities by Race/Ethnicity
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+pred_prob_diversion_petition_race <- predictions(va_diversion_petition_model, variables = c("race")) %>%
+  filter(race%in%c("Black","White","Hispanic","Asian")) 
+
+pred_prob_diversion_petition_race %>%
+  mutate(race = fct_reorder(race, predicted, max)) %>%
+  ggplot(aes(predicted, race)) +
+  geom_point(size = 6.5, alpha = 0.75, colour = "#1F4A58") +
+  geom_linerange(aes(xmin = predicted-std.error, xmax = predicted+std.error)) +
+  # scale_color_discrete(values = "#2F7084") +
+  scale_x_continuous(
+    expand = expansion(mult = c(0.2, 0.2)),
+    labels = label_percent(1),
+    breaks = seq(0, 1, by = 0.1)
+  ) +
+  guides(color = FALSE) +
+  expand_limits(x = .25) +
+  labs(
+    title = NULL,
+    x = "Predicted Probability of Petition",
+    y = NULL,
+    color = NULL
+  ) +
+  theme(
+    plot.title = element_text(size = 16),
+    axis.text.y = element_text(size = 16),
+    axis.title.x = element_text(vjust=-0.5)
+  ) 
+
+# ### save out as png
+# ggsave(
+#     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
+#     plot = last_plot(),
+#     device = ragg::agg_png,
+#     dpi = 300,
+#     height = 5.25,
+#     width = 10,
+#     units = "in",
+#     bg = "transparent"
+#   )
+```
+
+<br>
+
+## Table 3: Predicted Probablities by Gender
+
+**TO DO:** Double check predicted probability interpretation with categorical variables in model
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+pred_prob_diversion_petition_gender_overall <- predictions(va_diversion_petition_model, 
+                                                variables = c("gender")) %>%
+  mutate(rri = predicted / predicted[gender == "Female"]) %>% 
+  dplyr::select(gender,
+                predicted_probability=predicted,
+                std_error=std.error,
+                rri)
+
+### print table via kableextra
+kable(pred_prob_diversion_petition_gender_overall, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") 
+```
+
+<br>
+
+## Figure 2: Predicted Probablities by Gender
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+pred_prob_diversion_petition_gender <- predictions(va_diversion_petition_model, variables = c("gender")) 
+
+pred_prob_diversion_petition_gender %>%
+  mutate(race = fct_reorder(gender, predicted, max)) %>%
+  ggplot(aes(predicted, gender)) +
+  geom_point(size = 6.5, alpha = 0.75, colour = "#1F4A58") +
+  geom_linerange(aes(xmin = predicted-std.error, xmax = predicted+std.error)) +
+  # scale_color_discrete(values = "#2F7084") +
+  scale_x_continuous(
+    expand = expansion(mult = c(0.2, 0.2)),
+    labels = label_percent(1),
+    breaks = seq(0, 1, by = 0.1)
+  ) +
+  guides(color = FALSE) +
+  expand_limits(x = .25) +
+  labs(
+    title = NULL,
+    x = "Predicted Probability of Petition",
+    y = NULL,
+    color = NULL
+  ) +
+  theme(
+    plot.title = element_text(size = 16),
+    axis.text.y = element_text(size = 16),
+    axis.title.x = element_text(vjust=-0.5)
+  ) 
+
+# ### save out as png
+# ggsave(
+#     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
+#     plot = last_plot(),
+#     device = ragg::agg_png,
+#     dpi = 300,
+#     height = 5.25,
+#     width = 10,
+#     units = "in",
+#     bg = "transparent"
+#   )
+```
+
+<br>
+
+## Table 4: Predicted Probablities by CSU
+
+**TO DO:** Double check predicted probability interpretation with categorical variables in model
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+pred_prob_diversion_petition_csu_overall <- predictions(va_diversion_petition_model, 
+                                                variables = c("csu")) %>%
+  dplyr::select(csu,
+                predicted_probability=predicted,
+                std_error=std.error)
+
+### print table via kableextra
+kable(pred_prob_diversion_petition_csu_overall, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") 
+```
+
+<br>
+
+## Figure 3: Predicted Probablities by CSU
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+pred_prob_diversion_petition_csu <- predictions(va_diversion_petition_model, variables = c("csu")) 
+
+pred_prob_diversion_petition_csu %>%
+  mutate(race = fct_reorder(csu, predicted, max)) %>%
+  ggplot(aes(predicted, csu)) +
+  geom_point(size = 6.5, alpha = 0.75, colour = "#1F4A58") +
+  geom_linerange(aes(xmin = predicted-std.error, xmax = predicted+std.error)) +
+  # scale_color_discrete(values = "#2F7084") +
+  scale_x_continuous(
+    expand = expansion(mult = c(0.2, 0.2)),
+    labels = label_percent(1),
+    breaks = seq(0, 1, by = 0.1)
+  ) +
+  guides(color = FALSE) +
+  expand_limits(x = .25) +
+  labs(
+    title = NULL,
+    x = "Predicted Probability of Petition",
+    y = NULL,
+    color = NULL
+  ) +
+  theme(
+    plot.title = element_text(size = 16),
+    axis.text.y = element_text(size = 16),
+    axis.title.x = element_text(vjust=-0.5)
+  ) 
+
+# ### save out as png
+# ggsave(
+#     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
+#     plot = last_plot(),
+#     device = ragg::agg_png,
+#     dpi = 300,
+#     height = 5.25,
+#     width = 10,
+#     units = "in",
+#     bg = "transparent"
+#   )
+```
+
+<br>
+
+## Table 4: Predicted Probablities by Charge Type
+
+**TO DO:** Double check predicted probability interpretation with categorical variables in model
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+pred_prob_diversion_petition_dai_overall <- predictions(va_diversion_petition_model, 
+                                                variables = c("dai")) %>%
+  dplyr::select(dai,
+                predicted_probability=predicted,
+                std_error=std.error)
+
+### print table via kableextra
+kable(pred_prob_diversion_petition_dai_overall, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") 
+```
+
+<br>
+
+## Figure 3: Predicted Probablities by Charge Type
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+pred_prob_diversion_petition_dai <- predictions(va_diversion_petition_model, variables = c("dai")) 
+
+pred_prob_diversion_petition_dai %>%
+  mutate(race = fct_reorder(dai, predicted, max)) %>%
+  ggplot(aes(predicted, dai)) +
+  geom_point(size = 6.5, alpha = 0.75, colour = "#1F4A58") +
+  geom_linerange(aes(xmin = predicted-std.error, xmax = predicted+std.error)) +
+  # scale_color_discrete(values = "#2F7084") +
+  scale_x_continuous(
+    expand = expansion(mult = c(0.2, 0.2)),
+    labels = label_percent(1),
+    breaks = seq(0, 1, by = 0.1)
+  ) +
+  guides(color = FALSE) +
+  expand_limits(x = .25) +
+  labs(
+    title = NULL,
+    x = "Predicted Probability of Petition",
+    y = NULL,
+    color = NULL
+  ) +
+  theme(
+    plot.title = element_text(size = 16),
+    axis.text.y = element_text(size = 16),
+    axis.title.x = element_text(vjust=-0.5)
+  ) 
+
+# ### save out as png
+# ggsave(
+#     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
+#     plot = last_plot(),
+#     device = ragg::agg_png,
+#     dpi = 300,
+#     height = 5.25,
+#     width = 10,
+#     units = "in",
+#     bg = "transparent"
+#   )
+```
+
+<br><br>
