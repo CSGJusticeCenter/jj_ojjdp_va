@@ -62,15 +62,17 @@ sharepoint_ojjdp_va_viz <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Output/VA/r_v
 df_analytic_complaints_disposition_caseload <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_analytic_complaints_disposition_caseload.rds")) 
 ```
 
-# Outcome Variable: Petition
+# Research Question A 
 
 <br>
 
-## Table 1. Model Output
+## Table 1. Model Output: Petition
 
 In the following analysis, the outcome variable is binary -- split into petitioned at intake (excluding court summons) and either diverted, resolved, or referred to another agency. All records with other intake complaint decisions are excluded from this analysis.
 
-**NOTE:** I am currently running the regression on youth with no prior JJ history -- also filtering on intakes labelled as either "Delinquent" or "Status" (we probably need to ask Nina why there are youth with no prior JJ history, but violations). Predictors included in preliminary model are:
+**NOTE:** I am currently running the regression on youth with no prior JJ history. *I have removed the filter to only include intakes labelled as either "Delinquent" or "Status" so some charges are "other violation", "Prob./Parole Violation", and "court order violation (we probably want to ask Nina why there are youth with no prior JJ history, but violations).* 
+
+Predictors included in model are:
 
 * race
 
@@ -102,17 +104,19 @@ library(marginaleffects)
 
 intake_complaints_no_prior_jj_to_model_diversion_petitioned <- df_analytic_complaints_disposition_caseload %>%
   filter(jj_history_clean=="No Prior JJ History",
-         flg_category%in%c("Deliquent","Status"),
+         # flg_category%in%c("Deliquent","Status"),
          !is.na(intake_decision_regression_model_petition)==TRUE) %>% 
   mutate(race = fct_relevel(race_clean, "White"),
          gender = fct_relevel(gender_clean, "Male"),
          referral_source_clean = fct_relevel(referral_source_clean, "Other"),
-         date_opened_year = fct_relevel(as.character(date_opened_year), "2015")) %>% 
+         date_opened_year = fct_relevel(as.character(date_opened_year), "2015"),
+         intake_decision_regression_model_petition_num = ifelse(intake_decision_regression_model_petition=="Petitioned",
+                                           1,0)) %>% 
   distinct(juvenile_number,
            .keep_all=TRUE)
 
 va_diversion_petition_model <- glm(
-  intake_decision_regression_model_petition ~ race + gender + intake_age + csu + referral_source_clean + dai +
+  intake_decision_regression_model_petition_num ~ race + gender + intake_age + csu + referral_source_clean + dai +
     date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_violation_with_case,
   family = "binomial", 
   data = intake_complaints_no_prior_jj_to_model_diversion_petitioned)
@@ -166,7 +170,7 @@ pred_prob_diversion_petition_race <- predictions(va_diversion_petition_model, va
 pred_prob_diversion_petition_race %>%
   mutate(race = fct_reorder(race, predicted, max)) %>%
   ggplot(aes(predicted, race)) +
-  geom_point(size = 6.5, alpha = 0.75, colour = "#1F4A58") +
+  geom_point(size = 6.5, alpha = 0.75, colour = "#2F7084") +
   geom_linerange(aes(xmin = predicted-std.error, xmax = predicted+std.error)) +
   # scale_color_discrete(values = "#2F7084") +
   scale_x_continuous(
@@ -241,9 +245,9 @@ kable(pred_prob_diversion_petition_gender_overall,
 pred_prob_diversion_petition_gender <- predictions(va_diversion_petition_model, variables = c("gender")) 
 
 pred_prob_diversion_petition_gender %>%
-  mutate(race = fct_reorder(gender, predicted, max)) %>%
+  mutate(gender = fct_reorder(gender, predicted, max)) %>%
   ggplot(aes(predicted, gender)) +
-  geom_point(size = 6.5, alpha = 0.75, colour = "#1F4A58") +
+  geom_point(size = 6.5, alpha = 0.75, colour = "#2F7084") +
   geom_linerange(aes(xmin = predicted-std.error, xmax = predicted+std.error)) +
   # scale_color_discrete(values = "#2F7084") +
   scale_x_continuous(
@@ -316,9 +320,9 @@ kable(pred_prob_diversion_petition_csu_overall,
 pred_prob_diversion_petition_csu <- predictions(va_diversion_petition_model, variables = c("csu")) 
 
 pred_prob_diversion_petition_csu %>%
-  mutate(race = fct_reorder(csu, predicted, max)) %>%
+  mutate(csu = fct_reorder(csu, predicted, max)) %>%
   ggplot(aes(predicted, csu)) +
-  geom_point(size = 6.5, alpha = 0.75, colour = "#1F4A58") +
+  geom_point(size = 3.75, alpha = 0.7, colour = "#2F7084") +
   geom_linerange(aes(xmin = predicted-std.error, xmax = predicted+std.error)) +
   # scale_color_discrete(values = "#2F7084") +
   scale_x_continuous(
@@ -336,7 +340,7 @@ pred_prob_diversion_petition_csu %>%
   ) +
   theme(
     plot.title = element_text(size = 16),
-    axis.text.y = element_text(size = 16),
+    axis.text.y = element_text(size = 8),
     axis.title.x = element_text(vjust=-0.5)
   ) 
 
@@ -391,9 +395,9 @@ kable(pred_prob_diversion_petition_dai_overall,
 pred_prob_diversion_petition_dai <- predictions(va_diversion_petition_model, variables = c("dai")) 
 
 pred_prob_diversion_petition_dai %>%
-  mutate(race = fct_reorder(dai, predicted, max)) %>%
+  mutate(dai = fct_reorder(dai, predicted, max)) %>%
   ggplot(aes(predicted, dai)) +
-  geom_point(size = 6.5, alpha = 0.75, colour = "#1F4A58") +
+  geom_point(size = 6.5, alpha = 0.7, colour = "#2F7084") +
   geom_linerange(aes(xmin = predicted-std.error, xmax = predicted+std.error)) +
   # scale_color_discrete(values = "#2F7084") +
   scale_x_continuous(
@@ -401,6 +405,7 @@ pred_prob_diversion_petition_dai %>%
     labels = label_percent(1),
     breaks = seq(0, 1, by = 0.1)
   ) +
+  scale_y_discrete(labels = wrap_format(15)) +
   guides(color = FALSE) +
   expand_limits(x = .25) +
   labs(
@@ -411,7 +416,7 @@ pred_prob_diversion_petition_dai %>%
   ) +
   theme(
     plot.title = element_text(size = 16),
-    axis.text.y = element_text(size = 16),
+    axis.text.y = element_text(size = 8),
     axis.title.x = element_text(vjust=-0.5)
   ) 
 
@@ -427,5 +432,13 @@ pred_prob_diversion_petition_dai %>%
 #     bg = "transparent"
 #   )
 ```
+
+<br><br>
+
+# Research Question B
+
+<br>
+
+TBD
 
 <br><br>
