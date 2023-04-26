@@ -101,8 +101,7 @@ library(sjlabelled)
 library(marginaleffects)
 
 intake_complaints_no_prior_jj_to_model_diversion_petitioned <- df_analytic_complaints_disposition_caseload %>%
-  filter(intake_decision_clean%in%c("Diverted","Petitioned"),
-         jj_history_clean=="No Prior JJ History",
+  filter(jj_history_clean=="No Prior JJ History",
          flg_category%in%c("Deliquent","Status"),
          !is.na(intake_decision_regression_model_petition)==TRUE) %>% 
   mutate(race = fct_relevel(race_clean, "White"),
