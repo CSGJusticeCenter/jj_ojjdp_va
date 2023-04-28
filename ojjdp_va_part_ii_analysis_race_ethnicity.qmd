@@ -1278,10 +1278,6 @@ va_diversion_petition_model <- glm(
   family = "binomial", 
   data = intake_complaints_no_prior_jj_to_model_diversion_petitioned)
 
-# stargazer(va_petition_model,
-#           align = TRUE,
-#           type = "text",
-#           header = FALSE)
 
 tab_model(va_diversion_petition_model,
           p.style = "numeric_stars")
