@@ -262,8 +262,6 @@ kable(df_complaints_youth_intake_decision_table_gender_final,
 
 ### unique complaints split out
 df_complaints_youth_intake_decision_table_age <- df_analytic_complaints_disposition_caseload %>% 
-  filter(intake_age>8,
-         intake_age<20) %>% 
   dplyr::group_by(intake_age_clean) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
@@ -285,8 +283,6 @@ df_complaints_youth_intake_decision_table_age <- df_analytic_complaints_disposit
 
 ### unique complaints statewide
 df_complaints_youth_intake_decision_table_overall <- df_analytic_complaints_disposition_caseload %>% 
-   filter(intake_age>8,
-         intake_age<20) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
@@ -400,12 +396,18 @@ kable(df_complaints_youth_intake_decision_table_offense_final,
 #| column: page-right
 #| out-width: 85%
 
+### create denominator -- unique complaint for entire sample
+unique_complaints_status_sample_denom <- n_distinct(df_analytic_complaints_disposition_caseload$unique_complaint_id[df_analytic_complaints_disposition_caseload$dai=="Status Offense"])
+
+### create denominator -- unique youth for entire sample
+unique_youth_status_sample_denom <- n_distinct(df_analytic_complaints_disposition_caseload$juvenile_number[df_analytic_complaints_disposition_caseload$dai=="Status Offense"])
+
 ### unique complaints split out
 df_complaints_youth_intake_decision_table_offense_status <- df_analytic_complaints_disposition_caseload %>% 
   filter(dai=="Status Offense") %>% 
   dplyr::group_by(drg) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_status_sample_denom,
                                                                        accuracy = .1),
                    `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
                    `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
@@ -426,7 +428,7 @@ df_complaints_youth_intake_decision_table_offense_status <- df_analytic_complain
 df_complaints_youth_intake_decision_table_overall <- df_analytic_complaints_disposition_caseload %>% 
   filter(dai=="Status Offense") %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_status_sample_denom,
                                                                        accuracy = .1),
                    `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
                    `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
@@ -475,7 +477,7 @@ df_complaints_youth_intake_decision_table_offense_status_desc <- df_analytic_com
   filter(dai=="Status Offense") %>% 
   dplyr::group_by(description) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_status_sample_denom,
                                                                        accuracy = .1),
                    `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
                    `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,
@@ -496,7 +498,7 @@ df_complaints_youth_intake_decision_table_offense_status_desc <- df_analytic_com
 df_complaints_youth_intake_decision_table_overall <- df_analytic_complaints_disposition_caseload %>% 
   filter(dai=="Status Offense") %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
-                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_status_sample_denom,
                                                                        accuracy = .1),
                    `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
                    `Complaints Petitioned (row %)` = scales::percent(`Complaints Petitioned (N)`/`All Complaints (N)`,

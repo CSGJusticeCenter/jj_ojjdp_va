@@ -597,7 +597,24 @@ kable(df_rri_diversion_outcome_jj_final,
 
 In the following analysis, the outcome variable is binary -- split into petition (meaning complaint was petitioned at intake) and non-petition (diversion, resolved/dismissed, and other)
 
-**NOTE:** I am currently running the regression on youth with no prior JJ history -- also filtering on intakes labelled as either "Delinquent" or "Status" (we probably need to ask Nina why there are youth with no prior JJ history, but violations). Predictors included in preliminary model are race, gender, age at intake, CSU, referral/petitioner source, category of offense, and year of petition. 
+**NOTE:** Predictors included in model are:
+
+* race
+
+* gender
+
+* age at intake
+
+* CSU
+
+* referral/petitioner source
+
+* category of offense
+
+* year of petition
+
+* counts of felony, misdemeanor, status, and violation charges associated with intake/complaint
+
 
 Another control we could add is something on how rural/urban each county is...
 
@@ -611,22 +628,21 @@ library(sjlabelled)
 library(marginaleffects)
 
 intake_complaints_no_prior_jj_to_model <- df_analytic_complaints_disposition_caseload %>%
-  filter(jj_history_clean=="No Prior JJ History",
-         flg_category%in%c("Deliquent","Status")) %>% 
   mutate(race = fct_relevel(race_clean, "White"),
          gender = fct_relevel(gender_clean, "Male"),
+         jj_history_clean = fct_relevel(jj_history_clean, "No Prior JJ History"),
          referral_source_clean = fct_relevel(referral_source_clean, "Other"),
          date_opened_year = fct_relevel(as.character(date_opened_year), "2015"),
          intake_diverted_flag_num = ifelse(intake_diverted_flag=="Yes",
                                            1,0),
          intake_petitioned_flag_num = ifelse(intake_decision_clean=="Petitioned",
                                            1,0)) %>% 
-  distinct(juvenile_number,
+  distinct(unique_complaint_id,
            .keep_all=TRUE)
 
 va_petition_model <- glm(
   intake_petitioned_flag_num ~ race + gender + intake_age + csu + referral_source_clean + dai +
-    date_opened_year,
+    date_opened_year + jj_history_clean + count_misd_with_case + count_felony_with_case + count_status_with_case + count_violation_with_case,
   family = "binomial", 
   data = intake_complaints_no_prior_jj_to_model)
 
@@ -902,7 +918,24 @@ pred_prob_petition_race_by_dai %>%
 
 In the following analysis, the outcome variable is binary -- split into diverted (meaning complaint was diverted at intake) and resolved/dismissed (either "complaint unfounded" or "resolved"). All records with other intake complaint decisions are excluded.
 
-**NOTE:** I am currently running the regression on youth with no prior JJ history -- also filtering on intakes labelled as either "Delinquent" or "Status" (we probably need to ask Nina why there are youth with no prior JJ history, but violations). Predictors included in preliminary model are race, gender, age at intake, CSU, referral/petitioner source, category of offense, and year of petition. 
+**NOTE:** Predictors included in model are:
+
+* race
+
+* gender
+
+* age at intake
+
+* CSU
+
+* referral/petitioner source
+
+* category of offense
+
+* year of petition
+
+* counts of felony, misdemeanor, status, and violation charges associated with intake/complaint
+
 
 Another control we could add is something on how rural/urban each county is...
 
@@ -911,21 +944,20 @@ Another control we could add is something on how rural/urban each county is...
 #| out-width: 85%
 
 intake_complaints_no_prior_jj_to_model_diversion_resolved <- df_analytic_complaints_disposition_caseload %>%
-  filter(intake_decision_clean%in%c("Diverted","Resolved/Dismissed"),
-         jj_history_clean=="No Prior JJ History",
-         flg_category%in%c("Deliquent","Status")) %>% 
+  filter(intake_decision_clean%in%c("Diverted","Resolved/Dismissed")) %>% 
   mutate(race = fct_relevel(race_clean, "White"),
          gender = fct_relevel(gender_clean, "Male"),
+         jj_history_clean = fct_relevel(jj_history_clean, "No Prior JJ History"),
          referral_source_clean = fct_relevel(referral_source_clean, "Other"),
          date_opened_year = fct_relevel(as.character(date_opened_year), "2015"),
          intake_diverted_flag_num = ifelse(intake_diverted_flag=="Yes",
                                            1,0)) %>% 
-  distinct(juvenile_number,
+  distinct(unique_complaint_id,
            .keep_all=TRUE)
 
 va_diversion_resolved_model <- glm(
   intake_diverted_flag_num ~ race + gender + intake_age + csu + referral_source_clean + dai +
-    date_opened_year,
+    date_opened_year + jj_history_clean + count_misd_with_case + count_felony_with_case + count_status_with_case + count_violation_with_case,
   family = "binomial", 
   data = intake_complaints_no_prior_jj_to_model_diversion_resolved)
 
@@ -1202,7 +1234,25 @@ pred_prob_diversion_race_by_dai %>%
 
 In the following analysis, the outcome variable is binary -- split into petitioned at intake (excluding court summons) and formally diverted (meaning complaint was diverted at intake). All records with other intake complaint decisions are excluded.
 
-**NOTE:** I am currently running the regression on youth with no prior JJ history -- also filtering on intakes labelled as either "Delinquent" or "Status" (we probably need to ask Nina why there are youth with no prior JJ history, but violations). Predictors included in preliminary model are race, gender, age at intake, CSU, referral/petitioner source, category of offense, and year of petition. 
+
+**NOTE:** Predictors included in model are:
+
+* race
+
+* gender
+
+* age at intake
+
+* CSU
+
+* referral/petitioner source
+
+* category of offense
+
+* year of petition
+
+* counts of felony, misdemeanor, status, and violation charges associated with intake/complaint
+
 
 Another control we could add is something on how rural/urban each county is...
 
@@ -1211,21 +1261,20 @@ Another control we could add is something on how rural/urban each county is...
 #| out-width: 85%
 
 intake_complaints_no_prior_jj_to_model_diversion_petitioned <- df_analytic_complaints_disposition_caseload %>%
-  filter(intake_decision_clean%in%c("Diverted","Petitioned"),
-         jj_history_clean=="No Prior JJ History",
-         flg_category%in%c("Deliquent","Status")) %>% 
+  filter(intake_decision_clean%in%c("Diverted","Petitioned")) %>% 
   mutate(race = fct_relevel(race_clean, "White"),
          gender = fct_relevel(gender_clean, "Male"),
+         jj_history_clean = fct_relevel(jj_history_clean, "No Prior JJ History"),
          referral_source_clean = fct_relevel(referral_source_clean, "Other"),
          date_opened_year = fct_relevel(as.character(date_opened_year), "2015"),
          intake_diverted_flag_num = ifelse(intake_diverted_flag=="Yes",
                                            1,0)) %>% 
-  distinct(juvenile_number,
+  distinct(unique_complaint_id,
            .keep_all=TRUE)
 
 va_diversion_petition_model <- glm(
   intake_diverted_flag_num ~ race + gender + intake_age + csu + referral_source_clean + dai +
-    date_opened_year,
+    date_opened_year + jj_history_clean + count_misd_with_case + count_felony_with_case + count_status_with_case + count_violation_with_case,
   family = "binomial", 
   data = intake_complaints_no_prior_jj_to_model_diversion_petitioned)
 
