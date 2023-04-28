@@ -1286,7 +1286,7 @@ tab_model(va_diversion_petition_model,
 
 <br>
 
-####  Table 10: Predicted Probablities and Adjusted RRIs, Diverted (compared to Petitioned)
+#### Table 10: Predicted Probablities and Adjusted RRIs, Diverted (compared to Petitioned)
 
 **TO DO:** Double check predicted probability interpretation with categorical variables in model
 
