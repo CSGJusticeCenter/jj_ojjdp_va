@@ -613,6 +613,8 @@ In the following analysis, the outcome variable is binary -- split into petition
 
 * year of petition
 
+* JJ history
+
 * counts of felony, misdemeanor, status, and violation charges associated with intake/complaint
 
 
@@ -934,6 +936,8 @@ In the following analysis, the outcome variable is binary -- split into diverted
 
 * year of petition
 
+* JJ history
+
 * counts of felony, misdemeanor, status, and violation charges associated with intake/complaint
 
 
@@ -1250,6 +1254,8 @@ In the following analysis, the outcome variable is binary -- split into petition
 * category of offense
 
 * year of petition
+
+* JJ history
 
 * counts of felony, misdemeanor, status, and violation charges associated with intake/complaint
 

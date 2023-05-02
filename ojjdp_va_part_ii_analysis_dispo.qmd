@@ -322,7 +322,7 @@ kable(df_complaints_disposition_outcome_table_risk_score_final,
                                        "condensed", 
                                        "responsive"), 
                  row_label_position = "l") %>% 
-  row_spec(4, bold = TRUE)
+  row_spec(5, bold = TRUE)
 ```
 
 <br>
@@ -429,7 +429,7 @@ kable(df_complaints_disposition_outcome_table_gender_final,
 
 <br>
 
-## Table 5: Disposition Outcomes by Age at Disposition
+## Table 5: Disposition Outcomes by Age at Intake
 
 Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. Row percentages reflect the percentage of all disposed complaints (not percentage of petitioned complaints).
 
@@ -441,9 +441,9 @@ Note: The preliminary options for grouping dispositions that I am using are: Det
 ### unique complaints split out
 df_complaints_disposition_outcome_table_age <- df_analytic_complaints_disposition_caseload %>% 
     filter(complaint_eventually_petitioned_flag==1) %>% 
-   filter(court_disp_age>8,
-         court_disp_age<20) %>% 
-  dplyr::group_by(dispo_age_clean) %>% 
+   filter(intake_age>8,
+         intake_age<20) %>% 
+  dplyr::group_by(intake_age_clean) %>% 
       dplyr::summarise(`All Petitioned Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Disposed Complaints (N)` = n_distinct(unique_complaint_id[dispo_data_flag==1]),
                    `Petitioned Complaints w/ Disposition (row %)` = scales::percent(`All Disposed Complaints (N)`/`All Petitioned Complaints (N)`,
@@ -476,13 +476,13 @@ df_complaints_disposition_outcome_table_age <- df_analytic_complaints_dispositio
                    `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
-  dplyr::rename(`Age at Intake` = dispo_age_clean) 
+  dplyr::rename(`Age at Intake` = intake_age_clean) 
 
 ### unique complaints statewide
 df_complaints_disposition_outcome_table_overall <- df_analytic_complaints_disposition_caseload %>% 
     filter(complaint_eventually_petitioned_flag==1) %>% 
-   filter(court_disp_age>8,
-         court_disp_age<20) %>% 
+   filter(intake_age>8,
+         intake_age<20) %>% 
        dplyr::summarise(`All Petitioned Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Disposed Complaints (N)` = n_distinct(unique_complaint_id[dispo_data_flag==1]),
                    `Petitioned Complaints w/ Disposition (row %)` = scales::percent(`All Disposed Complaints (N)`/`All Petitioned Complaints (N)`,

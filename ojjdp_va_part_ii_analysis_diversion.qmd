@@ -262,6 +262,8 @@ kable(df_complaints_youth_intake_decision_table_gender_final,
 
 ### unique complaints split out
 df_complaints_youth_intake_decision_table_age <- df_analytic_complaints_disposition_caseload %>% 
+   filter(intake_age>8,
+         intake_age<20) %>% 
   dplyr::group_by(intake_age_clean) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
@@ -283,6 +285,8 @@ df_complaints_youth_intake_decision_table_age <- df_analytic_complaints_disposit
 
 ### unique complaints statewide
 df_complaints_youth_intake_decision_table_overall <- df_analytic_complaints_disposition_caseload %>% 
+   filter(intake_age>8,
+         intake_age<20) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
