@@ -407,6 +407,8 @@ kable(df_complaints_disposition_outcome_table_csu_final,
 
 ## Table 5: Average Length of Stay on Diversion by CSU
 
+**NOTE:** This table includes all charge types and is simply filtered on youth diverted at intake.
+
 Both measures of LOS on diversion are calculated by DJJ and provided in the `caseload` file -- see codebook page for more information. The two LOS measures are the "Number of days on the workload status "Diversion at Intake" and the "Number of days on the workload status "Diversion Beyond 90 Days"
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
@@ -415,6 +417,7 @@ Both measures of LOS on diversion are calculated by DJJ and provided in the `cas
 
 ###  mean and median diversion lengths of stay by race/ethnicity
 df_diversion_csu_los <- df_analytic_complaints_disposition_caseload %>% 
+   filter(intake_decision_clean=="Diverted") %>% 
   filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
   group_by(csu) %>% 
   dplyr::summarise(`Mean Diversion LOS (at intake)` = mean(div_at_int,
@@ -430,6 +433,7 @@ df_diversion_csu_los <- df_analytic_complaints_disposition_caseload %>%
 
 ### overall mean and median diversion lengths of stay
 df_diversion_overall_los <- df_analytic_complaints_disposition_caseload %>% 
+   filter(intake_decision_clean=="Diverted") %>% 
   filter(!is.na(div_at_int)==TRUE | !is.na(div_bey_90)==TRUE) %>% 
   dplyr::summarise(`Mean Diversion LOS (at intake)` = mean(div_at_int,
                                            na.rm=TRUE),
