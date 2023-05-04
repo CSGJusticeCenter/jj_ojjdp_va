@@ -29,7 +29,7 @@ For research question (A) we will build a series of logistic regression models, 
 ```{r include=FALSE}
 ### call libraries
 library(easypackages)
-libraries("tidyverse","foreign","lubridate","reshape2", "ggplot2","RColorBrewer","knitr","forcats","openxlsx","statar","svDialogs","xlsx", "magrittr","stringr", "data.table","janitor","kableExtra","leaflet", "readr", "rmarkdown","rowr", "gganimate", "gifski","tidycensus","sf","htmltools","acs","tigris","mapview","rgeos", "ggrepel", "censusxy","gdata","lavaan","mclust","tmap", "raster","rgeos","gmapsdistance","viridis","cowplot","lintr","leaflet.extras","censusapi","data.table","gridGraphics","readxl","haven","ggridges","extrafont","extrafontdb","datamodelr","Lahman","DiagrammeR","fs","readxl","rsvg","V8","csgjcr","DataExplorer","tidylog","ggpattern","scales")
+libraries("tidyverse","foreign","lubridate","reshape2", "ggplot2","RColorBrewer","knitr","forcats","openxlsx","statar","svDialogs","xlsx", "magrittr","stringr", "data.table","janitor","kableExtra","leaflet", "readr", "rmarkdown","rowr", "gganimate", "gifski","tidycensus","sf","htmltools","acs","tigris","mapview","rgeos", "ggrepel", "censusxy","gdata","lavaan","mclust","tmap", "raster","rgeos","gmapsdistance","viridis","cowplot","lintr","leaflet.extras","censusapi","data.table","gridGraphics","readxl","haven","ggridges","extrafont","extrafontdb","datamodelr","Lahman","DiagrammeR","fs","readxl","rsvg","V8","csgjcr","DataExplorer","tidylog","ggpattern","scales","tidylog")
 ```
 
 ```{r include=FALSE,message=FALSE,warning=FALSE}
@@ -63,6 +63,15 @@ df_analytic_complaints_disposition_caseload <- read_rds(file.path(sharepoint_ojj
   ### when two unique complaints for same individual have same date and both are labelled as first time JJ involvement, keep
   ### most serious offense between them
   filter(jj_history_clean=="No Prior JJ History") %>% 
+  ### also filter out complaints with prob/parole violations
+  ### and court order violations
+  ### and civil commitment offenses
+  ### and court summons intake decisions
+  ### double check w/ Becky
+  filter(dai!="Prob./Parole Violation",
+         dai!="Court Order Violation",
+         drg!="Civil Commitment",
+         intake_decision_label!="COURT SUMMONS") %>% 
   ### create hierarchy of charge types for de-duping youth/intake dates
     mutate(dai_severity_order = case_when(
       dai%in%c("Felony against Persons") ~ 1,
@@ -73,6 +82,17 @@ df_analytic_complaints_disposition_caseload <- read_rds(file.path(sharepoint_ojj
       dai%in%c("Status Offense") ~ 6,
       dai%in%c("Prob./Parole Violation","SENTENCED IN CIRCUIT COURT","Other Violation","Court Order Violation","TRANSFER LEGAL CUSTODY (16.1-278.8.12)") ~ 7,
    TRUE ~ as.numeric(NA))) %>% 
+    ### create hierarchy of charge types for de-duping youth/intake dates
+    mutate(dai_clean = case_when(
+      dai%in%c("Felony against Persons") ~ "Felony against Persons",
+      dai%in%c("Felony Weapons and Felony Narcotics Distribution") ~ "Felony Weapons and Felony Narcotics Distribution",
+      dai%in%c("Other Felony") ~ "Other Felony",
+      dai%in%c("Class 1 Misdemeanor Against Persons") ~ "Class 1 Misdemeanor Against Persons",
+      dai%in%c("Other Class 1 Misdemeanor") ~ "Other Class 1 Misdemeanor",
+      dai%in%c("Status Offense") & drg!="CHINS" ~ "Status Offense",
+      dai%in%c("Status Offense") & drg=="CHINS" ~ "CHINS",
+      dai%in%c("Other Violation") ~ "Other Violation",
+   TRUE ~ as.character(NA))) %>% 
   mutate(same_dates = ifelse(date_opened==next_complaint_intake_date,
                                                              1,0)) %>% 
   arrange(juvenile_number,
@@ -91,7 +111,7 @@ df_analytic_complaints_disposition_caseload <- read_rds(file.path(sharepoint_ojj
 
 In the following analysis, the outcome variable is binary -- split into petitioned at intake (excluding court summons) and either diverted, resolved, or referred to another agency. All records with other intake complaint decisions are excluded from this analysis.
 
-**NOTE:** I am currently running the regression on youth with no prior JJ history. *I have removed the filter to only include intakes labelled as either "Delinquent" or "Status" so some charges are "other violation", "Prob./Parole Violation", and "court order violation (we probably want to ask Nina why there are youth with no prior JJ history, but violations).* 
+**NOTE:** I am currently running the regression on youth with no prior JJ history. 
 
 Predictors included in model are:
 
@@ -137,7 +157,7 @@ intake_complaints_no_prior_jj_to_model_diversion_petitioned <- df_analytic_compl
            .keep_all=TRUE)
 
 va_diversion_petition_model <- glm(
-  intake_decision_regression_model_petition_num ~ race + gender + intake_age + csu + referral_source_clean + dai +
+  intake_decision_regression_model_petition_num ~ race + gender + intake_age + csu + referral_source_clean + dai_clean +
     date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_violation_with_case,
   family = "binomial", 
   data = intake_complaints_no_prior_jj_to_model_diversion_petitioned)
@@ -389,8 +409,8 @@ pred_prob_diversion_petition_csu %>%
 #| out-width: 85%
 
 pred_prob_diversion_petition_dai_overall <- predictions(va_diversion_petition_model, 
-                                                variables = c("dai")) %>%
-  dplyr::select(dai,
+                                                variables = c("dai_clean")) %>%
+  dplyr::select(dai_clean,
                 predicted_probability=predicted,
                 std_error=std.error)
 
@@ -413,11 +433,11 @@ kable(pred_prob_diversion_petition_dai_overall,
 #| column: page-right
 #| out-width: 85%
 
-pred_prob_diversion_petition_dai <- predictions(va_diversion_petition_model, variables = c("dai")) 
+pred_prob_diversion_petition_dai <- predictions(va_diversion_petition_model, variables = c("dai_clean")) 
 
 pred_prob_diversion_petition_dai %>%
-  mutate(dai = fct_reorder(dai, predicted, max)) %>%
-  ggplot(aes(predicted, dai)) +
+  mutate(dai_clean = fct_reorder(dai_clean, predicted, max)) %>%
+  ggplot(aes(predicted, dai_clean)) +
   geom_point(size = 6.5, alpha = 0.7, colour = "#2F7084") +
   geom_linerange(aes(xmin = predicted-std.error, xmax = predicted+std.error)) +
   # scale_color_discrete(values = "#2F7084") +
@@ -456,20 +476,20 @@ pred_prob_diversion_petition_dai %>%
 
 <br>
 
-## Figure 4: Predicted Probabilities of Petition by CSU for Status Offenses
+## Figure 4: Predicted Probabilities of Petition by CSU for Status Offenses 
 
-**NOTE:** We may want to exclude CSU's with small N sizes -- I haven't yet done that. 
+**NOTE:** This analysis excludes CHINS complaints. We may want to exclude CSU's with small N sizes -- I haven't yet done that. 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
-pred_prob_petition_status_by_csu <- predictions(va_diversion_petition_model, variables = c("dai","csu")) %>%
-  filter(dai%in%c("Status Offense"))
+pred_prob_petition_status_by_csu <- predictions(va_diversion_petition_model, variables = c("dai_clean","csu")) %>%
+  filter(dai_clean%in%c("Status Offense"))
 
 pred_prob_petition_status_by_csu %>%
   mutate(csu = fct_reorder(csu, predicted, max)) %>%
-  ggplot(aes(predicted, csu, color = dai)) +
+  ggplot(aes(predicted, csu, color = dai_clean)) +
   geom_point(size = 3.5, alpha = 0.85) +
   scale_colour_manual(values = rev(c("#2F7084"))) +
   scale_x_continuous(
@@ -511,7 +531,7 @@ pred_prob_petition_status_by_csu %>%
 
 In the following analysis, the outcome variable is binary -- whether a youth received another complaint within a year of their first intake (where the intake decision was diversion). All records with other intake complaint decisions are excluded from this analysis.
 
-**NOTE:** I am currently running the regression on youth with no prior JJ history *and* who were initially diverted. *I have removed the filter to only include intakes labelled as either "Delinquent" or "Status" so some charges are "other violation", "Prob./Parole Violation", and "court order violation (we probably want to ask Nina why there are youth with no prior JJ history, but violations).* 
+**NOTE:** I am currently running the regression on youth with no prior JJ history *and* who were initially diverted. 
 
 
 Predictors included in model are:
@@ -551,7 +571,7 @@ intake_initial_diversion_re_complaint_within_a_year_model <- df_analytic_complai
            .keep_all=TRUE)
 
 va_diversion_re_complaint_model <- glm(
-  regression_outcome_new_complaint_one_year_first_time_jj ~ race + gender + intake_age + csu + referral_source_clean + dai +
+  regression_outcome_new_complaint_one_year_first_time_jj ~ race + gender + intake_age + csu + referral_source_clean + dai_clean +
     date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_violation_with_case,
   family = "binomial", 
   data = intake_initial_diversion_re_complaint_within_a_year_model)
@@ -803,8 +823,8 @@ pred_prob_diversion_petition_csu %>%
 #| out-width: 85%
 
 pred_prob_diversion_petition_dai_overall <- predictions(va_diversion_re_complaint_model, 
-                                                variables = c("dai")) %>%
-  dplyr::select(dai,
+                                                variables = c("dai_clean")) %>%
+  dplyr::select(dai_clean,
                 predicted_probability=predicted,
                 std_error=std.error)
 
@@ -827,11 +847,11 @@ kable(pred_prob_diversion_petition_dai_overall,
 #| column: page-right
 #| out-width: 85%
 
-pred_prob_diversion_petition_dai <- predictions(va_diversion_re_complaint_model, variables = c("dai")) 
+pred_prob_diversion_petition_dai <- predictions(va_diversion_re_complaint_model, variables = c("dai_clean")) 
 
 pred_prob_diversion_petition_dai %>%
-  mutate(dai = fct_reorder(dai, predicted, max)) %>%
-  ggplot(aes(predicted, dai)) +
+  mutate(dai_clean = fct_reorder(dai_clean, predicted, max)) %>%
+  ggplot(aes(predicted, dai_clean)) +
   geom_point(size = 6.5, alpha = 0.7, colour = "#2F7084") +
   geom_linerange(aes(xmin = predicted-std.error, xmax = predicted+std.error)) +
   # scale_color_discrete(values = "#2F7084") +
@@ -872,14 +892,14 @@ pred_prob_diversion_petition_dai %>%
 
 ## Figure 9: Predicted Probabilities by CSU for Status Offenses
 
-**NOTE:** We may want to exclude CSU's with small N sizes -- I haven't yet done that. 
+**NOTE:** This analysis excludes CHINS complaints. We may want to exclude CSU's with small N sizes -- I haven't yet done that. 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
-pred_prob_petition_status_by_csu <- predictions(va_diversion_re_complaint_model, variables = c("dai","csu")) %>%
-  filter(dai%in%c("Status Offense"))
+pred_prob_petition_status_by_csu <- predictions(va_diversion_re_complaint_model, variables = c("dai_clean","csu")) %>%
+  filter(dai_clean%in%c("Status Offense"))
 
 pred_prob_petition_status_by_csu %>%
   mutate(csu = fct_reorder(csu, predicted, max)) %>%
@@ -926,7 +946,7 @@ pred_prob_petition_status_by_csu %>%
 
 In the following analysis, the outcome variable is binary -- whether a youth received a petitioned complaint within a year of their first intake (where the intake decision was diversion). All records with other intake complaint decisions are excluded from this analysis.
 
-**NOTE:** I am currently running the regression on youth with no prior JJ history *and* who were initially diverted. *I have removed the filter to only include intakes labelled as either "Delinquent" or "Status" so some charges are "other violation", "Prob./Parole Violation", and "court order violation (we probably want to ask Nina why there are youth with no prior JJ history, but violations).* 
+**NOTE:** I am currently running the regression on youth with no prior JJ history *and* who were initially diverted.
 
 
 Predictors included in model are:
@@ -966,7 +986,7 @@ intake_initial_diversion_new_petition_within_a_year_model <- df_analytic_complai
            .keep_all=TRUE)
 
 va_diversion_new_petition_model <- glm(
-  regression_outcome_new_petition_one_year_first_time_jj ~ race + gender + intake_age + csu + referral_source_clean + dai +
+  regression_outcome_new_petition_one_year_first_time_jj ~ race + gender + intake_age + csu + referral_source_clean + dai_clean +
     date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_violation_with_case,
   family = "binomial", 
   data = intake_initial_diversion_new_petition_within_a_year_model)
@@ -1218,8 +1238,8 @@ pred_prob_diversion_petition_csu %>%
 #| out-width: 85%
 
 pred_prob_diversion_petition_dai_overall <- predictions(va_diversion_new_petition_model, 
-                                                variables = c("dai")) %>%
-  dplyr::select(dai,
+                                                variables = c("dai_clean")) %>%
+  dplyr::select(dai_clean,
                 predicted_probability=predicted,
                 std_error=std.error)
 
@@ -1242,11 +1262,11 @@ kable(pred_prob_diversion_petition_dai_overall,
 #| column: page-right
 #| out-width: 85%
 
-pred_prob_diversion_petition_dai <- predictions(va_diversion_new_petition_model, variables = c("dai")) 
+pred_prob_diversion_petition_dai <- predictions(va_diversion_new_petition_model, variables = c("dai_clean")) 
 
 pred_prob_diversion_petition_dai %>%
-  mutate(dai = fct_reorder(dai, predicted, max)) %>%
-  ggplot(aes(predicted, dai)) +
+  mutate(dai_clean = fct_reorder(dai_clean, predicted, max)) %>%
+  ggplot(aes(predicted, dai_clean)) +
   geom_point(size = 6.5, alpha = 0.7, colour = "#2F7084") +
   geom_linerange(aes(xmin = predicted-std.error, xmax = predicted+std.error)) +
   # scale_color_discrete(values = "#2F7084") +
@@ -1287,14 +1307,14 @@ pred_prob_diversion_petition_dai %>%
 
 ## Figure 14: Predicted Probabilities by CSU for Status Offenses
 
-**NOTE:** We may want to exclude CSU's with small N sizes -- I haven't yet done that. 
+**NOTE:** This analysis excludes CHINS complaints. We may want to exclude CSU's with small N sizes -- I haven't yet done that. 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
-pred_prob_petition_status_by_csu <- predictions(va_diversion_new_petition_model, variables = c("dai","csu")) %>%
-  filter(dai%in%c("Status Offense"))
+pred_prob_petition_status_by_csu <- predictions(va_diversion_new_petition_model, variables = c("dai_clean","csu")) %>%
+  filter(dai_clean%in%c("Status Offense"))
 
 pred_prob_petition_status_by_csu %>%
   mutate(csu = fct_reorder(csu, predicted, max)) %>%

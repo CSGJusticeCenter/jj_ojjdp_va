@@ -98,7 +98,8 @@ Note: The preliminary options for grouping dispositions that I am using are: Det
 ### overall complaints by diversion status
 df_complaints_disposition_outcome_table <- df_analytic_complaints_disposition_caseload %>% 
   dplyr::group_by(dispo_description_clean_character) %>% 
-  dplyr::summarise(`Unique Petitioned Complaints (N)` = n_distinct(unique_complaint_id[complaint_eventually_petitioned_flag==1]),
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `Unique Petitioned Complaints (N)` = n_distinct(unique_complaint_id[complaint_eventually_petitioned_flag==1]),
                    `Unique Disposed Complaints (N)` = n_distinct(unique_complaint_id[dispo_data_flag==1]),
                    `Disposed Complaints, Percent of all Dispositions (column %)` = scales::percent(`Unique Disposed Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1)) %>% 
@@ -131,9 +132,11 @@ Note: The preliminary options for grouping dispositions that I am using are: Det
 
 ### unique complaints split out
 df_complaints_disposition_outcome_table_year <- df_analytic_complaints_disposition_caseload %>% 
-    filter(complaint_eventually_petitioned_flag==1) %>% 
   dplyr::group_by(date_opened_year) %>% 
-  dplyr::summarise(`All Petitioned Complaints (N)` = n_distinct(unique_complaint_id),
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Petitioned Complaints (N)` = n_distinct(unique_complaint_id[complaint_eventually_petitioned_flag==1]),
+                   `Complaints Petitioned (row %)` = scales::percent(`All Petitioned Complaints (N)`/`All Complaints (N)`,
+                                                                     accuracy = .1),
                    `All Disposed Complaints (N)` = n_distinct(unique_complaint_id[dispo_data_flag==1]),
                    `Petitioned Complaints w/ Disposition (row %)` = scales::percent(`All Disposed Complaints (N)`/`All Petitioned Complaints (N)`,
                                                                        accuracy = .1),
@@ -169,8 +172,10 @@ df_complaints_disposition_outcome_table_year <- df_analytic_complaints_dispositi
 
 ### unique complaints statewide
 df_complaints_disposition_outcome_table_overall <- df_analytic_complaints_disposition_caseload %>% 
-    filter(complaint_eventually_petitioned_flag==1) %>% 
-    dplyr::summarise(`All Petitioned Complaints (N)` = n_distinct(unique_complaint_id),
+   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Petitioned Complaints (N)` = n_distinct(unique_complaint_id[complaint_eventually_petitioned_flag==1]),
+                   `Complaints Petitioned (row %)` = scales::percent(`All Petitioned Complaints (N)`/`All Complaints (N)`,
+                                                                     accuracy = .1),
                    `All Disposed Complaints (N)` = n_distinct(unique_complaint_id[dispo_data_flag==1]),
                    `Petitioned Complaints w/ Disposition (row %)` = scales::percent(`All Disposed Complaints (N)`/`All Petitioned Complaints (N)`,
                                                                        accuracy = .1),
@@ -236,9 +241,11 @@ Note: The preliminary options for grouping dispositions that I am using are: Det
 
 ### unique complaints split out
 df_complaints_disposition_outcome_table_risk_score <- df_analytic_complaints_disposition_caseload %>% 
-    filter(complaint_eventually_petitioned_flag==1) %>% 
   dplyr::group_by(risk_level_clean) %>% 
-        dplyr::summarise(`All Petitioned Complaints (N)` = n_distinct(unique_complaint_id),
+        dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Petitioned Complaints (N)` = n_distinct(unique_complaint_id[complaint_eventually_petitioned_flag==1]),
+                   `Complaints Petitioned (row %)` = scales::percent(`All Petitioned Complaints (N)`/`All Complaints (N)`,
+                                                                     accuracy = .1),
                    `All Disposed Complaints (N)` = n_distinct(unique_complaint_id[dispo_data_flag==1]),
                    `Petitioned Complaints w/ Disposition (row %)` = scales::percent(`All Disposed Complaints (N)`/`All Petitioned Complaints (N)`,
                                                                        accuracy = .1),
@@ -274,8 +281,10 @@ df_complaints_disposition_outcome_table_risk_score <- df_analytic_complaints_dis
 
 ### unique complaints statewide
 df_complaints_disposition_outcome_table_overall <- df_analytic_complaints_disposition_caseload %>% 
-      filter(complaint_eventually_petitioned_flag==1) %>% 
-      dplyr::summarise(`All Petitioned Complaints (N)` = n_distinct(unique_complaint_id),
+       dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Petitioned Complaints (N)` = n_distinct(unique_complaint_id[complaint_eventually_petitioned_flag==1]),
+                   `Complaints Petitioned (row %)` = scales::percent(`All Petitioned Complaints (N)`/`All Complaints (N)`,
+                                                                     accuracy = .1),
                    `All Disposed Complaints (N)` = n_distinct(unique_complaint_id[dispo_data_flag==1]),
                    `Petitioned Complaints w/ Disposition (row %)` = scales::percent(`All Disposed Complaints (N)`/`All Petitioned Complaints (N)`,
                                                                        accuracy = .1),
@@ -337,9 +346,11 @@ Note: The preliminary options for grouping dispositions that I am using are: Det
 
 ### unique complaints split out
 df_complaints_disposition_outcome_table_gender <- df_analytic_complaints_disposition_caseload %>% 
-      filter(complaint_eventually_petitioned_flag==1) %>% 
   dplyr::group_by(gender_clean) %>% 
-         dplyr::summarise(`All Petitioned Complaints (N)` = n_distinct(unique_complaint_id),
+         dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Petitioned Complaints (N)` = n_distinct(unique_complaint_id[complaint_eventually_petitioned_flag==1]),
+                   `Complaints Petitioned (row %)` = scales::percent(`All Petitioned Complaints (N)`/`All Complaints (N)`,
+                                                                     accuracy = .1),
                    `All Disposed Complaints (N)` = n_distinct(unique_complaint_id[dispo_data_flag==1]),
                    `Petitioned Complaints w/ Disposition (row %)` = scales::percent(`All Disposed Complaints (N)`/`All Petitioned Complaints (N)`,
                                                                        accuracy = .1),
@@ -375,8 +386,10 @@ df_complaints_disposition_outcome_table_gender <- df_analytic_complaints_disposi
 
 ### unique complaints statewide
 df_complaints_disposition_outcome_table_overall <- df_analytic_complaints_disposition_caseload %>% 
-      filter(complaint_eventually_petitioned_flag==1) %>% 
-      dplyr::summarise(`All Petitioned Complaints (N)` = n_distinct(unique_complaint_id),
+      dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Petitioned Complaints (N)` = n_distinct(unique_complaint_id[complaint_eventually_petitioned_flag==1]),
+                   `Complaints Petitioned (row %)` = scales::percent(`All Petitioned Complaints (N)`/`All Complaints (N)`,
+                                                                     accuracy = .1),
                    `All Disposed Complaints (N)` = n_distinct(unique_complaint_id[dispo_data_flag==1]),
                    `Petitioned Complaints w/ Disposition (row %)` = scales::percent(`All Disposed Complaints (N)`/`All Petitioned Complaints (N)`,
                                                                        accuracy = .1),
@@ -440,11 +453,13 @@ Note: The preliminary options for grouping dispositions that I am using are: Det
 
 ### unique complaints split out
 df_complaints_disposition_outcome_table_age <- df_analytic_complaints_disposition_caseload %>% 
-    filter(complaint_eventually_petitioned_flag==1) %>% 
    filter(intake_age>8,
          intake_age<20) %>% 
   dplyr::group_by(intake_age_clean) %>% 
-      dplyr::summarise(`All Petitioned Complaints (N)` = n_distinct(unique_complaint_id),
+      dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Petitioned Complaints (N)` = n_distinct(unique_complaint_id[complaint_eventually_petitioned_flag==1]),
+                   `Complaints Petitioned (row %)` = scales::percent(`All Petitioned Complaints (N)`/`All Complaints (N)`,
+                                                                     accuracy = .1),
                    `All Disposed Complaints (N)` = n_distinct(unique_complaint_id[dispo_data_flag==1]),
                    `Petitioned Complaints w/ Disposition (row %)` = scales::percent(`All Disposed Complaints (N)`/`All Petitioned Complaints (N)`,
                                                                        accuracy = .1),
@@ -480,10 +495,12 @@ df_complaints_disposition_outcome_table_age <- df_analytic_complaints_dispositio
 
 ### unique complaints statewide
 df_complaints_disposition_outcome_table_overall <- df_analytic_complaints_disposition_caseload %>% 
-    filter(complaint_eventually_petitioned_flag==1) %>% 
    filter(intake_age>8,
          intake_age<20) %>% 
-       dplyr::summarise(`All Petitioned Complaints (N)` = n_distinct(unique_complaint_id),
+        dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Petitioned Complaints (N)` = n_distinct(unique_complaint_id[complaint_eventually_petitioned_flag==1]),
+                   `Complaints Petitioned (row %)` = scales::percent(`All Petitioned Complaints (N)`/`All Complaints (N)`,
+                                                                     accuracy = .1),
                    `All Disposed Complaints (N)` = n_distinct(unique_complaint_id[dispo_data_flag==1]),
                    `Petitioned Complaints w/ Disposition (row %)` = scales::percent(`All Disposed Complaints (N)`/`All Petitioned Complaints (N)`,
                                                                        accuracy = .1),
@@ -546,9 +563,11 @@ Note: The preliminary options for grouping dispositions that I am using are: Det
 
 ### unique complaints split out
 df_complaints_disposition_outcome_table_offense <- df_analytic_complaints_disposition_caseload %>% 
-      filter(complaint_eventually_petitioned_flag==1) %>% 
   dplyr::group_by(dai) %>% 
-       dplyr::summarise(`All Petitioned Complaints (N)` = n_distinct(unique_complaint_id),
+        dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Petitioned Complaints (N)` = n_distinct(unique_complaint_id[complaint_eventually_petitioned_flag==1]),
+                   `Complaints Petitioned (row %)` = scales::percent(`All Petitioned Complaints (N)`/`All Complaints (N)`,
+                                                                     accuracy = .1),
                    `All Disposed Complaints (N)` = n_distinct(unique_complaint_id[dispo_data_flag==1]),
                    `Petitioned Complaints w/ Disposition (row %)` = scales::percent(`All Disposed Complaints (N)`/`All Petitioned Complaints (N)`,
                                                                        accuracy = .1),
@@ -584,8 +603,10 @@ df_complaints_disposition_outcome_table_offense <- df_analytic_complaints_dispos
 
 ### unique complaints statewide
 df_complaints_disposition_outcome_table_overall <- df_analytic_complaints_disposition_caseload %>% 
-      filter(complaint_eventually_petitioned_flag==1) %>% 
-     dplyr::summarise(`All Petitioned Complaints (N)` = n_distinct(unique_complaint_id),
+     dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Petitioned Complaints (N)` = n_distinct(unique_complaint_id[complaint_eventually_petitioned_flag==1]),
+                   `Complaints Petitioned (row %)` = scales::percent(`All Petitioned Complaints (N)`/`All Complaints (N)`,
+                                                                     accuracy = .1),
                    `All Disposed Complaints (N)` = n_distinct(unique_complaint_id[dispo_data_flag==1]),
                    `Petitioned Complaints w/ Disposition (row %)` = scales::percent(`All Disposed Complaints (N)`/`All Petitioned Complaints (N)`,
                                                                        accuracy = .1),
@@ -648,10 +669,12 @@ Note: The preliminary options for grouping dispositions that I am using are: Det
 
 ### unique complaints split out
 df_complaints_disposition_outcome_table_offense_status <- df_analytic_complaints_disposition_caseload %>% 
-      filter(complaint_eventually_petitioned_flag==1) %>% 
   filter(dai=="Status Offense") %>% 
   dplyr::group_by(drg) %>% 
-       dplyr::summarise(`All Petitioned Complaints (N)` = n_distinct(unique_complaint_id),
+        dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Petitioned Complaints (N)` = n_distinct(unique_complaint_id[complaint_eventually_petitioned_flag==1]),
+                   `Complaints Petitioned (row %)` = scales::percent(`All Petitioned Complaints (N)`/`All Complaints (N)`,
+                                                                     accuracy = .1),
                    `All Disposed Complaints (N)` = n_distinct(unique_complaint_id[dispo_data_flag==1]),
                    `Petitioned Complaints w/ Disposition (row %)` = scales::percent(`All Disposed Complaints (N)`/`All Petitioned Complaints (N)`,
                                                                        accuracy = .1),
@@ -687,9 +710,11 @@ df_complaints_disposition_outcome_table_offense_status <- df_analytic_complaints
 
 ### unique complaints statewide
 df_complaints_disposition_outcome_table_overall <- df_analytic_complaints_disposition_caseload %>% 
-      filter(complaint_eventually_petitioned_flag==1) %>% 
   filter(dai=="Status Offense") %>% 
-       dplyr::summarise(`All Petitioned Complaints (N)` = n_distinct(unique_complaint_id),
+        dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Petitioned Complaints (N)` = n_distinct(unique_complaint_id[complaint_eventually_petitioned_flag==1]),
+                   `Complaints Petitioned (row %)` = scales::percent(`All Petitioned Complaints (N)`/`All Complaints (N)`,
+                                                                     accuracy = .1),
                    `All Disposed Complaints (N)` = n_distinct(unique_complaint_id[dispo_data_flag==1]),
                    `Petitioned Complaints w/ Disposition (row %)` = scales::percent(`All Disposed Complaints (N)`/`All Petitioned Complaints (N)`,
                                                                        accuracy = .1),
@@ -754,10 +779,12 @@ Note: The preliminary options for grouping dispositions that I am using are: Det
 
 ### unique complaints split out
 df_complaints_disposition_outcome_table_jj_history <- df_analytic_complaints_disposition_caseload %>% 
-      filter(complaint_eventually_petitioned_flag==1) %>% 
   filter(!is.na(jj_history_clean)==TRUE) %>% 
   dplyr::group_by(jj_history_clean) %>% 
-      dplyr::summarise(`All Petitioned Complaints (N)` = n_distinct(unique_complaint_id),
+       dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Petitioned Complaints (N)` = n_distinct(unique_complaint_id[complaint_eventually_petitioned_flag==1]),
+                   `Complaints Petitioned (row %)` = scales::percent(`All Petitioned Complaints (N)`/`All Complaints (N)`,
+                                                                     accuracy = .1),
                    `All Disposed Complaints (N)` = n_distinct(unique_complaint_id[dispo_data_flag==1]),
                    `Petitioned Complaints w/ Disposition (row %)` = scales::percent(`All Disposed Complaints (N)`/`All Petitioned Complaints (N)`,
                                                                        accuracy = .1),
@@ -793,9 +820,11 @@ df_complaints_disposition_outcome_table_jj_history <- df_analytic_complaints_dis
 
 ### unique complaints statewide
 df_complaints_disposition_outcome_table_overall <- df_analytic_complaints_disposition_caseload %>% 
-      filter(complaint_eventually_petitioned_flag==1) %>% 
   filter(!is.na(jj_history_clean)==TRUE) %>% 
-      dplyr::summarise(`All Petitioned Complaints (N)` = n_distinct(unique_complaint_id),
+      dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Petitioned Complaints (N)` = n_distinct(unique_complaint_id[complaint_eventually_petitioned_flag==1]),
+                   `Complaints Petitioned (row %)` = scales::percent(`All Petitioned Complaints (N)`/`All Complaints (N)`,
+                                                                     accuracy = .1),
                    `All Disposed Complaints (N)` = n_distinct(unique_complaint_id[dispo_data_flag==1]),
                    `Petitioned Complaints w/ Disposition (row %)` = scales::percent(`All Disposed Complaints (N)`/`All Petitioned Complaints (N)`,
                                                                        accuracy = .1),
@@ -858,10 +887,12 @@ Note: The preliminary options for grouping dispositions that I am using are: Det
 
 ### unique complaints split out
 df_complaints_disposition_outcome_table_pet_desc <- df_analytic_complaints_disposition_caseload %>% 
-      filter(complaint_eventually_petitioned_flag==1) %>% 
   filter(!is.na(referral_source_clean)==TRUE) %>% 
   dplyr::group_by(referral_source_clean) %>% 
-      dplyr::summarise(`All Petitioned Complaints (N)` = n_distinct(unique_complaint_id),
+      dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Petitioned Complaints (N)` = n_distinct(unique_complaint_id[complaint_eventually_petitioned_flag==1]),
+                   `Complaints Petitioned (row %)` = scales::percent(`All Petitioned Complaints (N)`/`All Complaints (N)`,
+                                                                     accuracy = .1),
                    `All Disposed Complaints (N)` = n_distinct(unique_complaint_id[dispo_data_flag==1]),
                    `Petitioned Complaints w/ Disposition (row %)` = scales::percent(`All Disposed Complaints (N)`/`All Petitioned Complaints (N)`,
                                                                        accuracy = .1),
@@ -898,9 +929,11 @@ df_complaints_disposition_outcome_table_pet_desc <- df_analytic_complaints_dispo
 
 ### overall
 df_complaints_disposition_outcome_table_overall <- df_analytic_complaints_disposition_caseload %>% 
-      filter(complaint_eventually_petitioned_flag==1) %>% 
   filter(!is.na(referral_source_clean)==TRUE) %>% 
-       dplyr::summarise(`All Petitioned Complaints (N)` = n_distinct(unique_complaint_id),
+         dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Petitioned Complaints (N)` = n_distinct(unique_complaint_id[complaint_eventually_petitioned_flag==1]),
+                   `Complaints Petitioned (row %)` = scales::percent(`All Petitioned Complaints (N)`/`All Complaints (N)`,
+                                                                     accuracy = .1),
                    `All Disposed Complaints (N)` = n_distinct(unique_complaint_id[dispo_data_flag==1]),
                    `Petitioned Complaints w/ Disposition (row %)` = scales::percent(`All Disposed Complaints (N)`/`All Petitioned Complaints (N)`,
                                                                        accuracy = .1),
