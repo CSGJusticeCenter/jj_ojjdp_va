@@ -331,8 +331,8 @@ df_complaints_youth_intake_decision <- df_djj_intake_complaints_clean %>%
    ### clean up petitioner type variable for csu-level analysis (with fewer categories)
   mutate(referral_source_clean_csu_level_categories = case_when(
     petitioner_desc%in%c("BASE POLICE","Other Law Enforcment","POLICE DEPARTMENT","SHERIFF","STATE POLICE","PROBATION OFFICER") ~ "Law Enforcement",
-    petitioner_desc%in%c("SCHOOL OFFICIAL","School Res. Officer") ~ "School",
-    petitioner_desc%in%c("CITIZEN","RELATIVE","SELF","SPOUSE","COURT","ABC BOARD","COMMONWLTHS ATTORNEY","COMMUNITY SRV BOARD","DETENTION HOME","FIRE DEPARTMENT","GROUP HOME","MENTAL HLTH OFFICIAL","MERCHANTS","NCIS","SOCIAL SERVICE") ~ "Other",
+    petitioner_desc%in%c("SCHOOL OFFICIAL") ~ "School Official",
+    petitioner_desc%in%c("School Res. Officer") ~ "School Resource Officer",      petitioner_desc%in%c("CITIZEN","RELATIVE","SELF","SPOUSE","COURT","ABC BOARD","COMMONWLTHS ATTORNEY","COMMUNITY SRV BOARD","DETENTION HOME","FIRE DEPARTMENT","GROUP HOME","MENTAL HLTH OFFICIAL","MERCHANTS","NCIS","SOCIAL SERVICE") ~ "Other",
    TRUE ~ as.character(NA))) %>% 
   ### create var for jj history using flags provided by DJJ
    mutate(jj_history_clean = case_when(

@@ -322,9 +322,205 @@ kable(df_complaints_youth_intake_decision_table_age_final,
   row_spec(5, bold = TRUE)
 ```
 
+
 <br>
 
-## Table 5a: Intake Decisions by Offense Type (most serious offense; mso_flag == "Y")
+## Table 5a: Complaints by Charge Type over Time (most serious offense; mso_flag == "Y")
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+### unique complaints split out
+df_complaints_youth_intake_decision_table_offense <- df_analytic_complaints_disposition_caseload %>% 
+  dplyr::group_by(date_opened_year) %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Felony against Persons (N)` = n_distinct(unique_complaint_id[dai=="Felony against Persons"]),
+                   `Felony against Persons (row %)` = scales::percent(`Felony against Persons (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Felony Weapons and Felony Narcotics Distribution (N)` = n_distinct(unique_complaint_id[dai=="Felony Weapons and Felony Narcotics Distribution"]),
+                   `Felony Weapons and Felony Narcotics Distribution (row %)` = scales::percent(`Felony Weapons and Felony Narcotics Distribution (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other Felony (N)` = n_distinct(unique_complaint_id[dai=="Other Felony"]),
+                   `Other Felony (row %)` = scales::percent(`Other Felony (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Class 1 Misdemeanor Against Persons (N)` = n_distinct(unique_complaint_id[dai=="Class 1 Misdemeanor Against Persons"]),
+                   `Class 1 Misdemeanor Against Persons (row %)` = scales::percent(`Class 1 Misdemeanor Against Persons (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other Class 1 Misdemeanor (N)` = n_distinct(unique_complaint_id[dai=="Other Class 1 Misdemeanor"]),
+                   `Other Class 1 Misdemeanor (row %)` = scales::percent(`Other Class 1 Misdemeanor (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Status Offense (N)` = n_distinct(unique_complaint_id[dai=="Status Offense"]),
+                   `Status Offense (row %)` = scales::percent(`Status Offense (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other Violation (N)` = n_distinct(unique_complaint_id[dai=="Other Violation"]),
+                   `Other Violation (row %)` = scales::percent(`Other Violation (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Prob./Parole Violation (N)` = n_distinct(unique_complaint_id[dai=="Prob./Parole Violation"]),
+                   `Prob./Parole Violation (row %)` = scales::percent(`Prob./Parole Violation (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Court Order Violation (N)` = n_distinct(unique_complaint_id[dai=="Court Order Violation"]),
+                   `Court Order Violation (row %)` = scales::percent(`Court Order Violation (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`Year of Intake` = date_opened_year)  
+
+### unique complaints statewide
+df_complaints_youth_intake_decision_table_overall <- df_analytic_complaints_disposition_caseload %>% 
+   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Felony against Persons (N)` = n_distinct(unique_complaint_id[dai=="Felony against Persons"]),
+                   `Felony against Persons (row %)` = scales::percent(`Felony against Persons (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Felony Weapons and Felony Narcotics Distribution (N)` = n_distinct(unique_complaint_id[dai=="Felony Weapons and Felony Narcotics Distribution"]),
+                   `Felony Weapons and Felony Narcotics Distribution (row %)` = scales::percent(`Felony Weapons and Felony Narcotics Distribution (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other Felony (N)` = n_distinct(unique_complaint_id[dai=="Other Felony"]),
+                   `Other Felony (row %)` = scales::percent(`Other Felony (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Class 1 Misdemeanor Against Persons (N)` = n_distinct(unique_complaint_id[dai=="Class 1 Misdemeanor Against Persons"]),
+                   `Class 1 Misdemeanor Against Persons (row %)` = scales::percent(`Class 1 Misdemeanor Against Persons (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other Class 1 Misdemeanor (N)` = n_distinct(unique_complaint_id[dai=="Other Class 1 Misdemeanor"]),
+                   `Other Class 1 Misdemeanor (row %)` = scales::percent(`Other Class 1 Misdemeanor (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Status Offense (N)` = n_distinct(unique_complaint_id[dai=="Status Offense"]),
+                   `Status Offense (row %)` = scales::percent(`Status Offense (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other Violation (N)` = n_distinct(unique_complaint_id[dai=="Other Violation"]),
+                   `Other Violation (row %)` = scales::percent(`Other Violation (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Prob./Parole Violation (N)` = n_distinct(unique_complaint_id[dai=="Prob./Parole Violation"]),
+                   `Prob./Parole Violation (row %)` = scales::percent(`Prob./Parole Violation (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Court Order Violation (N)` = n_distinct(unique_complaint_id[dai=="Court Order Violation"]),
+                   `Court Order Violation (row %)` = scales::percent(`Court Order Violation (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::mutate(`Year of Intake` = "Overall") 
+
+### combine two dataframes for table
+df_complaints_youth_intake_decision_table_offense_final <- rbind(df_complaints_youth_intake_decision_table_offense,
+                                                              df_complaints_youth_intake_decision_table_overall)
+
+
+### print table via kableextra
+kable(df_complaints_youth_intake_decision_table_offense_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") %>% 
+  row_spec(8, bold = TRUE)
+```
+
+
+<br>
+
+## Table 5b: Complaints by Charge Type and Referral Source 
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+### unique complaints split out
+df_complaints_youth_intake_decision_table_offense <- df_analytic_complaints_disposition_caseload %>% 
+  # filter(!is.na(referral_source_clean)==TRUE) %>% 
+  dplyr::group_by(referral_source_clean) %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Felony against Persons (N)` = n_distinct(unique_complaint_id[dai=="Felony against Persons"]),
+                   `Felony against Persons (row %)` = scales::percent(`Felony against Persons (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Felony Weapons and Felony Narcotics Distribution (N)` = n_distinct(unique_complaint_id[dai=="Felony Weapons and Felony Narcotics Distribution"]),
+                   `Felony Weapons and Felony Narcotics Distribution (row %)` = scales::percent(`Felony Weapons and Felony Narcotics Distribution (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other Felony (N)` = n_distinct(unique_complaint_id[dai=="Other Felony"]),
+                   `Other Felony (row %)` = scales::percent(`Other Felony (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Class 1 Misdemeanor Against Persons (N)` = n_distinct(unique_complaint_id[dai=="Class 1 Misdemeanor Against Persons"]),
+                   `Class 1 Misdemeanor Against Persons (row %)` = scales::percent(`Class 1 Misdemeanor Against Persons (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other Class 1 Misdemeanor (N)` = n_distinct(unique_complaint_id[dai=="Other Class 1 Misdemeanor"]),
+                   `Other Class 1 Misdemeanor (row %)` = scales::percent(`Other Class 1 Misdemeanor (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Status Offense (N)` = n_distinct(unique_complaint_id[dai=="Status Offense"]),
+                   `Status Offense (row %)` = scales::percent(`Status Offense (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other Violation (N)` = n_distinct(unique_complaint_id[dai=="Other Violation"]),
+                   `Other Violation (row %)` = scales::percent(`Other Violation (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Prob./Parole Violation (N)` = n_distinct(unique_complaint_id[dai=="Prob./Parole Violation"]),
+                   `Prob./Parole Violation (row %)` = scales::percent(`Prob./Parole Violation (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Court Order Violation (N)` = n_distinct(unique_complaint_id[dai=="Court Order Violation"]),
+                   `Court Order Violation (row %)` = scales::percent(`Court Order Violation (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`Referral Source` = referral_source_clean) %>% 
+  arrange(desc(`All Complaints (N)`))
+
+### unique complaints statewide
+df_complaints_youth_intake_decision_table_overall <- df_analytic_complaints_disposition_caseload %>% 
+   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Felony against Persons (N)` = n_distinct(unique_complaint_id[dai=="Felony against Persons"]),
+                   `Felony against Persons (row %)` = scales::percent(`Felony against Persons (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Felony Weapons and Felony Narcotics Distribution (N)` = n_distinct(unique_complaint_id[dai=="Felony Weapons and Felony Narcotics Distribution"]),
+                   `Felony Weapons and Felony Narcotics Distribution (row %)` = scales::percent(`Felony Weapons and Felony Narcotics Distribution (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other Felony (N)` = n_distinct(unique_complaint_id[dai=="Other Felony"]),
+                   `Other Felony (row %)` = scales::percent(`Other Felony (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Class 1 Misdemeanor Against Persons (N)` = n_distinct(unique_complaint_id[dai=="Class 1 Misdemeanor Against Persons"]),
+                   `Class 1 Misdemeanor Against Persons (row %)` = scales::percent(`Class 1 Misdemeanor Against Persons (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other Class 1 Misdemeanor (N)` = n_distinct(unique_complaint_id[dai=="Other Class 1 Misdemeanor"]),
+                   `Other Class 1 Misdemeanor (row %)` = scales::percent(`Other Class 1 Misdemeanor (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Status Offense (N)` = n_distinct(unique_complaint_id[dai=="Status Offense"]),
+                   `Status Offense (row %)` = scales::percent(`Status Offense (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Other Violation (N)` = n_distinct(unique_complaint_id[dai=="Other Violation"]),
+                   `Other Violation (row %)` = scales::percent(`Other Violation (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Prob./Parole Violation (N)` = n_distinct(unique_complaint_id[dai=="Prob./Parole Violation"]),
+                   `Prob./Parole Violation (row %)` = scales::percent(`Prob./Parole Violation (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Court Order Violation (N)` = n_distinct(unique_complaint_id[dai=="Court Order Violation"]),
+                   `Court Order Violation (row %)` = scales::percent(`Court Order Violation (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::mutate(`Referral Source` = "Overall") 
+
+### combine two dataframes for table
+df_complaints_youth_intake_decision_table_offense_final <- rbind(df_complaints_youth_intake_decision_table_offense,
+                                                              df_complaints_youth_intake_decision_table_overall)
+
+
+### print table via kableextra
+kable(df_complaints_youth_intake_decision_table_offense_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") %>% 
+  row_spec(10, bold = TRUE)
+```
+
+<br>
+
+## Table 5c: Intake Decisions by Offense Type (most serious offense; mso_flag == "Y")
 
 **Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'), and "REQ'D TO PARTICIPATE-DIVERSION" (code of '7'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
@@ -392,7 +588,7 @@ kable(df_complaints_youth_intake_decision_table_offense_final,
 
 <br>
 
-## Table 5b: Intake Decisions by Status Offense Type (most serious offense is status; mso_flag == "Y")
+## Table 5d: Intake Decisions by Status Offense Type (most serious offense is status; mso_flag == "Y")
 
 **Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'), and "REQ'D TO PARTICIPATE-DIVERSION" (code of '7'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
@@ -468,7 +664,7 @@ kable(df_complaints_youth_intake_decision_table_offense_status_final,
 
 <br>
 
-## Table 5c: Intake Decisions by Status Offense Description (most serious offense is status; mso_flag == "Y")
+## Table 5e: Intake Decisions by Status Offense Description (most serious offense is status; mso_flag == "Y")
 
 **Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'), and "REQ'D TO PARTICIPATE-DIVERSION" (code of '7'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
@@ -928,15 +1124,15 @@ kable(df_diversion_gender_los_final,
 df_diversion_outcome_year_overall <- df_analytic_complaints_disposition_caseload %>% 
   filter(intake_decision_clean=="Diverted") %>% 
   dplyr::group_by(date_opened_year) %>% 
-   dplyr::summarise(`Unique Youth Diverted (N)` = n_distinct(juvenile_number),
-                    `Unique Youth w/ Successful Diversion (N)` = n_distinct(juvenile_number[diversion_successful_flag==1]),
-                    `Successful Diversion Rate (%)` = scales::percent(`Unique Youth w/ Successful Diversion (N)`/`Unique Youth Diverted (N)`,
+   dplyr::summarise(`Unique Complaints Diverted (N)` = n_distinct(unique_complaint_id),
+                    `Unique Complaints w/ Successful Diversion (N)` = n_distinct(unique_complaint_id[diversion_successful_flag==1]),
+                    `Successful Diversion Rate (%)` = scales::percent(`Unique Complaints w/ Successful Diversion (N)`/`Unique Complaints Diverted (N)`,
                                                                        accuracy = .1),
-                    `Unique Youth w/ Unsuccessful Diversion without petition (N)` = n_distinct(juvenile_number[diversion_not_successful_no_petition_flag==1]),
-                    `Unsuccessful Diversion without petition (%)` = scales::percent(`Unique Youth w/ Unsuccessful Diversion without petition (N)`/`Unique Youth Diverted (N)`,
+                    `Unique Complaints w/ Unsuccessful Diversion without petition (N)` = n_distinct(unique_complaint_id[diversion_not_successful_no_petition_flag==1]),
+                    `Unsuccessful Diversion without petition (%)` = scales::percent(`Unique Complaints w/ Unsuccessful Diversion without petition (N)`/`Unique Complaints Diverted (N)`,
                                                                        accuracy = .1),
-                    `Unique Youth w/ Unsuccessful Diversion (with petition) (N)` = n_distinct(juvenile_number[diversion_not_successful_petition_flag==1]),
-                    `Unsuccessful Diversion with petition (%)` = scales::percent(`Unique Youth w/ Unsuccessful Diversion (with petition) (N)`/`Unique Youth Diverted (N)`,
+                    `Unique Complaints w/ Unsuccessful Diversion (with petition) (N)` = n_distinct(unique_complaint_id[diversion_not_successful_petition_flag==1]),
+                    `Unsuccessful Diversion with petition (%)` = scales::percent(`Unique Complaints w/ Unsuccessful Diversion (with petition) (N)`/`Unique Complaints Diverted (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
   dplyr::rename(`Year` = date_opened_year)
@@ -944,16 +1140,16 @@ df_diversion_outcome_year_overall <- df_analytic_complaints_disposition_caseload
 ### overall
 df_diversion_outcome_overall <- df_analytic_complaints_disposition_caseload %>% 
   filter(intake_decision_clean=="Diverted") %>% 
-   dplyr::summarise(`Unique Youth Diverted (N)` = n_distinct(juvenile_number),
-                    `Unique Youth w/ Successful Diversion (N)` = n_distinct(juvenile_number[diversion_successful_flag==1]),
-                    `Successful Diversion Rate (%)` = scales::percent(`Unique Youth w/ Successful Diversion (N)`/`Unique Youth Diverted (N)`,
+   dplyr::summarise(`Unique Complaints Diverted (N)` = n_distinct(unique_complaint_id),
+                    `Unique Complaints w/ Successful Diversion (N)` = n_distinct(unique_complaint_id[diversion_successful_flag==1]),
+                    `Successful Diversion Rate (%)` = scales::percent(`Unique Complaints w/ Successful Diversion (N)`/`Unique Complaints Diverted (N)`,
                                                                        accuracy = .1),
-                    `Unique Youth w/ Unsuccessful Diversion without petition (N)` = n_distinct(juvenile_number[diversion_not_successful_no_petition_flag==1]),
-                    `Unsuccessful Diversion without petition (%)` = scales::percent(`Unique Youth w/ Unsuccessful Diversion without petition (N)`/`Unique Youth Diverted (N)`,
+                    `Unique Complaints w/ Unsuccessful Diversion without petition (N)` = n_distinct(unique_complaint_id[diversion_not_successful_no_petition_flag==1]),
+                    `Unsuccessful Diversion without petition (%)` = scales::percent(`Unique Complaints w/ Unsuccessful Diversion without petition (N)`/`Unique Complaints Diverted (N)`,
                                                                        accuracy = .1),
-                    `Unique Youth w/ Unsuccessful Diversion (with petition) (N)` = n_distinct(juvenile_number[diversion_not_successful_petition_flag==1]),
-                    `Unsuccessful Diversion with petition (%)` = scales::percent(`Unique Youth w/ Unsuccessful Diversion (with petition) (N)`/`Unique Youth Diverted (N)`,
-                                                                       accuracy = .1)) %>% 
+                    `Unique Complaints w/ Unsuccessful Diversion (with petition) (N)` = n_distinct(unique_complaint_id[diversion_not_successful_petition_flag==1]),
+                    `Unsuccessful Diversion with petition (%)` = scales::percent(`Unique Complaints w/ Unsuccessful Diversion (with petition) (N)`/`Unique Complaints Diverted (N)`,
+                                                                       accuracy = .1)) %>%  
   dplyr::mutate(`Year` = "Overall")
  
 
@@ -973,4 +1169,63 @@ kable(df_diversion_outcome_year_overall_table,
   row_spec(8, bold = TRUE)
 ```
 
+<br>
+
+## Table 12: Diversion Outcomes by Charge Type 
+
+**Note:** Options for diversion outcomes include successful, unsuccessful with petition, and unsuccessful without petition. Most serious charge per complaint was selected.
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+### by year
+df_diversion_outcome_dai_overall <- df_analytic_complaints_disposition_caseload %>% 
+  filter(intake_decision_clean=="Diverted") %>% 
+  dplyr::group_by(dai) %>% 
+   dplyr::summarise(`Unique Complaints Diverted (N)` = n_distinct(unique_complaint_id),
+                    `Unique Complaints w/ Successful Diversion (N)` = n_distinct(unique_complaint_id[diversion_successful_flag==1]),
+                    `Successful Diversion Rate (%)` = scales::percent(`Unique Complaints w/ Successful Diversion (N)`/`Unique Complaints Diverted (N)`,
+                                                                       accuracy = .1),
+                    `Unique Complaints w/ Unsuccessful Diversion without petition (N)` = n_distinct(unique_complaint_id[diversion_not_successful_no_petition_flag==1]),
+                    `Unsuccessful Diversion without petition (%)` = scales::percent(`Unique Complaints w/ Unsuccessful Diversion without petition (N)`/`Unique Complaints Diverted (N)`,
+                                                                       accuracy = .1),
+                    `Unique Complaints w/ Unsuccessful Diversion (with petition) (N)` = n_distinct(unique_complaint_id[diversion_not_successful_petition_flag==1]),
+                    `Unsuccessful Diversion with petition (%)` = scales::percent(`Unique Complaints w/ Unsuccessful Diversion (with petition) (N)`/`Unique Complaints Diverted (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`Offense Description` = dai) %>% 
+  arrange(desc(`Unique Complaints Diverted (N)`))
+
+### overall
+df_diversion_outcome_overall <- df_analytic_complaints_disposition_caseload %>% 
+  filter(intake_decision_clean=="Diverted") %>% 
+   dplyr::summarise(`Unique Complaints Diverted (N)` = n_distinct(unique_complaint_id),
+                    `Unique Complaints w/ Successful Diversion (N)` = n_distinct(unique_complaint_id[diversion_successful_flag==1]),
+                    `Successful Diversion Rate (%)` = scales::percent(`Unique Complaints w/ Successful Diversion (N)`/`Unique Complaints Diverted (N)`,
+                                                                       accuracy = .1),
+                    `Unique Complaints w/ Unsuccessful Diversion without petition (N)` = n_distinct(unique_complaint_id[diversion_not_successful_no_petition_flag==1]),
+                    `Unsuccessful Diversion without petition (%)` = scales::percent(`Unique Complaints w/ Unsuccessful Diversion without petition (N)`/`Unique Complaints Diverted (N)`,
+                                                                       accuracy = .1),
+                    `Unique Complaints w/ Unsuccessful Diversion (with petition) (N)` = n_distinct(unique_complaint_id[diversion_not_successful_petition_flag==1]),
+                    `Unsuccessful Diversion with petition (%)` = scales::percent(`Unique Complaints w/ Unsuccessful Diversion (with petition) (N)`/`Unique Complaints Diverted (N)`,
+                                                                       accuracy = .1)) %>% 
+  dplyr::mutate(`Offense Description` = "Overall")
+ 
+
+df_diversion_outcome_dai_overall_table <- rbind(df_diversion_outcome_dai_overall,
+                                                 df_diversion_outcome_overall) 
+
+
+### print table via kableextra
+kable(df_diversion_outcome_dai_overall_table, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") %>% 
+  row_spec(9, bold = TRUE)
+```
 <br><br>
