@@ -428,9 +428,9 @@ kable(df_complaints_youth_intake_decision_table_offense_final,
 #| column: page-right
 #| out-width: 85%
 
+
 ### unique complaints split out
 df_complaints_youth_intake_decision_table_offense <- df_analytic_complaints_disposition_caseload %>% 
-  # filter(!is.na(referral_source_clean)==TRUE) %>% 
   dplyr::group_by(referral_source_clean) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
@@ -520,7 +520,87 @@ kable(df_complaints_youth_intake_decision_table_offense_final,
 
 <br>
 
-## Table 5c: Intake Decisions by Offense Type (most serious offense; mso_flag == "Y")
+## Table 5c: Complaints by Status Description and Referral Source 
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+### unique complaints split out
+df_complaints_youth_intake_decision_table_status <- df_analytic_complaints_disposition_caseload %>% 
+  filter(dai=="Status Offense") %>%
+  dplyr::group_by(referral_source_clean) %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Curfew Violation (N)` = n_distinct(unique_complaint_id[description=="CURFEW VIOLATION BETWEEN 10 PM AND 6 AM"]),
+                   `Curfew Violation (row %)` = scales::percent(`Curfew Violation (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Parents/CHINS (N)` = n_distinct(unique_complaint_id[description=="MOTION TO SHOW CAUSE - PARENTS FAIL TO OBEY CHINS/DELINQ ORD"]),
+                   `Parents/CHINS (row %)` = scales::percent(`Parents/CHINS (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Purchase or Possession of Tobacco (N)` = n_distinct(unique_complaint_id[description=="Purchase, attempted purchase or possession of tobacco by minor"]),
+                   `Purchase or Possession of Tobacco (row %)` = scales::percent(`Purchase or Possession of Tobacco (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Runaway (N)` = n_distinct(unique_complaint_id[description=="RUNAWAY, CHILD IN NEED OF SUPERVISION"]),
+                   `Runaway (row %)` = scales::percent(`Runaway (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Child in Need of Services (N)` = n_distinct(unique_complaint_id[description=="SERVICES, CHILD IN NEED OF"]),
+                   `Child in Need of Services (row %)` = scales::percent(`Child in Need of Services (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Truancy (N)` = n_distinct(unique_complaint_id[description=="TRUANCY, CHILD IN NEED OF SUPERVISION"]),
+                   `Truancy (row %)` = scales::percent(`Truancy (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`Referral Source` = referral_source_clean) %>% 
+  arrange(desc(`All Complaints (N)`))
+
+### unique complaints statewide
+df_complaints_youth_intake_decision_table_status_overall <- df_analytic_complaints_disposition_caseload %>% 
+  filter(dai=="Status Offense") %>%
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Curfew Violation (N)` = n_distinct(unique_complaint_id[description=="CURFEW VIOLATION BETWEEN 10 PM AND 6 AM"]),
+                   `Curfew Violation (row %)` = scales::percent(`Curfew Violation (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Parents/CHINS (N)` = n_distinct(unique_complaint_id[description=="MOTION TO SHOW CAUSE - PARENTS FAIL TO OBEY CHINS/DELINQ ORD"]),
+                   `Parents/CHINS (row %)` = scales::percent(`Parents/CHINS (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Purchase or Possession of Tobacco (N)` = n_distinct(unique_complaint_id[description=="Purchase, attempted purchase or possession of tobacco by minor"]),
+                   `Purchase or Possession of Tobacco (row %)` = scales::percent(`Purchase or Possession of Tobacco (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Runaway (N)` = n_distinct(unique_complaint_id[description=="RUNAWAY, CHILD IN NEED OF SUPERVISION"]),
+                   `Runaway (row %)` = scales::percent(`Runaway (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Child in Need of Services (N)` = n_distinct(unique_complaint_id[description=="SERVICES, CHILD IN NEED OF"]),
+                   `Child in Need of Services (row %)` = scales::percent(`Child in Need of Services (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Truancy (N)` = n_distinct(unique_complaint_id[description=="TRUANCY, CHILD IN NEED OF SUPERVISION"]),
+                   `Truancy (row %)` = scales::percent(`Truancy (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  dplyr::mutate(`Referral Source` = "Overall") 
+
+### combine two dataframes for table
+df_complaints_youth_intake_decision_table_status_final <- rbind(df_complaints_youth_intake_decision_table_status,
+                                                              df_complaints_youth_intake_decision_table_status_overall)
+
+
+### print table via kableextra
+kable(df_complaints_youth_intake_decision_table_status_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") %>% 
+  row_spec(10, bold = TRUE)
+```
+
+<br>
+
+## Table 5d: Intake Decisions by Offense Type (most serious offense; mso_flag == "Y")
 
 **Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'), and "REQ'D TO PARTICIPATE-DIVERSION" (code of '7'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
@@ -588,7 +668,7 @@ kable(df_complaints_youth_intake_decision_table_offense_final,
 
 <br>
 
-## Table 5d: Intake Decisions by Status Offense Type (most serious offense is status; mso_flag == "Y")
+## Table 5e: Intake Decisions by Status Offense Type (most serious offense is status; mso_flag == "Y")
 
 **Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'), and "REQ'D TO PARTICIPATE-DIVERSION" (code of '7'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
@@ -664,7 +744,7 @@ kable(df_complaints_youth_intake_decision_table_offense_status_final,
 
 <br>
 
-## Table 5e: Intake Decisions by Status Offense Description (most serious offense is status; mso_flag == "Y")
+## Table 5f: Intake Decisions by Status Offense Description (most serious offense is status; mso_flag == "Y")
 
 **Note:** I am currently coding the following intake decisions as 'Diverted': "UNSUCCESSFUL DIVERSION/PETITION FILED" (code of '18'), "SUCCESSFUL DIVERSION" (code of '20'), "UNSUCCESSFUL DIVERSION/NO PETITION FILED" (code of '21'), and "REQ'D TO PARTICIPATE-DIVERSION" (code of '7'). All other intake decisions are coded as "Not Diverted". See preliminary coding of intake decisions in `Intake Complaints, Intake Decision Descriptions` table on `codebook` page in `sample descriptives` tab
 
