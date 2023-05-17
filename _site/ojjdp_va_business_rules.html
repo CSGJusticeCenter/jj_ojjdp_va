@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.269">
+<meta name="generator" content="quarto-1.2.335">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>OJJDP Juvenile Justice System Reform Initiative: Virginia - Analysis: Part I</title>
+<title>OJJDP Juvenile Justice System Reform Initiative: Virginia - OJJDP Virginia Business Rules</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -85,17 +85,36 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Project and Analysis Plan</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-analysis" role="button" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Analysis</span>
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-part-i-analysis" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Part I Analysis</span>
     </a>
-    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-analysis">    
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-part-i-analysis">    
         <li>
-    <a class="dropdown-item" href="./ojjdp_va_part_i_analysis.html">
- <span class="dropdown-text">Part I (Regression Analysis)</span></a>
+    <a class="dropdown-item" href="./ojjdp_va_part_i_analysis_regression.html">
+ <span class="dropdown-text">Regression Analysis</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-part-ii-analysis" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Part II Analysis</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-part-ii-analysis">    
+        <li>
+    <a class="dropdown-item" href="./ojjdp_va_part_ii_analysis_diversion.html">
+ <span class="dropdown-text">Diversion Trends</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./ojjdp_va_part_ii_analysis.html">
- <span class="dropdown-text">Part II (Descriptive Analysis)</span></a>
+    <a class="dropdown-item" href="./ojjdp_va_part_ii_analysis_dispo.html">
+ <span class="dropdown-text">Disposition Trends</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./ojjdp_va_part_ii_analysis_race_ethnicity.html">
+ <span class="dropdown-text">Race/Ethnicity</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./ojjdp_va_part_ii_analysis_csu_level.html">
+ <span class="dropdown-text">CSU-level Analysis</span></a>
   </li>  
     </ul>
   </li>
@@ -103,10 +122,21 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="./ojjdp_va_questions_updates.html">
  <span class="menu-text">Questions and Updates</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./ojjdp_va_create_analytic_files.html">
- <span class="menu-text">Analytic File Prep</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-analytic-file-prep" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Analytic File Prep</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-analytic-file-prep">    
+        <li>
+    <a class="dropdown-item" href="./ojjdp_va_create_analytic_files.html">
+ <span class="dropdown-text">Analytic File Code</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./ojjdp_va_business_rules.html">
+ <span class="dropdown-text">Business Rules</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-sample-descriptives" role="button" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Sample Descriptives</span>
@@ -151,7 +181,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Analysis: Part I</h1>
+<h1 class="title">OJJDP Virginia Business Rules</h1>
 </div>
 
 
@@ -166,16 +196,11 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p><strong>Research Questions:</strong></p>
-<p>Using a cohort of first-time system involved youth, look at adjusted differences in likelihood of being diverted and likelihood of a re-complaint for diverted vs.&nbsp;non-diverted youth.</p>
-<p>A. How does the likelihood of being diverted differ by race, sex, and geography?</p>
-<p>B. For youth who are diverted, how likely are they to come back into the system with a new complaint or new petition within a year of the initial intake decision?</p>
+<p><strong>Business Rules for Analytic File Prep:</strong></p>
 <p><br></p>
-<p><strong>Methods:</strong></p>
-<p>For research question (A) we will build a series of logistic regression models, adjusting for race/ethnicity, age, offense, risk level, and other factors that may also be related to a decision to divert. Our outcome variable will be diversion/petition (0/1) and our independent variables of interest will be race, sex, and CSU. For research question (B) we will take a similar methodological approach, but restrict our cohort to diverted youth and focus on likelihood of a re-complaint within a year of diversion while adjusting for demographics, offense, risk level, etc. For research question (B) our outcome variable will be re-complaint within a year of the initial intake decision date (0/1) and our independent variables of interest will be race, sex, and CSU.</p>
-<p><em>Cohort:</em> first time system involved youth (no prior complaints), 2016-2021</p>
-<p><em>Method:</em> Logistic Regression, which allows us to look at the relationship between two variables (like race and decision to divert) while adjusting for other factors that may also be related to our outcome (like offense, risk, etc.).</p>
-<p><br></p>
+<iframe src="https://csgorg.sharepoint.com/sites/Team-JC-Research/_layouts/15/Doc.aspx?sourcedoc={96953dd0-6ddc-42ef-8c6c-eb77f97243f4}&amp;action=embedview" width="1024px" height="800px" frameborder="0">
+</iframe>
+<p><a href="https://csgorg.sharepoint.com/:w:/s/Team-JC-Research/EdA9lZbcbe9CjGzrd_lyQ_QB6UeLVQnESxAhweVD0XVhsQ?e=8fUtXc">View on SharePoint</a></p>
 <p><br></p>
 
 
