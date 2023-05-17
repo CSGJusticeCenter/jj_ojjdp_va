@@ -594,7 +594,6 @@ kable(df_complaints_youth_intake_decision_table_offense_felony_final,
 
 <br>
 
-
 ## Table 6c: Intake Decisions by Offense Type (most serious offense is misdemeanor)
 
 Most serious offense = "Class 1 Misdemeanor Against Persons","Other Class 1 Misdemeanor"

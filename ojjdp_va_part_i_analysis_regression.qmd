@@ -352,7 +352,7 @@ kable(pred_prob_diversion_petition_csu_overall,
 
 <br>
 
-## Figure 3: Predicted Probablities by CSU
+## Figure 3a: Predicted Probablities by CSU
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -399,6 +399,215 @@ pred_prob_diversion_petition_csu %>%
 ```
 
 <br>
+
+```{r include=FALSE,message=FALSE,warning=FALSE}
+### read in census/acs api key from environmnent
+### this allows us to pull census/acs data via the tidycensus package
+readRenviron("~/.Renviron")
+
+### read in va county-level shape file and keep geometry for mapping
+### from kyle walker/tidycensus: specify cb = TRUE which defaults to the Census Bureau’s cartographic boundary shapefiles. Cartographic boundary shapefiles are preferred to the core TIGER/Line shapefiles in tidycensus as their smaller size speeds up processing and because they are pre-clipped to the US coastline.
+va_county_shoreline_clipped <- get_acs(
+  geography = "county",
+  variables = "B19013_001",
+  state = "VA",
+  year = 2020,
+  geometry = TRUE,
+  cb = TRUE
+  ) %>%
+  clean_names() %>%
+  group_by(geoid) %>%
+  summarize(geometry = st_union(geometry)) %>%
+  ungroup() %>% 
+  mutate(state = "VA")
+
+### read in va county-level shape file with fips codes to use as lookup table
+va_county_shape <- read_sf("C:\\Users\\abyrum\\OneDrive - The Council of State Governments\\Geospatial_Mapping\\US County Geo Data\\tl_2019_us_county\\tl_2019_us_county.shp") %>%
+  clean_names() %>%
+  filter(statefp=="51") %>% ### filter by state fip code
+  dplyr::select(county=name,
+               county_fip=countyfp,
+               geoid)
+
+### lose geometry as this is just a lookup table
+va_county_lookup <- as.data.frame(va_county_shape) %>% 
+    dplyr::select(-(geometry))
+
+### now join va_county_shoreline_clipped and va_county_lookup
+va_county_shoreline_clipped_final <- left_join(va_county_shoreline_clipped,
+                                               va_county_lookup,
+                                               by = "geoid")
+
+
+### add geometry to counts of complaints, diversions, and petitions by county, csu, and csu region
+df_complaints_youth_intake_decision_county_to_join <- df_analytic_complaints_disposition_caseload %>%
+  mutate(fips_code = ifelse(fips_code=="X71",
+                            "071",fips_code),
+         fips_code = ifelse(fips_code=="X21",
+                            "021",fips_code)) %>%
+  dplyr::group_by(fips_code,csu,csu_region) %>%
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_diverted_flag=="Yes"]),
+                   `Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Resolved/Dismissed (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Resolved/Dismissed"])) %>%
+  ungroup()
+
+### join geometry to file
+df_county_level_intake_complaints_summary_geo <- left_join(va_county_shoreline_clipped_final,
+                                                     df_complaints_youth_intake_decision_county_to_join,
+                                                     by = c("county_fip"="fips_code"))
+
+### group geometry by csu
+df_csu_level_intake_summary_geo <- df_county_level_intake_complaints_summary_geo %>%
+  dplyr::group_by(csu) %>%
+  dplyr::summarise(`All Complaints (N)` = sum(`All Complaints (N)`),
+                   geometry = st_union(geometry)) %>%
+  ungroup()
+
+```
+
+```{r include=FALSE,message=FALSE,warning=FALSE}
+### set constants for mapping
+default_font_color <- "#4e4d47"
+default_font_family <- "Franklin Gothic Book"
+```
+
+```{r include=FALSE,message=FALSE,warning=FALSE}
+### create static map theme (based on https://timogrossenbacher.ch/2019/04/bivariate-maps-with-ggplot2-and-sf/)
+theme_map <- function(...) {
+  theme_minimal() +
+  theme(
+    text = element_text(family = default_font_family,
+                        color = default_font_color),
+    # remove all axes
+    axis.line = element_blank(),
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks = element_blank(),
+    # add a subtle grid
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    # borders and margins
+    plot.margin = unit(c(.5, .5, .2, .5), "cm"),
+    panel.border = element_blank(),
+    panel.spacing = unit(c(-.1, 0.2, .2, 0.2), "cm"),
+    # titles
+    legend.title = element_text(size = 11),
+    legend.text = element_text(size = 9, hjust = 0,
+                               color = default_font_color),
+    plot.title = element_text(size = 15, hjust = 0.5,
+                              color = default_font_color),
+    # plot.subtitle = element_text(size = 10, hjust = 0.5,
+    #                              color = default_font_color,
+    #                              margin = margin(b = -0.1,
+    #                                              t = -0.1,
+    #                                              l = 2,
+    #                                              unit = "cm"),
+    #                              debug = F),
+    # # captions
+    # plot.caption = element_text(size = 7,
+    #                             hjust = .5,
+    #                             margin = margin(t = 0.2,
+    #                                             b = 0,
+    #                                             unit = "cm"),
+    #                             color = default_font_color),
+    ...
+  )
+}
+```
+
+## Figure 3b: Predicted Probablities by CSU (mapped)
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 100%
+
+### join va_county_shoreline_clipped_final and pred_prob_diversion_petition_csu
+pred_prob_diversion_petition_csu_geo <- left_join(df_csu_level_intake_summary_geo,
+                                                pred_prob_diversion_petition_csu,
+                                                     by = "csu")
+
+### create quantiles object
+no_classes <- 4
+
+### extract quantiles from var we're mapping
+quantiles <- pred_prob_diversion_petition_csu_geo %>%
+  pull(estimate) %>%
+  quantile(probs = seq(0, 1, length.out = no_classes + 1), 
+           na.rm=TRUE) %>%
+  as.vector() 
+
+### make labels for map's legend
+label_estimate_rate <- c("51% to 80%","41% to 51%","30% to 41%","8% to 30%")
+
+### create a new variable with the specified quantiles
+pred_prob_diversion_petition_csu_geo_to_map <- pred_prob_diversion_petition_csu_geo %>%
+  mutate(percent_estimate_quartile = cut(-estimate,
+                               breaks = -quantiles,
+                               right = TRUE,
+                               labels = label_estimate_rate,
+                               include.lowest = T)) 
+
+
+### map via ggplot 
+ggplot(
+  # define main data source
+  data = pred_prob_diversion_petition_csu_geo_to_map
+) +
+  scale_alpha(name = "",
+              range = c(0.6, 0),
+              guide = F) + # suppress legend
+  # add main fill aesthetic
+  geom_sf(
+    mapping = aes(
+      fill = percent_estimate_quartile
+      ),
+    color = "white",
+    size = 0.1
+  ) +
+  ### use jr palette here
+ scale_fill_manual(
+    values = c("#1F4A58","#2F7084","#87C2D4","#AFD6E2"),
+    name = "Predicted Probability, Petition",
+    na.value = "grey50",
+    guide = guide_legend(
+     keyheight = unit(7.5, units = "mm"),
+     title.position = "top",
+     reverse = F # display highest on top
+  )) +
+  # use white stroke borders for county boundaries
+  geom_sf(
+    data = va_county_shoreline_clipped_final,
+    fill = "transparent",
+    color = "white",
+    size = .05
+  ) +
+  # use white stroke borders for csu boundaries
+  geom_sf(
+    data = pred_prob_diversion_petition_csu_geo_to_map,
+    fill = "transparent",
+    color = "white",
+    size = .65
+  )  +
+  # add theme
+  theme_map() 
+
+
+# ### write out
+# ggsave(
+#     filename = file.path(sharepoint_ojjdp_va_viz, "csu_level_diversion_rate_map.png"),
+#     plot = last_plot(),
+#     device = ragg::agg_png,
+#     dpi = 300,
+#     height = 5.25,
+#     width = 10,
+#     units = "in",
+#     bg = "transparent"
+#   )
+```
+
+<br>
+
 
 ## Table 5: Predicted Probablities by Charge Type
 
@@ -612,7 +821,7 @@ kable(pred_prob_dispo_csu_overall,
 
 <br>
 
-## Figure 5: Predicted Probablities by CSU
+## Figure 5a: Predicted Probablities by CSU
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -648,6 +857,98 @@ pred_prob_dispo_csu %>%
 # ### save out as png
 # ggsave(
 #     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
+#     plot = last_plot(),
+#     device = ragg::agg_png,
+#     dpi = 300,
+#     height = 5.25,
+#     width = 10,
+#     units = "in",
+#     bg = "transparent"
+#   )
+```
+
+<br>
+
+## Figure 5b: Predicted Probablities by CSU (mapped)
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 100%
+
+### join va_county_shoreline_clipped_final and pred_prob_dispo_csu
+pred_prob_dispo_csu_geo <- left_join(df_csu_level_intake_summary_geo,
+                                                pred_prob_dispo_csu,
+                                                     by = "csu")
+
+### create quantiles object
+no_classes <- 4
+
+### extract quantiles from var we're mapping
+quantiles <- pred_prob_dispo_csu_geo %>%
+  pull(estimate) %>%
+  quantile(probs = seq(0, 1, length.out = no_classes + 1), 
+           na.rm=TRUE) %>%
+  as.vector() 
+
+### make labels for map's legend
+label_estimate_rate <- c("51% to 80%","41% to 51%","30% to 41%","8% to 30%")
+
+### create a new variable with the specified quantiles
+pred_prob_dispo_csu_geo_to_map <- pred_prob_dispo_csu_geo %>%
+  mutate(percent_estimate_quartile = cut(-estimate,
+                               breaks = -quantiles,
+                               right = TRUE,
+                               labels = label_estimate_rate,
+                               include.lowest = T)) 
+
+
+### map via ggplot 
+ggplot(
+  # define main data source
+  data = pred_prob_dispo_csu_geo_to_map
+) +
+  scale_alpha(name = "",
+              range = c(0.6, 0),
+              guide = F) + # suppress legend
+  # add main fill aesthetic
+  geom_sf(
+    mapping = aes(
+      fill = percent_estimate_quartile
+      ),
+    color = "white",
+    size = 0.1
+  ) +
+  ### use jr palette here
+ scale_fill_manual(
+    values = c("#1F4A58","#2F7084","#87C2D4","#AFD6E2"),
+    name = "Predicted Probability, Disposition",
+    na.value = "grey50",
+    guide = guide_legend(
+     keyheight = unit(7.5, units = "mm"),
+     title.position = "top",
+     reverse = F # display highest on top
+  )) +
+  # use white stroke borders for county boundaries
+  geom_sf(
+    data = va_county_shoreline_clipped_final,
+    fill = "transparent",
+    color = "white",
+    size = .05
+  ) +
+  # use white stroke borders for csu boundaries
+  geom_sf(
+    data = pred_prob_diversion_petition_csu_geo_to_map,
+    fill = "transparent",
+    color = "white",
+    size = .65
+  )  +
+  # add theme
+  theme_map() 
+
+
+# ### write out
+# ggsave(
+#     filename = file.path(sharepoint_ojjdp_va_viz, "csu_level_diversion_rate_map.png"),
 #     plot = last_plot(),
 #     device = ragg::agg_png,
 #     dpi = 300,
@@ -1030,7 +1331,7 @@ kable(pred_prob_diversion_petition_csu_overall,
 
 <br>
 
-## Figure 10: Predicted Probablities by CSU
+## Figure 10a: Predicted Probablities by CSU
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -1066,6 +1367,98 @@ pred_prob_diversion_petition_csu %>%
 # ### save out as png
 # ggsave(
 #     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
+#     plot = last_plot(),
+#     device = ragg::agg_png,
+#     dpi = 300,
+#     height = 5.25,
+#     width = 10,
+#     units = "in",
+#     bg = "transparent"
+#   )
+```
+
+<br>
+
+## Figure 10b: Predicted Probablities by CSU (mapped)
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 100%
+
+### join va_county_shoreline_clipped_final and pred_prob_diversion_petition_csu
+pred_prob_diversion_petition_csu_geo <- left_join(df_csu_level_intake_summary_geo,
+                                                pred_prob_diversion_petition_csu,
+                                                     by = "csu")
+
+### create quantiles object
+no_classes <- 4
+
+### extract quantiles from var we're mapping
+quantiles <- pred_prob_diversion_petition_csu_geo %>%
+  pull(estimate) %>%
+  quantile(probs = seq(0, 1, length.out = no_classes + 1), 
+           na.rm=TRUE) %>%
+  as.vector() 
+
+### make labels for map's legend
+label_estimate_rate <- c("51% to 80%","41% to 51%","30% to 41%","8% to 30%")
+
+### create a new variable with the specified quantiles
+pred_prob_diversion_petition_csu_geo_to_map <- pred_prob_diversion_petition_csu_geo %>%
+  mutate(percent_estimate_quartile = cut(-estimate,
+                               breaks = -quantiles,
+                               right = TRUE,
+                               labels = label_estimate_rate,
+                               include.lowest = T)) 
+
+
+### map via ggplot 
+ggplot(
+  # define main data source
+  data = pred_prob_diversion_petition_csu_geo_to_map
+) +
+  scale_alpha(name = "",
+              range = c(0.6, 0),
+              guide = F) + # suppress legend
+  # add main fill aesthetic
+  geom_sf(
+    mapping = aes(
+      fill = percent_estimate_quartile
+      ),
+    color = "white",
+    size = 0.1
+  ) +
+  ### use jr palette here
+ scale_fill_manual(
+    values = c("#1F4A58","#2F7084","#87C2D4","#AFD6E2"),
+    name = "Predicted Probability, Second Complaint",
+    na.value = "grey50",
+    guide = guide_legend(
+     keyheight = unit(7.5, units = "mm"),
+     title.position = "top",
+     reverse = F # display highest on top
+  )) +
+  # use white stroke borders for county boundaries
+  geom_sf(
+    data = va_county_shoreline_clipped_final,
+    fill = "transparent",
+    color = "white",
+    size = .05
+  ) +
+  # use white stroke borders for csu boundaries
+  geom_sf(
+    data = pred_prob_diversion_petition_csu_geo_to_map,
+    fill = "transparent",
+    color = "white",
+    size = .65
+  )  +
+  # add theme
+  theme_map() 
+
+
+# ### write out
+# ggsave(
+#     filename = file.path(sharepoint_ojjdp_va_viz, "csu_level_diversion_rate_map.png"),
 #     plot = last_plot(),
 #     device = ragg::agg_png,
 #     dpi = 300,
@@ -1450,7 +1843,7 @@ kable(pred_prob_diversion_petition_csu_overall,
 
 <br>
 
-## Figure 15: Predicted Probablities by CSU
+## Figure 15a: Predicted Probablities by CSU
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -1486,6 +1879,98 @@ pred_prob_diversion_petition_csu %>%
 # ### save out as png
 # ggsave(
 #     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
+#     plot = last_plot(),
+#     device = ragg::agg_png,
+#     dpi = 300,
+#     height = 5.25,
+#     width = 10,
+#     units = "in",
+#     bg = "transparent"
+#   )
+```
+
+<br>
+
+## Figure 15b: Predicted Probablities by CSU (mapped)
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 100%
+
+### join va_county_shoreline_clipped_final and pred_prob_diversion_petition_csu
+pred_prob_diversion_petition_csu_geo <- left_join(df_csu_level_intake_summary_geo,
+                                                pred_prob_diversion_petition_csu,
+                                                     by = "csu")
+
+### create quantiles object
+no_classes <- 4
+
+### extract quantiles from var we're mapping
+quantiles <- pred_prob_diversion_petition_csu_geo %>%
+  pull(estimate) %>%
+  quantile(probs = seq(0, 1, length.out = no_classes + 1), 
+           na.rm=TRUE) %>%
+  as.vector() 
+
+### make labels for map's legend
+label_estimate_rate <- c("51% to 80%","41% to 51%","30% to 41%","8% to 30%")
+
+### create a new variable with the specified quantiles
+pred_prob_diversion_petition_csu_geo_to_map <- pred_prob_diversion_petition_csu_geo %>%
+  mutate(percent_estimate_quartile = cut(-estimate,
+                               breaks = -quantiles,
+                               right = TRUE,
+                               labels = label_estimate_rate,
+                               include.lowest = T)) 
+
+
+### map via ggplot 
+ggplot(
+  # define main data source
+  data = pred_prob_diversion_petition_csu_geo_to_map
+) +
+  scale_alpha(name = "",
+              range = c(0.6, 0),
+              guide = F) + # suppress legend
+  # add main fill aesthetic
+  geom_sf(
+    mapping = aes(
+      fill = percent_estimate_quartile
+      ),
+    color = "white",
+    size = 0.1
+  ) +
+  ### use jr palette here
+ scale_fill_manual(
+    values = c("#1F4A58","#2F7084","#87C2D4","#AFD6E2"),
+    name = "Predicted Probability, Subsequent Petition",
+    na.value = "grey50",
+    guide = guide_legend(
+     keyheight = unit(7.5, units = "mm"),
+     title.position = "top",
+     reverse = F # display highest on top
+  )) +
+  # use white stroke borders for county boundaries
+  geom_sf(
+    data = va_county_shoreline_clipped_final,
+    fill = "transparent",
+    color = "white",
+    size = .05
+  ) +
+  # use white stroke borders for csu boundaries
+  geom_sf(
+    data = pred_prob_diversion_petition_csu_geo_to_map,
+    fill = "transparent",
+    color = "white",
+    size = .65
+  )  +
+  # add theme
+  theme_map() 
+
+
+# ### write out
+# ggsave(
+#     filename = file.path(sharepoint_ojjdp_va_viz, "csu_level_diversion_rate_map.png"),
 #     plot = last_plot(),
 #     device = ragg::agg_png,
 #     dpi = 300,
