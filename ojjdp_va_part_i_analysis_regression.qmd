@@ -103,43 +103,37 @@ df_analytic_complaints_disposition_caseload <- read_rds(file.path(sharepoint_ojj
   
 ```
 
-# Research Question A1: Petition
-
-<br>
-
-## Table 1. Model Output: Petition
-
-In the following analysis, the outcome variable is binary -- split into petitioned at intake (excluding court summons) and either diverted, resolved, or referred to another agency. All records with other intake complaint decisions are excluded from this analysis.
-
-**NOTE:** I am currently running the regression on youth with no prior JJ history. 
-
-Predictors included in model are:
-
-* race
-
-* gender
-
-* age at intake
-
-* CSU
-
-* referral/petitioner source
-
-* category of offense
-
-* year of petition
-
-* counts of felony, misdemeanor, status, and violation charges associated with intake/complaint
-
-
-```{r message=FALSE,warning=FALSE}
+```{r eval=FALSE,include=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
-library(sjPlot)
-library(sjmisc)
-library(sjlabelled)
-library(marginaleffects)
+
+
+# Research Question A1: Petition
+ 
+## Table 1. Model Output: Petition
+
+# In the following analysis, the outcome variable is binary -- split into petitioned at intake (excluding court summons) and either diverted, resolved, or referred to another agency. All records with other intake complaint decisions are excluded from this analysis.
+# 
+# **NOTE:** I am currently running the regression on youth with no prior JJ history. 
+# 
+# Predictors included in model are:
+# 
+# * race
+# 
+# * gender
+# 
+# * age at intake
+# 
+# * CSU
+# 
+# * referral/petitioner source
+# 
+# * category of offense
+# 
+# * year of petition
+# 
+# * counts of felony, misdemeanor, status, and violation charges associated with intake/complaint
 
 intake_complaints_no_prior_jj_to_model_diversion_petitioned <- df_analytic_complaints_disposition_caseload %>%
   filter(jj_history_clean=="No Prior JJ History",
@@ -165,16 +159,12 @@ tab_model(va_diversion_petition_model,
 
 ```
 
-<br>
 
-## Table 2: Predicted Probablities by Race/Ethnicity
-
-**TO DO:** Double check predicted probability interpretation with categorical variables in model
-
-```{r echo=FALSE,message=FALSE,warning=FALSE}
+```{r include=FALSE,eval=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
+## Table 2: Predicted Probablities by Race/Ethnicity
 
 pred_prob_diversion_petition_race_overall <- predictions(va_diversion_petition_model, 
                                                 by = c("race")) %>%
@@ -196,13 +186,13 @@ kable(pred_prob_diversion_petition_race_overall,
                  row_label_position = "l") 
 ```
 
-<br>
+
+```{r include=FALSE,eval=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
 
 ## Figure 1: Predicted Probablities by Race/Ethnicity
 
-```{r echo=FALSE,message=FALSE,warning=FALSE}
-#| column: page-right
-#| out-width: 85%
 pred_prob_diversion_petition_race <- predictions(va_diversion_petition_model, by = c("race")) %>%
   filter(race%in%c("Black","White","Hispanic","Asian")) 
 
@@ -244,15 +234,11 @@ pred_prob_diversion_petition_race %>%
 #   )
 ```
 
-<br>
-
-## Table 3: Predicted Probablities by Gender
-
-**TO DO:** Double check predicted probability interpretation with categorical variables in model
-
-```{r echo=FALSE,message=FALSE,warning=FALSE}
+```{r include=FALSE,eval=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
+
+## Table 3: Predicted Probablities by Gender
 
 pred_prob_diversion_petition_gender_overall <- predictions(va_diversion_petition_model, 
                                                 by = c("gender")) %>%
@@ -274,13 +260,12 @@ kable(pred_prob_diversion_petition_gender_overall,
                  row_label_position = "l") 
 ```
 
-<br>
 
-## Figure 2: Predicted Probablities by Gender
-
-```{r echo=FALSE,message=FALSE,warning=FALSE}
+```{r include=FALSE,eval=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
+
+## Figure 2: Predicted Probablities by Gender
 
 pred_prob_diversion_petition_gender <- predictions(va_diversion_petition_model, by = c("gender")) 
 
@@ -322,15 +307,11 @@ pred_prob_diversion_petition_gender %>%
 #   )
 ```
 
-<br>
-
-## Table 4: Predicted Probablities by CSU
-
-**TO DO:** Double check predicted probability interpretation with categorical variables in model
-
-```{r echo=FALSE,message=FALSE,warning=FALSE}
+```{r include=FALSE,eval=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
+
+## Table 4: Predicted Probablities by CSU
 
 pred_prob_diversion_petition_csu_overall <- predictions(va_diversion_petition_model, 
                                                 by = c("csu")) %>%
@@ -350,13 +331,12 @@ kable(pred_prob_diversion_petition_csu_overall,
                  row_label_position = "l") 
 ```
 
-<br>
 
-## Figure 3a: Predicted Probablities by CSU
-
-```{r echo=FALSE,message=FALSE,warning=FALSE}
+```{r include=FALSE,eval=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
+
+## Figure 3a: Predicted Probablities by CSU
 
 pred_prob_diversion_petition_csu <- predictions(va_diversion_petition_model, by = c("csu")) 
 
@@ -398,7 +378,517 @@ pred_prob_diversion_petition_csu %>%
 #   )
 ```
 
+
+```{r include=FALSE,eval=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 100%
+
+## Figure 3b: Predicted Probablities by CSU (mapped)
+
+
+### join va_county_shoreline_clipped_final and pred_prob_diversion_petition_csu
+pred_prob_diversion_petition_csu_geo <- left_join(df_csu_level_intake_summary_geo,
+                                                pred_prob_diversion_petition_csu,
+                                                     by = "csu")
+
+### create quantiles object
+no_classes <- 4
+
+### extract quantiles from var we're mapping
+quantiles <- pred_prob_diversion_petition_csu_geo %>%
+  pull(estimate) %>%
+  quantile(probs = seq(0, 1, length.out = no_classes + 1), 
+           na.rm=TRUE) %>%
+  as.vector() 
+
+### make labels for map's legend
+label_estimate_rate <- c("51% to 80%","41% to 51%","30% to 41%","8% to 30%")
+
+### create a new variable with the specified quantiles
+pred_prob_diversion_petition_csu_geo_to_map <- pred_prob_diversion_petition_csu_geo %>%
+  mutate(percent_estimate_quartile = cut(-estimate,
+                               breaks = -quantiles,
+                               right = TRUE,
+                               labels = label_estimate_rate,
+                               include.lowest = T)) 
+
+
+### map via ggplot 
+ggplot(
+  # define main data source
+  data = pred_prob_diversion_petition_csu_geo_to_map
+) +
+  scale_alpha(name = "",
+              range = c(0.6, 0),
+              guide = F) + # suppress legend
+  # add main fill aesthetic
+  geom_sf(
+    mapping = aes(
+      fill = percent_estimate_quartile
+      ),
+    color = "white",
+    size = 0.1
+  ) +
+  ### use jr palette here
+ scale_fill_manual(
+    values = c("#1F4A58","#2F7084","#87C2D4","#AFD6E2"),
+    name = "Predicted Probability, Petition",
+    na.value = "grey50",
+    guide = guide_legend(
+     keyheight = unit(7.5, units = "mm"),
+     title.position = "top",
+     reverse = F # display highest on top
+  )) +
+  # use white stroke borders for county boundaries
+  geom_sf(
+    data = va_county_shoreline_clipped_final,
+    fill = "transparent",
+    color = "white",
+    size = .05
+  ) +
+  # use white stroke borders for csu boundaries
+  geom_sf(
+    data = pred_prob_diversion_petition_csu_geo_to_map,
+    fill = "transparent",
+    color = "white",
+    size = .65
+  )  +
+  # add theme
+  theme_map() 
+
+
+# ### write out
+# ggsave(
+#     filename = file.path(sharepoint_ojjdp_va_viz, "csu_level_diversion_rate_map.png"),
+#     plot = last_plot(),
+#     device = ragg::agg_png,
+#     dpi = 300,
+#     height = 5.25,
+#     width = 10,
+#     units = "in",
+#     bg = "transparent"
+#   )
+```
+
+
+```{r include=FALSE,eval=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+## Table 5: Predicted Probablities by Charge Type
+
+pred_prob_diversion_petition_dai_overall <- predictions(va_diversion_petition_model, 
+                                                by = c("dai_clean"),
+                                                type = "response") %>%
+  dplyr::select(dai_clean,
+                predicted_probability=estimate,
+                confidence_interval_low=conf.low,
+                confidence_interval_high=conf.high)
+
+### print table via kableextra
+kable(pred_prob_diversion_petition_dai_overall, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") 
+```
+
+
+```{r include=FALSE,eval=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+## Figure 3: Predicted Probablities by Charge Type
+
+pred_prob_diversion_petition_dai <- predictions(va_diversion_petition_model, by = c("dai_clean")) 
+
+pred_prob_diversion_petition_dai %>%
+  mutate(dai_clean = fct_reorder(dai_clean, estimate, max)) %>%
+  ggplot(aes(estimate, dai_clean)) +
+  geom_point(size = 6.5, alpha = 0.7, colour = "#2F7084") +
+  geom_linerange(aes(xmin = conf.low, xmax = conf.high)) +
+  # scale_color_discrete(values = "#2F7084") +
+  scale_x_continuous(
+    expand = expansion(mult = c(0.2, 0.2)),
+    labels = label_percent(1),
+    breaks = seq(0, 1, by = 0.1)
+  ) +
+  scale_y_discrete(labels = wrap_format(15)) +
+  guides(color = FALSE) +
+  expand_limits(x = .25) +
+  labs(
+    title = NULL,
+    x = "Predicted Probability of Petition",
+    y = NULL,
+    color = NULL
+  ) +
+  theme(
+    plot.title = element_text(size = 16),
+    axis.text.y = element_text(size = 8),
+    axis.title.x = element_text(vjust=-0.5)
+  ) 
+
+# ### save out as png
+# ggsave(
+#     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
+#     plot = last_plot(),
+#     device = ragg::agg_png,
+#     dpi = 300,
+#     height = 5.25,
+#     width = 10,
+#     units = "in",
+#     bg = "transparent"
+#   )
+```
+
+```{r include=FALSE,eval=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+## Figure 4: Predicted Probabilities of Petition by CSU for Status Offenses 
+
+# **NOTE:** This analysis excludes CHINS complaints. We may want to exclude CSU's with small N sizes -- I haven't yet done that.
+
+pred_prob_petition_status_by_csu <- predictions(va_diversion_petition_model, by = c("dai_clean","csu")) %>%
+  filter(dai_clean%in%c("Status Offense"))
+
+pred_prob_petition_status_by_csu %>%
+  mutate(csu = fct_reorder(csu, estimate, max)) %>%
+  ggplot(aes(estimate, csu, color = dai_clean)) +
+  geom_point(size = 3.5, alpha = 0.85) +
+  geom_linerange(aes(xmin = conf.low, xmax = conf.high)) +
+  scale_colour_manual(values = rev(c("#2F7084"))) +
+  scale_x_continuous(
+    expand = expansion(mult = c(0.1, 0.1)),
+    labels = label_percent(1),
+    breaks = seq(0, 1, by = 0.15)) +
+  guides(color = FALSE) +
+  expand_limits(x = 0) +
+  labs(
+    title = NULL,
+    x = "Predicted Probability of Petition",
+    y = NULL,
+    color = NULL) +
+  theme(
+    plot.title = element_text(size = 16),
+    axis.text.y = element_text(size = 8),
+    axis.title.x = element_text(vjust=-0.5))
+
+# ### save out as png
+# ggsave(
+#     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
+#     plot = last_plot(),
+#     device = ragg::agg_png,
+#     dpi = 300,
+#     height = 5.25,
+#     width = 10,
+#     units = "in",
+#     bg = "transparent"
+#   )
+```
+
+
+# Research Question A: Disposition
+
+
+**NOTE:** To explore JJ system involvement, we have landed on disposition as the outcome instead of petition -- partly because of the notable drop-off between the % of youth petitioned and the % of youth ultimately disposed. We have modeled both petition and disposition. 
+
 <br>
+
+## Table 1. Model Output: Disposition
+
+In the following analysis, the outcome variable is binary -- split into disposed or not disposed (whether complaint had any disposition data, regardless of disposition)
+
+**NOTE:** I am currently running the regression on youth with no prior JJ history. 
+
+Predictors included in model are:
+
+* race
+
+* gender
+
+* age at intake
+
+* CSU
+
+* referral/petitioner source
+
+* category of offense
+
+* year of petition
+
+* counts of felony, misdemeanor, status, and violation charges associated with intake/complaint
+
+```{r message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+library(sjPlot)
+library(sjmisc)
+library(sjlabelled)
+library(marginaleffects)
+
+intake_complaints_no_prior_jj_to_model_disposition <- df_analytic_complaints_disposition_caseload %>%
+  filter(jj_history_clean=="No Prior JJ History",
+         !is.na(intake_decision_regression_model_petition)==TRUE) %>% 
+  mutate(race = fct_relevel(race_clean, "White"),
+         gender = fct_relevel(gender_clean, "Male"),
+         referral_source_clean = fct_relevel(referral_source_clean, "Other"),
+         date_opened_year = fct_relevel(as.character(date_opened_year), "2015"),
+         regression_model_dispo_num = ifelse(!is.na(dispo_description_clean)==TRUE,
+                                           1,0)) %>% 
+  distinct(juvenile_number,
+           .keep_all=TRUE)
+
+va_dispo_model <- glm(
+  regression_model_dispo_num ~ race + gender + intake_age + csu + referral_source_clean + dai_clean +
+    date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_violation_with_case,
+  family = "binomial", 
+  data = intake_complaints_no_prior_jj_to_model_disposition)
+
+
+tab_model(va_dispo_model,
+          p.style = "numeric_stars")
+
+```
+
+<br>
+
+## Table 2: Predicted Probablities by Race/Ethnicity
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+pred_prob_diversion_dispo_race_overall <- predictions(va_dispo_model, 
+                                                by = c("race")) %>%
+  mutate(rri = estimate / estimate[race == "White"]) %>% 
+  dplyr::select(race_eth=race,
+                predicted_probability=estimate,
+                confidence_interval_low=conf.low,
+                confidence_interval_high=conf.high,
+                rri)
+
+### print table via kableextra
+kable(pred_prob_diversion_dispo_race_overall, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") 
+```
+
+<br>
+
+## Figure 1: Predicted Probablities by Race/Ethnicity
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+
+pred_prob_diversion_petition_race <- predictions(va_dispo_model, by = c("race")) %>%
+  filter(race%in%c("Black","White","Hispanic","Asian")) 
+
+pred_prob_diversion_petition_race %>%
+  mutate(race = fct_reorder(race, estimate, max)) %>%
+  ggplot(aes(estimate, race)) +
+  geom_point(size = 6.5, alpha = 0.75, colour = "#2F7084") +
+  geom_linerange(aes(xmin = conf.low, xmax = conf.high)) +
+  # scale_color_discrete(values = "#2F7084") +
+  scale_x_continuous(
+    # expand = expansion(mult = c(0.2, 0.2)),
+    labels = label_percent(1),
+    # breaks = seq(0, 1, by = 0.1)
+  ) +
+  guides(color = FALSE) +
+  expand_limits(x = .25) +
+  labs(
+    title = NULL,
+    x = "Predicted Probability of Disposition",
+    y = NULL,
+    color = NULL
+  ) +
+  theme(
+    plot.title = element_text(size = 16),
+    axis.text.y = element_text(size = 16),
+    axis.title.x = element_text(vjust=-0.5)
+  ) 
+
+# ### save out as png
+# ggsave(
+#     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
+#     plot = last_plot(),
+#     device = ragg::agg_png,
+#     dpi = 300,
+#     height = 5.25,
+#     width = 10,
+#     units = "in",
+#     bg = "transparent"
+#   )
+```
+
+<br>
+
+## Table 3: Predicted Probablities by Gender
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+
+pred_prob_diversion_petition_gender_overall <- predictions(va_dispo_model, 
+                                                by = c("gender")) %>%
+  mutate(rri = estimate / estimate[gender == "Female"]) %>% 
+  dplyr::select(gender,
+                predicted_probability=estimate,
+                confidence_interval_low=conf.low,
+                confidence_interval_high=conf.high,
+                rri)
+
+### print table via kableextra
+kable(pred_prob_diversion_petition_gender_overall, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") 
+```
+
+<br>
+
+## Figure 2: Predicted Probablities by Gender
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+
+pred_prob_diversion_petition_gender <- predictions(va_dispo_model, by = c("gender")) 
+
+pred_prob_diversion_petition_gender %>%
+  mutate(gender = fct_reorder(gender, estimate, max)) %>%
+  ggplot(aes(estimate, gender)) +
+  geom_point(size = 6.5, alpha = 0.75, colour = "#2F7084") +
+  geom_linerange(aes(xmin = conf.low, xmax = conf.high)) +
+  # scale_color_discrete(values = "#2F7084") +
+  scale_x_continuous(
+    # expand = expansion(mult = c(0.2, 0.2)),
+    labels = label_percent(),
+    breaks = seq(0, .4, by = 0.05)
+  ) +
+  guides(color = FALSE) +
+  expand_limits(x = .25) +
+  labs(
+    title = NULL,
+    x = "Predicted Probability of Disposition",
+    y = NULL,
+    color = NULL
+  ) +
+  theme(
+    plot.title = element_text(size = 16),
+    axis.text.y = element_text(size = 16),
+    axis.title.x = element_text(vjust=-0.5)
+  ) 
+
+# ### save out as png
+# ggsave(
+#     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
+#     plot = last_plot(),
+#     device = ragg::agg_png,
+#     dpi = 300,
+#     height = 5.25,
+#     width = 10,
+#     units = "in",
+#     bg = "transparent"
+#   )
+```
+
+
+<br>
+
+## Table 4: Predicted Probablities by CSU
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+pred_prob_dispo_csu_overall <- predictions(va_dispo_model, 
+                                                by = c("csu")) %>%
+  dplyr::select(csu,
+                predicted_probability=estimate,
+                confidence_interval_low=conf.low,
+                confidence_interval_high=conf.high)
+
+### print table via kableextra
+kable(pred_prob_dispo_csu_overall, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") 
+```
+
+<br>
+
+## Figure 3a: Predicted Probablities by CSU
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+pred_prob_dispo_csu <- predictions(va_dispo_model, by = c("csu")) 
+
+pred_prob_dispo_csu %>%
+  mutate(csu = fct_reorder(csu, estimate, max)) %>%
+  ggplot(aes(estimate, csu)) +
+  geom_point(size = 3.75, alpha = 0.7, colour = "#2F7084") +
+  geom_linerange(aes(xmin = conf.low, xmax = conf.high)) +
+  # scale_color_discrete(values = "#2F7084") +
+  scale_x_continuous(
+    expand = expansion(mult = c(0.2, 0.2)),
+    labels = label_percent(1),
+    breaks = seq(0, 1, by = 0.1)
+  ) +
+  guides(color = FALSE) +
+  expand_limits(x = .25) +
+  labs(
+    title = NULL,
+    x = "Predicted Probability of Disposition",
+    y = NULL,
+    color = NULL
+  ) +
+  theme(
+    plot.title = element_text(size = 16),
+    axis.text.y = element_text(size = 8),
+    axis.title.x = element_text(vjust=-0.5)
+  ) 
+
+# ### save out as png
+# ggsave(
+#     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
+#     plot = last_plot(),
+#     device = ragg::agg_png,
+#     dpi = 300,
+#     height = 5.25,
+#     width = 10,
+#     units = "in",
+#     bg = "transparent"
+#   )
+```
+
+<br>
+
+## Figure 3b: Predicted Probablities by CSU (mapped)
 
 ```{r include=FALSE,message=FALSE,warning=FALSE}
 ### read in census/acs api key from environmnent
@@ -516,364 +1006,12 @@ theme_map <- function(...) {
 }
 ```
 
-## Figure 3b: Predicted Probablities by CSU (mapped)
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 100%
 
-### join va_county_shoreline_clipped_final and pred_prob_diversion_petition_csu
-pred_prob_diversion_petition_csu_geo <- left_join(df_csu_level_intake_summary_geo,
-                                                pred_prob_diversion_petition_csu,
-                                                     by = "csu")
-
-### create quantiles object
-no_classes <- 4
-
-### extract quantiles from var we're mapping
-quantiles <- pred_prob_diversion_petition_csu_geo %>%
-  pull(estimate) %>%
-  quantile(probs = seq(0, 1, length.out = no_classes + 1), 
-           na.rm=TRUE) %>%
-  as.vector() 
-
-### make labels for map's legend
-label_estimate_rate <- c("51% to 80%","41% to 51%","30% to 41%","8% to 30%")
-
-### create a new variable with the specified quantiles
-pred_prob_diversion_petition_csu_geo_to_map <- pred_prob_diversion_petition_csu_geo %>%
-  mutate(percent_estimate_quartile = cut(-estimate,
-                               breaks = -quantiles,
-                               right = TRUE,
-                               labels = label_estimate_rate,
-                               include.lowest = T)) 
-
-
-### map via ggplot 
-ggplot(
-  # define main data source
-  data = pred_prob_diversion_petition_csu_geo_to_map
-) +
-  scale_alpha(name = "",
-              range = c(0.6, 0),
-              guide = F) + # suppress legend
-  # add main fill aesthetic
-  geom_sf(
-    mapping = aes(
-      fill = percent_estimate_quartile
-      ),
-    color = "white",
-    size = 0.1
-  ) +
-  ### use jr palette here
- scale_fill_manual(
-    values = c("#1F4A58","#2F7084","#87C2D4","#AFD6E2"),
-    name = "Predicted Probability, Petition",
-    na.value = "grey50",
-    guide = guide_legend(
-     keyheight = unit(7.5, units = "mm"),
-     title.position = "top",
-     reverse = F # display highest on top
-  )) +
-  # use white stroke borders for county boundaries
-  geom_sf(
-    data = va_county_shoreline_clipped_final,
-    fill = "transparent",
-    color = "white",
-    size = .05
-  ) +
-  # use white stroke borders for csu boundaries
-  geom_sf(
-    data = pred_prob_diversion_petition_csu_geo_to_map,
-    fill = "transparent",
-    color = "white",
-    size = .65
-  )  +
-  # add theme
-  theme_map() 
-
-
-# ### write out
-# ggsave(
-#     filename = file.path(sharepoint_ojjdp_va_viz, "csu_level_diversion_rate_map.png"),
-#     plot = last_plot(),
-#     device = ragg::agg_png,
-#     dpi = 300,
-#     height = 5.25,
-#     width = 10,
-#     units = "in",
-#     bg = "transparent"
-#   )
-```
-
-<br>
-
-
-## Table 5: Predicted Probablities by Charge Type
-
-**TO DO:** Double check predicted probability interpretation with categorical variables in model
-
-```{r echo=FALSE,message=FALSE,warning=FALSE}
-#| column: page-right
-#| out-width: 85%
-
-pred_prob_diversion_petition_dai_overall <- predictions(va_diversion_petition_model, 
-                                                by = c("dai_clean"),
-                                                type = "response") %>%
-  dplyr::select(dai_clean,
-                predicted_probability=estimate,
-                confidence_interval_low=conf.low,
-                confidence_interval_high=conf.high)
-
-### print table via kableextra
-kable(pred_prob_diversion_petition_dai_overall, 
-      format.args = list(big.mark = ","), 
-      align=rep('c')) %>%
-  kable_styling(bootstrap_options = c("striped", 
-                                       "hover", 
-                                       "condensed", 
-                                       "responsive"), 
-                 row_label_position = "l") 
-```
-
-<br>
-
-## Figure 3: Predicted Probablities by Charge Type
-
-```{r echo=FALSE,message=FALSE,warning=FALSE}
-#| column: page-right
-#| out-width: 85%
-
-pred_prob_diversion_petition_dai <- predictions(va_diversion_petition_model, by = c("dai_clean")) 
-
-pred_prob_diversion_petition_dai %>%
-  mutate(dai_clean = fct_reorder(dai_clean, estimate, max)) %>%
-  ggplot(aes(estimate, dai_clean)) +
-  geom_point(size = 6.5, alpha = 0.7, colour = "#2F7084") +
-  geom_linerange(aes(xmin = conf.low, xmax = conf.high)) +
-  # scale_color_discrete(values = "#2F7084") +
-  scale_x_continuous(
-    expand = expansion(mult = c(0.2, 0.2)),
-    labels = label_percent(1),
-    breaks = seq(0, 1, by = 0.1)
-  ) +
-  scale_y_discrete(labels = wrap_format(15)) +
-  guides(color = FALSE) +
-  expand_limits(x = .25) +
-  labs(
-    title = NULL,
-    x = "Predicted Probability of Petition",
-    y = NULL,
-    color = NULL
-  ) +
-  theme(
-    plot.title = element_text(size = 16),
-    axis.text.y = element_text(size = 8),
-    axis.title.x = element_text(vjust=-0.5)
-  ) 
-
-# ### save out as png
-# ggsave(
-#     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
-#     plot = last_plot(),
-#     device = ragg::agg_png,
-#     dpi = 300,
-#     height = 5.25,
-#     width = 10,
-#     units = "in",
-#     bg = "transparent"
-#   )
-```
-
-<br>
-
-## Figure 4: Predicted Probabilities of Petition by CSU for Status Offenses 
-
-**NOTE:** This analysis excludes CHINS complaints. We may want to exclude CSU's with small N sizes -- I haven't yet done that. 
-
-```{r echo=FALSE,message=FALSE,warning=FALSE}
-#| column: page-right
-#| out-width: 85%
-
-pred_prob_petition_status_by_csu <- predictions(va_diversion_petition_model, by = c("dai_clean","csu")) %>%
-  filter(dai_clean%in%c("Status Offense"))
-
-pred_prob_petition_status_by_csu %>%
-  mutate(csu = fct_reorder(csu, estimate, max)) %>%
-  ggplot(aes(estimate, csu, color = dai_clean)) +
-  geom_point(size = 3.5, alpha = 0.85) +
-  geom_linerange(aes(xmin = conf.low, xmax = conf.high)) +
-  scale_colour_manual(values = rev(c("#2F7084"))) +
-  scale_x_continuous(
-    expand = expansion(mult = c(0.1, 0.1)),
-    labels = label_percent(1),
-    breaks = seq(0, 1, by = 0.15)) +
-  guides(color = FALSE) +
-  expand_limits(x = 0) +
-  labs(
-    title = NULL,
-    x = "Predicted Probability of Petition",
-    y = NULL,
-    color = NULL) +
-  theme(
-    plot.title = element_text(size = 16),
-    axis.text.y = element_text(size = 8),
-    axis.title.x = element_text(vjust=-0.5))
-
-# ### save out as png
-# ggsave(
-#     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
-#     plot = last_plot(),
-#     device = ragg::agg_png,
-#     dpi = 300,
-#     height = 5.25,
-#     width = 10,
-#     units = "in",
-#     bg = "transparent"
-#   )
-```
-
-<br><br>
-
-# Research Question A2: Disposition
-
-<br>
-
-## Table 6. Model Output: Disposition
-
-In the following analysis, the outcome variable is binary -- split into disposed or not disposed (whether complaint had any disposition data, regardless of disposition)
-
-**NOTE:** I am currently running the regression on youth with no prior JJ history. 
-
-Predictors included in model are:
-
-* race
-
-* gender
-
-* age at intake
-
-* CSU
-
-* referral/petitioner source
-
-* category of offense
-
-* year of petition
-
-* counts of felony, misdemeanor, status, and violation charges associated with intake/complaint
-
-```{r message=FALSE,warning=FALSE}
-#| column: page-right
-#| out-width: 85%
-
-intake_complaints_no_prior_jj_to_model_disposition <- df_analytic_complaints_disposition_caseload %>%
-  filter(jj_history_clean=="No Prior JJ History",
-         !is.na(intake_decision_regression_model_petition)==TRUE) %>% 
-  mutate(race = fct_relevel(race_clean, "White"),
-         gender = fct_relevel(gender_clean, "Male"),
-         referral_source_clean = fct_relevel(referral_source_clean, "Other"),
-         date_opened_year = fct_relevel(as.character(date_opened_year), "2015"),
-         regression_model_dispo_num = ifelse(!is.na(dispo_description_clean)==TRUE,
-                                           1,0)) %>% 
-  distinct(juvenile_number,
-           .keep_all=TRUE)
-
-va_dispo_model <- glm(
-  regression_model_dispo_num ~ race + gender + intake_age + csu + referral_source_clean + dai_clean +
-    date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_violation_with_case,
-  family = "binomial", 
-  data = intake_complaints_no_prior_jj_to_model_disposition)
-
-
-tab_model(va_dispo_model,
-          p.style = "numeric_stars")
-
-```
-
-<br>
-
-## Table 7: Predicted Probablities by CSU
-
-**TO DO:** Double check predicted probability interpretation with categorical variables in model
-
-```{r echo=FALSE,message=FALSE,warning=FALSE}
-#| column: page-right
-#| out-width: 85%
-
-pred_prob_dispo_csu_overall <- predictions(va_dispo_model, 
-                                                by = c("csu")) %>%
-  dplyr::select(csu,
-                predicted_probability=estimate,
-                confidence_interval_low=conf.low,
-                confidence_interval_high=conf.high)
-
-### print table via kableextra
-kable(pred_prob_dispo_csu_overall, 
-      format.args = list(big.mark = ","), 
-      align=rep('c')) %>%
-  kable_styling(bootstrap_options = c("striped", 
-                                       "hover", 
-                                       "condensed", 
-                                       "responsive"), 
-                 row_label_position = "l") 
-```
-
-<br>
-
-## Figure 5a: Predicted Probablities by CSU
-
-```{r echo=FALSE,message=FALSE,warning=FALSE}
-#| column: page-right
-#| out-width: 85%
-
-pred_prob_dispo_csu <- predictions(va_dispo_model, by = c("csu")) 
-
-pred_prob_dispo_csu %>%
-  mutate(csu = fct_reorder(csu, estimate, max)) %>%
-  ggplot(aes(estimate, csu)) +
-  geom_point(size = 3.75, alpha = 0.7, colour = "#2F7084") +
-  geom_linerange(aes(xmin = conf.low, xmax = conf.high)) +
-  # scale_color_discrete(values = "#2F7084") +
-  scale_x_continuous(
-    expand = expansion(mult = c(0.2, 0.2)),
-    labels = label_percent(1),
-    breaks = seq(0, 1, by = 0.1)
-  ) +
-  guides(color = FALSE) +
-  expand_limits(x = .25) +
-  labs(
-    title = NULL,
-    x = "Predicted Probability of Disposition",
-    y = NULL,
-    color = NULL
-  ) +
-  theme(
-    plot.title = element_text(size = 16),
-    axis.text.y = element_text(size = 8),
-    axis.title.x = element_text(vjust=-0.5)
-  ) 
-
-# ### save out as png
-# ggsave(
-#     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
-#     plot = last_plot(),
-#     device = ragg::agg_png,
-#     dpi = 300,
-#     height = 5.25,
-#     width = 10,
-#     units = "in",
-#     bg = "transparent"
-#   )
-```
-
-<br>
-
-## Figure 5b: Predicted Probablities by CSU (mapped)
-
-```{r echo=FALSE,message=FALSE,warning=FALSE}
-#| column: page-right
-#| out-width: 100%
+knitr::opts_chunk$set(dev = "ragg_png")
 
 ### join va_county_shoreline_clipped_final and pred_prob_dispo_csu
 pred_prob_dispo_csu_geo <- left_join(df_csu_level_intake_summary_geo,
@@ -891,7 +1029,7 @@ quantiles <- pred_prob_dispo_csu_geo %>%
   as.vector() 
 
 ### make labels for map's legend
-label_estimate_rate <- c("51% to 80%","41% to 51%","30% to 41%","8% to 30%")
+label_estimate_rate <- c("29% to 48%","21% to 29%","15% to 21%","8% to 15%")
 
 ### create a new variable with the specified quantiles
 pred_prob_dispo_csu_geo_to_map <- pred_prob_dispo_csu_geo %>%
@@ -932,15 +1070,15 @@ ggplot(
   geom_sf(
     data = va_county_shoreline_clipped_final,
     fill = "transparent",
-    color = "white",
-    size = .05
+    color = "grey90",
+    linewidth = .05
   ) +
   # use white stroke borders for csu boundaries
   geom_sf(
-    data = pred_prob_diversion_petition_csu_geo_to_map,
+    data = pred_prob_dispo_csu_geo_to_map,
     fill = "transparent",
     color = "white",
-    size = .65
+    linewidth = .8
   )  +
   # add theme
   theme_map() 
@@ -961,9 +1099,7 @@ ggplot(
 
 <br>
 
-## Table 8: Predicted Probablities by Charge Type
-
-**TO DO:** Double check predicted probability interpretation with categorical variables in model
+## Table 5: Predicted Probablities by Charge Type
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -989,7 +1125,7 @@ kable(pred_prob_dispo_dai_overall,
 
 <br>
 
-## Figure 6: Predicted Probablities by Charge Type
+## Figure 4: Predicted Probablities by Charge Type
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -1038,7 +1174,7 @@ pred_prob_dispo_dai %>%
 
 <br>
 
-## Figure 7: Predicted Probabilities of Disposition by CSU for Status Offenses 
+## Figure 5: Predicted Probabilities of Disposition by CSU for Status Offenses 
 
 **NOTE:** This analysis excludes CHINS complaints. We may want to exclude CSU's with small N sizes -- I haven't yet done that. 
 
@@ -1090,7 +1226,7 @@ pred_prob_dispo_status_by_csu %>%
 
 <br>
 
-## Table 9. Model Output: Subsequent Complaint within One Year
+## Table 6. Model Output: Subsequent Complaint within One Year
 
 In the following analysis, the outcome variable is binary -- whether a youth received another complaint within a year of their first intake (where the intake decision was diversion). All records with other intake complaint decisions are excluded from this analysis.
 
@@ -1146,9 +1282,7 @@ tab_model(va_diversion_re_complaint_model,
 
 <br>
 
-## Table 10: Predicted Probablities by Race/Ethnicity
-
-**TO DO:** Double check predicted probability interpretation with categorical variables in model
+## Table 7: Predicted Probablities by Race/Ethnicity
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -1176,7 +1310,7 @@ kable(pred_prob_diversion_petition_race_overall,
 
 <br>
 
-## Figure 8: Predicted Probablities by Race/Ethnicity
+## Figure 6: Predicted Probablities by Race/Ethnicity
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -1225,9 +1359,7 @@ pred_prob_diversion_petition_race %>%
 
 <br>
 
-## Table 11: Predicted Probablities by Gender
-
-**TO DO:** Double check predicted probability interpretation with categorical variables in model
+## Table 8: Predicted Probablities by Gender
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -1255,7 +1387,7 @@ kable(pred_prob_diversion_petition_gender_overall,
 
 <br>
 
-## Figure 9: Predicted Probablities by Gender
+## Figure 7: Predicted Probablities by Gender
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -1303,9 +1435,8 @@ pred_prob_diversion_petition_gender %>%
 
 <br>
 
-## Table 12: Predicted Probablities by CSU
+## Table 9: Predicted Probablities by CSU
 
-**TO DO:** Double check predicted probability interpretation with categorical variables in model
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -1331,15 +1462,15 @@ kable(pred_prob_diversion_petition_csu_overall,
 
 <br>
 
-## Figure 10a: Predicted Probablities by CSU
+## Figure 8a: Predicted Probablities by CSU
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
-pred_prob_diversion_petition_csu <- predictions(va_diversion_re_complaint_model, by = c("csu")) 
+va_diversion_re_complaint_model_csu <- predictions(va_diversion_re_complaint_model, by = c("csu")) 
 
-pred_prob_diversion_petition_csu %>%
+va_diversion_re_complaint_model_csu %>%
   mutate(csu = fct_reorder(csu, estimate, max)) %>%
   ggplot(aes(estimate, csu)) +
   geom_point(size = 3.75, alpha = 0.7, colour = "#2F7084") +
@@ -1379,32 +1510,32 @@ pred_prob_diversion_petition_csu %>%
 
 <br>
 
-## Figure 10b: Predicted Probablities by CSU (mapped)
+## Figure 8b: Predicted Probablities by CSU (mapped)
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 100%
 
-### join va_county_shoreline_clipped_final and pred_prob_diversion_petition_csu
-pred_prob_diversion_petition_csu_geo <- left_join(df_csu_level_intake_summary_geo,
-                                                pred_prob_diversion_petition_csu,
+### join va_county_shoreline_clipped_final and va_diversion_re_complaint_model_csu
+va_diversion_re_complaint_model_csu_geo <- left_join(df_csu_level_intake_summary_geo,
+                                                va_diversion_re_complaint_model_csu,
                                                      by = "csu")
 
 ### create quantiles object
 no_classes <- 4
 
 ### extract quantiles from var we're mapping
-quantiles <- pred_prob_diversion_petition_csu_geo %>%
+quantiles <- va_diversion_re_complaint_model_csu_geo %>%
   pull(estimate) %>%
   quantile(probs = seq(0, 1, length.out = no_classes + 1), 
            na.rm=TRUE) %>%
   as.vector() 
 
 ### make labels for map's legend
-label_estimate_rate <- c("51% to 80%","41% to 51%","30% to 41%","8% to 30%")
+label_estimate_rate <- c("21% to 27%","18% to 21%","16% to 18%","11% to 16%")
 
 ### create a new variable with the specified quantiles
-pred_prob_diversion_petition_csu_geo_to_map <- pred_prob_diversion_petition_csu_geo %>%
+va_diversion_re_complaint_model_csu_geo_to_map <- va_diversion_re_complaint_model_csu_geo %>%
   mutate(percent_estimate_quartile = cut(-estimate,
                                breaks = -quantiles,
                                right = TRUE,
@@ -1415,7 +1546,7 @@ pred_prob_diversion_petition_csu_geo_to_map <- pred_prob_diversion_petition_csu_
 ### map via ggplot 
 ggplot(
   # define main data source
-  data = pred_prob_diversion_petition_csu_geo_to_map
+  data = va_diversion_re_complaint_model_csu_geo_to_map
 ) +
   scale_alpha(name = "",
               range = c(0.6, 0),
@@ -1443,14 +1574,14 @@ ggplot(
     data = va_county_shoreline_clipped_final,
     fill = "transparent",
     color = "white",
-    size = .05
+    linewidth = .05
   ) +
   # use white stroke borders for csu boundaries
   geom_sf(
-    data = pred_prob_diversion_petition_csu_geo_to_map,
+    data = va_diversion_re_complaint_model_csu_geo_to_map,
     fill = "transparent",
     color = "white",
-    size = .65
+    linewidth = .85
   )  +
   # add theme
   theme_map() 
@@ -1471,9 +1602,7 @@ ggplot(
 
 <br>
 
-## Table 13: Predicted Probablities by Charge Type
-
-**TO DO:** Double check predicted probability interpretation with categorical variables in model
+## Table 10: Predicted Probablities by Charge Type
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -1499,7 +1628,7 @@ kable(pred_prob_diversion_petition_dai_overall,
 
 <br>
 
-## Figure 11: Predicted Probablities by Charge Type
+## Figure 9: Predicted Probablities by Charge Type
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -1548,7 +1677,7 @@ pred_prob_diversion_petition_dai %>%
 
 <br>
 
-## Figure 12: Predicted Probabilities by CSU for Status Offenses
+## Figure 10: Predicted Probabilities by CSU for Status Offenses
 
 **NOTE:** This analysis excludes CHINS complaints. We may want to exclude CSU's with small N sizes -- I haven't yet done that. 
 
@@ -1600,7 +1729,7 @@ pred_prob_petition_status_by_csu %>%
 
 <br>
 
-## Table 14. Model Output: Petition within One Year
+## Table 11. Model Output: Petition within One Year
 
 In the following analysis, the outcome variable is binary -- whether a youth received a petitioned complaint within a year of their first intake (where the intake decision was diversion). All records with other intake complaint decisions are excluded from this analysis.
 
@@ -1626,7 +1755,6 @@ Predictors included in model are:
 * counts of felony, misdemeanor, status, and violation charges associated with intake/complaint
 
 
-Another control we could add is something on how rural/urban each county is...
 
 ```{r message=FALSE,warning=FALSE}
 #| column: page-right
@@ -1658,9 +1786,7 @@ tab_model(va_diversion_new_petition_model,
 
 <br>
 
-## Table 15: Predicted Probablities by Race/Ethnicity
-
-**TO DO:** Double check predicted probability interpretation with categorical variables in model
+## Table 12: Predicted Probablities by Race/Ethnicity
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -1688,7 +1814,7 @@ kable(pred_prob_diversion_petition_race_overall,
 
 <br>
 
-## Figure 13: Predicted Probablities by Race/Ethnicity
+## Figure 11: Predicted Probablities by Race/Ethnicity
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -1737,9 +1863,7 @@ pred_prob_diversion_petition_race %>%
 
 <br>
 
-## Table 16: Predicted Probablities by Gender
-
-**TO DO:** Double check predicted probability interpretation with categorical variables in model
+## Table 13: Predicted Probablities by Gender
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -1767,7 +1891,7 @@ kable(pred_prob_diversion_petition_gender_overall,
 
 <br>
 
-## Figure 14: Predicted Probablities by Gender
+## Figure 12: Predicted Probablities by Gender
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -1815,9 +1939,7 @@ pred_prob_diversion_petition_gender %>%
 
 <br>
 
-## Table 17: Predicted Probablities by CSU
-
-**TO DO:** Double check predicted probability interpretation with categorical variables in model
+## Table 14: Predicted Probablities by CSU
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -1843,15 +1965,15 @@ kable(pred_prob_diversion_petition_csu_overall,
 
 <br>
 
-## Figure 15a: Predicted Probablities by CSU
+## Figure 13a: Predicted Probablities by CSU
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
-pred_prob_diversion_petition_csu <- predictions(va_diversion_new_petition_model, by = c("csu")) 
+va_diversion_new_petition_model_csu <- predictions(va_diversion_new_petition_model, by = c("csu")) 
 
-pred_prob_diversion_petition_csu %>%
+va_diversion_new_petition_model_csu %>%
   mutate(csu = fct_reorder(csu, estimate, max)) %>%
   ggplot(aes(estimate, csu)) +
   geom_point(size = 3.75, alpha = 0.7, colour = "#2F7084") +
@@ -1891,32 +2013,32 @@ pred_prob_diversion_petition_csu %>%
 
 <br>
 
-## Figure 15b: Predicted Probablities by CSU (mapped)
+## Figure 13b: Predicted Probablities by CSU (mapped)
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 100%
 
 ### join va_county_shoreline_clipped_final and pred_prob_diversion_petition_csu
-pred_prob_diversion_petition_csu_geo <- left_join(df_csu_level_intake_summary_geo,
-                                                pred_prob_diversion_petition_csu,
+va_diversion_new_petition_model_csu_geo <- left_join(df_csu_level_intake_summary_geo,
+                                                va_diversion_new_petition_model_csu,
                                                      by = "csu")
 
 ### create quantiles object
 no_classes <- 4
 
 ### extract quantiles from var we're mapping
-quantiles <- pred_prob_diversion_petition_csu_geo %>%
+quantiles <- va_diversion_new_petition_model_csu_geo %>%
   pull(estimate) %>%
   quantile(probs = seq(0, 1, length.out = no_classes + 1), 
            na.rm=TRUE) %>%
   as.vector() 
 
 ### make labels for map's legend
-label_estimate_rate <- c("51% to 80%","41% to 51%","30% to 41%","8% to 30%")
+label_estimate_rate <- c("14% to 18%","12% to 14%","9% to 12%","7% to 9%")
 
 ### create a new variable with the specified quantiles
-pred_prob_diversion_petition_csu_geo_to_map <- pred_prob_diversion_petition_csu_geo %>%
+va_diversion_new_petition_model_csu_geo_to_map <- va_diversion_new_petition_model_csu_geo %>%
   mutate(percent_estimate_quartile = cut(-estimate,
                                breaks = -quantiles,
                                right = TRUE,
@@ -1927,7 +2049,7 @@ pred_prob_diversion_petition_csu_geo_to_map <- pred_prob_diversion_petition_csu_
 ### map via ggplot 
 ggplot(
   # define main data source
-  data = pred_prob_diversion_petition_csu_geo_to_map
+  data = va_diversion_new_petition_model_csu_geo_to_map
 ) +
   scale_alpha(name = "",
               range = c(0.6, 0),
@@ -1955,14 +2077,14 @@ ggplot(
     data = va_county_shoreline_clipped_final,
     fill = "transparent",
     color = "white",
-    size = .05
+    linewidth = .05
   ) +
   # use white stroke borders for csu boundaries
   geom_sf(
-    data = pred_prob_diversion_petition_csu_geo_to_map,
+    data = va_diversion_new_petition_model_csu_geo_to_map,
     fill = "transparent",
     color = "white",
-    size = .65
+    linewidth = .85
   )  +
   # add theme
   theme_map() 
@@ -1983,9 +2105,7 @@ ggplot(
 
 <br>
 
-## Table 18: Predicted Probablities by Charge Type
-
-**TO DO:** Double check predicted probability interpretation with categorical variables in model
+## Table 15: Predicted Probablities by Charge Type
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -2011,7 +2131,7 @@ kable(pred_prob_diversion_petition_dai_overall,
 
 <br>
 
-## Figure 16: Predicted Probablities by Charge Type
+## Figure 14: Predicted Probablities by Charge Type
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -2060,7 +2180,7 @@ pred_prob_diversion_petition_dai %>%
 
 <br>
 
-## Figure 17: Predicted Probabilities by CSU for Status Offenses
+## Figure 15: Predicted Probabilities by CSU for Status Offenses
 
 **NOTE:** This analysis excludes CHINS complaints. We may want to exclude CSU's with small N sizes -- I haven't yet done that. 
 

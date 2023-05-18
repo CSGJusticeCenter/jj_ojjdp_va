@@ -1358,14 +1358,14 @@ ggplot(
     data = df_county_level_intake_summary_geo_to_map,
     fill = "transparent",
     color = "white",
-    size = .05
+    linewidth = .05
   )  +
   # use additional csu-level shapefile for region border
   geom_sf(
     data = df_csu_level_intake_summary_geo,
     fill = "transparent",
     color = "white",
-    size = .65
+    linewidth = .65
   )  +
  # geom_label(
  #     data = df_csu_region_level_intake_summary_geo,
@@ -1485,14 +1485,14 @@ ggplot(
     data = df_county_level_intake_summary_geo_to_map,
     fill = "transparent",
     color = "white",
-    size = .05
+    linewidth = .05
   ) +
   # use white stroke borders for csu boundaries
   geom_sf(
     data = df_csu_level_intake_summary_geo_to_map,
     fill = "transparent",
     color = "white",
-    size = .65
+    linewidth = .65
   )  +
   # use additional csu region-level shapefile for region border
   # geom_sf(
@@ -1597,14 +1597,14 @@ ggplot(
     data = df_county_level_intake_summary_geo_to_map,
     fill = "transparent",
     color = "white",
-    size = .05
+    linewidth = .05
   ) +
   # use white stroke borders for csu boundaries
   geom_sf(
     data = df_csu_level_intake_summary_geo_to_map,
     fill = "transparent",
     color = "white",
-    size = .65
+    linewidth = .65
   )  +
   # use additional csu region-level shapefile for region border
   # geom_sf(
@@ -1733,14 +1733,14 @@ ggplot(
     data = df_county_level_intake_summary_geo_to_map,
     fill = "transparent",
     color = "white",
-    size = .05
+    linewidth = .05
   )  +
   # use additional csu-level shapefile for region border
   geom_sf(
     data = df_csu_level_intake_summary_geo,
     fill = "transparent",
     color = "white",
-    size = .65
+    linewidth = .65
   )  +
  # geom_label(
  #     data = df_csu_region_level_intake_summary_geo,
@@ -1860,14 +1860,14 @@ ggplot(
     data = df_county_level_intake_summary_geo_to_map,
     fill = "transparent",
     color = "white",
-    size = .05
+    linewidth = .05
   ) +
   # use white stroke borders for csu boundaries
   geom_sf(
     data = df_csu_level_intake_summary_geo_to_map,
     fill = "transparent",
     color = "white",
-    size = .65
+    linewidth = .65
   )  +
   # use additional csu region-level shapefile for region border
   # geom_sf(
@@ -1972,14 +1972,14 @@ ggplot(
     data = df_county_level_intake_summary_geo_to_map,
     fill = "transparent",
     color = "white",
-    size = .05
+    linewidth = .05
   ) +
   # use white stroke borders for csu boundaries
   geom_sf(
     data = df_csu_level_intake_summary_geo_to_map,
     fill = "transparent",
     color = "white",
-    size = .65
+    linewidth = .65
   )  +
   # use additional csu region-level shapefile for region border
   # geom_sf(
@@ -2108,14 +2108,14 @@ ggplot(
     data = df_county_level_intake_summary_geo_to_map,
     fill = "transparent",
     color = "white",
-    size = .05
+    linewidth = .05
   )  +
   # use additional csu-level shapefile for region border
   geom_sf(
     data = df_csu_level_intake_summary_geo,
     fill = "transparent",
     color = "white",
-    size = .65
+    linewidth = .65
   )  +
  # geom_label(
  #     data = df_csu_region_level_intake_summary_geo,
@@ -2235,14 +2235,14 @@ ggplot(
     data = df_county_level_intake_summary_geo_to_map,
     fill = "transparent",
     color = "white",
-    size = .05
+    linewidth = .05
   ) +
   # use white stroke borders for csu boundaries
   geom_sf(
     data = df_csu_level_intake_summary_geo_to_map,
     fill = "transparent",
     color = "white",
-    size = .65
+    linewidth = .65
   )  +
   # use additional csu region-level shapefile for region border
   # geom_sf(
@@ -2347,14 +2347,14 @@ ggplot(
     data = df_county_level_intake_summary_geo_to_map,
     fill = "transparent",
     color = "white",
-    size = .05
+    linewidth = .05
   ) +
   # use white stroke borders for csu boundaries
   geom_sf(
     data = df_csu_level_intake_summary_geo_to_map,
     fill = "transparent",
     color = "white",
-    size = .65
+    linewidth = .65
   )  +
   # use additional csu region-level shapefile for region border
   # geom_sf(
