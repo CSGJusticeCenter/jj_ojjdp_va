@@ -325,10 +325,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><br></p>
 <section id="table-1.-model-output-disposition" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="table-1.-model-output-disposition">Table 1. Model Output: Disposition</h2>
-<p>In the following analysis, the outcome variable is binary – split into disposed or not disposed (whether complaint had any disposition data, regardless of disposition)</p>
+<p>In the following analysis, the outcome variable is binary – split into disposed or not disposed (whether complaint was petitioned and had any disposition data, regardless of disposition)</p>
 <p><strong>NOTE:</strong> I am currently running the regression on youth with no prior JJ history.</p>
 <p>Predictors included in model are:</p>
 <ul>
+<li><p>temporary: intake_decision_petition_flag (whether case was initially petitioned)</p></li>
 <li><p>race</p></li>
 <li><p>gender</p></li>
 <li><p>age at intake</p></li>
@@ -358,7 +359,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>va_dispo_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  regression_model_dispo_num <span class="sc">~</span> race <span class="sc">+</span> gender <span class="sc">+</span> intake_age <span class="sc">+</span> csu <span class="sc">+</span> referral_source_clean <span class="sc">+</span> dai_clean <span class="sc">+</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    date_opened_year <span class="sc">+</span> count_misd_with_case <span class="sc">+</span> count_felony_with_case <span class="sc">+</span> count_status_with_case <span class="sc">+</span> count_other_violation_with_case <span class="sc">+</span> count_violation_with_case,</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    date_opened_year <span class="sc">+</span> count_misd_with_case <span class="sc">+</span> count_felony_with_case <span class="sc">+</span> count_status_with_case <span class="sc">+</span> count_other_violation_with_case <span class="sc">+</span> count_violation_with_case <span class="sc">+</span> intake_decision_petition_flag,</span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">"binomial"</span>, </span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> intake_complaints_no_prior_jj_to_model_disposition)</span>
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
@@ -380,386 +381,392 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">(Intercept)</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.10 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.08&nbsp;–&nbsp;0.13</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.01 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.00&nbsp;–&nbsp;0.01</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">race [American Indian]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.23 <sup></sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.72&nbsp;–&nbsp;2.04</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.435</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.27 <sup></sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.67&nbsp;–&nbsp;2.36</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.461</td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">race [Asian]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.09 <sup></sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.90&nbsp;–&nbsp;1.31</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.379</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.42 <sup>**</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.11&nbsp;–&nbsp;1.81</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.005</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">race [Black]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.09 <sup>**</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.03&nbsp;–&nbsp;1.14</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.001</strong></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.96 <sup></sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.91&nbsp;–&nbsp;1.03</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.256</td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">race [Hispanic]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.29 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.20&nbsp;–&nbsp;1.39</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.27 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.15&nbsp;–&nbsp;1.39</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">race [Other]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.78 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.72&nbsp;–&nbsp;0.85</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.75 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.68&nbsp;–&nbsp;0.83</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">gender [Female]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.81 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.78&nbsp;–&nbsp;0.85</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.84 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.80&nbsp;–&nbsp;0.88</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">intake age</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.05 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.04&nbsp;–&nbsp;1.06</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.02 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.01&nbsp;–&nbsp;1.03</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [002]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.75 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.65&nbsp;–&nbsp;0.87</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.70 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.58&nbsp;–&nbsp;0.84</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [003]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.30 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.23&nbsp;–&nbsp;0.39</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.42 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.30&nbsp;–&nbsp;0.57</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [004]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.29 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.24&nbsp;–&nbsp;0.34</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.50 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.40&nbsp;–&nbsp;0.62</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [005]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.38 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.31&nbsp;–&nbsp;0.47</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.43 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.33&nbsp;–&nbsp;0.55</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [006]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.02 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.70&nbsp;–&nbsp;2.40</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.07 <sup></sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.86&nbsp;–&nbsp;1.32</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.553</td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [007]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.47 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.39&nbsp;–&nbsp;0.56</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.29 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.23&nbsp;–&nbsp;0.35</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [008]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.42 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.20&nbsp;–&nbsp;1.67</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.67 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.55&nbsp;–&nbsp;0.81</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [009]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.11 <sup></sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.96&nbsp;–&nbsp;1.29</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.153</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.92 <sup></sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.77&nbsp;–&nbsp;1.11</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.383</td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [010]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.85 <sup></sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.72&nbsp;–&nbsp;1.01</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.063</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.78 <sup>*</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.63&nbsp;–&nbsp;0.96</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.019</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [011]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.86 <sup></sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.71&nbsp;–&nbsp;1.05</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.144</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.00 <sup></sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.78&nbsp;–&nbsp;1.29</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.974</td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [012]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.26 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.23&nbsp;–&nbsp;0.31</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.86 <sup></sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.71&nbsp;–&nbsp;1.05</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.148</td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [013]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.49 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.41&nbsp;–&nbsp;0.59</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.71 <sup>**</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.57&nbsp;–&nbsp;0.89</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.003</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [014]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.67 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.58&nbsp;–&nbsp;0.78</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.74 <sup>**</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.61&nbsp;–&nbsp;0.89</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [015]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.38 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.33&nbsp;–&nbsp;0.44</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.39 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.33&nbsp;–&nbsp;0.47</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [016]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.67 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.58&nbsp;–&nbsp;0.78</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.66 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.55&nbsp;–&nbsp;0.79</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [017]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.45 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.22&nbsp;–&nbsp;1.73</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.16 <sup></sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.93&nbsp;–&nbsp;1.45</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.199</td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [018]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.47 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.38&nbsp;–&nbsp;0.59</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.50 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.38&nbsp;–&nbsp;0.65</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [019]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.34 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.29&nbsp;–&nbsp;0.39</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.38 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.32&nbsp;–&nbsp;0.46</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [020]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.36 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.31&nbsp;–&nbsp;0.42</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.57 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.47&nbsp;–&nbsp;0.69</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [021]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.55 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.44&nbsp;–&nbsp;0.68</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.53 <sup>**</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.13&nbsp;–&nbsp;2.06</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.005</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [022]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.71 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.47&nbsp;–&nbsp;1.99</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.12 <sup></sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.93&nbsp;–&nbsp;1.35</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.233</td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [023]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.76 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.65&nbsp;–&nbsp;0.88</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.17 <sup></sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.96&nbsp;–&nbsp;1.43</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.115</td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [024]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.15 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.87&nbsp;–&nbsp;2.48</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.97 <sup></sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.82&nbsp;–&nbsp;1.15</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.764</td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [025]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.76 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.52&nbsp;–&nbsp;2.03</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.46 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.22&nbsp;–&nbsp;1.76</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [026]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.78 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.68&nbsp;–&nbsp;0.90</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.001</strong></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.57 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.48&nbsp;–&nbsp;0.67</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [027]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.73 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.62&nbsp;–&nbsp;0.85</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.45 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.19&nbsp;–&nbsp;1.77</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [028]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.03 <sup></sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.84&nbsp;–&nbsp;1.26</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.799</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.29 <sup></sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.99&nbsp;–&nbsp;1.68</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.056</td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [029]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.86 <sup></sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.72&nbsp;–&nbsp;1.02</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.088</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.48 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.40&nbsp;–&nbsp;0.59</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [02A]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.42 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.31&nbsp;–&nbsp;0.56</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.29 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.21&nbsp;–&nbsp;0.40</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [030]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.62 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.51&nbsp;–&nbsp;0.75</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.65 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.52&nbsp;–&nbsp;0.83</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">csu [031]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.21 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.18&nbsp;–&nbsp;0.25</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.39 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.33&nbsp;–&nbsp;0.47</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">referral source clean<br>[Citizen]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.13 <sup></sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.98&nbsp;–&nbsp;1.31</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.101</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.97 <sup></sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.83&nbsp;–&nbsp;1.15</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.747</td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">referral source clean<br>[Court]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.97 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.55&nbsp;–&nbsp;2.48</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.77 <sup>*</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.61&nbsp;–&nbsp;0.97</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.026</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">referral source clean<br>[Law Enforcement]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.30 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.15&nbsp;–&nbsp;1.48</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.84 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.59&nbsp;–&nbsp;2.13</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">referral source clean<br>[Probation Officer]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.26 <sup></sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.94&nbsp;–&nbsp;1.67</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.113</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">referral source clean<br>[Relative/Spouse/Self]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.88 <sup></sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.76&nbsp;–&nbsp;1.01</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.35 <sup></sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.97&nbsp;–&nbsp;1.87</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.072</td>
 </tr>
 <tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">referral source clean<br>[Relative/Spouse/Self]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.12 <sup></sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.96&nbsp;–&nbsp;1.32</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.150</td>
+</tr>
+<tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">referral source clean<br>[School Official]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.63 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.40&nbsp;–&nbsp;1.89</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.23 <sup>*</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.04&nbsp;–&nbsp;1.45</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.014</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">referral source clean<br>[School Resource Officer]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.86 <sup>*</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.75&nbsp;–&nbsp;0.99</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.033</strong></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.20 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.87&nbsp;–&nbsp;2.60</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">dai clean [Class 1<br>Misdemeanor Against<br>Persons]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.87 <sup></sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.73&nbsp;–&nbsp;1.03</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.113</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.98 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.60&nbsp;–&nbsp;2.45</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">dai clean [Felony against<br>Persons]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">6.15 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">5.08&nbsp;–&nbsp;7.42</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">4.82 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">3.84&nbsp;–&nbsp;6.07</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">dai clean [Felony Weapons<br>and Felony Narcotics<br>Distribution]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">6.10 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">4.72&nbsp;–&nbsp;7.90</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">4.51 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">3.33&nbsp;–&nbsp;6.12</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">dai clean [Other Class 1<br>Misdemeanor]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.66 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.56&nbsp;–&nbsp;0.79</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.08 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.68&nbsp;–&nbsp;2.57</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">dai clean [Other Felony]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">3.15 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.61&nbsp;–&nbsp;3.80</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">4.36 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">3.47&nbsp;–&nbsp;5.48</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">dai clean [Other<br>Violation]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.45 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.37&nbsp;–&nbsp;0.55</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.05 <sup></sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.83&nbsp;–&nbsp;1.31</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.697</td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">dai clean [Status<br>Offense]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.81 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.73&nbsp;–&nbsp;0.91</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.40 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.24&nbsp;–&nbsp;1.58</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">date opened year [2016]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.06 <sup></sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.98&nbsp;–&nbsp;1.15</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.163</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.24 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.13&nbsp;–&nbsp;1.37</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">date opened year [2017]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.11 <sup>*</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.02&nbsp;–&nbsp;1.20</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.015</strong></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.41 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.28&nbsp;–&nbsp;1.55</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">date opened year [2018]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.01 <sup></sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.93&nbsp;–&nbsp;1.09</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.889</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.40 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.27&nbsp;–&nbsp;1.54</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">date opened year [2019]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.90 <sup>*</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.83&nbsp;–&nbsp;0.98</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.012</strong></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.35 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.22&nbsp;–&nbsp;1.49</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">date opened year [2020]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.68 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.61&nbsp;–&nbsp;0.74</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.01 <sup></sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.90&nbsp;–&nbsp;1.13</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.929</td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">date opened year [2021]</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.81 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.72&nbsp;–&nbsp;0.91</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.19 <sup>*</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.04&nbsp;–&nbsp;1.36</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.013</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">count misd with case</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.40 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.35&nbsp;–&nbsp;1.45</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.14 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.10&nbsp;–&nbsp;1.18</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">count felony with case</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.52 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.45&nbsp;–&nbsp;1.61</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.21 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.15&nbsp;–&nbsp;1.27</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">count status with case</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.46 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.28&nbsp;–&nbsp;1.66</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.64 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.39&nbsp;–&nbsp;1.94</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">count other violation<br>with case</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.75 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.63&nbsp;–&nbsp;1.88</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.29 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.21&nbsp;–&nbsp;1.39</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">count violation with case</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">14.53 <sup>***</sup></td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">9.14&nbsp;–&nbsp;24.13</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">8.12 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">4.58&nbsp;–&nbsp;15.57</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">intake decision petition<br>flag</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">46.11 <sup>***</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">42.87&nbsp;–&nbsp;49.65</td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
 </tr>
 <tr>
@@ -768,7 +775,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">R<sup>2</sup> Tjur</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.215</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.465</td>
 </tr>
 <tr>
 <td colspan="4" style="font-style:italic; border-top:double black; text-align:right;">* p&lt;0.05&nbsp;&nbsp;&nbsp;** p&lt;0.01&nbsp;&nbsp;&nbsp;*** p&lt;0.001</td>
@@ -798,45 +805,45 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <tbody>
   <tr>
    <td style="text-align:center;"> White </td>
-   <td style="text-align:center;"> 0.1986817 </td>
-   <td style="text-align:center;"> 0.1938187 </td>
-   <td style="text-align:center;"> 0.2036359 </td>
+   <td style="text-align:center;"> 0.1048680 </td>
+   <td style="text-align:center;"> 0.1005470 </td>
+   <td style="text-align:center;"> 0.1093521 </td>
    <td style="text-align:center;"> 1.0000000 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> American Indian </td>
-   <td style="text-align:center;"> 0.2438252 </td>
-   <td style="text-align:center;"> 0.1609585 </td>
-   <td style="text-align:center;"> 0.3514828 </td>
-   <td style="text-align:center;"> 1.2272155 </td>
+   <td style="text-align:center;"> 0.1479111 </td>
+   <td style="text-align:center;"> 0.0850629 </td>
+   <td style="text-align:center;"> 0.2447714 </td>
+   <td style="text-align:center;"> 1.4104497 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Asian </td>
-   <td style="text-align:center;"> 0.1598638 </td>
-   <td style="text-align:center;"> 0.1366015 </td>
-   <td style="text-align:center;"> 0.1862329 </td>
-   <td style="text-align:center;"> 0.8046226 </td>
+   <td style="text-align:center;"> 0.0817086 </td>
+   <td style="text-align:center;"> 0.0653288 </td>
+   <td style="text-align:center;"> 0.1017482 </td>
+   <td style="text-align:center;"> 0.7791564 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Black </td>
-   <td style="text-align:center;"> 0.2061286 </td>
-   <td style="text-align:center;"> 0.2004104 </td>
-   <td style="text-align:center;"> 0.2119667 </td>
-   <td style="text-align:center;"> 1.0374816 </td>
+   <td style="text-align:center;"> 0.1050846 </td>
+   <td style="text-align:center;"> 0.1003101 </td>
+   <td style="text-align:center;"> 0.1100586 </td>
+   <td style="text-align:center;"> 1.0020656 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Hispanic </td>
-   <td style="text-align:center;"> 0.1866152 </td>
-   <td style="text-align:center;"> 0.1770207 </td>
-   <td style="text-align:center;"> 0.1966055 </td>
-   <td style="text-align:center;"> 0.9392672 </td>
+   <td style="text-align:center;"> 0.0935092 </td>
+   <td style="text-align:center;"> 0.0865022 </td>
+   <td style="text-align:center;"> 0.1010211 </td>
+   <td style="text-align:center;"> 0.8916850 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Other </td>
-   <td style="text-align:center;"> 0.1349621 </td>
-   <td style="text-align:center;"> 0.1262536 </td>
-   <td style="text-align:center;"> 0.1441720 </td>
-   <td style="text-align:center;"> 0.6792878 </td>
+   <td style="text-align:center;"> 0.0608813 </td>
+   <td style="text-align:center;"> 0.0556134 </td>
+   <td style="text-align:center;"> 0.0666131 </td>
+   <td style="text-align:center;"> 0.5805519 </td>
   </tr>
 </tbody>
 </table>
@@ -872,16 +879,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <tbody>
   <tr>
    <td style="text-align:center;"> Male </td>
-   <td style="text-align:center;"> 0.2187928 </td>
-   <td style="text-align:center;"> 0.2143034 </td>
-   <td style="text-align:center;"> 0.2233496 </td>
-   <td style="text-align:center;"> 1.397339 </td>
+   <td style="text-align:center;"> 0.1173600 </td>
+   <td style="text-align:center;"> 0.1130028 </td>
+   <td style="text-align:center;"> 0.1218620 </td>
+   <td style="text-align:center;"> 1.580999 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Female </td>
-   <td style="text-align:center;"> 0.1565782 </td>
-   <td style="text-align:center;"> 0.1519601 </td>
-   <td style="text-align:center;"> 0.1613098 </td>
+   <td style="text-align:center;"> 0.0742315 </td>
+   <td style="text-align:center;"> 0.0706982 </td>
+   <td style="text-align:center;"> 0.0779266 </td>
    <td style="text-align:center;"> 1.000000 </td>
   </tr>
 </tbody>
@@ -917,195 +924,195 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <tbody>
   <tr>
    <td style="text-align:center;"> 001 </td>
-   <td style="text-align:center;"> 0.3040531 </td>
-   <td style="text-align:center;"> 0.2809483 </td>
-   <td style="text-align:center;"> 0.3281907 </td>
+   <td style="text-align:center;"> 0.1788261 </td>
+   <td style="text-align:center;"> 0.1589148 </td>
+   <td style="text-align:center;"> 0.2006372 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 002 </td>
-   <td style="text-align:center;"> 0.2536881 </td>
-   <td style="text-align:center;"> 0.2356540 </td>
-   <td style="text-align:center;"> 0.2726100 </td>
+   <td style="text-align:center;"> 0.1183398 </td>
+   <td style="text-align:center;"> 0.1055430 </td>
+   <td style="text-align:center;"> 0.1324584 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 003 </td>
-   <td style="text-align:center;"> 0.1286724 </td>
-   <td style="text-align:center;"> 0.1049109 </td>
-   <td style="text-align:center;"> 0.1568724 </td>
+   <td style="text-align:center;"> 0.0413527 </td>
+   <td style="text-align:center;"> 0.0311383 </td>
+   <td style="text-align:center;"> 0.0547284 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 004 </td>
-   <td style="text-align:center;"> 0.1205740 </td>
-   <td style="text-align:center;"> 0.1079389 </td>
-   <td style="text-align:center;"> 0.1344652 </td>
+   <td style="text-align:center;"> 0.0395949 </td>
+   <td style="text-align:center;"> 0.0336352 </td>
+   <td style="text-align:center;"> 0.0465597 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 005 </td>
-   <td style="text-align:center;"> 0.1526832 </td>
-   <td style="text-align:center;"> 0.1317048 </td>
-   <td style="text-align:center;"> 0.1763245 </td>
+   <td style="text-align:center;"> 0.0661876 </td>
+   <td style="text-align:center;"> 0.0544727 </td>
+   <td style="text-align:center;"> 0.0802082 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 006 </td>
-   <td style="text-align:center;"> 0.4821642 </td>
-   <td style="text-align:center;"> 0.4491949 </td>
-   <td style="text-align:center;"> 0.5152894 </td>
+   <td style="text-align:center;"> 0.3594781 </td>
+   <td style="text-align:center;"> 0.3234546 </td>
+   <td style="text-align:center;"> 0.3971583 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 007 </td>
-   <td style="text-align:center;"> 0.1829153 </td>
-   <td style="text-align:center;"> 0.1620540 </td>
-   <td style="text-align:center;"> 0.2058026 </td>
+   <td style="text-align:center;"> 0.0829651 </td>
+   <td style="text-align:center;"> 0.0719321 </td>
+   <td style="text-align:center;"> 0.0955162 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 008 </td>
-   <td style="text-align:center;"> 0.3548559 </td>
-   <td style="text-align:center;"> 0.3276048 </td>
-   <td style="text-align:center;"> 0.3830824 </td>
+   <td style="text-align:center;"> 0.2203452 </td>
+   <td style="text-align:center;"> 0.1979582 </td>
+   <td style="text-align:center;"> 0.2444922 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 009 </td>
-   <td style="text-align:center;"> 0.3184190 </td>
-   <td style="text-align:center;"> 0.2985681 </td>
-   <td style="text-align:center;"> 0.3389519 </td>
+   <td style="text-align:center;"> 0.1957719 </td>
+   <td style="text-align:center;"> 0.1775788 </td>
+   <td style="text-align:center;"> 0.2153408 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 010 </td>
-   <td style="text-align:center;"> 0.2457990 </td>
-   <td style="text-align:center;"> 0.2225959 </td>
-   <td style="text-align:center;"> 0.2705790 </td>
+   <td style="text-align:center;"> 0.1370981 </td>
+   <td style="text-align:center;"> 0.1194682 </td>
+   <td style="text-align:center;"> 0.1568661 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 011 </td>
-   <td style="text-align:center;"> 0.2879650 </td>
-   <td style="text-align:center;"> 0.2562104 </td>
-   <td style="text-align:center;"> 0.3219517 </td>
+   <td style="text-align:center;"> 0.1646274 </td>
+   <td style="text-align:center;"> 0.1379489 </td>
+   <td style="text-align:center;"> 0.1952966 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 012 </td>
-   <td style="text-align:center;"> 0.0881975 </td>
-   <td style="text-align:center;"> 0.0798709 </td>
-   <td style="text-align:center;"> 0.0973002 </td>
+   <td style="text-align:center;"> 0.0555536 </td>
+   <td style="text-align:center;"> 0.0487834 </td>
+   <td style="text-align:center;"> 0.0632009 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 013 </td>
-   <td style="text-align:center;"> 0.1974421 </td>
-   <td style="text-align:center;"> 0.1768250 </td>
-   <td style="text-align:center;"> 0.2198212 </td>
+   <td style="text-align:center;"> 0.1035244 </td>
+   <td style="text-align:center;"> 0.0885070 </td>
+   <td style="text-align:center;"> 0.1207524 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 014 </td>
-   <td style="text-align:center;"> 0.2185169 </td>
-   <td style="text-align:center;"> 0.2021706 </td>
-   <td style="text-align:center;"> 0.2357943 </td>
+   <td style="text-align:center;"> 0.1194018 </td>
+   <td style="text-align:center;"> 0.1070458 </td>
+   <td style="text-align:center;"> 0.1329716 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 015 </td>
-   <td style="text-align:center;"> 0.1282522 </td>
-   <td style="text-align:center;"> 0.1187693 </td>
-   <td style="text-align:center;"> 0.1383733 </td>
+   <td style="text-align:center;"> 0.0550353 </td>
+   <td style="text-align:center;"> 0.0497559 </td>
+   <td style="text-align:center;"> 0.0608391 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 016 </td>
-   <td style="text-align:center;"> 0.1917135 </td>
-   <td style="text-align:center;"> 0.1766364 </td>
-   <td style="text-align:center;"> 0.2077528 </td>
+   <td style="text-align:center;"> 0.1073418 </td>
+   <td style="text-align:center;"> 0.0965813 </td>
+   <td style="text-align:center;"> 0.1191431 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 017 </td>
-   <td style="text-align:center;"> 0.4350654 </td>
-   <td style="text-align:center;"> 0.4029716 </td>
-   <td style="text-align:center;"> 0.4677129 </td>
+   <td style="text-align:center;"> 0.3109585 </td>
+   <td style="text-align:center;"> 0.2752601 </td>
+   <td style="text-align:center;"> 0.3490568 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 018 </td>
-   <td style="text-align:center;"> 0.1808112 </td>
-   <td style="text-align:center;"> 0.1551068 </td>
-   <td style="text-align:center;"> 0.2097180 </td>
+   <td style="text-align:center;"> 0.0736118 </td>
+   <td style="text-align:center;"> 0.0598426 </td>
+   <td style="text-align:center;"> 0.0902450 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 019 </td>
-   <td style="text-align:center;"> 0.1461920 </td>
-   <td style="text-align:center;"> 0.1358623 </td>
-   <td style="text-align:center;"> 0.1571643 </td>
+   <td style="text-align:center;"> 0.0575659 </td>
+   <td style="text-align:center;"> 0.0518915 </td>
+   <td style="text-align:center;"> 0.0638191 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 020 </td>
-   <td style="text-align:center;"> 0.1338090 </td>
-   <td style="text-align:center;"> 0.1221508 </td>
-   <td style="text-align:center;"> 0.1463943 </td>
+   <td style="text-align:center;"> 0.0636574 </td>
+   <td style="text-align:center;"> 0.0559782 </td>
+   <td style="text-align:center;"> 0.0723094 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 021 </td>
-   <td style="text-align:center;"> 0.1689631 </td>
-   <td style="text-align:center;"> 0.1442163 </td>
-   <td style="text-align:center;"> 0.1969789 </td>
+   <td style="text-align:center;"> 0.0948755 </td>
+   <td style="text-align:center;"> 0.0745791 </td>
+   <td style="text-align:center;"> 0.1199794 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 022 </td>
-   <td style="text-align:center;"> 0.3660182 </td>
-   <td style="text-align:center;"> 0.3428471 </td>
-   <td style="text-align:center;"> 0.3898263 </td>
+   <td style="text-align:center;"> 0.2469217 </td>
+   <td style="text-align:center;"> 0.2250054 </td>
+   <td style="text-align:center;"> 0.2702283 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 023 </td>
-   <td style="text-align:center;"> 0.2141218 </td>
-   <td style="text-align:center;"> 0.1971811 </td>
-   <td style="text-align:center;"> 0.2320971 </td>
+   <td style="text-align:center;"> 0.1091896 </td>
+   <td style="text-align:center;"> 0.0961340 </td>
+   <td style="text-align:center;"> 0.1237753 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 024 </td>
-   <td style="text-align:center;"> 0.4086402 </td>
-   <td style="text-align:center;"> 0.3888632 </td>
-   <td style="text-align:center;"> 0.4287175 </td>
+   <td style="text-align:center;"> 0.3111028 </td>
+   <td style="text-align:center;"> 0.2915796 </td>
+   <td style="text-align:center;"> 0.3313219 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 025 </td>
-   <td style="text-align:center;"> 0.3642838 </td>
-   <td style="text-align:center;"> 0.3436029 </td>
-   <td style="text-align:center;"> 0.3854784 </td>
+   <td style="text-align:center;"> 0.2396361 </td>
+   <td style="text-align:center;"> 0.2189491 </td>
+   <td style="text-align:center;"> 0.2616229 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 026 </td>
-   <td style="text-align:center;"> 0.2281519 </td>
-   <td style="text-align:center;"> 0.2127444 </td>
-   <td style="text-align:center;"> 0.2443290 </td>
+   <td style="text-align:center;"> 0.1188353 </td>
+   <td style="text-align:center;"> 0.1081450 </td>
+   <td style="text-align:center;"> 0.1304278 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 027 </td>
-   <td style="text-align:center;"> 0.1942611 </td>
-   <td style="text-align:center;"> 0.1778582 </td>
-   <td style="text-align:center;"> 0.2117871 </td>
+   <td style="text-align:center;"> 0.1197389 </td>
+   <td style="text-align:center;"> 0.1056948 </td>
+   <td style="text-align:center;"> 0.1353667 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 028 </td>
-   <td style="text-align:center;"> 0.2566259 </td>
-   <td style="text-align:center;"> 0.2255228 </td>
-   <td style="text-align:center;"> 0.2904101 </td>
+   <td style="text-align:center;"> 0.1583621 </td>
+   <td style="text-align:center;"> 0.1308610 </td>
+   <td style="text-align:center;"> 0.1903767 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 029 </td>
-   <td style="text-align:center;"> 0.2327963 </td>
-   <td style="text-align:center;"> 0.2104050 </td>
-   <td style="text-align:center;"> 0.2567956 </td>
+   <td style="text-align:center;"> 0.1178608 </td>
+   <td style="text-align:center;"> 0.1034168 </td>
+   <td style="text-align:center;"> 0.1340205 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 02A </td>
-   <td style="text-align:center;"> 0.1382397 </td>
-   <td style="text-align:center;"> 0.1093667 </td>
-   <td style="text-align:center;"> 0.1732524 </td>
+   <td style="text-align:center;"> 0.0582508 </td>
+   <td style="text-align:center;"> 0.0441461 </td>
+   <td style="text-align:center;"> 0.0765012 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 030 </td>
-   <td style="text-align:center;"> 0.1593340 </td>
-   <td style="text-align:center;"> 0.1402970 </td>
-   <td style="text-align:center;"> 0.1804122 </td>
+   <td style="text-align:center;"> 0.0611854 </td>
+   <td style="text-align:center;"> 0.0512291 </td>
+   <td style="text-align:center;"> 0.0729278 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> 031 </td>
-   <td style="text-align:center;"> 0.0801321 </td>
-   <td style="text-align:center;"> 0.0733932 </td>
-   <td style="text-align:center;"> 0.0874314 </td>
+   <td style="text-align:center;"> 0.0343872 </td>
+   <td style="text-align:center;"> 0.0305209 </td>
+   <td style="text-align:center;"> 0.0387238 </td>
   </tr>
 </tbody>
 </table>
@@ -1149,51 +1156,51 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <tbody>
   <tr>
    <td style="text-align:center;"> CHINS </td>
-   <td style="text-align:center;"> 0.1737478 </td>
-   <td style="text-align:center;"> 0.1640861 </td>
-   <td style="text-align:center;"> 0.1838532 </td>
+   <td style="text-align:center;"> 0.0906344 </td>
+   <td style="text-align:center;"> 0.0841443 </td>
+   <td style="text-align:center;"> 0.0975718 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Class 1 Misdemeanor Against Persons </td>
-   <td style="text-align:center;"> 0.1418833 </td>
-   <td style="text-align:center;"> 0.1361025 </td>
-   <td style="text-align:center;"> 0.1478675 </td>
+   <td style="text-align:center;"> 0.0634759 </td>
+   <td style="text-align:center;"> 0.0595189 </td>
+   <td style="text-align:center;"> 0.0676771 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Felony Weapons and Felony Narcotics Distribution </td>
-   <td style="text-align:center;"> 0.6697394 </td>
-   <td style="text-align:center;"> 0.6264615 </td>
-   <td style="text-align:center;"> 0.7103216 </td>
+   <td style="text-align:center;"> 0.6356841 </td>
+   <td style="text-align:center;"> 0.5837231 </td>
+   <td style="text-align:center;"> 0.6846630 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Felony against Persons </td>
-   <td style="text-align:center;"> 0.6609645 </td>
-   <td style="text-align:center;"> 0.6464835 </td>
-   <td style="text-align:center;"> 0.6751505 </td>
+   <td style="text-align:center;"> 0.6250895 </td>
+   <td style="text-align:center;"> 0.6074989 </td>
+   <td style="text-align:center;"> 0.6423558 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Other Class 1 Misdemeanor </td>
-   <td style="text-align:center;"> 0.1261254 </td>
-   <td style="text-align:center;"> 0.1210958 </td>
-   <td style="text-align:center;"> 0.1313326 </td>
+   <td style="text-align:center;"> 0.0570069 </td>
+   <td style="text-align:center;"> 0.0534550 </td>
+   <td style="text-align:center;"> 0.0607796 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Other Felony </td>
-   <td style="text-align:center;"> 0.5345116 </td>
-   <td style="text-align:center;"> 0.5203122 </td>
-   <td style="text-align:center;"> 0.5486554 </td>
+   <td style="text-align:center;"> 0.4495032 </td>
+   <td style="text-align:center;"> 0.4315357 </td>
+   <td style="text-align:center;"> 0.4676035 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Other Violation </td>
-   <td style="text-align:center;"> 0.1039972 </td>
-   <td style="text-align:center;"> 0.0973679 </td>
-   <td style="text-align:center;"> 0.1110222 </td>
+   <td style="text-align:center;"> 0.0396216 </td>
+   <td style="text-align:center;"> 0.0361281 </td>
+   <td style="text-align:center;"> 0.0434376 </td>
   </tr>
   <tr>
    <td style="text-align:center;"> Status Offense </td>
-   <td style="text-align:center;"> 0.1854183 </td>
-   <td style="text-align:center;"> 0.1786734 </td>
-   <td style="text-align:center;"> 0.1923581 </td>
+   <td style="text-align:center;"> 0.0868377 </td>
+   <td style="text-align:center;"> 0.0819274 </td>
+   <td style="text-align:center;"> 0.0920129 </td>
   </tr>
 </tbody>
 </table>

@@ -72,6 +72,9 @@ df_analytic_complaints_disposition_caseload <- read_rds(file.path(sharepoint_ojj
          dai!="Court Order Violation",
          drg!="Civil Commitment",
          intake_decision_label!="COURT SUMMONS") %>% 
+  ### create intake flag for cases initially petitioned (to add to disposition model)
+  mutate(intake_decision_petition_flag = ifelse(intake_decision_clean=="Petitioned",
+                                                1,0)) |> 
   ### create hierarchy of charge types for de-duping youth/intake dates
     mutate(dai_severity_order = case_when(
       dai%in%c("Felony against Persons") ~ 1,
@@ -600,11 +603,13 @@ pred_prob_petition_status_by_csu %>%
 
 ## Table 1. Model Output: Disposition
 
-In the following analysis, the outcome variable is binary -- split into disposed or not disposed (whether complaint had any disposition data, regardless of disposition)
+In the following analysis, the outcome variable is binary -- split into disposed or not disposed (whether complaint was petitioned and had any disposition data, regardless of disposition)
 
 **NOTE:** I am currently running the regression on youth with no prior JJ history. 
 
 Predictors included in model are:
+
+* temporary: intake_decision_petition_flag (whether case was initially petitioned)
 
 * race
 
@@ -645,7 +650,7 @@ intake_complaints_no_prior_jj_to_model_disposition <- df_analytic_complaints_dis
 
 va_dispo_model <- glm(
   regression_model_dispo_num ~ race + gender + intake_age + csu + referral_source_clean + dai_clean +
-    date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_other_violation_with_case + count_violation_with_case,
+    date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_other_violation_with_case + count_violation_with_case + intake_decision_petition_flag,
   family = "binomial", 
   data = intake_complaints_no_prior_jj_to_model_disposition)
 
