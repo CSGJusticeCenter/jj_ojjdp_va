@@ -29,6 +29,20 @@ We will conduct a descriptive analysis of the front end of the system from intak
 
 *	Dispositions on petitioned cases
 
+
+**Intake Decision Coding Decisions (for part II analysis):**
+
+* Diverted: "UNSUCCESSFUL DIVERSION/PETITION FILED", "SUCCESSFUL DIVERSION","UNSUCCESSFUL DIVERSION/NO PETITION FILED","REQ'D TO PARTICIPATE-DIVERSION"
+
+* Diverted (Informal): "REFERRED TO ANOTHER AGY FOR SV","UNOFFICIAL COUNSELING-FAMILY C"
+
+* Petitioned: "PETITION FILED", "PETITION/DETENTION ORDER FILED","COURT SUMMONS","PETITION/SHELTER CARE FILED"
+
+* Resolved/Dismissed: "RESOLVED", "COMPLAINT UNFOUNDED"
+
+* Other: "DETENTION ORDER ONLY","ACCEPTED VIA ICJ","RETURNED TO PROBATION SUPERVIS","PENDING","SHELTER CARE ONLY","RETURNED TO OUT-OF-STATE"
+
+
 *Cohort:* All complaints from 2016-2021  
 
 <br>

@@ -182,12 +182,22 @@ df_djj_intake_complaints_clean <- df_djj_intake_complaints_raw %>%
          count_misd_with_case = n_distinct(offense_number[dai%in%c("Class 1 Misdemeanor Against Persons",
                                                                      "Other Class 1 Misdemeanor")]),
          count_status_with_case = n_distinct(offense_number[dai%in%c("Status Offense")]),
-         count_violation_with_case = n_distinct(offense_number[dai%in%c("Other Violation",
-                                                                        "Court Order Violation",
+         count_violation_with_case = n_distinct(offense_number[dai%in%c("Court Order Violation",
                                                                         "Prob./Parole Violation")]),
+         ### based on review w/ Becky, pulled out 'other violation' into separate count variable
+         count_other_violation_with_case = n_distinct(offense_number[dai%in%c("Other Violation")]),
          div_at_int = sum(div_at_int, na.rm = TRUE),
          div_bey_90 = sum(div_bey_90, na.rm = TRUE)) %>%
   ungroup() %>% 
+  
+
+########################################################################
+########################################################################
+############ CODE REVIEW W/ BECKY -- LEFT OFF HERE
+########################################################################
+########################################################################
+
+
   ### keep most serious offense associated with intake case/complaint
   dplyr::filter(mso_flag == "Y") %>% 
   ### according to DJJ documentation, multiple offenses may have mso flag of 1 if

@@ -149,7 +149,7 @@ intake_complaints_no_prior_jj_to_model_diversion_petitioned <- df_analytic_compl
 
 va_diversion_petition_model <- glm(
   intake_decision_regression_model_petition_num ~ race + gender + intake_age + csu + referral_source_clean + dai_clean +
-    date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_violation_with_case,
+    date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_other_violation_with_case + count_violation_with_case,
   family = "binomial", 
   data = intake_complaints_no_prior_jj_to_model_diversion_petitioned)
 
@@ -645,7 +645,7 @@ intake_complaints_no_prior_jj_to_model_disposition <- df_analytic_complaints_dis
 
 va_dispo_model <- glm(
   regression_model_dispo_num ~ race + gender + intake_age + csu + referral_source_clean + dai_clean +
-    date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_violation_with_case,
+    date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_other_violation_with_case + count_violation_with_case,
   family = "binomial", 
   data = intake_complaints_no_prior_jj_to_model_disposition)
 
@@ -1270,7 +1270,7 @@ intake_initial_diversion_re_complaint_within_a_year_model <- df_analytic_complai
 
 va_diversion_re_complaint_model <- glm(
   regression_outcome_new_complaint_one_year_first_time_jj ~ race + gender + intake_age + csu + referral_source_clean + dai_clean +
-    date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_violation_with_case,
+    date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_other_violation_with_case + count_violation_with_case,
   family = "binomial", 
   data = intake_initial_diversion_re_complaint_within_a_year_model)
 
@@ -1436,7 +1436,6 @@ pred_prob_diversion_petition_gender %>%
 <br>
 
 ## Table 9: Predicted Probablities by CSU
-
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
@@ -1774,7 +1773,7 @@ intake_initial_diversion_new_petition_within_a_year_model <- df_analytic_complai
 
 va_diversion_new_petition_model <- glm(
   regression_outcome_new_petition_one_year_first_time_jj ~ race + gender + intake_age + csu + referral_source_clean + dai_clean +
-    date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_violation_with_case,
+    date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_other_violation_with_case + count_violation_with_case,
   family = "binomial", 
   data = intake_initial_diversion_new_petition_within_a_year_model)
 
