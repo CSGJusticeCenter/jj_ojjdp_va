@@ -39,7 +39,7 @@
     "href": "ojjdp_va_part_i_analysis_regression.html#table-1.-model-output-petition",
     "title": "Analysis: Part I",
     "section": "Table 1. Model Output: Petition",
-    "text": "Table 1. Model Output: Petition\nIn the following analysis, the outcome variable is binary – split into petitioned at intake (excluding court summons) and either diverted, resolved, or referred to another agency. All records with other intake complaint decisions are excluded from this analysis.\nNOTE: I am currently running the regression on youth with no prior JJ history.\nPredictors included in model are:\n\nrace\ngender\nage at intake\nCSU\nreferral/petitioner source\ncategory of offense\nyear of petition\ncounts of felony, misdemeanor, status, and violation charges associated with intake/complaint\n\n\nlibrary(sjPlot)\nlibrary(sjmisc)\nlibrary(sjlabelled)\nlibrary(marginaleffects)\n\nintake_complaints_no_prior_jj_to_model_diversion_petitioned <- df_analytic_complaints_disposition_caseload %>%\n  filter(jj_history_clean==\"No Prior JJ History\",\n         !is.na(intake_decision_regression_model_petition)==TRUE) %>% \n  mutate(race = fct_relevel(race_clean, \"White\"),\n         gender = fct_relevel(gender_clean, \"Male\"),\n         referral_source_clean = fct_relevel(referral_source_clean, \"Other\"),\n         date_opened_year = fct_relevel(as.character(date_opened_year), \"2015\"),\n         intake_decision_regression_model_petition_num = ifelse(intake_decision_regression_model_petition==\"Petitioned\",\n                                           1,0)) %>% \n  distinct(juvenile_number,\n           .keep_all=TRUE)\n\nva_diversion_petition_model <- glm(\n  intake_decision_regression_model_petition_num ~ race + gender + intake_age + csu + referral_source_clean + dai_clean +\n    date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_violation_with_case,\n  family = \"binomial\", \n  data = intake_complaints_no_prior_jj_to_model_diversion_petitioned)\n\n\ntab_model(va_diversion_petition_model,\n          p.style = \"numeric_stars\")\n\n\n\n\n \nintake decisionregression model petitionnum\n\n\nPredictors\nOdds Ratios\nCI\np\n\n\n(Intercept)\n1.53 ***\n1.22 – 1.93\n<0.001\n\n\nrace [American Indian]\n1.12 \n0.68 – 1.83\n0.666\n\n\nrace [Asian]\n0.77 **\n0.64 – 0.91\n0.003\n\n\nrace [Black]\n1.15 ***\n1.10 – 1.21\n<0.001\n\n\nrace [Hispanic]\n1.12 **\n1.04 – 1.20\n0.002\n\n\nrace [Other]\n0.92 *\n0.86 – 0.99\n0.021\n\n\ngender [Female]\n0.92 ***\n0.88 – 0.95\n<0.001\n\n\nintake age\n1.02 ***\n1.01 – 1.03\n<0.001\n\n\ncsu [002]\n0.79 ***\n0.69 – 0.91\n0.001\n\n\ncsu [003]\n0.29 ***\n0.23 – 0.36\n<0.001\n\n\ncsu [004]\n0.23 ***\n0.20 – 0.27\n<0.001\n\n\ncsu [005]\n0.58 ***\n0.49 – 0.69\n<0.001\n\n\ncsu [006]\n3.05 ***\n2.57 – 3.63\n<0.001\n\n\ncsu [007]\n1.42 ***\n1.22 – 1.66\n<0.001\n\n\ncsu [008]\n2.79 ***\n2.38 – 3.28\n<0.001\n\n\ncsu [009]\n1.40 ***\n1.22 – 1.61\n<0.001\n\n\ncsu [010]\n1.08 \n0.92 – 1.27\n0.340\n\n\ncsu [011]\n0.79 *\n0.66 – 0.95\n0.011\n\n\ncsu [012]\n0.15 ***\n0.13 – 0.18\n<0.001\n\n\ncsu [013]\n0.52 ***\n0.44 – 0.62\n<0.001\n\n\ncsu [014]\n0.87 \n0.76 – 1.00\n0.052\n\n\ncsu [015]\n0.71 ***\n0.63 – 0.81\n<0.001\n\n\ncsu [016]\n1.02 \n0.89 – 1.17\n0.761\n\n\ncsu [017]\n1.54 ***\n1.30 – 1.82\n<0.001\n\n\ncsu [018]\n0.56 ***\n0.46 – 0.68\n<0.001\n\n\ncsu [019]\n0.50 ***\n0.44 – 0.57\n<0.001\n\n\ncsu [020]\n0.39 ***\n0.34 – 0.45\n<0.001\n\n\ncsu [021]\n0.25 ***\n0.20 – 0.31\n<0.001\n\n\ncsu [022]\n2.08 ***\n1.80 – 2.41\n<0.001\n\n\ncsu [023]\n0.52 ***\n0.45 – 0.60\n<0.001\n\n\ncsu [024]\n4.16 ***\n3.61 – 4.80\n<0.001\n\n\ncsu [025]\n1.50 ***\n1.31 – 1.73\n<0.001\n\n\ncsu [026]\n1.40 ***\n1.22 – 1.59\n<0.001\n\n\ncsu [027]\n0.45 ***\n0.39 – 0.52\n<0.001\n\n\ncsu [028]\n0.83 \n0.69 – 1.01\n0.069\n\n\ncsu [029]\n1.78 ***\n1.52 – 2.08\n<0.001\n\n\ncsu [02A]\n1.17 \n0.94 – 1.46\n0.168\n\n\ncsu [030]\n0.65 ***\n0.55 – 0.77\n<0.001\n\n\ncsu [031]\n0.25 ***\n0.22 – 0.28\n<0.001\n\n\nreferral source clean[Citizen]\n1.17 *\n1.04 – 1.32\n0.010\n\n\nreferral source clean[Court]\n17.15 ***\n12.40 – 24.29\n<0.001\n\n\nreferral source clean[Law Enforcement]\n0.63 ***\n0.57 – 0.70\n<0.001\n\n\nreferral source clean[Probation Officer]\n0.99 \n0.77 – 1.26\n0.918\n\n\nreferral source clean[Relative/Spouse/Self]\n0.55 ***\n0.49 – 0.62\n<0.001\n\n\nreferral source clean[School Official]\n1.32 ***\n1.16 – 1.49\n<0.001\n\n\nreferral source clean[School Resource Officer]\n0.27 ***\n0.24 – 0.30\n<0.001\n\n\ndai clean [Class 1Misdemeanor AgainstPersons]\n0.31 ***\n0.27 – 0.37\n<0.001\n\n\ndai clean [Felony againstPersons]\n2.39 ***\n1.95 – 2.92\n<0.001\n\n\ndai clean [Felony Weaponsand Felony NarcoticsDistribution]\n2.81 ***\n2.09 – 3.80\n<0.001\n\n\ndai clean [Other Class 1Misdemeanor]\n0.19 ***\n0.16 – 0.22\n<0.001\n\n\ndai clean [Other Felony]\n0.73 **\n0.60 – 0.89\n0.002\n\n\ndai clean [OtherViolation]\n0.22 ***\n0.19 – 0.27\n<0.001\n\n\ndai clean [StatusOffense]\n0.48 ***\n0.44 – 0.53\n<0.001\n\n\ndate opened year [2016]\n0.85 ***\n0.79 – 0.92\n<0.001\n\n\ndate opened year [2017]\n0.79 ***\n0.74 – 0.85\n<0.001\n\n\ndate opened year [2018]\n0.70 ***\n0.65 – 0.75\n<0.001\n\n\ndate opened year [2019]\n0.61 ***\n0.56 – 0.65\n<0.001\n\n\ndate opened year [2020]\n0.53 ***\n0.49 – 0.58\n<0.001\n\n\ndate opened year [2021]\n0.62 ***\n0.56 – 0.69\n<0.001\n\n\ncount misd with case\n1.62 ***\n1.56 – 1.69\n<0.001\n\n\ncount felony with case\n2.36 ***\n2.17 – 2.58\n<0.001\n\n\ncount status with case\n1.11 \n0.97 – 1.25\n0.119\n\n\ncount violation with case\n2.16 ***\n2.00 – 2.33\n<0.001\n\n\nObservations\n67007\n\n\nR2 Tjur\n0.289\n\n\n* p<0.05   ** p<0.01   *** p<0.001"
+    "text": "Table 1. Model Output: Petition\nIn the following analysis, the outcome variable is binary – split into petitioned at intake (excluding court summons) and either diverted, resolved, or referred to another agency. All records with other intake complaint decisions are excluded from this analysis.\nNOTE: I am currently running the regression on youth with no prior JJ history.\nPredictors included in model are:\n\nrace\ngender\nage at intake\nCSU\nreferral/petitioner source\ncategory of offense\nyear of petition\ncounts of felony, misdemeanor, status, and violation charges associated with intake/complaint\n\n\nlibrary(sjPlot)\nlibrary(sjmisc)\nlibrary(sjlabelled)\nlibrary(marginaleffects)\n\nintake_complaints_no_prior_jj_to_model_diversion_petitioned <- df_analytic_complaints_disposition_caseload %>%\n  filter(jj_history_clean==\"No Prior JJ History\",\n         !is.na(intake_decision_regression_model_petition)==TRUE) %>% \n  mutate(race = fct_relevel(race_clean, \"White\"),\n         gender = fct_relevel(gender_clean, \"Male\"),\n         referral_source_clean = fct_relevel(referral_source_clean, \"Other\"),\n         date_opened_year = fct_relevel(as.character(date_opened_year), \"2015\"),\n         intake_decision_regression_model_petition_num = ifelse(intake_decision_regression_model_petition==\"Petitioned\",\n                                           1,0)) %>% \n  distinct(juvenile_number,\n           .keep_all=TRUE)\n\nva_diversion_petition_model <- glm(\n  intake_decision_regression_model_petition_num ~ race + gender + intake_age + csu + referral_source_clean + dai_clean +\n    date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_other_violation_with_case + count_violation_with_case,\n  family = \"binomial\", \n  data = intake_complaints_no_prior_jj_to_model_diversion_petitioned)\n\n\ntab_model(va_diversion_petition_model,\n          p.style = \"numeric_stars\")\n\n\n\n\n \nintake decisionregression model petitionnum\n\n\nPredictors\nOdds Ratios\nCI\np\n\n\n(Intercept)\n1.52 ***\n1.21 – 1.91\n<0.001\n\n\nrace [American Indian]\n1.11 \n0.68 – 1.82\n0.669\n\n\nrace [Asian]\n0.77 **\n0.64 – 0.91\n0.003\n\n\nrace [Black]\n1.15 ***\n1.10 – 1.20\n<0.001\n\n\nrace [Hispanic]\n1.12 **\n1.04 – 1.20\n0.002\n\n\nrace [Other]\n0.92 *\n0.86 – 0.99\n0.020\n\n\ngender [Female]\n0.92 ***\n0.88 – 0.95\n<0.001\n\n\nintake age\n1.02 ***\n1.01 – 1.03\n<0.001\n\n\ncsu [002]\n0.79 ***\n0.69 – 0.91\n0.001\n\n\ncsu [003]\n0.28 ***\n0.22 – 0.35\n<0.001\n\n\ncsu [004]\n0.23 ***\n0.20 – 0.27\n<0.001\n\n\ncsu [005]\n0.58 ***\n0.49 – 0.70\n<0.001\n\n\ncsu [006]\n3.05 ***\n2.56 – 3.63\n<0.001\n\n\ncsu [007]\n1.42 ***\n1.22 – 1.67\n<0.001\n\n\ncsu [008]\n2.79 ***\n2.38 – 3.28\n<0.001\n\n\ncsu [009]\n1.40 ***\n1.22 – 1.61\n<0.001\n\n\ncsu [010]\n1.08 \n0.92 – 1.27\n0.333\n\n\ncsu [011]\n0.78 **\n0.65 – 0.93\n0.007\n\n\ncsu [012]\n0.16 ***\n0.13 – 0.18\n<0.001\n\n\ncsu [013]\n0.51 ***\n0.43 – 0.60\n<0.001\n\n\ncsu [014]\n0.85 *\n0.74 – 0.98\n0.023\n\n\ncsu [015]\n0.71 ***\n0.63 – 0.81\n<0.001\n\n\ncsu [016]\n1.02 \n0.89 – 1.17\n0.765\n\n\ncsu [017]\n1.54 ***\n1.30 – 1.82\n<0.001\n\n\ncsu [018]\n0.56 ***\n0.46 – 0.68\n<0.001\n\n\ncsu [019]\n0.50 ***\n0.44 – 0.57\n<0.001\n\n\ncsu [020]\n0.39 ***\n0.34 – 0.45\n<0.001\n\n\ncsu [021]\n0.25 ***\n0.20 – 0.31\n<0.001\n\n\ncsu [022]\n2.08 ***\n1.80 – 2.41\n<0.001\n\n\ncsu [023]\n0.52 ***\n0.45 – 0.60\n<0.001\n\n\ncsu [024]\n4.16 ***\n3.61 – 4.79\n<0.001\n\n\ncsu [025]\n1.50 ***\n1.31 – 1.72\n<0.001\n\n\ncsu [026]\n1.39 ***\n1.22 – 1.59\n<0.001\n\n\ncsu [027]\n0.45 ***\n0.39 – 0.52\n<0.001\n\n\ncsu [028]\n0.83 \n0.69 – 1.01\n0.070\n\n\ncsu [029]\n1.78 ***\n1.52 – 2.08\n<0.001\n\n\ncsu [02A]\n1.17 \n0.94 – 1.47\n0.162\n\n\ncsu [030]\n0.65 ***\n0.55 – 0.77\n<0.001\n\n\ncsu [031]\n0.25 ***\n0.22 – 0.28\n<0.001\n\n\nreferral source clean[Citizen]\n1.17 **\n1.04 – 1.33\n0.009\n\n\nreferral source clean[Court]\n17.20 ***\n12.44 – 24.36\n<0.001\n\n\nreferral source clean[Law Enforcement]\n0.63 ***\n0.57 – 0.70\n<0.001\n\n\nreferral source clean[Probation Officer]\n0.99 \n0.77 – 1.26\n0.922\n\n\nreferral source clean[Relative/Spouse/Self]\n0.55 ***\n0.49 – 0.62\n<0.001\n\n\nreferral source clean[School Official]\n1.32 ***\n1.17 – 1.49\n<0.001\n\n\nreferral source clean[School Resource Officer]\n0.27 ***\n0.24 – 0.30\n<0.001\n\n\ndai clean [Class 1Misdemeanor AgainstPersons]\n0.31 ***\n0.27 – 0.37\n<0.001\n\n\ndai clean [Felony againstPersons]\n2.41 ***\n1.97 – 2.94\n<0.001\n\n\ndai clean [Felony Weaponsand Felony NarcoticsDistribution]\n2.84 ***\n2.11 – 3.83\n<0.001\n\n\ndai clean [Other Class 1Misdemeanor]\n0.19 ***\n0.16 – 0.22\n<0.001\n\n\ndai clean [Other Felony]\n0.74 **\n0.61 – 0.90\n0.003\n\n\ndai clean [OtherViolation]\n0.24 ***\n0.20 – 0.28\n<0.001\n\n\ndai clean [StatusOffense]\n0.48 ***\n0.44 – 0.53\n<0.001\n\n\ndate opened year [2016]\n0.85 ***\n0.79 – 0.92\n<0.001\n\n\ndate opened year [2017]\n0.79 ***\n0.74 – 0.85\n<0.001\n\n\ndate opened year [2018]\n0.69 ***\n0.64 – 0.75\n<0.001\n\n\ndate opened year [2019]\n0.61 ***\n0.56 – 0.65\n<0.001\n\n\ndate opened year [2020]\n0.53 ***\n0.49 – 0.58\n<0.001\n\n\ndate opened year [2021]\n0.62 ***\n0.56 – 0.69\n<0.001\n\n\ncount misd with case\n1.62 ***\n1.56 – 1.69\n<0.001\n\n\ncount felony with case\n2.36 ***\n2.16 – 2.58\n<0.001\n\n\ncount status with case\n1.11 \n0.98 – 1.26\n0.094\n\n\ncount other violationwith case\n2.05 ***\n1.90 – 2.22\n<0.001\n\n\ncount violation with case\n8.14 ***\n5.15 – 13.45\n<0.001\n\n\nObservations\n67007\n\n\nR2 Tjur\n0.289\n\n\n* p<0.05   ** p<0.01   *** p<0.001"
   },
   {
     "objectID": "ojjdp_va_part_i_analysis_regression.html#table-2-predicted-probablities-by-raceethnicity",
@@ -102,7 +102,7 @@
     "href": "ojjdp_va_part_i_analysis_regression.html#figure-4-predicted-probabilities-of-petition-by-csu-for-status-offenses",
     "title": "Analysis: Part I",
     "section": "Figure 4: Predicted Probabilities of Petition by CSU for Status Offenses",
-    "text": "Figure 4: Predicted Probabilities of Petition by CSU for Status Offenses\nNOTE: This analysis excludes CHINS complaints. We may want to exclude CSU’s with small N sizes – I haven’t yet done that."
+    "text": "Figure 4: Predicted Probabilities of Petition by CSU for Status Offenses\nNOTE: This analysis excludes CHINS complaints."
   },
   {
     "objectID": "ojjdp_va_part_i_analysis_regression.html#table-6.-model-output-disposition",
@@ -564,7 +564,7 @@
     "href": "ojjdp_va_part_i_analysis_regression.html#figure-10-predicted-probabilities-by-csu-for-status-offenses",
     "title": "Analysis: Part I",
     "section": "Figure 10: Predicted Probabilities by CSU for Status Offenses",
-    "text": "Figure 10: Predicted Probabilities by CSU for Status Offenses\nNOTE: This analysis excludes CHINS complaints. We may want to exclude CSU’s with small N sizes – I haven’t yet done that."
+    "text": "Figure 10: Predicted Probabilities by CSU for Status Offenses\nNOTE: This analysis excludes CHINS complaints."
   },
   {
     "objectID": "ojjdp_va_part_i_analysis_regression.html#table-11.-model-output-petition-within-one-year",
@@ -782,5 +782,292 @@
     "title": "Part II Analysis: Intake Decisions and Diversion",
     "section": "Table 12: Diversion Outcomes by Charge Type",
     "text": "Table 12: Diversion Outcomes by Charge Type\nNote: Options for diversion outcomes include successful, unsuccessful with petition, and unsuccessful without petition. Most serious charge per complaint was selected.\n\n\n\n\n \n  \n    Offense Description \n    Unique Complaints Diverted (N) \n    Unique Complaints w/ Successful Diversion (N) \n    Successful Diversion Rate (%) \n    Unique Complaints w/ Unsuccessful Diversion without petition (N) \n    Unsuccessful Diversion without petition (%) \n    Unique Complaints w/ Unsuccessful Diversion (with petition) (N) \n    Unsuccessful Diversion with petition (%) \n  \n \n\n  \n    Other Class 1 Misdemeanor \n    12,333 \n    10,854 \n    88.0% \n    651 \n    5.3% \n    826 \n    6.7% \n  \n  \n    Class 1 Misdemeanor Against Persons \n    8,665 \n    7,404 \n    85.4% \n    685 \n    7.9% \n    575 \n    6.6% \n  \n  \n    Status Offense \n    7,578 \n    5,365 \n    70.8% \n    856 \n    11.3% \n    1,357 \n    17.9% \n  \n  \n    Other Violation \n    5,876 \n    5,174 \n    88.1% \n    388 \n    6.6% \n    314 \n    5.3% \n  \n  \n    Other Felony \n    1,822 \n    1,555 \n    85.3% \n    96 \n    5.3% \n    171 \n    9.4% \n  \n  \n    Felony against Persons \n    798 \n    727 \n    91.1% \n    39 \n    4.9% \n    32 \n    4.0% \n  \n  \n    Felony Weapons and Felony Narcotics Distribution \n    90 \n    83 \n    92.2% \n    4 \n    4.4% \n    3 \n    3.3% \n  \n  \n    Court Order Violation \n    7 \n    3 \n    42.9% \n    1 \n    14.3% \n    3 \n    42.9% \n  \n  \n    Overall \n    37,169 \n    31,165 \n    83.8% \n    2,720 \n    7.3% \n    3,281 \n    8.8%"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#table-2-predicted-probabilities-by-raceethnicity",
+    "href": "ojjdp_va_part_i_analysis_regression.html#table-2-predicted-probabilities-by-raceethnicity",
+    "title": "Analysis: Part I",
+    "section": "Table 2: Predicted Probabilities by Race/Ethnicity",
+    "text": "Table 2: Predicted Probabilities by Race/Ethnicity\n\n\n\n\n \n  \n    race_eth \n    predicted_probability \n    confidence_interval_low \n    confidence_interval_high \n    rri \n  \n \n\n  \n    White \n    0.3718459 \n    0.3653147 \n    0.3784242 \n    1.0000000 \n  \n  \n    American Indian \n    0.4369377 \n    0.3215074 \n    0.5596282 \n    1.1750504 \n  \n  \n    Asian \n    0.2273956 \n    0.1984158 \n    0.2592392 \n    0.6115318 \n  \n  \n    Black \n    0.3950353 \n    0.3873345 \n    0.4027885 \n    1.0623629 \n  \n  \n    Hispanic \n    0.3234901 \n    0.3107697 \n    0.3364770 \n    0.8699575 \n  \n  \n    Other \n    0.3087859 \n    0.2951591 \n    0.3227538 \n    0.8304137"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#figure-1-predicted-probabilities-by-raceethnicity",
+    "href": "ojjdp_va_part_i_analysis_regression.html#figure-1-predicted-probabilities-by-raceethnicity",
+    "title": "Analysis: Part I",
+    "section": "Figure 1: Predicted Probabilities by Race/Ethnicity",
+    "text": "Figure 1: Predicted Probabilities by Race/Ethnicity"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#table-3-predicted-probabilities-by-gender",
+    "href": "ojjdp_va_part_i_analysis_regression.html#table-3-predicted-probabilities-by-gender",
+    "title": "Analysis: Part I",
+    "section": "Table 3: Predicted Probabilities by Gender",
+    "text": "Table 3: Predicted Probabilities by Gender\n\n\n\n\n \n  \n    gender \n    predicted_probability \n    confidence_interval_low \n    confidence_interval_high \n    rri \n  \n \n\n  \n    Male \n    0.3898300 \n    0.3839370 \n    0.3957553 \n    1.17747 \n  \n  \n    Female \n    0.3310742 \n    0.3243766 \n    0.3378410 \n    1.00000"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#figure-2a-predicted-probabilities-by-gender",
+    "href": "ojjdp_va_part_i_analysis_regression.html#figure-2a-predicted-probabilities-by-gender",
+    "title": "Analysis: Part I",
+    "section": "Figure 2a: Predicted Probabilities by Gender",
+    "text": "Figure 2a: Predicted Probabilities by Gender"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#figure-2b-predicted-probabilities-by-raceethnicity-and-gender",
+    "href": "ojjdp_va_part_i_analysis_regression.html#figure-2b-predicted-probabilities-by-raceethnicity-and-gender",
+    "title": "Analysis: Part I",
+    "section": "Figure 2b: Predicted Probabilities by Race/Ethnicity and Gender",
+    "text": "Figure 2b: Predicted Probabilities by Race/Ethnicity and Gender"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#table-4-predicted-probabilities-by-csu",
+    "href": "ojjdp_va_part_i_analysis_regression.html#table-4-predicted-probabilities-by-csu",
+    "title": "Analysis: Part I",
+    "section": "Table 4: Predicted Probabilities by CSU",
+    "text": "Table 4: Predicted Probabilities by CSU\n\n\n\n\n \n  \n    csu \n    predicted_probability \n    confidence_interval_low \n    confidence_interval_high \n  \n \n\n  \n    001 \n    0.4855849 \n    0.4595388 \n    0.5117094 \n  \n  \n    002 \n    0.4291355 \n    0.4075635 \n    0.4509803 \n  \n  \n    003 \n    0.2608010 \n    0.2249744 \n    0.3001236 \n  \n  \n    004 \n    0.2298931 \n    0.2120813 \n    0.2487286 \n  \n  \n    005 \n    0.3371233 \n    0.3053354 \n    0.3704558 \n  \n  \n    006 \n    0.7197073 \n    0.6913110 \n    0.7464496 \n  \n  \n    007 \n    0.6339804 \n    0.6064651 \n    0.6606483 \n  \n  \n    008 \n    0.7282191 \n    0.7036358 \n    0.7514834 \n  \n  \n    009 \n    0.4957398 \n    0.4738649 \n    0.5176309 \n  \n  \n    010 \n    0.4539346 \n    0.4247224 \n    0.4834675 \n  \n  \n    011 \n    0.4291841 \n    0.3929027 \n    0.4662429 \n  \n  \n    012 \n    0.0841685 \n    0.0759491 \n    0.0931876 \n  \n  \n    013 \n    0.3481644 \n    0.3207896 \n    0.3765801 \n  \n  \n    014 \n    0.3901340 \n    0.3692305 \n    0.4114488 \n  \n  \n    015 \n    0.3634310 \n    0.3477544 \n    0.3794032 \n  \n  \n    016 \n    0.4642085 \n    0.4425366 \n    0.4860163 \n  \n  \n    017 \n    0.6104159 \n    0.5782940 \n    0.6416073 \n  \n  \n    018 \n    0.3912370 \n    0.3540223 \n    0.4297612 \n  \n  \n    019 \n    0.3097977 \n    0.2945826 \n    0.3254361 \n  \n  \n    020 \n    0.2080357 \n    0.1928262 \n    0.2241117 \n  \n  \n    021 \n    0.1817055 \n    0.1560233 \n    0.2105604 \n  \n  \n    022 \n    0.6405981 \n    0.6168530 \n    0.6636741 \n  \n  \n    023 \n    0.2979285 \n    0.2783239 \n    0.3183049 \n  \n  \n    024 \n    0.7975125 \n    0.7816928 \n    0.8124609 \n  \n  \n    025 \n    0.5428581 \n    0.5206760 \n    0.5648714 \n  \n  \n    026 \n    0.5039645 \n    0.4844382 \n    0.5234787 \n  \n  \n    027 \n    0.2238592 \n    0.2060780 \n    0.2427057 \n  \n  \n    028 \n    0.3379923 \n    0.3024623 \n    0.3754496 \n  \n  \n    029 \n    0.5821605 \n    0.5544362 \n    0.6093752 \n  \n  \n    02A \n    0.4942047 \n    0.4448810 \n    0.5436414 \n  \n  \n    030 \n    0.3011196 \n    0.2758386 \n    0.3276692 \n  \n  \n    031 \n    0.1418119 \n    0.1321693 \n    0.1520347"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#figure-3a-predicted-probabilities-by-csu",
+    "href": "ojjdp_va_part_i_analysis_regression.html#figure-3a-predicted-probabilities-by-csu",
+    "title": "Analysis: Part I",
+    "section": "Figure 3a: Predicted Probabilities by CSU",
+    "text": "Figure 3a: Predicted Probabilities by CSU"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#figure-3b-predicted-probabilities-by-csu-mapped",
+    "href": "ojjdp_va_part_i_analysis_regression.html#figure-3b-predicted-probabilities-by-csu-mapped",
+    "title": "Analysis: Part I",
+    "section": "Figure 3b: Predicted Probabilities by CSU (mapped)",
+    "text": "Figure 3b: Predicted Probabilities by CSU (mapped)"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#table-5-predicted-probabilities-by-charge-type",
+    "href": "ojjdp_va_part_i_analysis_regression.html#table-5-predicted-probabilities-by-charge-type",
+    "title": "Analysis: Part I",
+    "section": "Table 5: Predicted Probabilities by Charge Type",
+    "text": "Table 5: Predicted Probabilities by Charge Type\n\n\n\n\n \n  \n    dai_clean \n    predicted_probability \n    confidence_interval_low \n    confidence_interval_high \n  \n \n\n  \n    CHINS \n    0.5807868 \n    0.5691533 \n    0.5924203 \n  \n  \n    Class 1 Misdemeanor Against Persons \n    0.2782043 \n    0.2713493 \n    0.2850593 \n  \n  \n    Felony Weapons and Felony Narcotics Distribution \n    0.8197026 \n    0.7897186 \n    0.8496866 \n  \n  \n    Felony against Persons \n    0.8102901 \n    0.7999392 \n    0.8206410 \n  \n  \n    Other Class 1 Misdemeanor \n    0.2168792 \n    0.2110690 \n    0.2226895 \n  \n  \n    Other Felony \n    0.6499049 \n    0.6389777 \n    0.6608322 \n  \n  \n    Other Violation \n    0.2651949 \n    0.2559116 \n    0.2744781 \n  \n  \n    Status Offense \n    0.4167768 \n    0.4089797 \n    0.4245739"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#figure-3-predicted-probabilities-by-charge-type",
+    "href": "ojjdp_va_part_i_analysis_regression.html#figure-3-predicted-probabilities-by-charge-type",
+    "title": "Analysis: Part I",
+    "section": "Figure 3: Predicted Probabilities by Charge Type",
+    "text": "Figure 3: Predicted Probabilities by Charge Type"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#table-6.-model-output-successful-diversion",
+    "href": "ojjdp_va_part_i_analysis_regression.html#table-6.-model-output-successful-diversion",
+    "title": "Analysis: Part I",
+    "section": "Table 6. Model Output: Successful Diversion",
+    "text": "Table 6. Model Output: Successful Diversion\nIn the following analysis, the outcome variable is binary – split into youth with successful diversion outcomes and those with unsuccessful diversion outcomes (whether petitioned or not). All records with other intake complaint decisions are excluded from this analysis, including diversions which were still active at time of data pull.\nNOTE: I am currently running the regression for youth with no prior JJ history and who were initially diverted.\nPredictors included in model are:\n\nrace\ngender\nage at intake\nCSU\nreferral/petitioner source\ncategory of offense\nyear of petition\ncounts of felony, misdemeanor, status, and violation charges associated with intake/complaint\n\n\nintake_complaints_no_prior_jj_to_model_diversion_outcome <- df_analytic_complaints_disposition_caseload %>%\n  filter(jj_history_clean==\"No Prior JJ History\",\n         !is.na(intake_decision_regression_model_petition)==TRUE,\n         intake_decision_label%in%c(\"UNSUCCESSFUL DIVERSION/PETITION FILED\", \"SUCCESSFUL DIVERSION\",\"UNSUCCESSFUL DIVERSION/NO PETITION FILED\")) %>% \n  mutate(race = fct_relevel(race_clean, \"White\"),\n         gender = fct_relevel(gender_clean, \"Male\"),\n         referral_source_clean = fct_relevel(referral_source_clean, \"Other\"),\n         date_opened_year = fct_relevel(as.character(date_opened_year), \"2015\"),\n         diversion_success_regression_model_num = ifelse(intake_decision_label==\"SUCCESSFUL DIVERSION\",\n                                           1,0)) %>% \n  distinct(juvenile_number,\n           .keep_all=TRUE)\n\nva_diversion_outcome_model <- glm(\n  diversion_success_regression_model_num ~ race + gender + intake_age + csu + referral_source_clean + dai_clean +\n    date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_other_violation_with_case + count_violation_with_case,\n  family = \"binomial\", \n  data = intake_complaints_no_prior_jj_to_model_diversion_outcome)\n\n\ntab_model(va_diversion_outcome_model,\n          p.style = \"numeric_stars\")\n\n\n\n\n \ndiversion successregression model num\n\n\nPredictors\nOdds Ratios\nCI\np\n\n\n(Intercept)\n7.63 ***\n4.05 – 14.56\n<0.001\n\n\nrace [American Indian]\n0.41 *\n0.18 – 1.06\n0.045\n\n\nrace [Asian]\n1.01 \n0.71 – 1.49\n0.946\n\n\nrace [Black]\n0.58 ***\n0.53 – 0.64\n<0.001\n\n\nrace [Hispanic]\n0.54 ***\n0.48 – 0.61\n<0.001\n\n\nrace [Other]\n0.97 \n0.84 – 1.12\n0.662\n\n\ngender [Female]\n1.10 **\n1.02 – 1.19\n0.010\n\n\nintake age\n1.04 ***\n1.02 – 1.06\n<0.001\n\n\ncsu [002]\n1.02 \n0.65 – 1.55\n0.926\n\n\ncsu [003]\n0.87 \n0.53 – 1.40\n0.568\n\n\ncsu [004]\n1.59 \n0.97 – 2.58\n0.060\n\n\ncsu [005]\n1.88 *\n1.13 – 3.11\n0.014\n\n\ncsu [006]\n0.61 \n0.33 – 1.16\n0.126\n\n\ncsu [007]\n0.53 *\n0.31 – 0.88\n0.015\n\n\ncsu [008]\n0.41 ***\n0.25 – 0.66\n<0.001\n\n\ncsu [009]\n0.76 \n0.49 – 1.16\n0.216\n\n\ncsu [010]\n0.96 \n0.61 – 1.48\n0.863\n\n\ncsu [011]\n0.73 \n0.44 – 1.19\n0.209\n\n\ncsu [012]\n0.63 *\n0.42 – 0.93\n0.025\n\n\ncsu [013]\n0.91 \n0.58 – 1.39\n0.669\n\n\ncsu [014]\n0.77 \n0.50 – 1.15\n0.214\n\n\ncsu [015]\n0.98 \n0.64 – 1.45\n0.907\n\n\ncsu [016]\n0.78 \n0.51 – 1.17\n0.251\n\n\ncsu [017]\n0.79 \n0.49 – 1.24\n0.306\n\n\ncsu [018]\n0.96 \n0.56 – 1.63\n0.878\n\n\ncsu [019]\n0.74 \n0.48 – 1.12\n0.168\n\n\ncsu [020]\n1.01 \n0.66 – 1.51\n0.966\n\n\ncsu [021]\n1.26 \n0.78 – 2.01\n0.339\n\n\ncsu [022]\n0.47 ***\n0.30 – 0.72\n0.001\n\n\ncsu [023]\n0.67 \n0.44 – 0.99\n0.052\n\n\ncsu [024]\n1.69 *\n1.04 – 2.73\n0.032\n\n\ncsu [025]\n0.86 \n0.54 – 1.34\n0.511\n\n\ncsu [026]\n0.50 ***\n0.33 – 0.74\n0.001\n\n\ncsu [027]\n0.83 \n0.54 – 1.24\n0.386\n\n\ncsu [028]\n0.69 \n0.43 – 1.09\n0.118\n\n\ncsu [029]\n0.76 \n0.48 – 1.18\n0.234\n\n\ncsu [02A]\n1.94 \n0.95 – 4.28\n0.082\n\n\ncsu [030]\n1.46 \n0.91 – 2.28\n0.106\n\n\ncsu [031]\n1.04 \n0.68 – 1.52\n0.862\n\n\nreferral source clean[Citizen]\n0.44 ***\n0.32 – 0.59\n<0.001\n\n\nreferral source clean[Court]\n0.41 \n0.16 – 1.17\n0.071\n\n\nreferral source clean[Law Enforcement]\n0.70 **\n0.54 – 0.89\n0.005\n\n\nreferral source clean[Probation Officer]\n0.52 *\n0.31 – 0.88\n0.012\n\n\nreferral source clean[Relative/Spouse/Self]\n0.30 ***\n0.22 – 0.42\n<0.001\n\n\nreferral source clean[School Official]\n0.29 ***\n0.22 – 0.39\n<0.001\n\n\nreferral source clean[School Resource Officer]\n0.70 **\n0.53 – 0.91\n0.010\n\n\ndai clean [Class 1Misdemeanor AgainstPersons]\n1.23 \n0.87 – 1.75\n0.236\n\n\ndai clean [Felony againstPersons]\n1.37 \n0.78 – 2.39\n0.273\n\n\ndai clean [Felony Weaponsand Felony NarcoticsDistribution]\n1.51 \n0.58 – 4.72\n0.432\n\n\ndai clean [Other Class 1Misdemeanor]\n1.48 *\n1.05 – 2.10\n0.026\n\n\ndai clean [Other Felony]\n0.93 \n0.55 – 1.54\n0.782\n\n\ndai clean [OtherViolation]\n1.40 \n0.96 – 2.06\n0.081\n\n\ndai clean [StatusOffense]\n0.85 \n0.66 – 1.08\n0.190\n\n\ndate opened year [2016]\n1.02 \n0.87 – 1.19\n0.817\n\n\ndate opened year [2017]\n1.02 \n0.88 – 1.19\n0.759\n\n\ndate opened year [2018]\n1.24 **\n1.06 – 1.45\n0.006\n\n\ndate opened year [2019]\n1.37 ***\n1.17 – 1.59\n<0.001\n\n\ndate opened year [2020]\n1.30 **\n1.09 – 1.55\n0.003\n\n\ndate opened year [2021]\n1.37 **\n1.12 – 1.69\n0.003\n\n\ncount misd with case\n0.92 **\n0.87 – 0.98\n0.005\n\n\ncount felony with case\n1.18 \n0.89 – 1.66\n0.283\n\n\ncount status with case\n0.78 *\n0.61 – 1.01\n0.049\n\n\ncount other violationwith case\n0.97 \n0.85 – 1.14\n0.665\n\n\ncount violation with case\n0.00 \nNA – 0.00\n0.857\n\n\nObservations\n27427\n\n\nR2 Tjur\n0.073\n\n\n* p<0.05   ** p<0.01   *** p<0.001"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#table-7-predicted-probabilities-by-raceethnicity",
+    "href": "ojjdp_va_part_i_analysis_regression.html#table-7-predicted-probabilities-by-raceethnicity",
+    "title": "Analysis: Part I",
+    "section": "Table 7: Predicted Probabilities by Race/Ethnicity",
+    "text": "Table 7: Predicted Probabilities by Race/Ethnicity\n\n\n\n\n \n  \n    race_eth \n    predicted_probability \n    confidence_interval_low \n    confidence_interval_high \n    rri \n  \n \n\n  \n    White \n    0.9057935 \n    0.8983497 \n    0.9127451 \n    1.0000000 \n  \n  \n    American Indian \n    0.7924885 \n    0.6137296 \n    0.9017627 \n    0.8749108 \n  \n  \n    Asian \n    0.9198056 \n    0.8886934 \n    0.9427813 \n    1.0154694 \n  \n  \n    Black \n    0.8551366 \n    0.8131042 \n    0.8890065 \n    0.9440746 \n  \n  \n    Hispanic \n    0.8326900 \n    0.8104571 \n    0.8527887 \n    0.9192934 \n  \n  \n    Other \n    0.8999348 \n    0.8875567 \n    0.9110868 \n    0.9935320"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#figure-5-predicted-probabilities-by-raceethnicity",
+    "href": "ojjdp_va_part_i_analysis_regression.html#figure-5-predicted-probabilities-by-raceethnicity",
+    "title": "Analysis: Part I",
+    "section": "Figure 5: Predicted Probabilities by Race/Ethnicity",
+    "text": "Figure 5: Predicted Probabilities by Race/Ethnicity"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#table-8-predicted-probabilities-by-gender",
+    "href": "ojjdp_va_part_i_analysis_regression.html#table-8-predicted-probabilities-by-gender",
+    "title": "Analysis: Part I",
+    "section": "Table 8: Predicted Probabilities by Gender",
+    "text": "Table 8: Predicted Probabilities by Gender\n\n\n\n\n \n  \n    gender \n    predicted_probability \n    confidence_interval_low \n    confidence_interval_high \n    rri \n  \n \n\n  \n    Male \n    0.8831545 \n    0.8697221 \n    0.8953686 \n    0.9951478 \n  \n  \n    Female \n    0.8874606 \n    0.8685841 \n    0.9039257 \n    1.0000000"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#figure-6a-predicted-probabilities-by-gender",
+    "href": "ojjdp_va_part_i_analysis_regression.html#figure-6a-predicted-probabilities-by-gender",
+    "title": "Analysis: Part I",
+    "section": "Figure 6a: Predicted Probabilities by Gender",
+    "text": "Figure 6a: Predicted Probabilities by Gender"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#figure-6b-predicted-probabilities-by-raceethnicity-and-gender",
+    "href": "ojjdp_va_part_i_analysis_regression.html#figure-6b-predicted-probabilities-by-raceethnicity-and-gender",
+    "title": "Analysis: Part I",
+    "section": "Figure 6b: Predicted Probabilities by Race/Ethnicity and Gender",
+    "text": "Figure 6b: Predicted Probabilities by Race/Ethnicity and Gender"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#table-9-predicted-probabilities-by-csu",
+    "href": "ojjdp_va_part_i_analysis_regression.html#table-9-predicted-probabilities-by-csu",
+    "title": "Analysis: Part I",
+    "section": "Table 9: Predicted Probabilities by CSU",
+    "text": "Table 9: Predicted Probabilities by CSU\n\n\n\n\n \n  \n    csu \n    predicted_probability \n    confidence_interval_low \n    confidence_interval_high \n  \n \n\n  \n    001 \n    0.9095311 \n    0.8732558 \n    0.9361829 \n  \n  \n    002 \n    0.9143423 \n    0.8970368 \n    0.9289696 \n  \n  \n    003 \n    0.8431661 \n    0.7525291 \n    0.9048062 \n  \n  \n    004 \n    0.9130329 \n    0.8859668 \n    0.9341522 \n  \n  \n    005 \n    0.9452050 \n    0.9254124 \n    0.9599726 \n  \n  \n    006 \n    0.8527403 \n    0.7790742 \n    0.9048432 \n  \n  \n    007 \n    0.8218415 \n    0.7658892 \n    0.8667478 \n  \n  \n    008 \n    0.7144591 \n    0.5534554 \n    0.8347454 \n  \n  \n    009 \n    0.8898663 \n    0.8693800 \n    0.9074815 \n  \n  \n    010 \n    0.8864820 \n    0.8613611 \n    0.9075397 \n  \n  \n    011 \n    0.8291765 \n    0.7797028 \n    0.8694005 \n  \n  \n    012 \n    0.8762008 \n    0.8620757 \n    0.8890655 \n  \n  \n    013 \n    0.8553429 \n    0.6728826 \n    0.9444344 \n  \n  \n    014 \n    0.8687232 \n    0.5434147 \n    0.9735408 \n  \n  \n    015 \n    0.9166490 \n    0.9012268 \n    0.9298507 \n  \n  \n    016 \n    0.8826012 \n    0.8634968 \n    0.8993434 \n  \n  \n    017 \n    0.8319347 \n    0.7922310 \n    0.8653409 \n  \n  \n    018 \n    0.8496246 \n    0.7996513 \n    0.8888653 \n  \n  \n    019 \n    0.8826739 \n    0.8636143 \n    0.8993802 \n  \n  \n    020 \n    0.9209430 \n    0.9077379 \n    0.9323988 \n  \n  \n    021 \n    0.8842717 \n    0.8520041 \n    0.9102452 \n  \n  \n    022 \n    0.7866610 \n    0.7514795 \n    0.8180678 \n  \n  \n    023 \n    0.8023311 \n    0.7776757 \n    0.8248680 \n  \n  \n    024 \n    0.9218463 \n    0.8976296 \n    0.9407127 \n  \n  \n    025 \n    0.8802501 \n    0.8510474 \n    0.9043708 \n  \n  \n    026 \n    0.8455833 \n    0.8202795 \n    0.8678982 \n  \n  \n    027 \n    0.8805466 \n    0.8637722 \n    0.8955054 \n  \n  \n    028 \n    0.8556211 \n    0.8205008 \n    0.8848344 \n  \n  \n    029 \n    0.8544672 \n    0.8218931 \n    0.8819396 \n  \n  \n    02A \n    0.9486277 \n    0.9067723 \n    0.9722665 \n  \n  \n    030 \n    0.8976475 \n    0.8728570 \n    0.9180582 \n  \n  \n    031 \n    0.9009678 \n    0.8898649 \n    0.9110633"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#figure-7a-predicted-probabilities-by-csu",
+    "href": "ojjdp_va_part_i_analysis_regression.html#figure-7a-predicted-probabilities-by-csu",
+    "title": "Analysis: Part I",
+    "section": "Figure 7a: Predicted Probabilities by CSU",
+    "text": "Figure 7a: Predicted Probabilities by CSU"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#figure-7b-predicted-probabilities-by-csu-mapped",
+    "href": "ojjdp_va_part_i_analysis_regression.html#figure-7b-predicted-probabilities-by-csu-mapped",
+    "title": "Analysis: Part I",
+    "section": "Figure 7b: Predicted Probabilities by CSU (mapped)",
+    "text": "Figure 7b: Predicted Probabilities by CSU (mapped)"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#table-10-predicted-probabilities-by-charge-type",
+    "href": "ojjdp_va_part_i_analysis_regression.html#table-10-predicted-probabilities-by-charge-type",
+    "title": "Analysis: Part I",
+    "section": "Table 10: Predicted Probabilities by Charge Type",
+    "text": "Table 10: Predicted Probabilities by Charge Type\n\n\n\n\n \n  \n    dai_clean \n    predicted_probability \n    confidence_interval_low \n    confidence_interval_high \n  \n \n\n  \n    CHINS \n    0.7160839 \n    0.6844555 \n    0.7477123 \n  \n  \n    Class 1 Misdemeanor Against Persons \n    0.8764256 \n    0.8685022 \n    0.8843489 \n  \n  \n    Felony Weapons and Felony Narcotics Distribution \n    0.9333333 \n    0.8771273 \n    0.9895393 \n  \n  \n    Felony against Persons \n    0.9211356 \n    0.9003301 \n    0.9419412 \n  \n  \n    Other Class 1 Misdemeanor \n    0.9052192 \n    0.8994373 \n    0.9110011 \n  \n  \n    Other Felony \n    0.8804423 \n    0.8639805 \n    0.8969041 \n  \n  \n    Other Violation \n    0.9089867 \n    0.9005563 \n    0.9174171 \n  \n  \n    Status Offense \n    0.7355803 \n    0.7226409 \n    0.7485198"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#figure-8-predicted-probabilities-by-charge-type",
+    "href": "ojjdp_va_part_i_analysis_regression.html#figure-8-predicted-probabilities-by-charge-type",
+    "title": "Analysis: Part I",
+    "section": "Figure 8: Predicted Probabilities by Charge Type",
+    "text": "Figure 8: Predicted Probabilities by Charge Type"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#figure-9-predicted-probabilities-of-petition-by-csu-for-status-offenses",
+    "href": "ojjdp_va_part_i_analysis_regression.html#figure-9-predicted-probabilities-of-petition-by-csu-for-status-offenses",
+    "title": "Analysis: Part I",
+    "section": "Figure 9: Predicted Probabilities of Petition by CSU for Status Offenses",
+    "text": "Figure 9: Predicted Probabilities of Petition by CSU for Status Offenses\nNOTE: This analysis excludes CHINS complaints."
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#table-7-predicted-probabilities-by-raceethnicity-1",
+    "href": "ojjdp_va_part_i_analysis_regression.html#table-7-predicted-probabilities-by-raceethnicity-1",
+    "title": "Analysis: Part I",
+    "section": "Table 7: Predicted Probabilities by Race/Ethnicity",
+    "text": "Table 7: Predicted Probabilities by Race/Ethnicity\n\n\n\n\n \n  \n    race_eth \n    predicted_probability \n    confidence_interval_low \n    confidence_interval_high \n    rri \n  \n \n\n  \n    White \n    0.1776077 \n    0.1707959 \n    0.1846306 \n    1.0000000 \n  \n  \n    American Indian \n    0.2520809 \n    0.1233990 \n    0.4465894 \n    1.4193129 \n  \n  \n    Asian \n    0.1226484 \n    0.0927153 \n    0.1605356 \n    0.6905582 \n  \n  \n    Black \n    0.2084861 \n    0.1996270 \n    0.2176314 \n    1.1738574 \n  \n  \n    Hispanic \n    0.2435769 \n    0.2272486 \n    0.2606827 \n    1.3714325 \n  \n  \n    Other \n    0.1152798 \n    0.1027521 \n    0.1291151 \n    0.6490700"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#figure-6-predicted-probabilities-by-raceethnicity",
+    "href": "ojjdp_va_part_i_analysis_regression.html#figure-6-predicted-probabilities-by-raceethnicity",
+    "title": "Analysis: Part I",
+    "section": "Figure 6: Predicted Probabilities by Race/Ethnicity",
+    "text": "Figure 6: Predicted Probabilities by Race/Ethnicity"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#table-8-predicted-probabilities-by-gender-1",
+    "href": "ojjdp_va_part_i_analysis_regression.html#table-8-predicted-probabilities-by-gender-1",
+    "title": "Analysis: Part I",
+    "section": "Table 8: Predicted Probabilities by Gender",
+    "text": "Table 8: Predicted Probabilities by Gender\n\n\n\n\n \n  \n    gender \n    predicted_probability \n    confidence_interval_low \n    confidence_interval_high \n    rri \n  \n \n\n  \n    Male \n    0.2078313 \n    0.2013725 \n    0.2144417 \n    1.345063 \n  \n  \n    Female \n    0.1545141 \n    0.1474299 \n    0.1618741 \n    1.000000"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#figure-7-predicted-probabilities-by-gender",
+    "href": "ojjdp_va_part_i_analysis_regression.html#figure-7-predicted-probabilities-by-gender",
+    "title": "Analysis: Part I",
+    "section": "Figure 7: Predicted Probabilities by Gender",
+    "text": "Figure 7: Predicted Probabilities by Gender"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#table-9-predicted-probabilities-by-csu-1",
+    "href": "ojjdp_va_part_i_analysis_regression.html#table-9-predicted-probabilities-by-csu-1",
+    "title": "Analysis: Part I",
+    "section": "Table 9: Predicted Probabilities by CSU",
+    "text": "Table 9: Predicted Probabilities by CSU\n\n\n\n\n \n  \n    csu \n    predicted_probability \n    confidence_interval_low \n    confidence_interval_high \n  \n \n\n  \n    001 \n    0.1718345 \n    0.1320879 \n    0.2205027 \n  \n  \n    002 \n    0.1881708 \n    0.1658410 \n    0.2127405 \n  \n  \n    003 \n    0.2358619 \n    0.1918973 \n    0.2863300 \n  \n  \n    004 \n    0.2033878 \n    0.1693877 \n    0.2422224 \n  \n  \n    005 \n    0.1609846 \n    0.1342486 \n    0.1918650 \n  \n  \n    006 \n    0.1149957 \n    0.0643976 \n    0.1969794 \n  \n  \n    007 \n    0.1605208 \n    0.1178624 \n    0.2148581 \n  \n  \n    008 \n    0.2333037 \n    0.1826457 \n    0.2929757 \n  \n  \n    009 \n    0.1447770 \n    0.1239342 \n    0.1684510 \n  \n  \n    010 \n    0.1424378 \n    0.1181366 \n    0.1707698 \n  \n  \n    011 \n    0.1709152 \n    0.1297063 \n    0.2218787 \n  \n  \n    012 \n    0.1978080 \n    0.1810723 \n    0.2156832 \n  \n  \n    013 \n    0.2685074 \n    0.2378104 \n    0.3015990 \n  \n  \n    014 \n    0.1734977 \n    0.1536024 \n    0.1953750 \n  \n  \n    015 \n    0.1454541 \n    0.1293074 \n    0.1632390 \n  \n  \n    016 \n    0.1634996 \n    0.1432861 \n    0.1859457 \n  \n  \n    017 \n    0.1971366 \n    0.1604533 \n    0.2398109 \n  \n  \n    018 \n    0.1897472 \n    0.1437055 \n    0.2462974 \n  \n  \n    019 \n    0.1733302 \n    0.1525969 \n    0.1962282 \n  \n  \n    020 \n    0.1446422 \n    0.1285921 \n    0.1623224 \n  \n  \n    021 \n    0.1517006 \n    0.1200658 \n    0.1898719 \n  \n  \n    022 \n    0.2136895 \n    0.1806329 \n    0.2509429 \n  \n  \n    023 \n    0.2583938 \n    0.2322000 \n    0.2864401 \n  \n  \n    024 \n    0.1792824 \n    0.1477985 \n    0.2157749 \n  \n  \n    025 \n    0.1849377 \n    0.1507769 \n    0.2247894 \n  \n  \n    026 \n    0.2081804 \n    0.1869469 \n    0.2311401 \n  \n  \n    027 \n    0.1949682 \n    0.1747255 \n    0.2169398 \n  \n  \n    028 \n    0.2213097 \n    0.1838557 \n    0.2639261 \n  \n  \n    029 \n    0.1739657 \n    0.1411314 \n    0.2125484 \n  \n  \n    02A \n    0.1628615 \n    0.1156263 \n    0.2244946 \n  \n  \n    030 \n    0.2252352 \n    0.1917301 \n    0.2626925 \n  \n  \n    031 \n    0.2133730 \n    0.1983584 \n    0.2291992"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#figure-8a-predicted-probabilities-by-csu",
+    "href": "ojjdp_va_part_i_analysis_regression.html#figure-8a-predicted-probabilities-by-csu",
+    "title": "Analysis: Part I",
+    "section": "Figure 8a: Predicted Probabilities by CSU",
+    "text": "Figure 8a: Predicted Probabilities by CSU"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#figure-8b-predicted-probabilities-by-csu-mapped",
+    "href": "ojjdp_va_part_i_analysis_regression.html#figure-8b-predicted-probabilities-by-csu-mapped",
+    "title": "Analysis: Part I",
+    "section": "Figure 8b: Predicted Probabilities by CSU (mapped)",
+    "text": "Figure 8b: Predicted Probabilities by CSU (mapped)"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#table-10-predicted-probabilities-by-charge-type-1",
+    "href": "ojjdp_va_part_i_analysis_regression.html#table-10-predicted-probabilities-by-charge-type-1",
+    "title": "Analysis: Part I",
+    "section": "Table 10: Predicted Probabilities by Charge Type",
+    "text": "Table 10: Predicted Probabilities by Charge Type\n\n\n\n\n \n  \n    dai_clean \n    predicted_probability \n    confidence_interval_low \n    confidence_interval_high \n  \n \n\n  \n    CHINS \n    0.3211420 \n    0.2845110 \n    0.3601155 \n  \n  \n    Class 1 Misdemeanor Against Persons \n    0.2125315 \n    0.2022435 \n    0.2231964 \n  \n  \n    Felony Weapons and Felony Narcotics Distribution \n    0.1149592 \n    0.0604049 \n    0.2078829 \n  \n  \n    Felony against Persons \n    0.1234202 \n    0.0993429 \n    0.1523460 \n  \n  \n    Other Class 1 Misdemeanor \n    0.1505494 \n    0.1432634 \n    0.1581375 \n  \n  \n    Other Felony \n    0.1883135 \n    0.1680105 \n    0.2104495 \n  \n  \n    Other Violation \n    0.1778153 \n    0.1664661 \n    0.1897621 \n  \n  \n    Status Offense \n    0.2482796 \n    0.2343041 \n    0.2628025"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#figure-9-predicted-probabilities-by-charge-type",
+    "href": "ojjdp_va_part_i_analysis_regression.html#figure-9-predicted-probabilities-by-charge-type",
+    "title": "Analysis: Part I",
+    "section": "Figure 9: Predicted Probabilities by Charge Type",
+    "text": "Figure 9: Predicted Probabilities by Charge Type"
+  },
+  {
+    "objectID": "ojjdp_va_part_ii_analysis_race_ethnicity.html",
+    "href": "ojjdp_va_part_ii_analysis_race_ethnicity.html",
+    "title": "Part II Analysis: Race/Ethnicity",
+    "section": "",
+    "text": "Data Sample:\nResearch Question:\nConduct a front-end system assessment from intake through petition for all complaints 2016-2021.\nMethods:\nWe will conduct a descriptive analysis of the front end of the system from intake through petition, provide unadjusted counts, RRI’s and means tests where applicable, by race, sex, offense, risk, CSU, and year for:\nIntake Decision Coding Decisions (for part II analysis):\nCohort: All complaints from 2016-2021"
+  },
+  {
+    "objectID": "ojjdp_va_part_ii_analysis_race_ethnicity.html#table-1-intake-decisions-by-raceethnicity",
+    "href": "ojjdp_va_part_ii_analysis_race_ethnicity.html#table-1-intake-decisions-by-raceethnicity",
+    "title": "Part II Analysis: Race/Ethnicity",
+    "section": "Table 1: Intake Decisions by Race/Ethnicity",
+    "text": "Table 1: Intake Decisions by Race/Ethnicity\nNote: I am currently coding the following intake decisions as ‘Diverted’: “UNSUCCESSFUL DIVERSION/PETITION FILED” (code of ‘18’), “SUCCESSFUL DIVERSION” (code of ‘20’), “UNSUCCESSFUL DIVERSION/NO PETITION FILED” (code of ‘21’), and “REQ’D TO PARTICIPATE-DIVERSION” (code of ‘7’). All other intake decisions are coded as “Not Diverted”. See preliminary coding of intake decisions in Intake Complaints, Intake Decision Descriptions table on codebook page in sample descriptives tab\n\n\n\n\n \n  \n    Race/Ethnicity \n    All Complaints (N) \n    All Complaints (column %) \n    Complaints Petitioned (N) \n    Complaints Petitioned (row %) \n    Complaints Diverted (N) \n    Complaints Diverted (row %) \n    Complaints Resolved/Dismissed (N) \n    Complaints Resolved/Dismissed (row %) \n    Other (N) \n    Other (row %) \n  \n \n\n  \n    American Indian \n    188 \n    0.1% \n    117 \n    62.2% \n    45 \n    23.9% \n    17 \n    9.0% \n    3 \n    1.6% \n  \n  \n    Asian \n    1,935 \n    1.0% \n    1,086 \n    56.1% \n    440 \n    22.7% \n    206 \n    10.6% \n    30 \n    1.6% \n  \n  \n    Black \n    81,336 \n    41.1% \n    57,368 \n    70.5% \n    12,248 \n    15.1% \n    7,017 \n    8.6% \n    1,584 \n    1.9% \n  \n  \n    Hispanic \n    21,416 \n    10.8% \n    14,205 \n    66.3% \n    3,913 \n    18.3% \n    1,891 \n    8.8% \n    393 \n    1.8% \n  \n  \n    White \n    79,782 \n    40.3% \n    53,177 \n    66.7% \n    17,250 \n    21.6% \n    5,766 \n    7.2% \n    728 \n    0.9% \n  \n  \n    Other \n    11,777 \n    6.0% \n    6,951 \n    59.0% \n    2,854 \n    24.2% \n    1,309 \n    11.1% \n    138 \n    1.2% \n  \n  \n    NA \n    1,390 \n    0.7% \n    673 \n    48.4% \n    419 \n    30.1% \n    220 \n    15.8% \n    19 \n    1.4% \n  \n  \n    Overall \n    197,824 \n    100.0% \n    133,577 \n    67.5% \n    37,169 \n    18.8% \n    16,426 \n    8.3% \n    2,895 \n    1.5%"
+  },
+  {
+    "objectID": "ojjdp_va_part_ii_analysis_race_ethnicity.html#table-2-disposition-outcomes-by-raceethnicity",
+    "href": "ojjdp_va_part_ii_analysis_race_ethnicity.html#table-2-disposition-outcomes-by-raceethnicity",
+    "title": "Part II Analysis: Race/Ethnicity",
+    "section": "Table 2: Disposition Outcomes by Race/Ethnicity",
+    "text": "Table 2: Disposition Outcomes by Race/Ethnicity\nNote: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, No further action/none, Restitution, Other. See the Disposition, Preliminary Disposition Groupings table on the codebook page in the sample descriptives tab for a full list of each disposition and I’ve grouped it.\n\n\n\n\n \n  \n    Race/Ethnicity \n    All Disposed Complaints (N) \n    All Disposed Complaints (column %) \n    Detention (N) \n    Detention (row %) \n    Commitment (N) \n    Commitment (row %) \n    Probation/Supervision (N) \n    Probation/Supervision (row %) \n    Deferral (N) \n    Deferral (row %) \n    Community Service (N) \n    Community Service (row %) \n    Fine (N) \n    Fine (row %) \n    No further action/none (N) \n    No further action/none (row %) \n    Restitution (N) \n    Restitution (row %) \n    Other (N) \n    Other (row %) \n  \n \n\n  \n    American Indian \n    188 \n    0.1% \n    7 \n    3.7% \n    3 \n    1.6% \n    53 \n    28.2% \n    3 \n    1.6% \n    3 \n    1.6% \n    2 \n    1.1% \n    1 \n    0.5% \n    2 \n    1.1% \n    2 \n    1.1% \n  \n  \n    Asian \n    1,935 \n    1.0% \n    43 \n    2.2% \n    12 \n    0.6% \n    411 \n    21.2% \n    14 \n    0.7% \n    39 \n    2.0% \n    10 \n    0.5% \n    11 \n    0.6% \n    4 \n    0.2% \n    19 \n    1.0% \n  \n  \n    Black \n    81,336 \n    41.1% \n    4,893 \n    6.0% \n    2,359 \n    2.9% \n    20,921 \n    25.7% \n    890 \n    1.1% \n    1,499 \n    1.8% \n    451 \n    0.6% \n    649 \n    0.8% \n    275 \n    0.3% \n    1,500 \n    1.8% \n  \n  \n    Hispanic \n    21,416 \n    10.8% \n    1,281 \n    6.0% \n    269 \n    1.3% \n    5,187 \n    24.2% \n    149 \n    0.7% \n    356 \n    1.7% \n    204 \n    1.0% \n    265 \n    1.2% \n    31 \n    0.1% \n    200 \n    0.9% \n  \n  \n    White \n    79,782 \n    40.3% \n    3,582 \n    4.5% \n    698 \n    0.9% \n    20,526 \n    25.7% \n    789 \n    1.0% \n    2,220 \n    2.8% \n    624 \n    0.8% \n    345 \n    0.4% \n    165 \n    0.2% \n    1,083 \n    1.4% \n  \n  \n    Other \n    11,777 \n    6.0% \n    364 \n    3.1% \n    102 \n    0.9% \n    2,255 \n    19.1% \n    102 \n    0.9% \n    329 \n    2.8% \n    97 \n    0.8% \n    65 \n    0.6% \n    19 \n    0.2% \n    136 \n    1.2% \n  \n  \n    NA \n    1,390 \n    0.7% \n    15 \n    1.1% \n    1 \n    0.1% \n    155 \n    11.2% \n    16 \n    1.2% \n    52 \n    3.7% \n    26 \n    1.9% \n    5 \n    0.4% \n    1 \n    0.1% \n    28 \n    2.0% \n  \n  \n    Overall \n    197,824 \n    100.0% \n    10,179 \n    5.1% \n    3,438 \n    1.7% \n    49,502 \n    25.0% \n    1,957 \n    1.0% \n    4,492 \n    2.3% \n    1,408 \n    0.7% \n    1,335 \n    0.7% \n    491 \n    0.2% \n    2,962 \n    1.5%"
+  },
+  {
+    "objectID": "ojjdp_va_part_ii_analysis_race_ethnicity.html#table-3-average-length-of-stay-on-diversion-by-raceethnicity",
+    "href": "ojjdp_va_part_ii_analysis_race_ethnicity.html#table-3-average-length-of-stay-on-diversion-by-raceethnicity",
+    "title": "Part II Analysis: Race/Ethnicity",
+    "section": "Table 3: Average Length of Stay on Diversion by Race/Ethnicity",
+    "text": "Table 3: Average Length of Stay on Diversion by Race/Ethnicity\nBoth measures of LOS on diversion are calculated by DJJ and provided in the caseload file – see codebook page for more information. The two LOS measures are the “Number of days on the workload status”Diversion at Intake” and the “Number of days on the workload status”Diversion Beyond 90 Days”\n\n\n\n\n \n  \n    Race/Ethnicity \n    Mean Diversion LOS (at intake) \n    Median Diversion LOS (at intake) \n    Mean Diversion LOS (beyond 90 days) \n    Median Diversion LOS (beyond 90 days) \n  \n \n\n  \n    American Indian \n    14.50000 \n    0 \n    0.0053191 \n    0 \n  \n  \n    Asian \n    13.20000 \n    0 \n    0.0087855 \n    0 \n  \n  \n    Black \n    10.63666 \n    0 \n    0.0072907 \n    0 \n  \n  \n    Hispanic \n    11.46970 \n    0 \n    0.0029417 \n    0 \n  \n  \n    White \n    15.85843 \n    0 \n    0.0054398 \n    0 \n  \n  \n    Other \n    17.03040 \n    0 \n    0.0067080 \n    0 \n  \n  \n    NA \n    21.76115 \n    0 \n    0.0064748 \n    0 \n  \n  \n    Overall \n    13.32032 \n    0 \n    0.0060458 \n    0"
+  },
+  {
+    "objectID": "ojjdp_va_part_ii_analysis_race_ethnicity.html#table-4-overall-jj-population-rri",
+    "href": "ojjdp_va_part_ii_analysis_race_ethnicity.html#table-4-overall-jj-population-rri",
+    "title": "Part II Analysis: Race/Ethnicity",
+    "section": "Table 4: Overall JJ Population, RRI",
+    "text": "Table 4: Overall JJ Population, RRI\n\n\n\n\n \n  \n    Race/Ethnicity \n    Unique Youth (N) \n    JJ-involved Rate (per 10k youth) \n    JJ-involved RRI (to white youth) \n  \n \n\n  \n    White \n    43,415 \n    723.2193 \n    NA \n  \n  \n    American Indian \n    108 \n    371.1340 \n    0.51 \n  \n  \n    Asian \n    1,225 \n    152.8480 \n    0.21 \n  \n  \n    Black \n    34,470 \n    1,493.8180 \n    2.07 \n  \n  \n    Hispanic \n    9,377 \n    696.8690 \n    0.96 \n  \n  \n    Other \n    7,836 \n    NA \n    NA"
+  },
+  {
+    "objectID": "ojjdp_va_part_ii_analysis_race_ethnicity.html#table-5-diversion-and-petition-rate-rri",
+    "href": "ojjdp_va_part_ii_analysis_race_ethnicity.html#table-5-diversion-and-petition-rate-rri",
+    "title": "Part II Analysis: Race/Ethnicity",
+    "section": "Table 5: Diversion and Petition Rate, RRI",
+    "text": "Table 5: Diversion and Petition Rate, RRI\nQuestion: Should we limit to youth with no prior JJ history if we keep this analysis at the individual-level as opposed to complaint/case-level? Otherwise, how would we create a youth-level measure of diversion decisions? I am currently filtering on youth with no prior JJ history. I have also filtered out youth whose charge is a technical violation (not sure why they are listed as not having JJ history?)\nNOTE: I am currently only include “formal” diversions in the count of unique youth diverted. The denominator used is all youth in the DJJ sample without prior JJ history.\n\n\n\n\n \n  \n    Race/Ethnicity \n    Unique Youth, no prior JJ history (N) \n    Unique Youth Diverted, no prior JJ history (N) \n    Diversion Rate (per 10k JJ-involved youth w/ no prior JJ history) \n    Diversion RRI (to white youth) \n    Unique Youth Petitioned, no prior JJ history (N) \n    Petition Rate (per 10k JJ-involved youth w/ no prior JJ history) \n    Petition RRI (to white youth) \n  \n \n\n  \n    American Indian \n    95 \n    31 \n    3,263.158 \n    0.90 \n    46 \n    4,842.105 \n    1.01 \n  \n  \n    Asian \n    1,114 \n    371 \n    3,330.341 \n    0.92 \n    442 \n    3,967.684 \n    0.83 \n  \n  \n    Black \n    26,704 \n    8,577 \n    3,211.878 \n    0.88 \n    12,168 \n    4,556.621 \n    0.95 \n  \n  \n    Hispanic \n    7,975 \n    2,813 \n    3,527.273 \n    0.97 \n    3,257 \n    4,084.013 \n    0.85 \n  \n  \n    White \n    36,633 \n    13,303 \n    3,631.425 \n    NA \n    17,550 \n    4,790.762 \n    NA \n  \n  \n    Other \n    7,220 \n    2,379 \n    3,295.014 \n    0.91 \n    3,375 \n    4,674.515 \n    0.98"
+  },
+  {
+    "objectID": "ojjdp_va_part_ii_analysis_race_ethnicity.html#table-6-informal-diversion-and-resolveddismissed-rate-rri",
+    "href": "ojjdp_va_part_ii_analysis_race_ethnicity.html#table-6-informal-diversion-and-resolveddismissed-rate-rri",
+    "title": "Part II Analysis: Race/Ethnicity",
+    "section": "Table 6: Informal Diversion and Resolved/Dismissed Rate, RRI",
+    "text": "Table 6: Informal Diversion and Resolved/Dismissed Rate, RRI\nQuestion: Should we limit to youth with no prior JJ history if we keep this analysis at the individual-level as opposed to complaint/case-level? Otherwise, how would we create a youth-level measure of diversion decisions? I am currently filtering on youth with no prior JJ history. I have also filtered out youth whose charge is a technical violation (not sure why they are listed as not having JJ history?)\nNOTE: I am currently only include “formal” diversions in the count of unique youth diverted. The denominator used is all youth in the DJJ sample without prior JJ history.\n\n\n\n\n \n  \n    Race/Ethnicity \n    Unique Youth, no prior JJ history (N) \n    Unique Youth Diverted (Informal), no prior JJ history (N) \n    Diversion (Informal) Rate (per 10k JJ-involved youth w/ no prior JJ history) \n    Diversion (Informal) RRI (to white youth) \n    Unique Youth Resolved/Dismissed, no prior JJ history (N) \n    Resolved/Dismissed Rate (per 10k JJ-involved youth w/ no prior JJ history) \n    Resolved/Dismissed RRI (to white youth) \n  \n \n\n  \n    American Indian \n    95 \n    5 \n    526.3158 \n    1.02 \n    11 \n    1,157.8947 \n    1.16 \n  \n  \n    Asian \n    1,114 \n    134 \n    1,202.8725 \n    2.33 \n    157 \n    1,409.3357 \n    1.41 \n  \n  \n    Black \n    26,704 \n    1,745 \n    653.4602 \n    1.27 \n    3,951 \n    1,479.5536 \n    1.48 \n  \n  \n    Hispanic \n    7,975 \n    687 \n    861.4420 \n    1.67 \n    1,147 \n    1,438.2445 \n    1.44 \n  \n  \n    White \n    36,633 \n    1,889 \n    515.6553 \n    NA \n    3,651 \n    996.6424 \n    NA \n  \n  \n    Other \n    7,220 \n    387 \n    536.0111 \n    1.04 \n    1,023 \n    1,416.8975 \n    1.42"
+  },
+  {
+    "objectID": "ojjdp_va_part_ii_analysis_race_ethnicity.html#table-7-diversion-outcomes-rri",
+    "href": "ojjdp_va_part_ii_analysis_race_ethnicity.html#table-7-diversion-outcomes-rri",
+    "title": "Part II Analysis: Race/Ethnicity",
+    "section": "Table 7: Diversion Outcomes, RRI",
+    "text": "Table 7: Diversion Outcomes, RRI\nQuestion: Should we limit to youth with no prior JJ history if we keep this analysis at the individual-level as opposed to complaint/case-level? Otherwise, how would we create a youth-level measure of diversion decisions? I am currently filtering on youth with no prior JJ history. I have also filtered out youth whose charge is a technical violation (not sure why they are listed as not having JJ history?)\nNOTE: I am currently only include “formal” diversions in the count of unique youth diverted. The denominator used is all youth in the DJJ sample without prior JJ history and who were diverted.\n\n\n\n\n \n  \n    Race/Ethnicity \n    Unique Youth Diverted, no prior JJ history (N) \n    Unique Youth w/ Successful Diversion (N) \n    Successful Diversion Rate (per 10k diverted youth) \n    Successful Diversion RRI (to white youth) \n    Unique Youth w/ Unsuccessful Diversion (no petition) (N) \n    Unsuccessful Diversion (no petition) Rate (per 10k diverted youth) \n    Unsuccessful Diversion (no petition) RRI (to white youth) \n    Unique Youth w/ Unsuccessful Diversion (with petition) (N) \n    Unsuccessful Diversion (with petition) Rate (per 10k diverted youth) \n    Unsuccessful Diversion (with petition) RRI (to white youth) \n  \n \n\n  \n    American Indian \n    31 \n    24 \n    7,741.935 \n    0.87 \n    2 \n    645.1613 \n    1.45 \n    5 \n    1,612.9032 \n    2.51 \n  \n  \n    Asian \n    371 \n    337 \n    9,083.558 \n    1.02 \n    11 \n    296.4960 \n    0.67 \n    23 \n    619.9461 \n    0.96 \n  \n  \n    Black \n    8,577 \n    7,218 \n    8,415.530 \n    0.94 \n    677 \n    789.3203 \n    1.78 \n    682 \n    795.1498 \n    1.24 \n  \n  \n    Hispanic \n    2,813 \n    2,286 \n    8,126.555 \n    0.91 \n    203 \n    721.6495 \n    1.63 \n    323 \n    1,148.2403 \n    1.78 \n  \n  \n    White \n    13,303 \n    11,856 \n    8,912.275 \n    NA \n    590 \n    443.5090 \n    NA \n    856 \n    643.4639 \n    NA \n  \n  \n    Other \n    2,379 \n    2,103 \n    8,839.849 \n    0.99 \n    148 \n    622.1101 \n    1.40 \n    128 \n    538.0412 \n    0.84 \n  \n\n\n\n\n\n\n\n\nTable 8: Predicted Probabilities and Adjusted RRIs, Petition\nTO DO: Double check predicted probability interpretation with categorical variables in model\n\n\n\nFigure 1: Adjusted RRI: Petition\nNOTE: Difference is statistically significant for both Asian (<0.001) and Black youth (<0.01)\n\n\n\nFigure 2: Predicted Probabilities of Petition by Referral Source\n\n\n\nFigure 3: Predicted Probabilities of Petition by CSU\nNOTE: We will likely want to exclude CSU’s with small N sizes – I haven’t yet done that.\n\n\n\nFigure 4: Predicted Probabilities of Petition by Charge Type\nQuestion: Do status offenses have relatively lower predicted probability of diversion b/c they are more likely to be dismissed? This could be a drawback of the current model (where all intake decisions are included and coded into either diversion or not diversion)"
+  },
+  {
+    "objectID": "ojjdp_va_part_ii_analysis_race_ethnicity.html#adjusted-diversion-versus-resolveddismissed",
+    "href": "ojjdp_va_part_ii_analysis_race_ethnicity.html#adjusted-diversion-versus-resolveddismissed",
+    "title": "Part II Analysis: Race/Ethnicity",
+    "section": "2. Adjusted: Diversion versus Resolved/Dismissed",
+    "text": "2. Adjusted: Diversion versus Resolved/Dismissed\nIn the following analysis, the outcome variable is binary – split into diverted (meaning complaint was diverted at intake) and resolved/dismissed (either “complaint unfounded” or “resolved”). All records with other intake complaint decisions are excluded.\nNOTE: Predictors included in model are:\n\nrace\ngender\nage at intake\nCSU\nreferral/petitioner source\ncategory of offense\nyear of petition\nJJ history\ncounts of felony, misdemeanor, status, and violation charges associated with intake/complaint\n\nAnother control we could add is something on how rural/urban each county is…\n\n\nTable 9: Predicted Probablities and Adjusted RRIs, Diverted (compared to Dismissed/Resolved)\nTO DO: Double check predicted probability interpretation with categorical variables in model\n\n\n\nFigure 5: Adjusted RRI: Diverted (compared to Dismissed/Resolved)\nNOTE: Difference is statistically significant for both Asian (<0.05) and Black youth (<0.001)\n\n\n\nFigure 6: Predicted Probabilities of Diversion by Referral Source\n\n\n\nFigure 7: Predicted Probabilities of Diversion by CSU\nNOTE: We will likely want to exclude CSU’s with small N sizes – I haven’t yet done that.\n\n\n\nFigure 8: Predicted Probabilities of Diversion by Charge Type\nQuestion: Do status offenses have the lowest predicted probability of diversion b/c they are more likely to be dismissed? How should we treat this so as not to claim that VA diverts too few youth with status complaints – if many are just being dismissed/resolved?"
+  },
+  {
+    "objectID": "ojjdp_va_part_ii_analysis_race_ethnicity.html#adjusted-diversion-versus-petitioned",
+    "href": "ojjdp_va_part_ii_analysis_race_ethnicity.html#adjusted-diversion-versus-petitioned",
+    "title": "Part II Analysis: Race/Ethnicity",
+    "section": "3. Adjusted: Diversion versus Petitioned",
+    "text": "3. Adjusted: Diversion versus Petitioned\nIn the following analysis, the outcome variable is binary – split into petitioned at intake (excluding court summons) and formally diverted (meaning complaint was diverted at intake). All records with other intake complaint decisions are excluded.\nNOTE: Predictors included in model are:\n\nrace\ngender\nage at intake\nCSU\nreferral/petitioner source\ncategory of offense\nyear of petition\nJJ history\ncounts of felony, misdemeanor, status, and violation charges associated with intake/complaint\n\nAnother control we could add is something on how rural/urban each county is…\n\n\nTable 10: Predicted Probablities and Adjusted RRIs, Diverted (compared to Petitioned)\nTO DO: Double check predicted probability interpretation with categorical variables in model\n\n\n\nFigure 9: Adjusted RRI: Diverted (compared to Petitioned)\nNOTE: Difference is statistically significant for both Asian (<0.05) and Black youth (<0.001)\n\n\n\nFigure 10: Predicted Probabilities of Diversion by Referral Source\n\n\n\nFigure 11: Predicted Probabilities of Diversion by CSU\nNOTE: We will likely want to exclude CSU’s with small N sizes – I haven’t yet done that.\n\n\n\nFigure 12: Predicted Probabilities of Diversion by Charge Type"
   }
 ]

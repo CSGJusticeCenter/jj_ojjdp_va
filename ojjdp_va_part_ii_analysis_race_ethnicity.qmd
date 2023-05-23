@@ -603,40 +603,42 @@ kable(df_rri_diversion_outcome_jj_final,
 
 <br>
 
+
+
+```{r eval=FALSE,include=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
 # Adjusted RRIs
 
 <br>
 
 ## 1. Adjusted: Petition 
 
-In the following analysis, the outcome variable is binary -- split into petition (meaning complaint was petitioned at intake) and non-petition (diversion, resolved/dismissed, and other)
-
-**NOTE:** Predictors included in model are:
-
-* race
-
-* gender
-
-* age at intake
-
-* CSU
-
-* referral/petitioner source
-
-* category of offense
-
-* year of petition
-
-* JJ history
-
-* counts of felony, misdemeanor, status, and violation charges associated with intake/complaint
-
-
-Another control we could add is something on how rural/urban each county is...
-
-```{r echo=FALSE,message=FALSE,warning=FALSE}
-#| column: page-right
-#| out-width: 85%
+# In the following analysis, the outcome variable is binary -- split into petition (meaning complaint was petitioned at intake) and non-petition (diversion, resolved/dismissed, and other)
+# 
+# **NOTE:** Predictors included in model are:
+# 
+# * race
+# 
+# * gender
+# 
+# * age at intake
+# 
+# * CSU
+# 
+# * referral/petitioner source
+# 
+# * category of offense
+# 
+# * year of petition
+# 
+# * JJ history
+# 
+# * counts of felony, misdemeanor, status, and violation charges associated with intake/complaint
+# 
+# 
+# Another control we could add is something on how rural/urban each county is...
 
 library(sjPlot)
 library(sjmisc)
@@ -674,7 +676,7 @@ tab_model(va_petition_model,
 
 **TO DO:** Double check predicted probability interpretation with categorical variables in model
 
-```{r echo=FALSE,message=FALSE,warning=FALSE}
+```{r eval=FALSE,include=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
@@ -703,7 +705,7 @@ kable(pred_prob_petition_race_overall,
 
 **NOTE:** Difference is statistically significant for both Asian (<0.001) and Black youth (<0.01)
 
-```{r echo=FALSE,message=FALSE,warning=FALSE}
+```{r eval=FALSE,include=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
@@ -778,7 +780,7 @@ ggplot(data = pred_prob_petition_race_overall_viz, aes(y = rri, x = race, fill =
 
 #### Figure 2: Predicted Probabilities of Petition by Referral Source
 
-```{r echo=FALSE,message=FALSE,warning=FALSE}
+```{r eval=FALSE,include=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
@@ -832,7 +834,7 @@ pred_prob_petition_race_by_referral_type %>%
 
 **NOTE:** We will likely want to exclude CSU's with small N sizes -- I haven't yet done that. 
 
-```{r echo=FALSE,message=FALSE,warning=FALSE}
+```{r eval=FALSE,include=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
@@ -883,7 +885,7 @@ pred_prob_petition_race_by_csu %>%
 
 **Question:** Do status offenses have relatively lower predicted probability of diversion b/c they are more likely to be dismissed? This could be a drawback of the current model (where all intake decisions are included and coded into either diversion or not diversion)
 
-```{r echo=FALSE,message=FALSE,warning=FALSE}
+```{r eval=FALSE,include=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
@@ -957,7 +959,7 @@ In the following analysis, the outcome variable is binary -- split into diverted
 
 Another control we could add is something on how rural/urban each county is...
 
-```{r echo=FALSE,message=FALSE,warning=FALSE}
+```{r eval=FALSE,include=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
@@ -991,7 +993,8 @@ tab_model(va_diversion_resolved_model,
 
 **TO DO:** Double check predicted probability interpretation with categorical variables in model
 
-```{r echo=FALSE,message=FALSE,warning=FALSE}
+```{r eval=FALSE,include=FALSE,message=FALSE,warning=FALSE}
+
 #| column: page-right
 #| out-width: 85%
 
@@ -1020,7 +1023,7 @@ kable(pred_prob_diversion_race_overall,
 
 **NOTE:** Difference is statistically significant for both Asian (<0.05) and Black youth (<0.001)
 
-```{r echo=FALSE,message=FALSE,warning=FALSE}
+```{r eval=FALSE,include=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
@@ -1095,7 +1098,7 @@ ggplot(data = pred_prob_diversion_race_overall_viz, aes(y = rri, x = race, fill 
 
 #### Figure 6: Predicted Probabilities of Diversion by Referral Source
 
-```{r echo=FALSE,message=FALSE,warning=FALSE}
+```{r eval=FALSE,include=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
@@ -1149,7 +1152,7 @@ pred_prob_diversion_race_by_referral_type %>%
 
 **NOTE:** We will likely want to exclude CSU's with small N sizes -- I haven't yet done that. 
 
-```{r echo=FALSE,message=FALSE,warning=FALSE}
+```{r eval=FALSE,include=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
@@ -1200,7 +1203,7 @@ pred_prob_diversion_race_by_csu %>%
 
 **Question:** Do status offenses have the lowest predicted probability of diversion b/c they are more likely to be dismissed? How should we treat this so as not to claim that VA diverts too few youth with status complaints -- if many are just being dismissed/resolved?
 
-```{r echo=FALSE,message=FALSE,warning=FALSE}
+```{r eval=FALSE,include=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
@@ -1276,7 +1279,7 @@ In the following analysis, the outcome variable is binary -- split into petition
 
 Another control we could add is something on how rural/urban each county is...
 
-```{r echo=FALSE,message=FALSE,warning=FALSE}
+```{r eval=FALSE,include=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
@@ -1310,7 +1313,7 @@ tab_model(va_diversion_petition_model,
 
 **TO DO:** Double check predicted probability interpretation with categorical variables in model
 
-```{r echo=FALSE,message=FALSE,warning=FALSE}
+```{r eval=FALSE,include=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
@@ -1339,7 +1342,7 @@ kable(pred_prob_diversion_petition_race_overall,
 
 **NOTE:** Difference is statistically significant for both Asian (<0.05) and Black youth (<0.001)
 
-```{r echo=FALSE,message=FALSE,warning=FALSE}
+```{r eval=FALSE,include=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
@@ -1414,7 +1417,7 @@ ggplot(data = pred_prob_diversion_petition_race_overall_viz, aes(y = rri, x = ra
 
 #### Figure 10: Predicted Probabilities of Diversion by Referral Source
 
-```{r echo=FALSE,message=FALSE,warning=FALSE}
+```{r eval=FALSE,include=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
@@ -1468,7 +1471,7 @@ pred_prob_diversion_petition_race_by_referral_type %>%
 
 **NOTE:** We will likely want to exclude CSU's with small N sizes -- I haven't yet done that. 
 
-```{r echo=FALSE,message=FALSE,warning=FALSE}
+```{r eval=FALSE,include=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
@@ -1517,7 +1520,7 @@ pred_prob_diversion_petition_race_by_csu %>%
 
 #### Figure 12: Predicted Probabilities of Diversion by Charge Type 
 
-```{r echo=FALSE,message=FALSE,warning=FALSE}
+```{r eval=FALSE,include=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
 
