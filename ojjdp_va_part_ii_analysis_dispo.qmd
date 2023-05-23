@@ -146,7 +146,7 @@ Note: The preliminary options for grouping dispositions that I am using are: Det
 
 ### unique complaints split out
 df_complaints_disposition_outcome_table_year <- df_analytic_complaints_disposition_caseload %>% 
-  dplyr::group_by(date_opened_year) %>% 
+  dplyr::group_by(date_opened_fy) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Petitioned Complaints (N)` = n_distinct(unique_complaint_id[complaint_eventually_petitioned_flag==1]),
                    `Complaints Petitioned (row %)` = scales::percent(`All Petitioned Complaints (N)`/`All Complaints (N)`,
@@ -182,7 +182,7 @@ df_complaints_disposition_outcome_table_year <- df_analytic_complaints_dispositi
                    `Other (row %)` = scales::percent(`Other (N)`/`All Disposed Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
-  dplyr::rename(`Year of Complaint` = date_opened_year) 
+  dplyr::rename(`Year of Complaint` = date_opened_fy) 
 
 ### unique complaints statewide
 df_complaints_disposition_outcome_table_overall <- df_analytic_complaints_disposition_caseload %>% 
@@ -237,7 +237,7 @@ kable(df_complaints_disposition_outcome_table_year_final,
                                        "condensed", 
                                        "responsive"), 
                  row_label_position = "l") %>% 
-  row_spec(8, bold = TRUE)
+  row_spec(7, bold = TRUE)
 ```
 
 

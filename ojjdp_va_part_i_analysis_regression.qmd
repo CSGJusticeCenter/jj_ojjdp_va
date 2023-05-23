@@ -144,7 +144,7 @@ intake_complaints_no_prior_jj_to_model_diversion_petitioned <- df_analytic_compl
   mutate(race = fct_relevel(race_clean, "White"),
          gender = fct_relevel(gender_clean, "Male"),
          referral_source_clean = fct_relevel(referral_source_clean, "Other"),
-         date_opened_year = fct_relevel(as.character(date_opened_year), "2015"),
+         date_opened_fy = fct_relevel(as.character(date_opened_fy), "2016"),
          intake_decision_regression_model_petition_num = ifelse(intake_decision_regression_model_petition=="Petitioned",
                                            1,0)) %>% 
   distinct(juvenile_number,
@@ -152,7 +152,7 @@ intake_complaints_no_prior_jj_to_model_diversion_petitioned <- df_analytic_compl
 
 va_diversion_petition_model <- glm(
   intake_decision_regression_model_petition_num ~ race + gender + intake_age + csu + referral_source_clean + dai_clean +
-    date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_other_violation_with_case + count_violation_with_case,
+    date_opened_fy + count_misd_with_case + count_felony_with_case + count_status_with_case + count_other_violation_with_case + count_violation_with_case,
   family = "binomial", 
   data = intake_complaints_no_prior_jj_to_model_diversion_petitioned)
 
@@ -824,7 +824,7 @@ intake_complaints_no_prior_jj_to_model_diversion_outcome <- df_analytic_complain
   mutate(race = fct_relevel(race_clean, "White"),
          gender = fct_relevel(gender_clean, "Male"),
          referral_source_clean = fct_relevel(referral_source_clean, "Other"),
-         date_opened_year = fct_relevel(as.character(date_opened_year), "2015"),
+         date_opened_fy = fct_relevel(as.character(date_opened_fy), "2016"),
          diversion_success_regression_model_num = ifelse(intake_decision_label=="SUCCESSFUL DIVERSION",
                                            1,0)) %>% 
   distinct(juvenile_number,
@@ -832,7 +832,7 @@ intake_complaints_no_prior_jj_to_model_diversion_outcome <- df_analytic_complain
 
 va_diversion_outcome_model <- glm(
   diversion_success_regression_model_num ~ race + gender + intake_age + csu + referral_source_clean + dai_clean +
-    date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_other_violation_with_case + count_violation_with_case,
+    date_opened_fy + count_misd_with_case + count_felony_with_case + count_status_with_case + count_other_violation_with_case + count_violation_with_case,
   family = "binomial", 
   data = intake_complaints_no_prior_jj_to_model_diversion_outcome)
 
@@ -1387,7 +1387,7 @@ intake_complaints_no_prior_jj_to_model_disposition <- df_analytic_complaints_dis
   mutate(race = fct_relevel(race_clean, "White"),
          gender = fct_relevel(gender_clean, "Male"),
          referral_source_clean = fct_relevel(referral_source_clean, "Other"),
-         date_opened_year = fct_relevel(as.character(date_opened_year), "2015"),
+         date_opened_fy = fct_relevel(as.character(date_opened_fy), "2016"),
          regression_model_dispo_num = ifelse(!is.na(dispo_description_clean)==TRUE,
                                            1,0)) %>% 
   distinct(juvenile_number,
@@ -1395,7 +1395,7 @@ intake_complaints_no_prior_jj_to_model_disposition <- df_analytic_complaints_dis
 
 va_dispo_model <- glm(
   regression_model_dispo_num ~ race + gender + intake_age + csu + referral_source_clean + dai_clean +
-    date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_other_violation_with_case + count_violation_with_case + intake_decision_petition_flag,
+    date_opened_fy + count_misd_with_case + count_felony_with_case + count_status_with_case + count_other_violation_with_case + count_violation_with_case + intake_decision_petition_flag,
   family = "binomial", 
   data = intake_complaints_no_prior_jj_to_model_disposition)
 
@@ -1881,13 +1881,13 @@ intake_initial_diversion_re_complaint_within_a_year_model <- df_analytic_complai
   mutate(race = fct_relevel(race_clean, "White"),
          gender = fct_relevel(gender_clean, "Male"),
          referral_source_clean = fct_relevel(referral_source_clean, "Other"),
-         date_opened_year = fct_relevel(as.character(date_opened_year), "2015")) %>% 
+         date_opened_fy = fct_relevel(as.character(date_opened_fy), "2016")) %>% 
   distinct(juvenile_number,
            .keep_all=TRUE)
 
 va_diversion_re_complaint_model <- glm(
   regression_outcome_new_complaint_one_year_first_time_jj ~ race + gender + intake_age + csu + referral_source_clean + dai_clean +
-    date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_other_violation_with_case + count_violation_with_case,
+    date_opened_fy + count_misd_with_case + count_felony_with_case + count_status_with_case + count_other_violation_with_case + count_violation_with_case,
   family = "binomial", 
   data = intake_initial_diversion_re_complaint_within_a_year_model)
 
@@ -2380,13 +2380,13 @@ intake_initial_diversion_new_petition_within_a_year_model <- df_analytic_complai
   mutate(race = fct_relevel(race_clean, "White"),
          gender = fct_relevel(gender_clean, "Male"),
          referral_source_clean = fct_relevel(referral_source_clean, "Other"),
-         date_opened_year = fct_relevel(as.character(date_opened_year), "2015")) %>% 
+         date_opened_fy = fct_relevel(as.character(date_opened_fy), "2016")) %>% 
   distinct(juvenile_number,
            .keep_all=TRUE)
 
 va_diversion_new_petition_model <- glm(
   regression_outcome_new_petition_one_year_first_time_jj ~ race + gender + intake_age + csu + referral_source_clean + dai_clean +
-    date_opened_year + count_misd_with_case + count_felony_with_case + count_status_with_case + count_other_violation_with_case + count_violation_with_case,
+    date_opened_fy + count_misd_with_case + count_felony_with_case + count_status_with_case + count_other_violation_with_case + count_violation_with_case,
   family = "binomial", 
   data = intake_initial_diversion_new_petition_within_a_year_model)
 

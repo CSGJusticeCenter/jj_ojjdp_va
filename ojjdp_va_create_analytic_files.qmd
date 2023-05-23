@@ -261,6 +261,8 @@ df_djj_intake_complaints_clean <- df_djj_intake_complaints_raw %>%
   ### clean dates and create year for potential grouping in future trend analysis
   mutate(date_opened = ymd(as_date(excel_numeric_to_date(as.numeric(as.character(date_opened)), 
                                                   date_system = "modern"))),
+         date_opened_fy = csgjcr::csg_fiscal_year(date_opened,
+                                                          fy_start="July"),
          ysai_date = ymd(as_date(ysai_date)),
          date_opened_year = year(date_opened)) %>% 
   ### remove records for youth/individuals younger than 8 and older than 20

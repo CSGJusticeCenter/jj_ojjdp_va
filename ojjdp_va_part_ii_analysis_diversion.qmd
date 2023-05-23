@@ -81,7 +81,7 @@ sharepoint_ojjdp_va_viz <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Output/VA/r_v
 
 ### read in df_analytic_complaints_disposition_caseload file for analysis
 df_analytic_complaints_disposition_caseload <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_analytic_complaints_disposition_caseload.rds")) %>% 
-  mutate(date_opened_year = as.character(date_opened_year)) 
+  mutate(date_opened_fy = as.character(date_opened_fy)) 
 ```
 
 ```{r include=FALSE,warning=FALSE,include=FALSE}
@@ -138,7 +138,7 @@ kable(df_complaints_youth_intake_decision_table,
 
 ### unique complaints split out
 df_complaints_youth_intake_decision_table_year <- df_analytic_complaints_disposition_caseload %>% 
-  dplyr::group_by(date_opened_year) %>% 
+  dplyr::group_by(date_opened_fy) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
@@ -155,7 +155,7 @@ df_complaints_youth_intake_decision_table_year <- df_analytic_complaints_disposi
                    `Other (row %)` = scales::percent(`Other (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
-  dplyr::rename(`Year of Complaint` = date_opened_year) 
+  dplyr::rename(`Year of Complaint` = date_opened_fy) 
 
 ### unique complaints statewide
 df_complaints_youth_intake_decision_table_overall <- df_analytic_complaints_disposition_caseload %>% 
@@ -191,7 +191,7 @@ kable(df_complaints_youth_intake_decision_table_year_final,
                                        "condensed", 
                                        "responsive"), 
                  row_label_position = "l") %>% 
-  row_spec(8, bold = TRUE)
+  row_spec(7, bold = TRUE)
 ```
 
 <br>
@@ -341,7 +341,7 @@ kable(df_complaints_youth_intake_decision_table_age_final,
 
 ### unique complaints split out
 df_complaints_youth_intake_decision_table_offense <- df_analytic_complaints_disposition_caseload %>% 
-  dplyr::group_by(date_opened_year) %>% 
+  dplyr::group_by(date_opened_fy) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
                                                                        accuracy = .1),
@@ -373,7 +373,7 @@ df_complaints_youth_intake_decision_table_offense <- df_analytic_complaints_disp
                    `Court Order Violation (row %)` = scales::percent(`Court Order Violation (N)`/`All Complaints (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
-  dplyr::rename(`Year of Intake` = date_opened_year)  
+  dplyr::rename(`Year of Intake` = date_opened_fy)  
 
 ### unique complaints statewide
 df_complaints_youth_intake_decision_table_overall <- df_analytic_complaints_disposition_caseload %>% 
@@ -424,7 +424,7 @@ kable(df_complaints_youth_intake_decision_table_offense_final,
                                        "condensed", 
                                        "responsive"), 
                  row_label_position = "l") %>% 
-  row_spec(8, bold = TRUE)
+  row_spec(7, bold = TRUE)
 ```
 
 
@@ -820,6 +820,85 @@ kable(df_complaints_youth_intake_decision_table_offense_status_desc_final,
   row_spec(7, bold = TRUE)
 ```
 
+<br>
+
+
+## Table 5g: Complaints by Status Description over Time
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+### unique complaints split out
+df_complaints_youth_intake_decision_table_status <- df_analytic_complaints_disposition_caseload %>% 
+  filter(dai=="Status Offense") %>%
+  dplyr::group_by(date_opened_fy) %>% 
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Curfew Violation (N)` = n_distinct(unique_complaint_id[description=="CURFEW VIOLATION BETWEEN 10 PM AND 6 AM"]),
+                   `Curfew Violation (row %)` = scales::percent(`Curfew Violation (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Parents/CHINS (N)` = n_distinct(unique_complaint_id[description=="MOTION TO SHOW CAUSE - PARENTS FAIL TO OBEY CHINS/DELINQ ORD"]),
+                   `Parents/CHINS (row %)` = scales::percent(`Parents/CHINS (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Purchase or Possession of Tobacco (N)` = n_distinct(unique_complaint_id[description=="Purchase, attempted purchase or possession of tobacco by minor"]),
+                   `Purchase or Possession of Tobacco (row %)` = scales::percent(`Purchase or Possession of Tobacco (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Runaway (N)` = n_distinct(unique_complaint_id[description=="RUNAWAY, CHILD IN NEED OF SUPERVISION"]),
+                   `Runaway (row %)` = scales::percent(`Runaway (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Child in Need of Services (N)` = n_distinct(unique_complaint_id[description=="SERVICES, CHILD IN NEED OF"]),
+                   `Child in Need of Services (row %)` = scales::percent(`Child in Need of Services (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Truancy (N)` = n_distinct(unique_complaint_id[description=="TRUANCY, CHILD IN NEED OF SUPERVISION"]),
+                   `Truancy (row %)` = scales::percent(`Truancy (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  ungroup() %>% 
+  dplyr::rename(`Year of Intake` = date_opened_fy) 
+
+### unique complaints statewide
+df_complaints_youth_intake_decision_table_status_overall <- df_analytic_complaints_disposition_caseload %>% 
+  filter(dai=="Status Offense") %>%
+  dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
+                   `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                                                                       accuracy = .1),
+                   `Curfew Violation (N)` = n_distinct(unique_complaint_id[description=="CURFEW VIOLATION BETWEEN 10 PM AND 6 AM"]),
+                   `Curfew Violation (row %)` = scales::percent(`Curfew Violation (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Parents/CHINS (N)` = n_distinct(unique_complaint_id[description=="MOTION TO SHOW CAUSE - PARENTS FAIL TO OBEY CHINS/DELINQ ORD"]),
+                   `Parents/CHINS (row %)` = scales::percent(`Parents/CHINS (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Purchase or Possession of Tobacco (N)` = n_distinct(unique_complaint_id[description=="Purchase, attempted purchase or possession of tobacco by minor"]),
+                   `Purchase or Possession of Tobacco (row %)` = scales::percent(`Purchase or Possession of Tobacco (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Runaway (N)` = n_distinct(unique_complaint_id[description=="RUNAWAY, CHILD IN NEED OF SUPERVISION"]),
+                   `Runaway (row %)` = scales::percent(`Runaway (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Child in Need of Services (N)` = n_distinct(unique_complaint_id[description=="SERVICES, CHILD IN NEED OF"]),
+                   `Child in Need of Services (row %)` = scales::percent(`Child in Need of Services (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1),
+                   `Truancy (N)` = n_distinct(unique_complaint_id[description=="TRUANCY, CHILD IN NEED OF SUPERVISION"]),
+                   `Truancy (row %)` = scales::percent(`Truancy (N)`/`All Complaints (N)`,
+                                                                       accuracy = .1)) %>% 
+  dplyr::mutate(`Year of Intake` = "Overall") 
+
+### combine two dataframes for table
+df_complaints_youth_intake_decision_table_status_final <- rbind(df_complaints_youth_intake_decision_table_status,
+                                                              df_complaints_youth_intake_decision_table_status_overall)
+
+
+### print table via kableextra
+kable(df_complaints_youth_intake_decision_table_status_final, 
+      format.args = list(big.mark = ","), 
+      align=rep('c')) %>%
+  kable_styling(bootstrap_options = c("striped", 
+                                       "hover", 
+                                       "condensed", 
+                                       "responsive"), 
+                 row_label_position = "l") %>% 
+  row_spec(7, bold = TRUE)
+```
 
 <br>
 
@@ -1211,7 +1290,7 @@ kable(df_diversion_gender_los_final,
 ### by year
 df_diversion_outcome_year_overall <- df_analytic_complaints_disposition_caseload %>% 
   filter(intake_decision_clean=="Diverted") %>% 
-  dplyr::group_by(date_opened_year) %>% 
+  dplyr::group_by(date_opened_fy) %>% 
    dplyr::summarise(`Unique Complaints Diverted (N)` = n_distinct(unique_complaint_id),
                     `Unique Complaints w/ Successful Diversion (N)` = n_distinct(unique_complaint_id[diversion_successful_flag==1]),
                     `Successful Diversion Rate (%)` = scales::percent(`Unique Complaints w/ Successful Diversion (N)`/`Unique Complaints Diverted (N)`,
@@ -1223,7 +1302,7 @@ df_diversion_outcome_year_overall <- df_analytic_complaints_disposition_caseload
                     `Unsuccessful Diversion with petition (%)` = scales::percent(`Unique Complaints w/ Unsuccessful Diversion (with petition) (N)`/`Unique Complaints Diverted (N)`,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
-  dplyr::rename(`Year` = date_opened_year)
+  dplyr::rename(`Year` = date_opened_fy)
 
 ### overall
 df_diversion_outcome_overall <- df_analytic_complaints_disposition_caseload %>% 
@@ -1254,7 +1333,7 @@ kable(df_diversion_outcome_year_overall_table,
                                        "condensed", 
                                        "responsive"), 
                  row_label_position = "l") %>% 
-  row_spec(8, bold = TRUE)
+  row_spec(7, bold = TRUE)
 ```
 
 <br>
