@@ -124,7 +124,7 @@ Predictors included in model are:
 
 * category of offense
 
-* year of petition
+* fiscal year of intake
 
 * counts of felony, misdemeanor, status, and violation charges associated with intake/complaint
 
@@ -808,7 +808,7 @@ Predictors included in model are:
 
 * category of offense
 
-* year of petition
+* fiscal year of intake
 
 * counts of felony, misdemeanor, status, and violation charges associated with intake/complaint
 
@@ -1377,7 +1377,7 @@ pred_prob_petition_status_by_csu %>%
 # 
 # * category of offense
 # 
-# * year of petition
+# * fiscal year of intake
 # 
 # * counts of felony, misdemeanor, status, and violation charges associated with intake/complaint
 
@@ -1864,7 +1864,7 @@ Predictors included in model are:
 
 * category of offense
 
-* year of petition
+* fiscal year of intake
 
 * counts of felony, misdemeanor, status, and violation charges associated with intake/complaint
 
@@ -2368,7 +2368,7 @@ pred_prob_petition_status_by_csu %>%
 # 
 # * category of offense
 # 
-# * year of petition
+# * fiscal year of intake
 # 
 # * counts of felony, misdemeanor, status, and violation charges associated with intake/complaint
 
