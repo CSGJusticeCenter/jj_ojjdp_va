@@ -50,13 +50,7 @@ sharepoint_ojjdp_va_viz <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Output/VA/r_v
 ```
 
 ```{r include=FALSE}
-### pull in virginia djj analytic files 
-
-# ### read in df_analytic_complaints_disposition_caseload.rds analytic rds file 
-# df_complaints_youth_intake_decision_csu <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_complaints_youth_intake_decision_csu.rds"))
-# 
-# ### read in caseload_clean.rds analytic rds file 
-# caseload_clean <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"caseload_clean.rds"))
+### pull in virginia djj analytic file
 
 ### read in df_analytic_complaints_disposition_caseload file for analysis
 df_analytic_complaints_disposition_caseload <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_analytic_complaints_disposition_caseload.rds")) %>% 
@@ -175,7 +169,6 @@ tab_model(va_diversion_petition_model,
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
-
 
 pred_prob_diversion_petition_race_overall <- predictions(va_diversion_petition_model, 
                                                 by = c("race")) %>%
@@ -332,7 +325,7 @@ pred_prob_diversion_petition_gender %>%
 #| column: page-right
 #| out-width: 85%
 
-pred_prob_diversion_petition_race_by_referral_type <- predictions(va_diversion_petition_model, variables = c("race","gender")) %>%
+pred_prob_diversion_petition_race_by_referral_type <- predictions(va_diversion_petition_model, by = c("race","gender")) %>%
   group_by(gender) %>% 
   mutate(
     rri = estimate / estimate[race == "White"]) %>% 
@@ -343,7 +336,7 @@ pred_prob_diversion_petition_race_by_referral_type %>%
   mutate(referral_source_clean = fct_reorder(gender, estimate, max)) %>%
   ggplot(aes(estimate, gender, color = race)) +
   geom_point(size = 6.5, alpha = 0.75) +
-  scale_colour_manual(values = rev(c("#1F4A58","#2F7084","#87C2D4"))) +
+  scale_colour_manual(values = c("#1F4A58","#2F7084","#87C2D4")) +
   scale_x_continuous(
     expand = expansion(mult = c(0.1, 0.1)),
     labels = label_percent(1),
@@ -903,7 +896,7 @@ pred_prob_diversion_petition_race %>%
   expand_limits(x = .25) +
   labs(
     title = NULL,
-    x = "Predicted Probability of Petition",
+    x = "Predicted Probability of Successful Diversion",
     y = NULL,
     color = NULL
   ) +
@@ -981,7 +974,7 @@ pred_prob_diversion_petition_gender %>%
   expand_limits(x = .25) +
   labs(
     title = NULL,
-    x = "Predicted Probability of Petition",
+    x = "Predicted Probability of Successful Diversion",
     y = NULL,
     color = NULL
   ) +
@@ -1012,7 +1005,7 @@ pred_prob_diversion_petition_gender %>%
 #| column: page-right
 #| out-width: 85%
 
-pred_prob_diversion_petition_race_by_referral_type <- predictions(va_diversion_outcome_model, variables = c("race","gender")) %>%
+pred_prob_diversion_petition_race_by_referral_type <- predictions(va_diversion_outcome_model, by = c("race","gender")) %>%
   group_by(gender) %>% 
   mutate(
     rri = estimate / estimate[race == "White"]) %>% 
@@ -1023,7 +1016,7 @@ pred_prob_diversion_petition_race_by_referral_type %>%
   mutate(referral_source_clean = fct_reorder(gender, estimate, max)) %>%
   ggplot(aes(estimate, gender, color = race)) +
   geom_point(size = 6.5, alpha = 0.75) +
-  scale_colour_manual(values = rev(c("#1F4A58","#2F7084","#87C2D4"))) +
+  scale_colour_manual(values = c("#1F4A58","#2F7084","#87C2D4")) +
   scale_x_continuous(
     expand = expansion(mult = c(0.1, 0.1)),
     labels = label_percent(1),
@@ -1033,7 +1026,7 @@ pred_prob_diversion_petition_race_by_referral_type %>%
   expand_limits(x = 0) +
   labs(
     title = NULL,
-    x = "Predicted Probability of Petition",
+    x = "Predicted Probability of Successful Diversion",
     y = NULL,
     color = NULL
   ) +
@@ -1063,7 +1056,6 @@ pred_prob_diversion_petition_race_by_referral_type %>%
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
 #| column: page-right
 #| out-width: 85%
-
 
 pred_prob_diversion_petition_csu_overall <- predictions(va_diversion_outcome_model, 
                                                 by = c("csu")) %>%
@@ -1109,7 +1101,7 @@ pred_prob_diversion_petition_csu %>%
   expand_limits(x = .25) +
   labs(
     title = NULL,
-    x = "Predicted Probability of Petition",
+    x = "Predicted Probability of Successful Diversion",
     y = NULL,
     color = NULL
   ) +
@@ -1140,9 +1132,6 @@ pred_prob_diversion_petition_csu %>%
 #| column: page-right
 #| out-width: 100%
 
-knitr::opts_chunk$set(dev = "ragg_png")
-
-
 ### join va_county_shoreline_clipped_final and pred_prob_diversion_petition_csu
 pred_prob_diversion_petition_csu_geo <- left_join(df_csu_level_intake_summary_geo,
                                                 pred_prob_diversion_petition_csu,
@@ -1159,7 +1148,7 @@ quantiles <- pred_prob_diversion_petition_csu_geo %>%
   as.vector() 
 
 ### make labels for map's legend
-label_estimate_rate <- c("51% to 80%","41% to 51%","30% to 41%","8% to 30%")
+label_estimate_rate <- c("90% to 95%","88% to 90%","85% to 88%","71% to 85%")
 
 ### create a new variable with the specified quantiles
 pred_prob_diversion_petition_csu_geo_to_map <- pred_prob_diversion_petition_csu_geo %>%
@@ -1189,7 +1178,7 @@ ggplot(
   ### use jr palette here
  scale_fill_manual(
     values = c("#1F4A58","#2F7084","#87C2D4","#AFD6E2"),
-    name = "Predicted Probability, Petition",
+    name = "Predicted Probability, Successful Diversion",
     na.value = "grey50",
     guide = guide_legend(
      keyheight = unit(7.5, units = "mm"),
@@ -1282,7 +1271,7 @@ pred_prob_diversion_petition_dai %>%
   expand_limits(x = .25) +
   labs(
     title = NULL,
-    x = "Predicted Probability of Petition",
+    x = "Predicted Probability of Successful Diversion",
     y = NULL,
     color = NULL
   ) +
@@ -1333,7 +1322,7 @@ pred_prob_petition_status_by_csu %>%
   expand_limits(x = 0) +
   labs(
     title = NULL,
-    x = "Predicted Probability of Petition",
+    x = "Predicted Probability of Successful Diversion",
     y = NULL,
     color = NULL) +
   theme(
