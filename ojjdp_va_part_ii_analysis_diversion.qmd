@@ -81,7 +81,7 @@ sharepoint_ojjdp_va_viz <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Output/VA/r_v
 
 ### read in df_analytic_complaints_disposition_caseload file for analysis
 df_analytic_complaints_disposition_caseload <- read_rds(file.path(sharepoint_ojjdp_va_analysis_analytic_data,"df_analytic_complaints_disposition_caseload.rds")) %>% 
-  mutate(date_opened_year = as.character(date_opened_year))
+  mutate(date_opened_year = as.character(date_opened_year)) 
 ```
 
 ```{r include=FALSE,warning=FALSE,include=FALSE}
@@ -333,7 +333,7 @@ kable(df_complaints_youth_intake_decision_table_age_final,
                                        "condensed", 
                                        "responsive"), 
                  row_label_position = "l") %>% 
-  row_spec(5, bold = TRUE)
+  row_spec(4, bold = TRUE)
 ```
 
 

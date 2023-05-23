@@ -458,7 +458,7 @@ kable(df_complaints_disposition_outcome_table_gender_final,
 
 ## Table 5: Disposition Outcomes by Age at Intake
 
-Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. Row percentages reflect the percentage of all disposed complaints (not percentage of petitioned complaints).
+Note: The preliminary options for grouping dispositions that I am using are: Detention, Commitment, Probation/Supervision, Deferral, Community Service, Fine, No further action/none, Restitution, Other. See the `Disposition, Preliminary Disposition Groupings` table on the `codebook` page in the `sample descriptives` tab for a full list of each disposition and I've grouped it. Row percentages reflect the percentage of all disposed complaints (not percentage of petitioned complaints). 
 
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
@@ -562,7 +562,7 @@ kable(df_complaints_disposition_outcome_table_age_final,
                                        "condensed", 
                                        "responsive"), 
                  row_label_position = "l") %>% 
-  row_spec(5, bold = TRUE)
+  row_spec(4, bold = TRUE)
 ```
 
 <br>

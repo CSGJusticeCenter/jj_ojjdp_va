@@ -186,8 +186,9 @@ df_djj_intake_complaints_clean <- df_djj_intake_complaints_raw %>%
                                                                         "Prob./Parole Violation")]),
          ### based on review w/ Becky, pulled out 'other violation' into separate count variable
          count_other_violation_with_case = n_distinct(offense_number[dai%in%c("Other Violation")]),
-         div_at_int = sum(div_at_int, na.rm = TRUE),
-         div_bey_90 = sum(div_bey_90, na.rm = TRUE)) %>%
+         ### leave NAs as NAs so as to not confuse a LOS of '0' days and missing data
+         div_at_int = sum(div_at_int),
+         div_bey_90 = sum(div_bey_90)) %>%
   ungroup() %>% 
   
 
@@ -228,29 +229,25 @@ df_djj_intake_complaints_clean <- df_djj_intake_complaints_raw %>%
          labels = c("Female", "Male"))) %>% 
   ### temp cleaning of age -- pending feedback from DJJ
   mutate(petition_age_clean = case_when(
-    pet_age < 12 ~ 1,
-    pet_age>= 12 &  pet_age< 14 ~ 2,
-    pet_age>= 14 &  pet_age< 16 ~ 3,
-    pet_age>= 16 &  pet_age< 20 ~ 4,
+    pet_age < 13 ~ 1,
+    pet_age>= 13 &  pet_age< 16 ~ 2,
+    pet_age>= 16 &  pet_age< 20 ~ 3,
     TRUE ~ as.numeric(NA)),
     petition_age_clean = factor(petition_age_clean,
-         levels = c(1,2,3,4),
-         labels = c("Less than 12", 
-                    "12 to 13",
-                    "14 to 15",
-                    "16 to 20")),
+         levels = c(1,2,3),
+         labels = c("12 and under", 
+                    "13 to 15",
+                    "16 and over")),
     intake_age_clean = case_when(
-    intake_age < 12 ~ 1,
-    intake_age>= 12 &  intake_age< 14 ~ 2,
-    intake_age>= 14 &  intake_age< 16 ~ 3,
-    intake_age>= 16 &  intake_age< 20 ~ 4,
+    intake_age < 13 ~ 1,
+    intake_age>= 13 &  intake_age< 16 ~ 2,
+    intake_age>= 16 &  intake_age< 20 ~ 3,
     TRUE ~ as.numeric(NA)),
     intake_age_clean = factor(intake_age_clean,
-         levels = c(1,2,3,4),
-         labels = c("Less than 12", 
-                    "12 to 13",
-                    "14 to 15",
-                    "16 to 20")),
+         levels = c(1,2,3),
+         labels = c("12 and under", 
+                    "13 to 15",
+                    "16 and over")),
     risk_level_clean = case_when(
     risk_level=="L" ~ 1,
     risk_level=="M" ~ 2,
