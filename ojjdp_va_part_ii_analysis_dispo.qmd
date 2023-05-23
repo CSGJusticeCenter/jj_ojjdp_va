@@ -467,8 +467,6 @@ Note: The preliminary options for grouping dispositions that I am using are: Det
 
 ### unique complaints split out
 df_complaints_disposition_outcome_table_age <- df_analytic_complaints_disposition_caseload %>% 
-   filter(intake_age>8,
-         intake_age<20) %>% 
   dplyr::group_by(intake_age_clean) %>% 
       dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Petitioned Complaints (N)` = n_distinct(unique_complaint_id[complaint_eventually_petitioned_flag==1]),
@@ -509,8 +507,6 @@ df_complaints_disposition_outcome_table_age <- df_analytic_complaints_dispositio
 
 ### unique complaints statewide
 df_complaints_disposition_outcome_table_overall <- df_analytic_complaints_disposition_caseload %>% 
-   filter(intake_age>8,
-         intake_age<20) %>% 
         dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Petitioned Complaints (N)` = n_distinct(unique_complaint_id[complaint_eventually_petitioned_flag==1]),
                    `Complaints Petitioned (row %)` = scales::percent(`All Petitioned Complaints (N)`/`All Complaints (N)`,
