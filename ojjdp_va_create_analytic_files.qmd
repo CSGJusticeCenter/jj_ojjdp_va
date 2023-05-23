@@ -229,9 +229,9 @@ df_djj_intake_complaints_clean <- df_djj_intake_complaints_raw %>%
          labels = c("Female", "Male"))) %>% 
   ### temp cleaning of age -- pending feedback from DJJ
   mutate(petition_age_clean = case_when(
-    pet_age < 13 ~ 1,
+    pet_age< 13 ~ 1,
     pet_age>= 13 &  pet_age< 16 ~ 2,
-    pet_age>= 16 &  pet_age< 20 ~ 3,
+    pet_age>= 16 &  pet_age< 21 ~ 3,
     TRUE ~ as.numeric(NA)),
     petition_age_clean = factor(petition_age_clean,
          levels = c(1,2,3),
@@ -239,9 +239,9 @@ df_djj_intake_complaints_clean <- df_djj_intake_complaints_raw %>%
                     "13 to 15",
                     "16 and over")),
     intake_age_clean = case_when(
-    intake_age < 13 ~ 1,
+    intake_age< 13 ~ 1,
     intake_age>= 13 &  intake_age< 16 ~ 2,
-    intake_age>= 16 &  intake_age< 20 ~ 3,
+    intake_age>= 16 &  intake_age< 21 ~ 3,
     TRUE ~ as.numeric(NA)),
     intake_age_clean = factor(intake_age_clean,
          levels = c(1,2,3),
