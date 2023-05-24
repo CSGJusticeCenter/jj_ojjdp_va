@@ -383,6 +383,9 @@ df_complaints_youth_intake_decision <- df_djj_intake_complaints_clean %>%
   mutate(next_complaint_intake_date = dplyr::lead(date_opened,
                                                    1,
                                                    default=NA),
+         next_complaint_dai = dplyr::lead(dai,
+                                                   1,
+                                                   default=NA),
          next_petition_intake_date = dplyr::lead(date_opened_petitioned_only,
                                                    1,
                                                    default=NA)) %>%
@@ -414,6 +417,7 @@ codebook_intake_decision_values_timing_test <- df_complaints_youth_intake_decisi
           jj_history_clean,
           date_opened,
           next_complaint_intake_date,
+          next_complaint_dai,
           time_between_complaints,
           time_between_complaints_within_one_year_flag,
           regression_outcome_new_complaint_one_year_first_time_jj,
