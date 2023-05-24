@@ -2251,7 +2251,7 @@ kable(pred_prob_diversion_petition_dai_overall,
 #| out-width: 85%
 
 ### create denominator -- unique complaint for entire sample
-subsequent_complaints_status_sample_denom <- n_distinct(intake_initial_diversion_re_complaint_within_a_year_model$unique_complaint_id[intake_initial_diversion_re_complaint_within_a_year_model$dai=="Status Offense"])
+subsequent_complaints_status_sample_denom <- n_distinct(intake_initial_diversion_re_complaint_within_a_year_model$unique_complaint_id[intake_initial_diversion_re_complaint_within_a_year_model$dai=="Status Offense" & intake_initial_diversion_re_complaint_within_a_year_model$regression_outcome_new_complaint_one_year_first_time_jj==1])
 
 ### unique complaints split out
 df_complaints_youth_intake_decision_table_subsequent_offense <- intake_initial_diversion_re_complaint_within_a_year_model %>% 
