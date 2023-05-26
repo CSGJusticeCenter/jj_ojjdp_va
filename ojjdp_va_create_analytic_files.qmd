@@ -190,16 +190,7 @@ df_djj_intake_complaints_clean <- df_djj_intake_complaints_raw %>%
          div_at_int = sum(div_at_int),
          div_bey_90 = sum(div_bey_90)) %>%
   ungroup() %>% 
-  
-
-########################################################################
-########################################################################
-############ CODE REVIEW W/ BECKY -- LEFT OFF HERE
-########################################################################
-########################################################################
-
-
-  ### keep most serious offense associated with intake case/complaint
+    ### keep most serious offense associated with intake case/complaint
   dplyr::filter(mso_flag == "Y") %>% 
   ### according to DJJ documentation, multiple offenses may have mso flag of 1 if
   ### severity ranking is tied; it appears that ties only occur with identical vcc codes
@@ -274,6 +265,14 @@ df_djj_intake_complaints_clean <- df_djj_intake_complaints_raw %>%
   ### our cut off for the intake section is 8 to 20 years old
   filter((drg=="CHINS" | intake_age >=8),
          intake_age<=20)
+
+
+########################################################################
+########################################################################
+############ CODE REVIEW W/ BECKY -- LEFT OFF HERE
+########################################################################
+########################################################################
+
 
 ### clean up codebook values that we need
 codebook_intake_decision_values <- codebook %>% 
