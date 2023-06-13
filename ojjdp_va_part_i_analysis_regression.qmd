@@ -40,7 +40,7 @@ knitr::opts_chunk$set(
   cache = FALSE)
 
 ### set theme
-theme_set(theme_minimal())
+theme_set(theme_minimal(26, base_family = "Calibri"))
 
 ### set sharepoint path using csgjcr function
 sharepoint_ojjdp_va_analysis_analytic_data <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Data/VA/analysis/analytic"))
@@ -199,18 +199,17 @@ kable(pred_prob_diversion_petition_race_overall,
 #| out-width: 85%
 
 pred_prob_diversion_petition_race <- predictions(va_diversion_petition_model, by = c("race")) %>%
-  filter(race%in%c("Black","White","Hispanic","Asian")) 
+  filter(race%in%c("Black","White","Hispanic")) 
 
 pred_prob_diversion_petition_race %>%
   mutate(race = fct_reorder(race, estimate, max)) %>%
-  ggplot(aes(estimate, race)) +
-  geom_point(size = 6.5, alpha = 0.75, colour = "#2F7084") +
-  geom_linerange(aes(xmin = conf.low, xmax = conf.high)) +
-  # scale_color_discrete(values = "#2F7084") +
-  scale_x_continuous(
-    expand = expansion(mult = c(0.2, 0.2)),
-    labels = label_percent(1),
-    breaks = seq(0, 1, by = 0.1)
+  ggplot(aes(estimate, race, color = race)) +
+ geom_point(size = 9.5, alpha = 0.9) +
+  scale_colour_manual(values = c("#2F7084","#2F7084","#2F7084")) +
+  # geom_linerange(aes(xmin = conf.low, xmax = conf.high)) +
+ scale_x_continuous(labels = scales::percent_format(accuracy = 1),
+                     limits = c(min(0), 
+                                max(.45))
   ) +
   guides(color = FALSE) +
   expand_limits(x = .25) +
@@ -220,23 +219,31 @@ pred_prob_diversion_petition_race %>%
     y = NULL,
     color = NULL
   ) +
-  theme(
-    plot.title = element_text(size = 16),
-    axis.text.y = element_text(size = 16),
-    axis.title.x = element_text(vjust=-0.5)
-  ) 
+   theme(plot.title = element_text(hjust = 0.5),
+        axis.text.y = element_text(size = 14),
+        axis.text.x = element_text(face = "bold", hjust = 1, size = 14),
+        axis.title.x = element_text(size = 14, margin = margin(t = 15)),
+        axis.title.y = element_text(size = 14, margin = margin(r = 15)),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5),
+        axis.ticks.length = unit(0, "cm"),
+        # panel.grid.major.y = element_blank(),
+        # panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank()
+        ) 
 
-# ### save out as png
-# ggsave(
-#     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
-#     plot = last_plot(),
-#     device = ragg::agg_png,
-#     dpi = 300,
-#     height = 5.25,
-#     width = 10,
-#     units = "in",
-#     bg = "transparent"
-#   )
+
+### save out as png
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "pred_prob_petition_race.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
 ```
 
 <br>
@@ -335,8 +342,9 @@ pred_prob_diversion_petition_race_by_referral_type <- predictions(va_diversion_p
 pred_prob_diversion_petition_race_by_referral_type %>%
   mutate(referral_source_clean = fct_reorder(gender, estimate, max)) %>%
   ggplot(aes(estimate, gender, color = race)) +
-  geom_point(size = 6.5, alpha = 0.75) +
+  geom_point(size = 9.5, alpha = 0.85) +
   scale_colour_manual(values = c("#1F4A58","#2F7084","#87C2D4")) +
+    # geom_linerange(aes(xmin = conf.low, xmax = conf.high)) +
   scale_x_continuous(
     expand = expansion(mult = c(0.1, 0.1)),
     labels = label_percent(1),
@@ -348,25 +356,33 @@ pred_prob_diversion_petition_race_by_referral_type %>%
     title = NULL,
     x = "Predicted Probability of Petition",
     y = NULL,
-    color = NULL
-  ) +
-  theme(
-    plot.title = element_text(size = 16),
-    axis.text.y = element_text(size = 16),
-    axis.title.x = element_text(vjust=-0.5)
-  )
+    color = NULL) +
+   theme(legend.title = element_text(hjust = 0.5,size = 13),
+        legend.text = element_text(size = 12),
+        axis.text.y = element_markdown(size = 14),
+        axis.text.x = element_text(face = "bold", hjust = 1, size = 14),
+        axis.title.x = element_text(size = 14, margin = margin(t = 15)),
+        axis.title.y = element_text(size = 14, margin = margin(r = 15)),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5),
+        axis.ticks.length = unit(0, "cm"),
+        # panel.grid.major.y = element_blank(),
+        # panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank()
+        ) 
 
-# ### save out as png
-# ggsave(
-#     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
-#     plot = last_plot(),
-#     device = ragg::agg_png,
-#     dpi = 300,
-#     height = 5.25,
-#     width = 10,
-#     units = "in",
-#     bg = "transparent"
-#   )
+
+### save out as png
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "pred_prob_petition_race_gender.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
 ```
 
 <br>
@@ -408,15 +424,16 @@ kable(pred_prob_diversion_petition_csu_overall,
 pred_prob_diversion_petition_csu <- predictions(va_diversion_petition_model, by = c("csu")) 
 
 pred_prob_diversion_petition_csu %>%
-  mutate(csu = fct_reorder(csu, estimate, max)) %>%
-  ggplot(aes(estimate, csu)) +
-  geom_point(size = 3.75, alpha = 0.7, colour = "#2F7084") +
+  mutate(csu = fct_reorder(csu, estimate, max),
+         state = "va") %>%
+  ggplot(aes(estimate, csu, color = state)) +
+  geom_point(size = 3.85, alpha = 0.8) +
+   scale_colour_manual(values = c("#2F7084")) +
   geom_linerange(aes(xmin = conf.low, xmax = conf.high)) +
-  # scale_color_discrete(values = "#2F7084") +
-  scale_x_continuous(
-    expand = expansion(mult = c(0.2, 0.2)),
-    labels = label_percent(1),
-    breaks = seq(0, 1, by = 0.1)
+   scale_x_continuous(
+    labels = label_percent(accurracy=1),
+    limits = c(min(0), 
+                                max(.82))
   ) +
   guides(color = FALSE) +
   expand_limits(x = .25) +
@@ -426,23 +443,30 @@ pred_prob_diversion_petition_csu %>%
     y = NULL,
     color = NULL
   ) +
-  theme(
-    plot.title = element_text(size = 16),
-    axis.text.y = element_text(size = 8),
-    axis.title.x = element_text(vjust=-0.5)
-  ) 
+   theme(plot.title = element_text(hjust = 0.5),
+        axis.text.y = element_markdown(),
+        axis.text.x = element_text(hjust = 1, size = 14),
+        axis.title.x = element_text(size = 14, margin = margin(t = 15)),
+        axis.title.y = element_text(size = 14, margin = margin(r = 15)),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5),
+        axis.ticks.length = unit(0, "cm"),
+        # panel.grid.major.y = element_blank(),
+        # panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank()
+        ) 
 
-# ### save out as png
-# ggsave(
-#     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
-#     plot = last_plot(),
-#     device = ragg::agg_png,
-#     dpi = 300,
-#     height = 5.25,
-#     width = 10,
-#     units = "in",
-#     bg = "transparent"
-#   )
+### save out as png
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "pred_prob_petition_csu_overall.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
 ```
 
 <br>
@@ -734,10 +758,9 @@ pred_prob_diversion_petition_dai %>%
 #     bg = "transparent"
 #   )
 ```
-
 <br>
 
-## Figure 4: Predicted Probabilities of Petition by CSU for Status Offenses 
+## Figure 4a: Predicted Probabilities of Petition by CSU for Status Offenses 
 
 **NOTE:** This analysis excludes CHINS complaints.
 
@@ -752,9 +775,10 @@ pred_prob_petition_status_by_csu <- predictions(va_diversion_petition_model, by 
 pred_prob_petition_status_by_csu %>%
   mutate(csu = fct_reorder(csu, estimate, max)) %>%
   ggplot(aes(estimate, csu, color = dai_clean)) +
-  geom_point(size = 3.5, alpha = 0.85) +
+  geom_point(size = 3.5, alpha = 0.9) +
+  scale_colour_manual(values = c("#2F7084")) +
   geom_linerange(aes(xmin = conf.low, xmax = conf.high)) +
-  scale_colour_manual(values = rev(c("#2F7084"))) +
+  # scale_colour_manual(values = rev(c("#2F7084"))) +
   scale_x_continuous(
     expand = expansion(mult = c(0.1, 0.1)),
     labels = label_percent(1),
@@ -763,26 +787,166 @@ pred_prob_petition_status_by_csu %>%
   expand_limits(x = 0) +
   labs(
     title = NULL,
-    x = "Predicted Probability of Petition",
-    y = NULL,
+    x = "Predicted Probability of Petition, Status",
+    y = "CSU",
     color = NULL) +
-  theme(
-    plot.title = element_text(size = 16),
-    axis.text.y = element_text(size = 8),
-    axis.title.x = element_text(vjust=-0.5))
+  # theme(
+  #   plot.title = element_text(size = 16),
+  #   axis.text.y = element_text(size = 8),
+  #   axis.title.x = element_text(vjust=-0.5))
+  theme(legend.position = "top",
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x = element_text(),
+        axis.text.y = element_text(),
+        axis.title.x = element_text(margin = margin(t = 15)),
+        axis.title.y = element_text(margin = margin(r = 15)),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5),
+        axis.ticks.length = unit(0, "cm"),
+        # panel.grid.major.y = element_blank(),
+        # panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank()
+        )  
 
-# ### save out as png
-# ggsave(
-#     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
-#     plot = last_plot(),
-#     device = ragg::agg_png,
-#     dpi = 300,
-#     height = 5.25,
-#     width = 10,
-#     units = "in",
-#     bg = "transparent"
-#   )
+### save out as png
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "pred_prob_csu_status_only.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
 ```
+
+<br>
+
+## Figure 4b: Predicted Probabilities of Petition by CSU for Class 1 Misdemeanor Offenses 
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+
+pred_prob_petition_status_by_csu <- predictions(va_diversion_petition_model, by = c("dai_clean","csu")) %>%
+  filter(dai_clean%in%c("Class 1 Misdemeanor Against Persons"))
+
+pred_prob_petition_status_by_csu %>%
+  mutate(csu = fct_reorder(csu, estimate, max)) %>%
+  ggplot(aes(estimate, csu, color = dai_clean)) +
+  geom_point(size = 3.5, alpha = 0.75) +
+    scale_colour_manual(values = c("#2F7084")) +
+  # scale_colour_manual(values = c("#1F4A58","#2F7084","#87C2D4")) +
+  # geom_point(size = 3.5, alpha = 0.85, color = "#2F7084") +
+  geom_linerange(aes(xmin = conf.low, xmax = conf.high)) +
+  # scale_colour_manual(values = rev(c("#2F7084"))) +
+  scale_x_continuous(
+    expand = expansion(mult = c(0.1, 0.1)),
+    labels = label_percent(1),
+    breaks = seq(0, 1, by = 0.15)) +
+  guides(color = FALSE) +
+  expand_limits(x = 0) +
+  labs(
+    title = NULL,
+    x = "Predicted Probability of Petition, Class 1 Misdemeanor against Persons",
+    y = "CSU",
+    color = NULL) +
+  # theme(
+  #   plot.title = element_text(size = 16),
+  #   axis.text.y = element_text(size = 8),
+  #   axis.title.x = element_text(vjust=-0.5))
+  theme(legend.position = "top",
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x = element_text(),
+        axis.text.y = element_text(),
+        axis.title.x = element_text(margin = margin(t = 15)),
+        axis.title.y = element_text(margin = margin(r = 15)),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5),
+        axis.ticks.length = unit(0, "cm"),
+        # panel.grid.major.y = element_blank(),
+        # panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank()
+        )  
+
+### save out as png
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "pred_prob_csu_misd_only.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
+```
+
+<br>
+
+## Figure 4c: Predicted Probabilities of Petition by CSU for Felony Offenses 
+
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+pred_prob_petition_status_by_csu <- predictions(va_diversion_petition_model, by = c("dai_clean","csu")) %>%
+  filter(dai_clean%in%c("Other Felony"))
+
+pred_prob_petition_status_by_csu %>%
+  mutate(csu = fct_reorder(csu, estimate, max)) %>%
+  ggplot(aes(estimate, csu, color = dai_clean)) +
+  geom_point(size = 3.5, alpha = 0.75) +
+  scale_colour_manual(values = c("#2F7084")) +
+  # geom_point(size = 3.5, alpha = 0.85, color = "#2F7084") +
+  geom_linerange(aes(xmin = conf.low, xmax = conf.high)) +
+  # scale_colour_manual(values = rev(c("#2F7084"))) +
+  scale_x_continuous(
+    expand = expansion(mult = c(0.1, 0.1)),
+    labels = label_percent(1),
+    breaks = seq(0, 1, by = 0.15)) +
+  guides(color = FALSE) +
+  expand_limits(x = 0) +
+  labs(
+    title = NULL,
+    x = "Predicted Probability of Petition, Other Felony",
+    y = "CSU",
+    color = NULL) +
+  # theme(
+  #   plot.title = element_text(size = 16),
+  #   axis.text.y = element_text(size = 8),
+  #   axis.title.x = element_text(vjust=-0.5))
+  theme(legend.position = "top",
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x = element_text(),
+        axis.text.y = element_text(),
+        axis.title.x = element_text(margin = margin(t = 15)),
+        axis.title.y = element_text(margin = margin(r = 15)),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5),
+        axis.ticks.length = unit(0, "cm"),
+        # panel.grid.major.y = element_blank(),
+        # panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank()
+        )  
+
+### save out as png
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "pred_prob_csu_felony_only.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
+```
+
+<br><br>
 
 # Research Question A2: Diversion Outcomes
  
@@ -879,18 +1043,18 @@ kable(pred_prob_diversion_petition_race_overall,
 #| out-width: 85%
 
 pred_prob_diversion_petition_race <- predictions(va_diversion_outcome_model, by = c("race")) %>%
-  filter(race%in%c("Black","White","Hispanic","Asian")) 
+  filter(race%in%c("Black","White","Hispanic")) 
 
 pred_prob_diversion_petition_race %>%
   mutate(race = fct_reorder(race, estimate, max)) %>%
-  ggplot(aes(estimate, race)) +
-  geom_point(size = 6.5, alpha = 0.75, colour = "#2F7084") +
-  geom_linerange(aes(xmin = conf.low, xmax = conf.high)) +
-  # scale_color_discrete(values = "#2F7084") +
-  scale_x_continuous(
-    expand = expansion(mult = c(0.2, 0.2)),
-    labels = label_percent(1),
-    breaks = seq(0, 1, by = 0.1)
+  ggplot(aes(estimate, race, color = race)) +
+  geom_point(size = 9.5, alpha = 0.85) +
+    scale_color_manual(values = c("#2F7084","#2F7084","#2F7084")) +
+  # geom_linerange(aes(xmin = conf.low, xmax = conf.high)) +
+   scale_x_continuous(
+    labels = label_percent(accurracy=1),
+    limits = c(min(0), 
+                                max(1))
   ) +
   guides(color = FALSE) +
   expand_limits(x = .25) +
@@ -900,23 +1064,30 @@ pred_prob_diversion_petition_race %>%
     y = NULL,
     color = NULL
   ) +
-  theme(
-    plot.title = element_text(size = 16),
-    axis.text.y = element_text(size = 16),
-    axis.title.x = element_text(vjust=-0.5)
-  ) 
+   theme(plot.title = element_text(hjust = 0.5),
+        axis.text.y = element_markdown(size = 14),
+        axis.text.x = element_text(hjust = 1, size = 14),
+        axis.title.x = element_text(size = 14, margin = margin(t = 15)),
+        axis.title.y = element_text(size = 14, margin = margin(r = 15)),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5),
+        axis.ticks.length = unit(0, "cm"),
+        # panel.grid.major.y = element_blank(),
+        # panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank()
+        ) 
 
-# ### save out as png
-# ggsave(
-#     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
-#     plot = last_plot(),
-#     device = ragg::agg_png,
-#     dpi = 300,
-#     height = 5.25,
-#     width = 10,
-#     units = "in",
-#     bg = "transparent"
-#   )
+### save out as png
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "pred_prob_diversion_success_by_race_eth.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
 ```
 
 <br>
@@ -1256,17 +1427,18 @@ kable(pred_prob_diversion_petition_dai_overall,
 pred_prob_diversion_petition_dai <- predictions(va_diversion_outcome_model, by = c("dai_clean")) 
 
 pred_prob_diversion_petition_dai %>%
+  # filter(dai_clean!="CHINS") |> 
   mutate(dai_clean = fct_reorder(dai_clean, estimate, max)) %>%
-  ggplot(aes(estimate, dai_clean)) +
-  geom_point(size = 6.5, alpha = 0.7, colour = "#2F7084") +
+  ggplot(aes(estimate, dai_clean, colour = dai_clean)) +
+  geom_point(size = 6.5, alpha = 0.7) +
+  scale_colour_manual(values = c("#2F7084","#2F7084","#2F7084","#2F7084","#2F7084","#2F7084","#2F7084","#2F7084")) +
   geom_linerange(aes(xmin = conf.low, xmax = conf.high)) +
-  # scale_color_discrete(values = "#2F7084") +
   scale_x_continuous(
-    expand = expansion(mult = c(0.2, 0.2)),
-    labels = label_percent(1),
-    breaks = seq(0, 1, by = 0.1)
+    labels = label_percent(accurracy=1),
+    limits = c(min(0), 
+                                max(1))
   ) +
-  scale_y_discrete(labels = wrap_format(15)) +
+  scale_y_discrete(labels = wrap_format(20)) +
   guides(color = FALSE) +
   expand_limits(x = .25) +
   labs(
@@ -1275,23 +1447,30 @@ pred_prob_diversion_petition_dai %>%
     y = NULL,
     color = NULL
   ) +
-  theme(
-    plot.title = element_text(size = 16),
-    axis.text.y = element_text(size = 8),
-    axis.title.x = element_text(vjust=-0.5)
-  ) 
+   theme(plot.title = element_text(hjust = 0.5),
+        axis.text.y = element_text(size=11),
+        axis.text.x = element_text(hjust = 1, size = 14),
+        axis.title.x = element_text(size = 14, margin = margin(t = 15)),
+        axis.title.y = element_text(size = 14, margin = margin(r = 15)),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5),
+        axis.ticks.length = unit(0, "cm"),
+        # panel.grid.major.y = element_blank(),
+        # panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank()
+        ) 
 
-# ### save out as png
-# ggsave(
-#     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
-#     plot = last_plot(),
-#     device = ragg::agg_png,
-#     dpi = 300,
-#     height = 5.25,
-#     width = 10,
-#     units = "in",
-#     bg = "transparent"
-#   )
+### save out as png
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "pred_prob_diversion_success_by_charge_type.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
 ```
 
 <br>
@@ -2088,40 +2267,51 @@ va_diversion_re_complaint_model_csu <- predictions(va_diversion_re_complaint_mod
 
 va_diversion_re_complaint_model_csu %>%
   mutate(csu = fct_reorder(csu, estimate, max)) %>%
-  ggplot(aes(estimate, csu)) +
-  geom_point(size = 3.75, alpha = 0.7, colour = "#2F7084") +
+  mutate(reference = "VA") |> 
+  ggplot(aes(estimate, csu, color = reference)) +
+  geom_point(size = 3.75, alpha = 0.7) +
+  scale_color_manual(values = c("#2F7084")) +
   geom_linerange(aes(xmin = conf.low, xmax = conf.high)) +
   # scale_color_discrete(values = "#2F7084") +
-  scale_x_continuous(
-    expand = expansion(mult = c(0.2, 0.2)),
-    labels = label_percent(1),
-    breaks = seq(0, 1, by = 0.05)
+   scale_x_continuous(
+    labels = label_percent(accurracy=1),
+    limits = c(min(0), 
+                                max(.31))
   ) +
   guides(color = FALSE) +
   expand_limits(x = .25) +
   labs(
     title = NULL,
     x = "Predicted Probability of Second Complaint",
-    y = NULL,
+    y = "CSU",
     color = NULL
   ) +
-  theme(
-    plot.title = element_text(size = 16),
-    axis.text.y = element_text(size = 8),
-    axis.title.x = element_text(vjust=-0.5)
-  ) 
+   theme(plot.title = element_text(hjust = 0.5),
+        axis.text.y = element_text(),
+        axis.text.x = element_text(hjust = 1, size = 14),
+        axis.title.x = element_text(size = 14, margin = margin(t = 15)),
+        axis.title.y = element_text(size = 14, margin = margin(r = 15)),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5),
+        axis.ticks.length = unit(0, "cm"),
+        # panel.grid.major.y = element_blank(),
+        # panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank()
+        ) 
 
-# ### save out as png
-# ggsave(
-#     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
-#     plot = last_plot(),
-#     device = ragg::agg_png,
-#     dpi = 300,
-#     height = 5.25,
-#     width = 10,
-#     units = "in",
-#     bg = "transparent"
-#   )
+
+
+### save out as png
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "pred_prob_subsequent_complaint_by_csu.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
 ```
 
 <br>
@@ -2288,14 +2478,15 @@ pred_prob_diversion_petition_dai <- predictions(va_diversion_re_complaint_model,
 
 pred_prob_diversion_petition_dai %>%
   mutate(dai_clean = fct_reorder(dai_clean, estimate, max)) %>%
-  ggplot(aes(estimate, dai_clean)) +
-  geom_point(size = 6.5, alpha = 0.7, colour = "#2F7084") +
+  ggplot(aes(estimate, dai_clean, color = dai_clean)) +
+  geom_point(size = 6.5, alpha = 0.7) +
+  scale_color_manual(values = c("#2F7084","#2F7084","#2F7084","#2F7084","#2F7084","#2F7084","#2F7084","#2F7084")) +
   geom_linerange(aes(xmin = conf.low, xmax = conf.high)) +
   # scale_color_discrete(values = "#2F7084") +
-  scale_x_continuous(
-    expand = expansion(mult = c(0.2, 0.2)),
-    labels = label_percent(1),
-    breaks = seq(0, 1, by = 0.05)
+   scale_x_continuous(
+    labels = label_percent(accurracy=1),
+    limits = c(min(0), 
+                                max(.4))
   ) +
   scale_y_discrete(labels = wrap_format(15)) +
   guides(color = FALSE) +
@@ -2306,23 +2497,31 @@ pred_prob_diversion_petition_dai %>%
     y = NULL,
     color = NULL
   ) +
-  theme(
-    plot.title = element_text(size = 16),
-    axis.text.y = element_text(size = 8),
-    axis.title.x = element_text(vjust=-0.5)
-  ) 
+   theme(plot.title = element_text(hjust = 0.5),
+        axis.text.y = element_text(size = 10),
+        axis.text.x = element_text(hjust = 1, size = 14),
+        axis.title.x = element_text(size = 14, margin = margin(t = 15)),
+        axis.title.y = element_text(size = 14, margin = margin(r = 15)),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5),
+        axis.ticks.length = unit(0, "cm"),
+        # panel.grid.major.y = element_blank(),
+        # panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank()
+        ) 
 
-# ### save out as png
-# ggsave(
-#     filename = file.path(sharepoint_viz_path, "pred_prob_revocation_race_supervision_type_overall.png"),
-#     plot = last_plot(),
-#     device = ragg::agg_png,
-#     dpi = 300,
-#     height = 5.25,
-#     width = 10,
-#     units = "in",
-#     bg = "transparent"
-#   )
+
+### save out as png
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "pred_prob_subsequent_complaint_by_charge_type.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
 ```
 
 <br>

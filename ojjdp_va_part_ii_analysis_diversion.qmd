@@ -50,7 +50,7 @@ We will conduct a descriptive analysis of the front end of the system from intak
 ```{r include=FALSE}
 ### call libraries
 library(easypackages)
-libraries("tidyverse","foreign","lubridate","reshape2", "ggplot2","RColorBrewer","knitr","forcats","openxlsx","statar","svDialogs","xlsx", "magrittr","stringr", "data.table","janitor","kableExtra","leaflet", "readr", "rmarkdown","rowr", "gganimate", "gifski","tidycensus","sf","htmltools","acs","tigris","mapview","rgeos", "ggrepel", "censusxy","gdata","lavaan","mclust","tmap", "raster","rgeos","gmapsdistance","viridis","cowplot","lintr","leaflet.extras","censusapi","data.table","gridGraphics","readxl","haven","ggridges","extrafont","extrafontdb","datamodelr","Lahman","DiagrammeR","fs","readxl","rsvg","V8","csgjcr","DataExplorer","tidylog")
+libraries("tidyverse","foreign","lubridate","reshape2", "ggplot2","RColorBrewer","knitr","forcats","openxlsx","statar","svDialogs","xlsx", "magrittr","stringr", "data.table","janitor","kableExtra","leaflet", "readr", "rmarkdown","rowr", "gganimate", "gifski","tidycensus","sf","htmltools","acs","tigris","mapview","rgeos", "ggrepel", "censusxy","gdata","lavaan","mclust","tmap", "raster","rgeos","gmapsdistance","viridis","cowplot","lintr","leaflet.extras","censusapi","data.table","gridGraphics","readxl","haven","ggridges","extrafont","extrafontdb","datamodelr","Lahman","DiagrammeR","fs","readxl","rsvg","V8","csgjcr","DataExplorer","tidylog","ggtext")
 ```
 
 ```{r include=FALSE,message=FALSE,warning=FALSE}
@@ -61,7 +61,7 @@ knitr::opts_chunk$set(
   cache = FALSE)
 
 ### set theme
-theme_set(theme_minimal())
+theme_set(theme_minimal(16, base_family = "Calibri"))
 
 ### set sharepoint path using csgjcr function
 sharepoint_ojjdp_va_analysis_analytic_data <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Data/VA/analysis/analytic"))
@@ -333,6 +333,93 @@ kable(df_complaints_youth_intake_decision_table_age_final,
 
 <br>
 
+## Slide 20. 
+
+```{r echo=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+
+# ### unique complaints split out
+# df_complaints_youth_intake_decision_table_age <- df_analytic_complaints_disposition_caseload %>% 
+#   dplyr::group_by(intake_age_clean) %>% 
+#   dplyr::summarise(`Complaints Petitioned (row %)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"])/n_distinct(unique_complaint_id),
+#                    `Complaints Diverted (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Diverted"]),
+#                    `Complaints Diverted (row %)` = `Complaints Diverted (N)`/n_distinct(unique_complaint_id),
+#                    `Complaints Resolved/Dismissed (row %)` = n_distinct(unique_complaint_id[intake_decision_clean=="Resolved/Dismissed"])/n_distinct(unique_complaint_id),
+#                    `Other (row %)` =  n_distinct(unique_complaint_id[intake_decision_clean=="Other"])/n_distinct(unique_complaint_id)) %>% 
+#   ungroup() %>% 
+#   pivot_longer(!intake_age_clean, names_to = "complaint_type", values_to = "percent") 
+
+
+### unique complaints split out
+df_complaints_youth_intake_decision_viz_age <- df_analytic_complaints_disposition_caseload %>% 
+  dplyr::group_by(intake_age_clean) %>% 
+  dplyr::summarise(`Complaints (row %)` = n_distinct(unique_complaint_id)/unique_complaints_sample_denom) %>% 
+  ungroup() %>% 
+  pivot_longer(!intake_age_clean, names_to = "complaint_type", values_to = "percent") 
+
+### plot
+### bar plot
+ggplot(data = df_complaints_youth_intake_decision_viz_age,
+       aes(x = intake_age_clean,
+           y = percent,
+           fill = intake_age_clean)) + 
+  geom_bar(stat = "identity",  
+           color = "gray80") +
+  scale_x_discrete(limits = rev) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1),
+                     limits = c(min(0), 
+                                max(.6))) +
+  geom_label(
+    aes(
+      y = percent,
+      label = scales::percent(percent,
+                              accuracy = 1),
+      fontface = "bold"
+    ),
+    position = position_stack(vjust = .5),
+    size = 6,
+    colour = "white",
+    show.legend = FALSE
+  ) +
+  scale_fill_manual(values = c("#2F7084","#2F7084","#2F7084","#2F7084","#2F7084","#2F7084")) +
+  guides(fill = FALSE) +
+  labs(x = NULL, y = NULL,
+       fill = NULL,
+       caption = NULL,
+       title = NULL,
+       subtitle = NULL) +
+  theme_minimal() +
+  theme(legend.position = "top",
+        legend.title.align=0.5,
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5),
+        # axis.text.x = element_markdown(),
+        axis.text.y = element_markdown(size = 16),
+        axis.text.x = element_text(face = "bold", hjust = 1, size = 16),
+        axis.ticks.length = unit(0, "cm"),
+        panel.grid.major.y = element_blank(),
+        # panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank()) +
+  coord_flip()
+
+### write out
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "slide_20_complaints_by_age_group.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
+```
+
+<br>
+
 ## Table 5a: Complaints by Charge Type over Time (most serious offense; mso_flag == "Y")
 
 ```{r echo=FALSE,message=FALSE,warning=FALSE}
@@ -427,6 +514,894 @@ kable(df_complaints_youth_intake_decision_table_offense_final,
   row_spec(7, bold = TRUE)
 ```
 
+<br>
+
+## Slide 12. 
+
+```{r echo=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+### unique complaints split out
+df_complaints_youth_intake_decision_offense_viz_percent_change <- df_analytic_complaints_disposition_caseload %>% 
+  dplyr::summarise(`Felony 2016` = n_distinct(unique_complaint_id[dai%in%c("Felony Weapons and Felony Narcotics Distribution",
+                                                                          "Felony against Persons",
+                                                                          "Other Felony") & date_opened_fy==2016]),
+                   `Felony 2021` = n_distinct(unique_complaint_id[dai%in%c("Felony Weapons and Felony Narcotics Distribution",
+                                                                          "Felony against Persons",
+                                                                          "Other Felony") & date_opened_fy==2021]),
+                    felony_count_change = (`Felony 2021` - `Felony 2016`)/`Felony 2016`,
+                   `Class 1 Misdemeanor 2016` = n_distinct(unique_complaint_id[dai%in%c("Class 1 Misdemeanor Against Persons",
+                                                                                       "Other Class 1 Misdemeanor") & date_opened_fy==2016]),
+                   `Class 1 Misdemeanor 2021` = n_distinct(unique_complaint_id[dai%in%c("Class 1 Misdemeanor Against Persons",
+                                                                                       "Other Class 1 Misdemeanor") & date_opened_fy==2021]),
+                   misd_count_change = (`Class 1 Misdemeanor 2021` - `Class 1 Misdemeanor 2016`)/`Class 1 Misdemeanor 2016`,
+
+
+                   `Status Offense 2016` = n_distinct(unique_complaint_id[dai=="Status Offense" & date_opened_fy==2016]),
+                   `Status Offense 2021` = n_distinct(unique_complaint_id[dai=="Status Offense" & date_opened_fy==2021]),
+                    status_count_change = (`Status Offense 2021` - `Status Offense 2016`)/`Status Offense 2016`,
+                   `Other Violation 2016` = n_distinct(unique_complaint_id[dai=="Other Violation" & date_opened_fy==2016]),
+                   `Other Violation 2021` = n_distinct(unique_complaint_id[dai=="Other Violation" & date_opened_fy==2021]),
+                   other_violation_count_change = (`Other Violation 2021` - `Other Violation 2016`)/`Other Violation 2016`,
+
+                   `Prob./Parole Violation 2016` = n_distinct(unique_complaint_id[dai=="Prob./Parole Violation" & date_opened_fy==2016]),
+                   `Prob./Parole Violation 2021` = n_distinct(unique_complaint_id[dai=="Prob./Parole Violation" & date_opened_fy==2021]),
+                   prob_parole_violation_count_change = (`Prob./Parole Violation 2021` - `Prob./Parole Violation 2016`)/`Prob./Parole Violation 2016`) |> 
+  dplyr::select("Felony"=felony_count_change,
+                "Class 1 Misdemeanor"=misd_count_change,
+                "Status Offense"=status_count_change,
+                "Other Violation"=other_violation_count_change,
+                "Prob./Parole Violation"=prob_parole_violation_count_change) |> 
+  mutate(date_opened_fy = "2021") |> 
+  pivot_longer(!date_opened_fy, names_to = "offense_type", values_to = "percent_change") 
+
+
+### unique complaints split out
+### pivot wide to long for ggplot
+df_complaints_youth_intake_decision_offense_viz <- df_analytic_complaints_disposition_caseload %>% 
+  mutate(date_opened_fy = as.character(date_opened_fy)) |> 
+  dplyr::group_by(date_opened_fy) %>% 
+  dplyr::summarise(
+    # `All Complaints (N)` = n_distinct(unique_complaint_id),
+                   # `All Complaints (column %)` = scales::percent(`All Complaints (N)`/unique_complaints_sample_denom,
+                   #                                                     accuracy = .1),
+                   `Felony` = n_distinct(unique_complaint_id[dai%in%c("Felony Weapons and Felony Narcotics Distribution",
+                                                                          "Felony against Persons",
+                                                                          "Other Felony")]),
+                   # `Felony (row %)` = scales::percent(`Felony against Persons (N)`/`All Complaints (N)`,
+                   #                                                     accuracy = .1),
+                   `Class 1 Misdemeanor` = n_distinct(unique_complaint_id[dai%in%c("Class 1 Misdemeanor Against Persons",
+                                                                                       "Other Class 1 Misdemeanor")]),
+                   # `Class 1 Misdemeanor (row %)` = scales::percent(`Class 1 Misdemeanor Against Persons (N)`/`All Complaints (N)`,
+                   #                                                     accuracy = .1),
+                   `Status Offense` = n_distinct(unique_complaint_id[dai=="Status Offense"]),
+                   # `Status Offense (row %)` = scales::percent(`Status Offense (N)`/`All Complaints (N)`,
+                   #                                                     accuracy = .1),
+                   `Other Violation` = n_distinct(unique_complaint_id[dai=="Other Violation"]),
+                   # `Other Violation (row %)` = scales::percent(`Other Violation (N)`/`All Complaints (N)`,
+                   #                                                     accuracy = .1),
+                   `Prob./Parole Violation` = n_distinct(unique_complaint_id[dai=="Prob./Parole Violation"])
+                   # `Prob./Parole Violation (row %)` = scales::percent(`Prob./Parole Violation (N)`/`All Complaints (N)`,
+                   #                                                     accuracy = .1)
+                   ) %>% 
+  ungroup() |> 
+  pivot_longer(!date_opened_fy, names_to = "offense_type", values_to = "count") |> 
+  left_join(df_complaints_youth_intake_decision_offense_viz_percent_change,
+            by = c("offense_type","date_opened_fy")) |> 
+  mutate(offense_type = factor(offense_type,
+                                levels = c("Felony",
+                                           "Class 1 Misdemeanor",
+                                           "Status Offense",
+                                           "Other Violation",
+                                           "Prob./Parole Violation")))
+
+###geom_line 
+ggplot(data = df_complaints_youth_intake_decision_offense_viz, aes(x = date_opened_fy, y = count, color = offense_type, group = offense_type)) +
+  geom_line(color = "black", size = 2.75) +
+  geom_line(size = 2.2) +
+  geom_point(color = "black", size = 4) +
+  geom_point(size = 3.5) +
+  labs(x = "Fiscal Year", y = "Complaints (N)", color=NULL, title = NULL, caption = NULL) +
+  scale_y_continuous(label=scales::comma) +
+  theme(legend.position = "top",
+        panel.grid.major.x = element_blank(),      
+        plot.title = element_text( hjust = 0.5),
+        axis.text.x = element_text(),
+        axis.text.y = element_text(),
+        axis.title.x = element_text(margin = margin(t = 30)),
+        axis.title.y = element_text(margin = margin(r = 30)),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5)) +  
+  scale_color_manual(values = c("#2F7084",
+                               "#1F4A58",
+                               "#E17619",
+                               "#87C2D4",
+                               "#61C280")) +
+  scale_fill_manual(values = c("#2F7084",
+                               "#1F4A58",
+                               "#E17619",
+                               "#87C2D4",
+                               "#61C280")) +
+  geom_label_repel(aes(label = scales::percent(as.numeric(percent_change),
+                                               accuracy = 0.1),
+                    fill = offense_type),
+                   hjust = -.5,
+                   label.padding = 0.15,
+                   box.padding = 0.15,
+                   color = "white",
+                   size = 4.75,
+                   segment.color = NA,
+                   fontface = "bold",
+                   na.rm = TRUE,
+                   show.legend = FALSE)
+
+### write out
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "slide_12_complaints_over_time_by_offense.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
+```
+
+<br>
+
+## Slide 29. 
+
+```{r echo=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+
+### unique complaints split out
+### pivot wide to long for ggplot
+df_complaints_youth_intake_decision_offense_viz <- df_analytic_complaints_disposition_caseload %>% 
+  dplyr::group_by(date_opened_fy) %>% 
+  dplyr::summarise(`Complaints Petitioned` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"])/n_distinct(unique_complaint_id),
+                   `Complaints Not Petitioned` = n_distinct(unique_complaint_id[intake_decision_clean!="Petitioned"])/n_distinct(unique_complaint_id)) %>%
+  ungroup() |> 
+  pivot_longer(!date_opened_fy, names_to = "petition_status", values_to = "percent") |> 
+  mutate(date_opened_fy = as.character(date_opened_fy))
+
+
+### plot
+ggplot(data = df_complaints_youth_intake_decision_offense_viz, aes(y = percent, x = date_opened_fy, fill = petition_status)) + 
+  geom_bar(stat = "identity", color = "gray80") +
+  scale_x_discrete(limits = rev) +
+  scale_y_continuous(labels = scales::percent) +
+   geom_label(
+    aes(
+      y = percent,
+      label = scales::percent(percent,
+                              accuracy = 1),
+      fontface = "bold"
+    ),
+    position = position_stack(vjust = .5),
+    size = 5,
+    colour = "white",
+    show.legend = FALSE
+  ) +
+  scale_fill_manual(values = c("#87C2D4","#2F7084")) +
+  guides(fill = guide_legend(reverse = TRUE,
+                             title.position = "top",
+                             label.position = "bottom",
+                             keywidth = 3,
+                             nrow = 1)) +
+  labs(x = NULL, y = NULL,
+       fill = "Intake Decision",
+       caption = NULL,
+       title = NULL,
+       subtitle = NULL) +
+  theme(legend.position = "top",
+        legend.title.align=0.5,
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5),
+        # axis.text.x = element_markdown(),
+        axis.text.y = element_markdown(),
+        axis.text.x = element_text(face = "bold", hjust = 1, size = 12),
+        axis.ticks.length = unit(0, "cm"),
+        panel.grid.major.y = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank()) +
+  coord_flip()
+
+### write out
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "slide_29_petition_rate_overall.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
+```
+
+<br>
+
+## Slide 23. 
+
+```{r echo=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+
+### unique complaints split out
+### pivot wide to long for ggplot
+df_complaints_youth_intake_decision_offense_viz <- df_analytic_complaints_disposition_caseload %>% 
+  mutate(dai_clean_viz = case_when(dai%in%c("Felony Weapons and Felony Narcotics Distribution",
+                                                                          "Felony against Persons",
+                                                                          "Other Felony") ~ "Felony",
+                   dai%in%c("Class 1 Misdemeanor Against Persons",
+                                                                                       "Other Class 1 Misdemeanor") ~ "Class 1 Misdemeanor",
+                   dai=="Status Offense" ~ "Status Offense",
+                   dai=="Other Violation" ~ "Other Violation",
+                   dai=="Prob./Parole Violation" ~ "Prob./Parole Violation",
+        TRUE ~ as.character(NA))) |> 
+  filter(!is.na(dai_clean_viz),
+         dai_clean_viz%in%c("Status Offense",
+                            "Class 1 Misdemeanor")) |> 
+  dplyr::group_by(date_opened_fy) %>% 
+  dplyr::summarise(`Status Offense` = n_distinct(unique_complaint_id[dai_clean_viz=="Status Offense" & intake_decision_clean=="Petitioned"])/n_distinct(unique_complaint_id[dai_clean_viz=="Status Offense"]),
+                   `Class 1 Misdemeanor` = n_distinct(unique_complaint_id[dai_clean_viz=="Class 1 Misdemeanor" & intake_decision_clean=="Petitioned"])/n_distinct(unique_complaint_id[dai_clean_viz=="Class 1 Misdemeanor"])) %>%
+  ungroup() |> 
+  pivot_longer(!date_opened_fy, names_to = "petition_status", values_to = "percent") 
+# |> 
+#   mutate(dai_clean_viz = factor(dai_clean_viz,
+#                                 levels = c("Felony",
+#                                            "Other Violation",
+#                                            "Status Offense",
+#                                            "Class 1 Misdemeanor")))
+
+
+###geom_line 
+ggplot(data = df_complaints_youth_intake_decision_offense_viz, aes(x = date_opened_fy, y = percent, color = petition_status, group = petition_status)) +
+  geom_line(color = "black", size = 2.75) +
+  geom_line(size = 2.2) +
+  geom_point(color = "black", size = 4) +
+  geom_point(size = 3.5) +
+  labs(x = "Fiscal Year", y = "Percent of Complaints Petitioned (%)", color=NULL, title = NULL, caption = NULL) +
+  scale_y_continuous(label=scales::percent_format(accuracy=1)) +
+  theme(legend.position = "top",
+        panel.grid.major.x = element_blank(),      
+        plot.title = element_text( hjust = 0.5),
+        axis.text.x = element_text(),
+        axis.text.y = element_text(),
+        axis.title.x = element_text(margin = margin(t = 30)),
+        axis.title.y = element_text(margin = margin(r = 30)),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5)) +  
+  scale_color_manual(values = c("#1F4A58","#87C2D4")) +
+  scale_fill_manual(values = c("#1F4A58","#87C2D4")) +
+  geom_label_repel(aes(label = scales::percent(as.numeric(percent),
+                                               accuracy = 0.1),
+                    fill = petition_status),
+                   hjust = .1,
+                   label.padding = 0.2,
+                   box.padding = 0.2,
+                   color = "white",
+                   size = 4,
+                   segment.color = NA,
+                   fontface = "bold",
+                   na.rm = TRUE,
+                   show.legend = FALSE)
+
+### write out
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "slide_23_petition_rate_by_offense_over_time_line.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
+```
+
+<br>
+
+## Slide 30. 
+
+```{r echo=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+
+### unique complaints split out
+### pivot wide to long for ggplot
+df_complaints_youth_intake_decision_offense_viz <- df_analytic_complaints_disposition_caseload %>% 
+  mutate(dai_clean_viz = case_when(dai%in%c("Felony Weapons and Felony Narcotics Distribution",
+                                                                          "Felony against Persons",
+                                                                          "Other Felony") ~ "Felony",
+                   dai%in%c("Class 1 Misdemeanor Against Persons",
+                                                                                       "Other Class 1 Misdemeanor") ~ "Class 1 Misdemeanor",
+                   dai=="Status Offense" ~ "Status Offense",
+                   dai=="Other Violation" ~ "Other Violation",
+                   dai=="Prob./Parole Violation" ~ "Prob./Parole Violation",
+        TRUE ~ as.character(NA))) |> 
+  filter(!is.na(dai_clean_viz),
+         dai_clean_viz!="Prob./Parole Violation") |> 
+  dplyr::group_by(dai_clean_viz) %>% 
+  dplyr::summarise(`Complaints Petitioned` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"])/n_distinct(unique_complaint_id),
+                   `Complaints Not Petitioned` = n_distinct(unique_complaint_id[intake_decision_clean!="Petitioned"])/n_distinct(unique_complaint_id)) %>%
+  ungroup() |> 
+  pivot_longer(!dai_clean_viz, names_to = "petition_status", values_to = "percent") |> 
+  mutate(dai_clean_viz = factor(dai_clean_viz,
+                                levels = c("Felony",
+                                           "Other Violation",
+                                           "Status Offense",
+                                           "Class 1 Misdemeanor")))
+
+
+### plot
+ggplot(data = df_complaints_youth_intake_decision_offense_viz, aes(y = percent, x = dai_clean_viz, fill = petition_status)) + 
+  geom_bar(stat = "identity", color = "gray80") +
+  scale_x_discrete(limits = rev) +
+  scale_y_continuous(labels = scales::percent) +
+   geom_label(
+    aes(
+      y = percent,
+      label = scales::percent(percent,
+                              accuracy = 1),
+      fontface = "bold"
+    ),
+    position = position_stack(vjust = .5),
+    size = 5,
+    colour = "white",
+    show.legend = FALSE
+  ) +
+  scale_fill_manual(values = c("#87C2D4","#2F7084")) +
+  guides(fill = guide_legend(reverse = TRUE,
+                             title.position = "top",
+                             label.position = "bottom",
+                             keywidth = 3,
+                             nrow = 1)) +
+  labs(x = NULL, y = NULL,
+       fill = "Intake Decision",
+       caption = NULL,
+       title = NULL,
+       subtitle = NULL) +
+  theme(legend.position = "top",
+        legend.title.align=0.5,
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5),
+        # axis.text.x = element_markdown(),
+        axis.text.y = element_markdown(),
+        axis.text.x = element_text(face = "bold", hjust = 1, size = 12),
+        axis.ticks.length = unit(0, "cm"),
+        panel.grid.major.y = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank()) +
+  coord_flip()
+
+### write out
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "slide_30_petition_rate_by_offense.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
+```
+
+<br>
+
+## Slide 13. 
+
+```{r echo=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+### unique complaints split out
+### pivot wide to long for ggplot
+df_complaints_youth_intake_decision_offense_bar_viz <- df_analytic_complaints_disposition_caseload %>% 
+  dplyr::summarise(`Felony` = n_distinct(unique_complaint_id[dai%in%c("Felony Weapons and Felony Narcotics Distribution",
+                                                                          "Felony against Persons",
+                                                                          "Other Felony")])/n_distinct(unique_complaint_id),
+                   `Class 1 Misdemeanor` = n_distinct(unique_complaint_id[dai%in%c("Class 1 Misdemeanor Against Persons",
+                                                                                       "Other Class 1 Misdemeanor")])/n_distinct(unique_complaint_id),
+                   `Status Offense` = n_distinct(unique_complaint_id[dai=="Status Offense"])/n_distinct(unique_complaint_id),
+                   `Other Violation` = n_distinct(unique_complaint_id[dai=="Other Violation"])/n_distinct(unique_complaint_id),
+                   `Prob./Parole Violation` = n_distinct(unique_complaint_id[dai=="Prob./Parole Violation"])/n_distinct(unique_complaint_id),
+                   `Court Order Violation` = n_distinct(unique_complaint_id[dai=="Court Order Violation"])/n_distinct(unique_complaint_id)) %>% 
+  mutate(date_opened_fy = "Overall") |> 
+  pivot_longer(!date_opened_fy, names_to = "offense_type", values_to = "count") |> 
+  arrange(desc(count))
+
+
+### bar plot
+ggplot(data = df_complaints_youth_intake_decision_offense_bar_viz,
+       aes(x = reorder(offense_type,-count),
+           y = count,
+           fill = offense_type)) + 
+  geom_bar(stat = "identity",  
+           color = "gray80") +
+  scale_x_discrete(limits = rev) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1),
+                     limits = c(min(0), 
+                                max(.4))) +
+  geom_label(
+    aes(
+      y = count,
+      label = scales::percent(count,
+                              accuracy = 1),
+      fontface = "bold"
+    ),
+    position = position_stack(vjust = .5),
+    size = 5,
+    colour = "white",
+    show.legend = FALSE
+  ) +
+  scale_fill_manual(values = c("#2F7084","#2F7084","#2F7084","#2F7084","#2F7084","#2F7084")) +
+  guides(fill = guide_legend(reverse = TRUE,
+                             title.position = "top",
+                             label.position = "bottom",
+                             keywidth = 3,
+                             nrow = 1)) +
+  labs(x = NULL, y = NULL,
+       fill = NULL,
+       caption = NULL,
+       title = NULL,
+       subtitle = NULL) +
+  theme_minimal() +
+  theme(legend.position = "none",
+        legend.title.align=0.5,
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5),
+        axis.ticks.length = unit(0, "cm"),
+        axis.text.y = element_text(size=10),
+        panel.grid.major.y = element_blank()) + 
+    coord_flip() 
+
+
+### write out
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "slide_13_offense_proportion_overall.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
+```
+
+<br>
+
+## Slide 14a. 
+
+```{r echo=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+### unique complaints split out
+df_complaints_youth_intake_decision_offense_viz_overall_count <- df_analytic_complaints_disposition_caseload %>% 
+  # dplyr::filter(dai!="Court Order Violation") |> 
+  dplyr::summarise(`2016` = n_distinct(unique_complaint_id[date_opened_fy==2016]),
+                   `2017` = n_distinct(unique_complaint_id[date_opened_fy==2017]),
+                   `2018` = n_distinct(unique_complaint_id[date_opened_fy==2018]),
+                   `2019` = n_distinct(unique_complaint_id[date_opened_fy==2019]),
+                   `2020` = n_distinct(unique_complaint_id[date_opened_fy==2020]),
+                   `2021` = n_distinct(unique_complaint_id[date_opened_fy==2021])) |> 
+  mutate(group = "counts") |> 
+  pivot_longer(!group, names_to = "date_opened_fy", values_to = "count") |> 
+  dplyr::select(-group)
+
+### unique complaints split out
+### pivot wide to long for ggplot
+df_complaints_youth_intake_decision_offense_bar_viz <- df_analytic_complaints_disposition_caseload %>% 
+  # dplyr::filter(dai!="Court Order Violation") |> 
+  group_by(date_opened_fy) |> 
+  dplyr::summarise(`Felony` = n_distinct(unique_complaint_id[dai%in%c("Felony Weapons and Felony Narcotics Distribution",
+                                                                          "Felony against Persons",
+                                                                          "Other Felony")])/n_distinct(unique_complaint_id),
+                   `Class 1 Misdemeanor` = n_distinct(unique_complaint_id[dai%in%c("Class 1 Misdemeanor Against Persons",
+                                                                                       "Other Class 1 Misdemeanor")])/n_distinct(unique_complaint_id),
+                   `Status Offense` = n_distinct(unique_complaint_id[dai=="Status Offense"])/n_distinct(unique_complaint_id),
+                   `Other Violation` = n_distinct(unique_complaint_id[dai=="Other Violation"])/n_distinct(unique_complaint_id),
+                   `Prob./Parole Violation` = n_distinct(unique_complaint_id[dai=="Prob./Parole Violation"])/n_distinct(unique_complaint_id)) %>% 
+  ungroup() |> 
+  pivot_longer(!date_opened_fy, names_to = "offense_type", values_to = "percent") |> 
+  left_join(df_complaints_youth_intake_decision_offense_viz_overall_count,
+            by = "date_opened_fy") %>% 
+  mutate(
+    date_opened_fy_n = paste0(
+      "<span style = 'font-size:12pt'>", date_opened_fy, "</span><br>",
+      "<span style = 'font-size:8pt'><em>", "N = ", scales::comma(count, 1), "</em></span>")) |> 
+  mutate(offense_type = factor(offense_type,
+                                levels = c("Felony",
+                                           "Class 1 Misdemeanor",
+                                           "Status Offense",
+                                           "Other Violation",
+                                           "Prob./Parole Violation")))
+
+### plot
+ggplot(data = df_complaints_youth_intake_decision_offense_bar_viz, aes(y = percent, x = date_opened_fy_n, fill = forcats::fct_rev(offense_type))) + 
+  geom_bar(stat = "identity", color = "gray80") +
+  scale_x_discrete(limits = rev) +
+  scale_y_continuous(labels = scales::percent) +
+   geom_label(
+    aes(
+      y = percent,
+      label = scales::percent(percent,
+                              accuracy = 1),
+      fontface = "bold"
+    ),
+    position = position_stack(vjust = .5),
+    size = 3.9,
+    fill = "white",
+    colour = "gray40",
+    show.legend = FALSE
+  ) +
+  scale_fill_manual(values = c("#D7EBF1","#AFD6E2","#87C2D4","#2F7084","#1F4A58")) +
+  guides(fill = guide_legend(reverse = TRUE,
+                             title.position = "top",
+                             label.position = "bottom",
+                             keywidth = 3,
+                             nrow = 1)) +
+  labs(x = NULL, y = NULL,
+       fill = "Offense Type",
+       caption = NULL,
+       title = NULL,
+       subtitle = NULL) +
+  theme(legend.position = "top",
+        legend.title.align=0.5,
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5),
+        # axis.text.x = element_markdown(),
+        axis.text.y = element_markdown(),
+        axis.text.x = element_text(face = "bold", hjust = 1, size = 12),
+        axis.ticks.length = unit(0, "cm"),
+        panel.grid.major.y = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank()) +
+  coord_flip()
+
+### write out
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "slide_14_complaints_over_time_by_offense_proportions.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
+```
+
+<br>
+
+## Slide 14b. 
+
+```{r echo=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+### unique complaints split out
+df_complaints_youth_intake_decision_offense_viz_overall_count <- df_analytic_complaints_disposition_caseload %>% 
+  # dplyr::filter(dai!="Court Order Violation") |> 
+  dplyr::summarise(`2016` = n_distinct(unique_complaint_id[date_opened_fy==2016]),
+                   `2017` = n_distinct(unique_complaint_id[date_opened_fy==2017]),
+                   `2018` = n_distinct(unique_complaint_id[date_opened_fy==2018]),
+                   `2019` = n_distinct(unique_complaint_id[date_opened_fy==2019]),
+                   `2020` = n_distinct(unique_complaint_id[date_opened_fy==2020]),
+                   `2021` = n_distinct(unique_complaint_id[date_opened_fy==2021])) |> 
+  mutate(group = "counts") |> 
+  pivot_longer(!group, names_to = "date_opened_fy", values_to = "count") |> 
+  dplyr::select(-group)
+
+### unique complaints split out
+### pivot wide to long for ggplot
+df_complaints_youth_intake_decision_offense_bar_viz <- df_analytic_complaints_disposition_caseload %>% 
+  # dplyr::filter(dai!="Court Order Violation") |> 
+  mutate(date_opened_fy = as.character(date_opened_fy)) |> 
+  group_by(date_opened_fy) |> 
+  dplyr::summarise(`Felony` = n_distinct(unique_complaint_id[dai%in%c("Felony Weapons and Felony Narcotics Distribution",
+                                                                          "Felony against Persons",
+                                                                          "Other Felony")])/n_distinct(unique_complaint_id),
+                   `All Other Offenses` = n_distinct(unique_complaint_id[!dai%in%c("Felony Weapons and Felony Narcotics Distribution",
+                                                                          "Felony against Persons",
+                                                                          "Other Felony")])/n_distinct(unique_complaint_id)) %>% 
+  ungroup() |> 
+  pivot_longer(!date_opened_fy, names_to = "offense_type", values_to = "percent") |> 
+  left_join(df_complaints_youth_intake_decision_offense_viz_overall_count,
+            by = "date_opened_fy") %>% 
+  mutate(
+    date_opened_fy_n = paste0(
+      "<span style = 'font-size:12pt'>", date_opened_fy, "</span><br><br>",
+      "<span style = 'font-size:8pt'><em>", "N = ", scales::comma(count, 1), "</em></span>")) |> 
+  mutate(offense_type = factor(offense_type,
+                                levels = c("Felony",
+                                           "All Other Offenses")))
+
+### plot
+ggplot(data = df_complaints_youth_intake_decision_offense_bar_viz, aes(y = percent, x = date_opened_fy_n, fill = forcats::fct_rev(offense_type))) + 
+  geom_bar(stat = "identity", color = "gray80") +
+  scale_x_discrete(limits = rev) +
+  scale_y_continuous(labels = scales::percent) +
+   geom_label(
+    aes(
+      y = percent,
+      label = scales::percent(percent,
+                              accuracy = 1),
+      fontface = "bold"
+    ),
+    position = position_stack(vjust = .5),
+    size = 3.9,
+    fill = "white",
+    colour = "gray40",
+    show.legend = FALSE
+  ) +
+  scale_fill_manual(values = c("gray","#2F7084")) +
+  guides(fill = guide_legend(reverse = TRUE,
+                             title.position = "top",
+                             label.position = "bottom",
+                             keywidth = 3,
+                             nrow = 1)) +
+  labs(x = NULL, y = NULL,
+       fill = "Offense Type",
+       caption = NULL,
+       title = NULL,
+       subtitle = NULL) +
+  theme(legend.position = "top",
+        legend.title.align=0.5,
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5),
+        # axis.text.x = element_markdown(),
+        axis.text.y = element_markdown(),
+        axis.text.x = element_text(face = "bold", hjust = 1, size = 12),
+        axis.ticks.length = unit(0, "cm"),
+        panel.grid.major.y = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank()) +
+  coord_flip()
+
+### write out
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "slide_14b_complaints_over_time_by_offense_proportions.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
+```
+
+<br>
+
+## Slide 14c. 
+
+```{r echo=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+### unique complaints split out
+df_complaints_youth_intake_decision_offense_viz_overall_count <- df_analytic_complaints_disposition_caseload %>% 
+  dplyr::filter(dai%in%c("Felony Weapons and Felony Narcotics Distribution",
+                                                                          "Felony against Persons",
+                                                                          "Other Felony")) |>
+  dplyr::summarise(`2016` = n_distinct(unique_complaint_id[date_opened_fy==2016]),
+                   `2017` = n_distinct(unique_complaint_id[date_opened_fy==2017]),
+                   `2018` = n_distinct(unique_complaint_id[date_opened_fy==2018]),
+                   `2019` = n_distinct(unique_complaint_id[date_opened_fy==2019]),
+                   `2020` = n_distinct(unique_complaint_id[date_opened_fy==2020]),
+                   `2021` = n_distinct(unique_complaint_id[date_opened_fy==2021])) |>
+  mutate(group = "counts") |> 
+  pivot_longer(!group, names_to = "date_opened_fy", values_to = "count") |> 
+  dplyr::select(-group)
+
+### unique complaints split out
+df_complaints_youth_intake_decision_offense_viz_persons_count <- df_analytic_complaints_disposition_caseload %>% 
+  dplyr::filter(dai%in%c("Felony Weapons and Felony Narcotics Distribution",
+                                                                          "Felony against Persons",
+                                                                          "Other Felony")) |>
+  dplyr::summarise(`2016` = n_distinct(unique_complaint_id[date_opened_fy==2016 & dai%in%c("Felony against Persons")]),
+                   `2017` = n_distinct(unique_complaint_id[date_opened_fy==2017 & dai%in%c("Felony against Persons")]),
+                   `2018` = n_distinct(unique_complaint_id[date_opened_fy==2018 & dai%in%c("Felony against Persons")]),
+                   `2019` = n_distinct(unique_complaint_id[date_opened_fy==2019 & dai%in%c("Felony against Persons")]),
+                   `2020` = n_distinct(unique_complaint_id[date_opened_fy==2020 & dai%in%c("Felony against Persons")]),
+                   `2021` = n_distinct(unique_complaint_id[date_opened_fy==2021 & dai%in%c("Felony against Persons")])) |>
+  mutate(group = "counts") |> 
+  pivot_longer(!group, names_to = "date_opened_fy", values_to = "person_count") |> 
+  dplyr::select(-group)
+
+### unique complaints split out
+### pivot wide to long for ggplot
+df_complaints_youth_intake_decision_offense_bar_viz <- df_analytic_complaints_disposition_caseload %>% 
+  dplyr::filter(dai%in%c("Felony Weapons and Felony Narcotics Distribution",
+                                                                          "Felony against Persons",
+                                                                          "Other Felony")) |>
+                  mutate(date_opened_fy = as.character(date_opened_fy)) |> 
+  group_by(date_opened_fy) |> 
+  dplyr::summarise(`Felony Weapons and Narcotics` = n_distinct(unique_complaint_id[dai%in%c("Felony Weapons and Felony Narcotics Distribution")])/n_distinct(unique_complaint_id),
+                   `Felony against Persons` = n_distinct(unique_complaint_id[dai%in%c("Felony against Persons")])/n_distinct(unique_complaint_id),
+                   `Other Felony` = n_distinct(unique_complaint_id[dai%in%c("Other Felony")])/n_distinct(unique_complaint_id)) %>% 
+  ungroup() |> 
+  pivot_longer(!date_opened_fy, names_to = "offense_type", values_to = "percent") |> 
+  mutate(date_opened_fy = as.character(date_opened_fy)) |> 
+  left_join(df_complaints_youth_intake_decision_offense_viz_overall_count,
+            by = "date_opened_fy") %>% 
+    left_join(df_complaints_youth_intake_decision_offense_viz_persons_count,
+            by = "date_opened_fy") %>% 
+  mutate(
+    date_opened_fy_n = paste0(
+      "<span style = 'font-size:12pt'>", date_opened_fy, "</span><br>",
+      "<span style = 'font-size:8pt'><em>", "Overall N = ", scales::comma(count, 1), "</em></span><br>",
+      "<span style = 'font-size:8pt'><em>", "Against Persons N = ", scales::comma(person_count, 1), "</em></span>")) |> 
+  mutate(offense_type = factor(offense_type,
+                                levels = c("Felony against Persons",
+                                           "Felony Weapons and Narcotics",
+                                           "Other Felony")))
+
+### plot
+ggplot(data = df_complaints_youth_intake_decision_offense_bar_viz, aes(y = percent, x = date_opened_fy_n, fill = forcats::fct_rev(offense_type))) + 
+  geom_bar(stat = "identity", color = "gray80") +
+  scale_x_discrete(limits = rev) +
+  scale_y_continuous(labels = scales::percent) +
+   geom_label(
+    aes(
+      y = percent,
+      label = scales::percent(percent,
+                              accuracy = 1),
+      fontface = "bold"
+    ),
+    position = position_stack(vjust = .5),
+    size = 5,
+    # fill = "white",
+    colour = "white",
+    show.legend = FALSE
+  ) +
+  scale_fill_manual(values = rev(c("#87C2D4","#2F7084","#1F4A58"))) +
+  guides(fill = guide_legend(reverse = TRUE,
+                             title.position = "top",
+                             label.position = "bottom",
+                             keywidth = 3,
+                             nrow = 1)) +
+  labs(x = NULL, y = NULL,
+       fill = "Felony Type",
+       caption = NULL,
+       title = NULL,
+       subtitle = NULL) +
+  theme(legend.position = "top",
+        legend.title.align=0.5,
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5),
+        # axis.text.x = element_markdown(),
+        axis.text.y = element_markdown(),
+        axis.text.x = element_text(face = "bold", hjust = 1, size = 12),
+        axis.ticks.length = unit(0, "cm"),
+        panel.grid.major.y = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank()) +
+  coord_flip()
+
+### write out
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "slide_14c_complaints_over_time_by_offense_proportions.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
+```
+
+<br>
+
+## Slide 17. 
+
+```{r echo=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+### unique complaints split out
+df_complaints_youth_intake_decision_offense_viz_overall_count <- df_analytic_complaints_disposition_caseload %>% 
+  dplyr::filter(dai=="Status Offense") |> 
+  dplyr::summarise(`2016` = n_distinct(unique_complaint_id[date_opened_fy==2016]),
+                   `2017` = n_distinct(unique_complaint_id[date_opened_fy==2017]),
+                   `2018` = n_distinct(unique_complaint_id[date_opened_fy==2018]),
+                   `2019` = n_distinct(unique_complaint_id[date_opened_fy==2019]),
+                   `2020` = n_distinct(unique_complaint_id[date_opened_fy==2020]),
+                   `2021` = n_distinct(unique_complaint_id[date_opened_fy==2021])) |> 
+  mutate(group = "counts") |> 
+  pivot_longer(!group, names_to = "date_opened_fy", values_to = "count") |> 
+  dplyr::select(-group)
+
+### unique complaints split out
+### pivot wide to long for ggplot
+df_complaints_youth_intake_decision_offense_bar_viz <- df_analytic_complaints_disposition_caseload %>% 
+  group_by(date_opened_fy) |> 
+  dplyr::summarise(`Status Offense` = n_distinct(unique_complaint_id[dai=="Status Offense"])/n_distinct(unique_complaint_id),
+                   `All Other Offenses` = n_distinct(unique_complaint_id[dai!="Status Offense"])/n_distinct(unique_complaint_id)) %>% 
+  ungroup() |> 
+  pivot_longer(!date_opened_fy, names_to = "offense_type", values_to = "percent") |> 
+  left_join(df_complaints_youth_intake_decision_offense_viz_overall_count,
+            by = "date_opened_fy") %>% 
+  mutate(
+    date_opened_fy_n = paste0(
+      "<span style = 'font-size:12pt'>", date_opened_fy, "</span><br><br>",
+      "<span style = 'font-size:8pt'><em>", "Status N = ", scales::comma(count, 1), "</em></span>")) |> 
+  mutate(offense_type = factor(offense_type,
+                                levels = c("Status Offense",
+                                           "All Other Offenses")))
+
+### plot
+ggplot(data = df_complaints_youth_intake_decision_offense_bar_viz, aes(y = percent, x = date_opened_fy_n, fill = forcats::fct_rev(offense_type))) + 
+  geom_bar(stat = "identity", color = "gray80") +
+  scale_x_discrete(limits = rev) +
+  scale_y_continuous(labels = scales::percent) +
+   geom_label(
+    aes(
+      y = percent,
+      label = scales::percent(percent,
+                              accuracy = 1),
+      fontface = "bold"
+    ),
+    position = position_stack(vjust = .5),
+    size = 5,
+    fill = "white",
+    colour = "gray40",
+    show.legend = FALSE
+  ) +
+  scale_fill_manual(values = c("gray","#2F7084")) +
+  guides(fill = guide_legend(reverse = TRUE,
+                             title.position = "top",
+                             label.position = "bottom",
+                             keywidth = 3,
+                             nrow = 1)) +
+  labs(x = NULL, y = NULL,
+       fill = "Offense Type",
+       caption = NULL,
+       title = NULL,
+       subtitle = NULL) +
+  theme(legend.position = "top",
+        legend.title.align=0.5,
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5),
+        # axis.text.x = element_markdown(),
+        axis.text.y = element_markdown(),
+        axis.text.x = element_text(face = "bold", hjust = 1, size = 12),
+        axis.ticks.length = unit(0, "cm"),
+        panel.grid.major.y = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank()) +
+  coord_flip()
+
+### write out
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "slide_17_complaints_over_time_by_status_non_status_proportions.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
+```
 
 <br>
 
@@ -604,6 +1579,284 @@ kable(df_complaints_youth_intake_decision_table_status_final,
                                        "responsive"), 
                  row_label_position = "l") %>% 
   row_spec(10, bold = TRUE)
+```
+
+<br>
+
+## Slide 18a. 
+
+```{r echo=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+'%!in%' <- function(x,y)!('%in%'(x,y))
+
+
+### unique complaints split out
+df_complaints_youth_intake_decision_offense_viz_overall_count <- df_analytic_complaints_disposition_caseload %>% 
+    filter(dai=="Status Offense") %>%
+  dplyr::summarise(`Need for Services` = n_distinct(unique_complaint_id[description=="SERVICES, CHILD IN NEED OF"]),
+                   `Runaway` = n_distinct(unique_complaint_id[description=="RUNAWAY, CHILD IN NEED OF SUPERVISION"]),
+                   `Truancy` = n_distinct(unique_complaint_id[description=="TRUANCY, CHILD IN NEED OF SUPERVISION"]),
+                   `Other` = n_distinct(unique_complaint_id[description%!in%c("SERVICES, CHILD IN NEED OF","RUNAWAY, CHILD IN NEED OF SUPERVISION","TRUANCY, CHILD IN NEED OF SUPERVISION")])) |> 
+  mutate(group = "counts") |> 
+  pivot_longer(!group, names_to = "referral_type", values_to = "count") |> 
+  dplyr::select(-group)
+
+### unique complaints split out
+### pivot wide to long for ggplot
+### unique complaints split out
+df_complaints_youth_intake_decision_table_status <- df_analytic_complaints_disposition_caseload %>% 
+  filter(dai=="Status Offense") %>%
+  dplyr::summarise(`Need for Services` = n_distinct(unique_complaint_id[description=="SERVICES, CHILD IN NEED OF"])/n_distinct(unique_complaint_id),
+                   `Runaway` = n_distinct(unique_complaint_id[description=="RUNAWAY, CHILD IN NEED OF SUPERVISION"])/n_distinct(unique_complaint_id),
+                   `Truancy` = n_distinct(unique_complaint_id[description=="TRUANCY, CHILD IN NEED OF SUPERVISION"])/n_distinct(unique_complaint_id),
+                   `Other` = n_distinct(unique_complaint_id[description%!in%c("SERVICES, CHILD IN NEED OF","RUNAWAY, CHILD IN NEED OF SUPERVISION","TRUANCY, CHILD IN NEED OF SUPERVISION")])/n_distinct(unique_complaint_id)) %>% 
+  mutate(offense_type = "Status") |> 
+  pivot_longer(!offense_type, names_to = "referral_type", values_to = "percent") |> 
+  left_join(df_complaints_youth_intake_decision_offense_viz_overall_count,
+            by = "referral_type") %>% 
+  mutate(
+    referral_type_n = paste0(
+      "<span style = 'font-size:12pt'>", referral_type, "</span><br><br>",
+      "<span style = 'font-size:8pt'><em>", "N = ", scales::comma(count, 1), "</em></span>")) 
+
+### plot
+### bar plot
+ggplot(data = df_complaints_youth_intake_decision_table_status,
+       aes(x = reorder(referral_type_n,-count),
+           y = percent,
+           fill = referral_type_n)) + 
+  geom_bar(stat = "identity",  
+           color = "gray80") +
+  scale_x_discrete(limits = rev) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1),
+                     limits = c(min(0), 
+                                max(.55))) +
+  geom_label(
+    aes(
+      y = percent,
+      label = scales::percent(percent,
+                              accuracy = 1),
+      fontface = "bold"
+    ),
+    position = position_stack(vjust = .5),
+    size = 5,
+    colour = "white",
+    show.legend = FALSE
+  ) +
+  scale_fill_manual(values = c("#2F7084","#2F7084","#2F7084","#2F7084","#2F7084","#2F7084")) +
+  guides(fill = FALSE) +
+  labs(x = NULL, y = NULL,
+       fill = NULL,
+       caption = NULL,
+       title = NULL,
+       subtitle = NULL) +
+  theme_minimal() +
+  theme(legend.position = "top",
+        legend.title.align=0.5,
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5),
+        # axis.text.x = element_markdown(),
+        axis.text.y = element_markdown(),
+        axis.text.x = element_text(face = "bold", hjust = 1, size = 12),
+        axis.ticks.length = unit(0, "cm"),
+        panel.grid.major.y = element_blank(),
+        # panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank()) +
+  coord_flip()
+
+### write out
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "slide_18_status_complaints_over_time_by_referral_source.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
+```
+
+<br>
+
+## Slide 18b. 
+
+```{r echo=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+### unique complaints split out
+### pivot wide to long for ggplot
+### unique complaints split out
+df_complaints_youth_intake_decision_table_status <- df_analytic_complaints_disposition_caseload %>% 
+  filter(dai=="Status Offense",
+         !is.na(referral_source_clean_csu_level_categories)) %>%
+  mutate(description_viz_clean = case_when(
+    description=="SERVICES, CHILD IN NEED OF" ~ "Need Services",
+    description=="RUNAWAY, CHILD IN NEED OF SUPERVISION" ~ "Runaway",
+    description=="TRUANCY, CHILD IN NEED OF SUPERVISION" ~ "Truancy",
+    description%!in%c("SERVICES, CHILD IN NEED OF","RUNAWAY, CHILD IN NEED OF SUPERVISION","TRUANCY, CHILD IN NEED OF SUPERVISION") ~ "Other",
+        TRUE ~ as.character(NA))) |> 
+  group_by(description_viz_clean) |> 
+  dplyr::summarise(`Law Enforcement` = n_distinct(unique_complaint_id[referral_source_clean_csu_level_categories=="Law Enforcement"])/n_distinct(unique_complaint_id),
+                   `School Official` = n_distinct(unique_complaint_id[referral_source_clean_csu_level_categories=="School Official"])/n_distinct(unique_complaint_id),
+                   `School Resource` = n_distinct(unique_complaint_id[referral_source_clean_csu_level_categories=="School Resource Officer"])/n_distinct(unique_complaint_id),
+                   `Other` = n_distinct(unique_complaint_id[referral_source_clean_csu_level_categories=="Other"])/n_distinct(unique_complaint_id)) %>% 
+  ungroup() |> 
+  pivot_longer(!description_viz_clean, names_to = "referral_source", values_to = "percent")  
+
+### bar plot
+ggplot(data = df_complaints_youth_intake_decision_table_status,
+       aes(x = forcats::fct_rev(referral_source),
+           y = percent,
+           fill = referral_source)) + 
+  geom_bar(stat = "identity", 
+           position = "dodge", 
+           color = "gray80") +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 5)) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1),
+                     limits = c(min(0), 
+                                max(1))) +
+  scale_fill_manual(values = rev(c("#1F4A58","#2F7084","#87C2D4","#AFD6E2"))) +
+  scale_color_manual(values = rev(c("#1F4A58","#2F7084","#87C2D4","#AFD6E2"))) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 10.5, face="bold"),
+       axis.ticks.length = unit(0, "cm"),
+       plot.caption = element_text(hjust = 0.5),
+        strip.placement="outside",
+        # strip.text.x=element_text(angle=45, hjust=1, face="bold", size=10,
+        #                       margin=margin(r=10)),
+       strip.text.y.left = element_text(angle = 0),
+        panel.grid.major.y = element_blank()) +
+  coord_flip() + 
+  facet_grid(description_viz_clean ~ ., scales="free_y", space="free_y", switch="y") +
+  guides(fill = FALSE) + 
+   labs(x = NULL, y = NULL,
+       fill = NULL,
+       caption = NULL,
+       title = NULL,
+       subtitle = NULL) +
+  geom_label_repel(aes(label = scales::percent(as.numeric(percent),
+                                               accuracy = 0.1),
+                   color = referral_source),
+                   hjust = -.35,
+                   fill = "white",
+                   label.padding = 0.1,
+                   box.padding = 0.1,
+                   size = 3.25,
+                   segment.color = NA,
+                   fontface = "bold",
+                   na.rm = TRUE,
+                   show.legend = FALSE)
+
+
+### write out
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "slide_18b_status_complaints_over_time_by_referral_source_and_referral_reason.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
+```
+
+<br>
+
+## Slide 32. 
+
+```{r echo=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+
+### unique complaints split out
+### pivot wide to long for ggplot
+df_complaints_youth_intake_decision_offense_viz <- df_analytic_complaints_disposition_caseload %>% 
+  # mutate(dai_clean_viz = case_when(dai%in%c("Felony Weapons and Felony Narcotics Distribution",
+  #                                                                         "Felony against Persons",
+  #                                                                         "Other Felony") ~ "Felony",
+  #                  dai%in%c("Class 1 Misdemeanor Against Persons",
+  #                                                                                      "Other Class 1 Misdemeanor") ~ "Class 1 Misdemeanor",
+  #                  dai=="Status Offense" ~ "Status Offense",
+  #                  dai=="Other Violation" ~ "Other Violation",
+  #                  dai=="Prob./Parole Violation" ~ "Prob./Parole Violation",
+  #       TRUE ~ as.character(NA))) |> 
+  filter(!is.na(referral_source_clean)) |>
+  dplyr::group_by(referral_source_clean) %>% 
+  dplyr::summarise(`Complaints Petitioned` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"])/n_distinct(unique_complaint_id),
+                   `Complaints Not Petitioned` = n_distinct(unique_complaint_id[intake_decision_clean!="Petitioned"])/n_distinct(unique_complaint_id)) %>%
+  ungroup() |> 
+  pivot_longer(!referral_source_clean, names_to = "petition_status", values_to = "percent") |>
+  mutate(referral_source_clean = factor(referral_source_clean,
+                                levels = c("Probation Officer",
+                                           "Other",
+                                           "Court",
+                                           "Law Enforcement",
+                                           "Citizen",
+                                           "School Official",
+                                           "Relative/Spouse/Self",
+                                           "School Resource Officer")))
+
+
+### plot
+ggplot(data = df_complaints_youth_intake_decision_offense_viz, aes(y = percent, x = referral_source_clean, fill = petition_status)) + 
+  geom_bar(stat = "identity", color = "gray80") +
+  scale_x_discrete(limits = rev) +
+  scale_y_continuous(labels = scales::percent) +
+   geom_label(
+    aes(
+      y = percent,
+      label = scales::percent(percent,
+                              accuracy = 1),
+      fontface = "bold"
+    ),
+    position = position_stack(vjust = .5),
+    size = 5,
+    colour = "white",
+    show.legend = FALSE
+  ) +
+  scale_fill_manual(values = c("#87C2D4","#2F7084")) +
+  guides(fill = guide_legend(reverse = TRUE,
+                             title.position = "top",
+                             label.position = "bottom",
+                             keywidth = 3,
+                             nrow = 1)) +
+  labs(x = NULL, y = NULL,
+       fill = "Intake Decision",
+       caption = NULL,
+       title = NULL,
+       subtitle = NULL) +
+  theme(legend.position = "top",
+        legend.title.align=0.5,
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5),
+        # axis.text.x = element_markdown(),
+        axis.text.y = element_markdown(),
+        axis.text.x = element_text(face = "bold", hjust = 1, size = 12),
+        axis.ticks.length = unit(0, "cm"),
+        panel.grid.major.y = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank()) +
+  coord_flip()
+
+### write out
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "slide_32_petition_rate_by_referral_source.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
 ```
 
 <br>
@@ -822,6 +2075,95 @@ kable(df_complaints_youth_intake_decision_table_offense_status_desc_final,
 
 <br>
 
+## Slide 24. 
+
+```{r echo=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+
+### unique complaints split out
+### pivot wide to long for ggplot
+df_complaints_youth_intake_decision_offense_viz <- df_analytic_complaints_disposition_caseload %>% 
+  filter(dai=="Status Offense") %>% 
+  mutate(description_clean_viz = case_when(
+    description=="CURFEW VIOLATION BETWEEN 10 PM AND 6 AM" ~ "Curfew",
+    description=="MOTION TO SHOW CAUSE - PARENTS FAIL TO OBEY CHINS/DELINQ ORD" ~ "Parents/CHINS",
+    description=="Purchase, attempted purchase or possession of tobacco by minor" ~ "Tobacco",
+    description=="RUNAWAY, CHILD IN NEED OF SUPERVISION" ~ "Runaway",
+    description=="SERVICES, CHILD IN NEED OF" ~ "Need for Services",
+    description=="TRUANCY, CHILD IN NEED OF SUPERVISION" ~ "Truancy",
+    TRUE ~ as.character(NA))) |>
+  filter(description_clean_viz!="Parents/CHINS") |> 
+  dplyr::group_by(description_clean_viz) %>% 
+  dplyr::summarise(`Complaints Petitioned` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"])/n_distinct(unique_complaint_id),
+                   `Complaints Not Petitioned` = n_distinct(unique_complaint_id[intake_decision_clean!="Petitioned"])/n_distinct(unique_complaint_id)) %>%
+  ungroup() |> 
+  pivot_longer(!description_clean_viz, names_to = "petition_status", values_to = "percent") |>
+  mutate(description_clean_viz = factor(description_clean_viz,
+                                levels = c("Curfew",
+                                           "Runaway",
+                                           "Need for Services",
+                                           "Truancy",
+                                           "Tobacco")))
+
+
+### plot
+ggplot(data = df_complaints_youth_intake_decision_offense_viz, aes(y = percent, x = description_clean_viz, fill = petition_status)) + 
+  geom_bar(stat = "identity", color = "gray80") +
+  scale_x_discrete(limits = rev) +
+  scale_y_continuous(labels = scales::percent) +
+   geom_label(
+    aes(
+      y = percent,
+      label = scales::percent(percent,
+                              accuracy = 1),
+      fontface = "bold"
+    ),
+    position = position_stack(vjust = .5),
+    size = 5,
+    colour = "white",
+    show.legend = FALSE
+  ) +
+  scale_fill_manual(values = c("#87C2D4","#2F7084")) +
+  guides(fill = guide_legend(reverse = TRUE,
+                             title.position = "top",
+                             label.position = "bottom",
+                             keywidth = 3,
+                             nrow = 1)) +
+  labs(x = NULL, y = NULL,
+       fill = "Intake Decision",
+       caption = NULL,
+       title = NULL,
+       subtitle = NULL) +
+  theme(legend.position = "top",
+        legend.title.align=0.5,
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5),
+        # axis.text.x = element_markdown(),
+        axis.text.y = element_markdown(),
+        axis.text.x = element_text(face = "bold", hjust = 1, size = 12),
+        axis.ticks.length = unit(0, "cm"),
+        panel.grid.major.y = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank()) +
+  coord_flip()
+
+### write out
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "slide_24_petition_rate_by_status_description.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
+```
+
+<br>
 
 ## Table 5g: Complaints by Status Description over Time
 
@@ -968,6 +2310,98 @@ kable(df_complaints_youth_intake_decision_table_jj_history_final,
                                        "responsive"), 
                  row_label_position = "l") %>% 
   row_spec(6, bold = TRUE)
+```
+
+<br>
+
+## Slide 31. 
+
+```{r echo=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+
+### unique complaints split out
+### pivot wide to long for ggplot
+df_complaints_youth_intake_decision_offense_viz <- df_analytic_complaints_disposition_caseload %>% 
+  mutate(jj_history_clean = ifelse(jj_history_clean=="Prior Status/CHINS/CHINsup",
+                                   "Prior Status",as.character(jj_history_clean))) |> 
+  # mutate(dai_clean_viz = case_when(dai%in%c("Felony Weapons and Felony Narcotics Distribution",
+  #                                                                         "Felony against Persons",
+  #                                                                         "Other Felony") ~ "Felony",
+  #                  dai%in%c("Class 1 Misdemeanor Against Persons",
+  #                                                                                      "Other Class 1 Misdemeanor") ~ "Class 1 Misdemeanor",
+  #                  dai=="Status Offense" ~ "Status Offense",
+  #                  dai=="Other Violation" ~ "Other Violation",
+  #                  dai=="Prob./Parole Violation" ~ "Prob./Parole Violation",
+  #       TRUE ~ as.character(NA))) |> 
+  filter(!is.na(jj_history_clean)==TRUE) %>% 
+  dplyr::group_by(jj_history_clean) %>% 
+  dplyr::summarise(`Complaints Petitioned` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"])/n_distinct(unique_complaint_id),
+                   `Complaints Not Petitioned` = n_distinct(unique_complaint_id[intake_decision_clean!="Petitioned"])/n_distinct(unique_complaint_id)) %>%
+  ungroup() |> 
+  pivot_longer(!jj_history_clean, names_to = "petition_status", values_to = "percent") |>
+  mutate(jj_history_clean = factor(jj_history_clean,
+                                levels = c("Prior 'Other' History",
+                                           "Prior Felony",
+                                           "Prior Status",
+                                           "Prior Misdemeanor",
+                                           "No Prior JJ History")))
+
+
+### plot
+ggplot(data = df_complaints_youth_intake_decision_offense_viz, aes(y = percent, x = jj_history_clean, fill = petition_status)) + 
+  geom_bar(stat = "identity", color = "gray80") +
+  scale_x_discrete(limits = rev) +
+  scale_y_continuous(labels = scales::percent) +
+   geom_label(
+    aes(
+      y = percent,
+      label = scales::percent(percent,
+                              accuracy = 1),
+      fontface = "bold"
+    ),
+    position = position_stack(vjust = .5),
+    size = 5,
+    colour = "white",
+    show.legend = FALSE
+  ) +
+  scale_fill_manual(values = c("#87C2D4","#2F7084")) +
+  guides(fill = guide_legend(reverse = TRUE,
+                             title.position = "top",
+                             label.position = "bottom",
+                             keywidth = 3,
+                             nrow = 1)) +
+  labs(x = NULL, y = NULL,
+       fill = "Intake Decision",
+       caption = NULL,
+       title = NULL,
+       subtitle = NULL) +
+  theme(legend.position = "top",
+        legend.title.align=0.5,
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 0.5),
+        # axis.text.x = element_markdown(),
+        axis.text.y = element_markdown(),
+        axis.text.x = element_text(face = "bold", hjust = 1, size = 12),
+        axis.ticks.length = unit(0, "cm"),
+        panel.grid.major.y = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank()) +
+  coord_flip()
+
+### write out
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "slide_31_petition_rate_by_jj_history.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
 ```
 
 <br>

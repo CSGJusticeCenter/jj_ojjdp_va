@@ -50,7 +50,7 @@ We will conduct a descriptive analysis of the front end of the system from intak
 ```{r include=FALSE}
 ### call libraries
 library(easypackages)
-libraries("tidyverse","foreign","lubridate","reshape2", "ggplot2","RColorBrewer","knitr","forcats","openxlsx","statar","svDialogs","xlsx", "magrittr","stringr", "data.table","janitor","kableExtra","leaflet", "readr", "rmarkdown","rowr", "gganimate", "gifski","tidycensus","sf","htmltools","acs","tigris","mapview","rgeos", "ggrepel", "censusxy","gdata","lavaan","mclust","tmap", "raster","rgeos","gmapsdistance","viridis","cowplot","lintr","leaflet.extras","censusapi","data.table","gridGraphics","readxl","haven","ggridges","extrafont","extrafontdb","datamodelr","Lahman","DiagrammeR","fs","readxl","rsvg","V8","csgjcr","DataExplorer","tidylog","ggpattern","scales")
+libraries("tidyverse","foreign","lubridate","reshape2", "ggplot2","RColorBrewer","knitr","forcats","openxlsx","statar","svDialogs","xlsx", "magrittr","stringr", "data.table","janitor","kableExtra","leaflet", "readr", "rmarkdown","rowr", "gganimate", "gifski","tidycensus","sf","htmltools","acs","tigris","mapview","rgeos", "ggrepel", "censusxy","gdata","lavaan","mclust","tmap", "raster","rgeos","gmapsdistance","viridis","cowplot","lintr","leaflet.extras","censusapi","data.table","gridGraphics","readxl","haven","ggridges","extrafont","extrafontdb","datamodelr","Lahman","DiagrammeR","fs","readxl","rsvg","V8","csgjcr","DataExplorer","tidylog","ggpattern","scales","ggpattern")
 ```
 
 ```{r include=FALSE,message=FALSE,warning=FALSE}
@@ -399,6 +399,114 @@ kable(df_rri_overall_jj_final,
                                        "condensed", 
                                        "responsive"), 
                  row_label_position = "l") 
+```
+
+## slide 42.
+
+```{r layout="l-body-outset",echo=FALSE,message=FALSE,warning=FALSE}
+### remove groups analysis with small sample size
+### pull out RRIs for plot
+### use gather to shift data from wide to long
+df_rri_overall_jj_final_to_viz <- df_rri_overall_jj_final %>% 
+  filter(`Race/Ethnicity`%in%c("Black",
+                               "Hispanic",
+                               "White")) %>% 
+  dplyr::select(`Race/Ethnicity`,rri=`JJ-involved RRI (to white youth)`) %>% 
+  dplyr::filter(`Race/Ethnicity`!="White") %>% 
+  mutate(reference = 1)
+
+### plot
+ggplot(data = df_rri_overall_jj_final_to_viz, 
+       aes(y = rri, 
+           x = `Race/Ethnicity`, 
+           fill = forcats::fct_rev(`Race/Ethnicity`))) + 
+  geom_bar(stat = "identity", 
+           position = "dodge"
+           # ,color = "gray80"
+             ) +
+    # geom_bar(aes(y=reference),
+    #          stat = "identity", 
+    #        position = "dodge", 
+    #        fill = "gray80") +
+    geom_col_pattern(aes(y=reference),
+                   pattern_color = NA,
+                   pattern_fill = "gray80",
+                   pattern = "stripe"
+                   # ,color = "gray80"
+                     ) +
+  geom_abline(slope=0, 
+              intercept=1,  
+              col = "#000000", 
+              size = 1.5, 
+              linetype="dashed") +
+  scale_x_discrete(limits = rev) +
+  scale_y_continuous(limits=c(min(0), 
+                                           max(2.5))) +
+  scale_fill_manual(values = c("#1F4A58","#87C2D4")) +
+  scale_color_manual(values = rev(c("#1F4A58","#87C2D4"))) +
+  theme(legend.position = "top",
+        legend.title.align=0.5,
+        # axis.text.y = element_text(face = "bold", hjust = 1, size = 14),
+        # strip.text.x = element_text(face = "bold", vjust = 1.5, size = 14, 
+        #                             hjust = 0.5),
+          axis.text.y = element_text(face = "bold",size = 14),
+        axis.text.x = element_text(face = "bold", hjust = 1, size = 14),
+        plot.caption = element_text(hjust = 0.5),
+        axis.ticks.length = unit(0, "cm"),
+        panel.grid.major.y = element_blank(),
+        # panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.title.x = element_text(size = 15, margin = margin(t = 15)),
+        axis.title.y = element_text(size =15, margin = margin(r = 15))) +
+    labs(y = "Relative Rate Index (RRI)", 
+         x = NULL,
+      caption = NULL,
+      title = NULL,
+      subtitle = NULL,
+      fill = NULL) +
+    coord_flip() +
+  # facet_grid(~ rri_measure) +
+ # guides(fill = guide_legend(reverse = TRUE,
+ #                             title.position = "top",
+ #                             label.position = "bottom",
+ #                             keywidth = 3,
+ #                             nrow = 1)) +
+   guides(fill = FALSE) +
+  # geom_label_repel(aes(label = format(round(as.numeric(rri), 
+  #                                           digits = 1), 
+  #                                     nsmall=1), 
+  #                      group = forcats::fct_rev(`Race/Ethnicity`),
+  #                      color = `Race/Ethnicity`),
+  #                 position = position_dodge(.9),
+  #                 direction = 'x',
+  #                 hjust = 0.75,
+  #                 label.padding = 0.3,
+  #                 box.padding = 0.15,
+  #                 size = 5,
+  #                 fill = "white",
+  #                 fontface = "bold",
+  #                 na.rm = TRUE,
+  #                 show.legend = FALSE) +
+  annotate("text", 
+           x = 2.53, 
+           y = 1.57, 
+           label = "This line represents White youth (reference group)", 
+           colour = "#000000", 
+           size = 3.75, 
+           fontface = 2)
+
+
+### write out
+ggsave(
+    filename = file.path(sharepoint_ojjdp_va_viz, "race_eth_overall_rri.png"),
+    plot = last_plot(),
+    device = ragg::agg_png,
+    dpi = 300,
+    height = 5.25,
+    width = 10,
+    units = "in",
+    bg = "transparent"
+  )
 ```
 
 <br>
