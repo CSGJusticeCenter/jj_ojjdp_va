@@ -29,7 +29,7 @@ For research question (A) we will build a series of logistic regression models, 
 ```{r include=FALSE}
 ### call libraries
 library(easypackages)
-libraries("tidyverse","foreign","lubridate","reshape2", "ggplot2","RColorBrewer","knitr","forcats","openxlsx","statar","svDialogs","xlsx", "magrittr","stringr", "data.table","janitor","kableExtra","leaflet", "readr", "rmarkdown","rowr", "gganimate", "gifski","tidycensus","sf","htmltools","acs","tigris","mapview","rgeos", "ggrepel", "censusxy","gdata","lavaan","mclust","tmap", "raster","rgeos","gmapsdistance","viridis","cowplot","lintr","leaflet.extras","censusapi","data.table","gridGraphics","readxl","haven","ggridges","extrafont","extrafontdb","datamodelr","Lahman","DiagrammeR","fs","readxl","rsvg","V8","csgjcr","DataExplorer","tidylog","ggpattern","scales","tidylog")
+libraries("tidyverse","foreign","lubridate","reshape2", "ggplot2","RColorBrewer","knitr","forcats","openxlsx","statar","svDialogs","xlsx", "magrittr","stringr", "data.table","janitor","kableExtra","leaflet", "readr", "rmarkdown","rowr", "gganimate", "gifski","tidycensus","sf","htmltools","acs","tigris","mapview","rgeos", "ggrepel", "censusxy","gdata","lavaan","mclust","tmap", "raster","rgeos","gmapsdistance","viridis","cowplot","lintr","leaflet.extras","censusapi","data.table","gridGraphics","readxl","haven","ggridges","extrafont","extrafontdb","datamodelr","Lahman","DiagrammeR","fs","readxl","rsvg","V8","csgjcr","DataExplorer","tidylog","ggpattern","scales","tidylog","ggtext")
 ```
 
 ```{r include=FALSE,message=FALSE,warning=FALSE}
@@ -159,6 +159,32 @@ va_diversion_petition_model <- glm(
 
 tab_model(va_diversion_petition_model,
           p.style = "numeric_stars")
+
+```
+
+<br>
+
+## Model A1 Variance Inflation Factor (VIF)
+
+**Note:** Independent variables with VIF values over 5 indicate "a potentially severe correlation" between two predictors (see https://www.statology.org/variance-inflation-factor-r/)
+
+**Question:** Should we be using GVIF or GVIF^(1/(2*DF)) which accounts for DF in calculating the GVIF?
+
+Here's a relevant post:
+
+* https://stats.stackexchange.com/questions/70679/which-variance-inflation-factor-should-i-be-using-textgvif-or-textgvif
+
+
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+### call the car library
+library(car)
+
+### calculate the VIF for each predictor variable in the model
+car::vif(va_diversion_petition_model)
 
 ```
 
@@ -1003,6 +1029,32 @@ va_diversion_outcome_model <- glm(
 
 tab_model(va_diversion_outcome_model,
           p.style = "numeric_stars")
+
+```
+
+<br>
+
+## Model A2 Variance Inflation Factor (VIF)
+
+**Note:** Independent variables with VIF values over 5 indicate "a potentially severe correlation" between two predictors (see https://www.statology.org/variance-inflation-factor-r/)
+
+**Question:** Should we be using GVIF or GVIF^(1/(2*DF)) which accounts for DF in calculating the GVIF?
+
+Here's a relevant post:
+
+* https://stats.stackexchange.com/questions/70679/which-variance-inflation-factor-should-i-be-using-textgvif-or-textgvif
+
+
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+### call the car library
+library(car)
+
+### calculate the VIF for each predictor variable in the model
+car::vif(va_diversion_outcome_model)
 
 ```
 
@@ -2073,6 +2125,32 @@ va_diversion_re_complaint_model <- glm(
 
 tab_model(va_diversion_re_complaint_model,
           p.style = "numeric_stars")
+
+```
+
+<br>
+
+## Model B Variance Inflation Factor (VIF)
+
+**Note:** Independent variables with VIF values over 5 indicate "a potentially severe correlation" between two predictors (see https://www.statology.org/variance-inflation-factor-r/)
+
+**Question:** Should we be using GVIF or GVIF^(1/(2*DF)) which accounts for DF in calculating the GVIF?
+
+Here's a relevant post:
+
+* https://stats.stackexchange.com/questions/70679/which-variance-inflation-factor-should-i-be-using-textgvif-or-textgvif
+
+
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+#| column: page-right
+#| out-width: 85%
+
+### call the car library
+library(car)
+
+### calculate the VIF for each predictor variable in the model
+car::vif(va_diversion_re_complaint_model)
 
 ```
 

@@ -1160,5 +1160,47 @@
     "title": "Analysis: Part I",
     "section": "Table 10b: Charge Type of Subsequent Complaint (initial offense is status)",
     "text": "Table 10b: Charge Type of Subsequent Complaint (initial offense is status)\n\n\n\n\n \n  \n    Subsequent Offense \n    All Complaints (N) \n    All Complaints (column %) \n  \n \n\n  \n    Class 1 Misdemeanor Against Persons \n    168 \n    14.8% \n  \n  \n    Court Order Violation \n    136 \n    12.0% \n  \n  \n    Felony Weapons and Felony Narcotics Distribution \n    7 \n    0.6% \n  \n  \n    Felony against Persons \n    28 \n    2.5% \n  \n  \n    Other Class 1 Misdemeanor \n    145 \n    12.7% \n  \n  \n    Other Felony \n    51 \n    4.5% \n  \n  \n    Other Violation \n    109 \n    9.6% \n  \n  \n    Prob./Parole Violation \n    12 \n    1.1% \n  \n  \n    Status Offense \n    482 \n    42.4%"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#model-a1-variance-inflation-factor-vif",
+    "href": "ojjdp_va_part_i_analysis_regression.html#model-a1-variance-inflation-factor-vif",
+    "title": "Analysis: Part I",
+    "section": "Model A1 Variance Inflation Factor (VIF)",
+    "text": "Model A1 Variance Inflation Factor (VIF)\nNote: Independent variables with VIF values over 5 indicate “a potentially severe correlation” between two predictors (see https://www.statology.org/variance-inflation-factor-r/)\nQuestion: Should we be using GVIF or GVIF^(1/(2*DF)) which accounts for DF in calculating the GVIF?\nHere’s a relevant post:\n\nhttps://stats.stackexchange.com/questions/70679/which-variance-inflation-factor-should-i-be-using-textgvif-or-textgvif\n\n\n\n                                      GVIF Df GVIF^(1/(2*Df))\nrace                              1.532381  5        1.043606\ngender                            1.035035  1        1.017367\nintake_age                        1.240984  1        1.113994\ncsu                               2.530688 31        1.015088\nreferral_source_clean             7.057889  7        1.149793\ndai_clean                       550.896694  7        1.569606\ndate_opened_fy                    1.072912  5        1.007062\ncount_misd_with_case              2.678658  1        1.636661\ncount_felony_with_case            5.507363  1        2.346777\ncount_status_with_case           11.041969  1        3.322946\ncount_other_violation_with_case   2.867399  1        1.693340\ncount_violation_with_case         1.011302  1        1.005635"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#figure-4a-predicted-probabilities-of-petition-by-csu-for-status-offenses",
+    "href": "ojjdp_va_part_i_analysis_regression.html#figure-4a-predicted-probabilities-of-petition-by-csu-for-status-offenses",
+    "title": "Analysis: Part I",
+    "section": "Figure 4a: Predicted Probabilities of Petition by CSU for Status Offenses",
+    "text": "Figure 4a: Predicted Probabilities of Petition by CSU for Status Offenses\nNOTE: This analysis excludes CHINS complaints."
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#figure-4b-predicted-probabilities-of-petition-by-csu-for-class-1-misdemeanor-offenses",
+    "href": "ojjdp_va_part_i_analysis_regression.html#figure-4b-predicted-probabilities-of-petition-by-csu-for-class-1-misdemeanor-offenses",
+    "title": "Analysis: Part I",
+    "section": "Figure 4b: Predicted Probabilities of Petition by CSU for Class 1 Misdemeanor Offenses",
+    "text": "Figure 4b: Predicted Probabilities of Petition by CSU for Class 1 Misdemeanor Offenses"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#figure-4c-predicted-probabilities-of-petition-by-csu-for-felony-offenses",
+    "href": "ojjdp_va_part_i_analysis_regression.html#figure-4c-predicted-probabilities-of-petition-by-csu-for-felony-offenses",
+    "title": "Analysis: Part I",
+    "section": "Figure 4c: Predicted Probabilities of Petition by CSU for Felony Offenses",
+    "text": "Figure 4c: Predicted Probabilities of Petition by CSU for Felony Offenses"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#model-a2-variance-inflation-factor-vif",
+    "href": "ojjdp_va_part_i_analysis_regression.html#model-a2-variance-inflation-factor-vif",
+    "title": "Analysis: Part I",
+    "section": "Model A2 Variance Inflation Factor (VIF)",
+    "text": "Model A2 Variance Inflation Factor (VIF)\nNote: Independent variables with VIF values over 5 indicate “a potentially severe correlation” between two predictors (see https://www.statology.org/variance-inflation-factor-r/)\nQuestion: Should we be using GVIF or GVIF^(1/(2*DF)) which accounts for DF in calculating the GVIF?\nHere’s a relevant post:\n\nhttps://stats.stackexchange.com/questions/70679/which-variance-inflation-factor-should-i-be-using-textgvif-or-textgvif\n\n\n\n                                      GVIF Df GVIF^(1/(2*Df))\nrace                              1.658558  5        1.051897\ngender                            1.025475  1        1.012658\nintake_age                        1.107942  1        1.052588\ncsu                               3.839855 31        1.021938\nreferral_source_clean             9.204122  7        1.171806\ndai_clean                       614.794645  7        1.581958\ndate_opened_fy                    1.167583  5        1.015614\ncount_misd_with_case              1.832308  1        1.353628\ncount_felony_with_case            6.992696  1        2.644371\ncount_status_with_case           10.905218  1        3.302305\ncount_other_violation_with_case   2.899785  1        1.702876\ncount_violation_with_case         1.000000  1        1.000000"
+  },
+  {
+    "objectID": "ojjdp_va_part_i_analysis_regression.html#model-b-variance-inflation-factor-vif",
+    "href": "ojjdp_va_part_i_analysis_regression.html#model-b-variance-inflation-factor-vif",
+    "title": "Analysis: Part I",
+    "section": "Model B Variance Inflation Factor (VIF)",
+    "text": "Model B Variance Inflation Factor (VIF)\nNote: Independent variables with VIF values over 5 indicate “a potentially severe correlation” between two predictors (see https://www.statology.org/variance-inflation-factor-r/)\nQuestion: Should we be using GVIF or GVIF^(1/(2*DF)) which accounts for DF in calculating the GVIF?\nHere’s a relevant post:\n\nhttps://stats.stackexchange.com/questions/70679/which-variance-inflation-factor-should-i-be-using-textgvif-or-textgvif\n\n\n\n                                      GVIF Df GVIF^(1/(2*Df))\nrace                              1.603252  5        1.048335\ngender                            1.027275  1        1.013546\nintake_age                        1.130205  1        1.063111\ncsu                               3.290949 31        1.019398\nreferral_source_clean             6.673359  7        1.145201\ndai_clean                       420.867836  7        1.539710\ndate_opened_fy                    1.096300  4        1.011559\ncount_misd_with_case              2.400019  1        1.549199\ncount_felony_with_case            6.252939  1        2.500588\ncount_status_with_case            7.492156  1        2.737180\ncount_other_violation_with_case   2.777106  1        1.666465\ncount_violation_with_case         1.011116  1        1.005542"
   }
 ]

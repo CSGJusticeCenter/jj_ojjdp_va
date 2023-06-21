@@ -61,7 +61,7 @@ knitr::opts_chunk$set(
   cache = FALSE)
 
 ### set theme
-theme_set(theme_minimal(16, base_family = "Calibri"))
+theme_set(theme_minimal())
 
 ### set sharepoint path using csgjcr function
 sharepoint_ojjdp_va_analysis_analytic_data <- csgjcr::csg_sp_path(file.path("JJ_OJJDP/Data/VA/analysis/analytic"))
@@ -605,12 +605,13 @@ ggplot(data = df_complaints_youth_intake_decision_offense_viz, aes(x = date_open
   labs(x = "Fiscal Year", y = "Complaints (N)", color=NULL, title = NULL, caption = NULL) +
   scale_y_continuous(label=scales::comma) +
   theme(legend.position = "top",
+        legend.text = element_text(size = 13),
         panel.grid.major.x = element_blank(),      
         plot.title = element_text( hjust = 0.5),
-        axis.text.x = element_text(),
-        axis.text.y = element_text(),
-        axis.title.x = element_text(margin = margin(t = 30)),
-        axis.title.y = element_text(margin = margin(r = 30)),
+        axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 16),
+        axis.title.x = element_text(size = 16,margin = margin(t = 15)),
+        axis.title.y = element_text(size = 16,margin = margin(r = 15)),
         plot.subtitle = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0.5)) +  
   scale_color_manual(values = c("#2F7084",
@@ -627,10 +628,10 @@ ggplot(data = df_complaints_youth_intake_decision_offense_viz, aes(x = date_open
                                                accuracy = 0.1),
                     fill = offense_type),
                    hjust = -.5,
-                   label.padding = 0.15,
-                   box.padding = 0.15,
+                   label.padding = 0.18,
+                   box.padding = 0.18,
                    color = "white",
-                   size = 4.75,
+                   size = 4.95,
                    segment.color = NA,
                    fontface = "bold",
                    na.rm = TRUE,
@@ -682,7 +683,7 @@ ggplot(data = df_complaints_youth_intake_decision_offense_viz, aes(y = percent, 
       fontface = "bold"
     ),
     position = position_stack(vjust = .5),
-    size = 5,
+    size = 6,
     colour = "white",
     show.legend = FALSE
   ) +
@@ -698,17 +699,16 @@ ggplot(data = df_complaints_youth_intake_decision_offense_viz, aes(y = percent, 
        title = NULL,
        subtitle = NULL) +
   theme(legend.position = "top",
-        legend.title.align=0.5,
-        plot.title = element_text(hjust = 0.5),
+        legend.title = element_text(hjust = 0.5,size = 13),
+        legend.text = element_text(size = 13),
+        panel.grid.major.x = element_blank(),      
+        plot.title = element_text( hjust = 0.5),
+        axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 16),
+        axis.title.x = element_text(size = 16,margin = margin(t = 15)),
+        axis.title.y = element_text(size = 16,margin = margin(r = 15)),
         plot.subtitle = element_text(hjust = 0.5),
-        plot.caption = element_text(hjust = 0.5),
-        # axis.text.x = element_markdown(),
-        axis.text.y = element_markdown(),
-        axis.text.x = element_text(face = "bold", hjust = 1, size = 12),
-        axis.ticks.length = unit(0, "cm"),
-        panel.grid.major.y = element_blank(),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor = element_blank()) +
+        plot.caption = element_text(hjust = 0.5)) +  
   coord_flip()
 
 ### write out
@@ -768,14 +768,18 @@ ggplot(data = df_complaints_youth_intake_decision_offense_viz, aes(x = date_open
   geom_point(color = "black", size = 4) +
   geom_point(size = 3.5) +
   labs(x = "Fiscal Year", y = "Percent of Complaints Petitioned (%)", color=NULL, title = NULL, caption = NULL) +
-  scale_y_continuous(label=scales::percent_format(accuracy=1)) +
+  scale_y_continuous(label=scales::percent_format(accuracy=1),
+                     limits = c(min(.2), 
+                                max(.63))) +
   theme(legend.position = "top",
+        legend.title = element_text(hjust = 0.5,size = 13),
+        legend.text = element_text(size = 13),
         panel.grid.major.x = element_blank(),      
         plot.title = element_text( hjust = 0.5),
-        axis.text.x = element_text(),
-        axis.text.y = element_text(),
-        axis.title.x = element_text(margin = margin(t = 30)),
-        axis.title.y = element_text(margin = margin(r = 30)),
+        axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 16),
+        axis.title.x = element_text(size = 16,margin = margin(t = 15)),
+        axis.title.y = element_text(size = 16,margin = margin(r = 15)),
         plot.subtitle = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0.5)) +  
   scale_color_manual(values = c("#1F4A58","#87C2D4")) +
@@ -787,7 +791,7 @@ ggplot(data = df_complaints_youth_intake_decision_offense_viz, aes(x = date_open
                    label.padding = 0.2,
                    box.padding = 0.2,
                    color = "white",
-                   size = 4,
+                   size = 5,
                    segment.color = NA,
                    fontface = "bold",
                    na.rm = TRUE,
@@ -854,7 +858,7 @@ ggplot(data = df_complaints_youth_intake_decision_offense_viz, aes(y = percent, 
       fontface = "bold"
     ),
     position = position_stack(vjust = .5),
-    size = 5,
+    size = 6,
     colour = "white",
     show.legend = FALSE
   ) +
@@ -870,17 +874,16 @@ ggplot(data = df_complaints_youth_intake_decision_offense_viz, aes(y = percent, 
        title = NULL,
        subtitle = NULL) +
   theme(legend.position = "top",
-        legend.title.align=0.5,
-        plot.title = element_text(hjust = 0.5),
+        legend.title = element_text(hjust = 0.5,size = 13),
+        legend.text = element_text(size = 13),
+        panel.grid.major.x = element_blank(),      
+        plot.title = element_text( hjust = 0.5),
+        axis.text.x = element_text(size = 14),
+        axis.text.y = element_text(size = 13),
+        axis.title.x = element_text(size = 16,margin = margin(t = 15)),
+        axis.title.y = element_text(size = 16,margin = margin(r = 15)),
         plot.subtitle = element_text(hjust = 0.5),
-        plot.caption = element_text(hjust = 0.5),
-        # axis.text.x = element_markdown(),
-        axis.text.y = element_markdown(),
-        axis.text.x = element_text(face = "bold", hjust = 1, size = 12),
-        axis.ticks.length = unit(0, "cm"),
-        panel.grid.major.y = element_blank(),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor = element_blank()) +
+        plot.caption = element_text(hjust = 0.5)) +  
   coord_flip()
 
 ### write out
@@ -940,7 +943,7 @@ ggplot(data = df_complaints_youth_intake_decision_offense_bar_viz,
       fontface = "bold"
     ),
     position = position_stack(vjust = .5),
-    size = 5,
+    size = 6,
     colour = "white",
     show.legend = FALSE
   ) +
@@ -957,13 +960,16 @@ ggplot(data = df_complaints_youth_intake_decision_offense_bar_viz,
        subtitle = NULL) +
   theme_minimal() +
   theme(legend.position = "none",
-        legend.title.align=0.5,
-        plot.title = element_text(hjust = 0.5),
+        # legend.title = element_text(hjust = 0.5,size = 13),
+        # legend.text = element_text(size = 13),
+        panel.grid.major.x = element_blank(),      
+        plot.title = element_text( hjust = 0.5),
+        axis.text.x = element_text(size = 14),
+        axis.text.y = element_text(size = 14),
+        axis.title.x = element_text(size = 16,margin = margin(t = 15)),
+        axis.title.y = element_text(size = 16,margin = margin(r = 15)),
         plot.subtitle = element_text(hjust = 0.5),
-        plot.caption = element_text(hjust = 0.5),
-        axis.ticks.length = unit(0, "cm"),
-        axis.text.y = element_text(size=10),
-        panel.grid.major.y = element_blank()) + 
+        plot.caption = element_text(hjust = 0.5)) +  
     coord_flip() 
 
 
@@ -1124,8 +1130,8 @@ df_complaints_youth_intake_decision_offense_bar_viz <- df_analytic_complaints_di
             by = "date_opened_fy") %>% 
   mutate(
     date_opened_fy_n = paste0(
-      "<span style = 'font-size:12pt'>", date_opened_fy, "</span><br><br>",
-      "<span style = 'font-size:8pt'><em>", "N = ", scales::comma(count, 1), "</em></span>")) |> 
+      "<span style = 'font-size:14pt'>", date_opened_fy, "</span><br>",
+      "<span style = 'font-size:10pt'><em>", "N = ", scales::comma(count, 1), "</em></span>")) |> 
   mutate(offense_type = factor(offense_type,
                                 levels = c("Felony",
                                            "All Other Offenses")))
@@ -1143,7 +1149,7 @@ ggplot(data = df_complaints_youth_intake_decision_offense_bar_viz, aes(y = perce
       fontface = "bold"
     ),
     position = position_stack(vjust = .5),
-    size = 3.9,
+    size = 5,
     fill = "white",
     colour = "gray40",
     show.legend = FALSE
@@ -1160,18 +1166,21 @@ ggplot(data = df_complaints_youth_intake_decision_offense_bar_viz, aes(y = perce
        title = NULL,
        subtitle = NULL) +
   theme(legend.position = "top",
-        legend.title.align=0.5,
+        legend.title = element_text(hjust = 0.5,size = 13),
+        legend.text = element_text(size = 12),
         plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0.5),
         # axis.text.x = element_markdown(),
-        axis.text.y = element_markdown(),
-        axis.text.x = element_text(face = "bold", hjust = 1, size = 12),
+        axis.text.y = element_markdown(size=14),
+        axis.text.x = element_text(face = "bold", hjust = 1, size = 14),
         axis.ticks.length = unit(0, "cm"),
         panel.grid.major.y = element_blank(),
         panel.grid.major.x = element_blank(),
         panel.grid.minor = element_blank()) +
   coord_flip()
+
+
 
 ### write out
 ggsave(
@@ -1244,9 +1253,9 @@ df_complaints_youth_intake_decision_offense_bar_viz <- df_analytic_complaints_di
             by = "date_opened_fy") %>% 
   mutate(
     date_opened_fy_n = paste0(
-      "<span style = 'font-size:12pt'>", date_opened_fy, "</span><br>",
-      "<span style = 'font-size:8pt'><em>", "Overall N = ", scales::comma(count, 1), "</em></span><br>",
-      "<span style = 'font-size:8pt'><em>", "Against Persons N = ", scales::comma(person_count, 1), "</em></span>")) |> 
+      "<span style = 'font-size:14pt'>", date_opened_fy, "</span><br>",
+      "<span style = 'font-size:9pt'><em>", "Overall N = ", scales::comma(count, 1), "</em></span><br>",
+      "<span style = 'font-size:9pt'><em>", "Against Persons N = ", scales::comma(person_count, 1), "</em></span>")) |> 
   mutate(offense_type = factor(offense_type,
                                 levels = c("Felony against Persons",
                                            "Felony Weapons and Narcotics",
@@ -1265,7 +1274,7 @@ ggplot(data = df_complaints_youth_intake_decision_offense_bar_viz, aes(y = perce
       fontface = "bold"
     ),
     position = position_stack(vjust = .5),
-    size = 5,
+    size = 5.5,
     # fill = "white",
     colour = "white",
     show.legend = FALSE
@@ -1282,13 +1291,14 @@ ggplot(data = df_complaints_youth_intake_decision_offense_bar_viz, aes(y = perce
        title = NULL,
        subtitle = NULL) +
   theme(legend.position = "top",
-        legend.title.align=0.5,
+        legend.title = element_text(hjust = 0.5,size = 13),
+        legend.text = element_text(size = 13),
         plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0.5),
         # axis.text.x = element_markdown(),
-        axis.text.y = element_markdown(),
-        axis.text.x = element_text(face = "bold", hjust = 1, size = 12),
+        axis.text.y = element_markdown(size = 14),
+        axis.text.x = element_text(face = "bold", hjust = 1, size = 14),
         axis.ticks.length = unit(0, "cm"),
         panel.grid.major.y = element_blank(),
         panel.grid.major.x = element_blank(),
@@ -1341,8 +1351,8 @@ df_complaints_youth_intake_decision_offense_bar_viz <- df_analytic_complaints_di
             by = "date_opened_fy") %>% 
   mutate(
     date_opened_fy_n = paste0(
-      "<span style = 'font-size:12pt'>", date_opened_fy, "</span><br><br>",
-      "<span style = 'font-size:8pt'><em>", "Status N = ", scales::comma(count, 1), "</em></span>")) |> 
+      "<span style = 'font-size:14pt'>", date_opened_fy, "</span><br>",
+      "<span style = 'font-size:10pt'><em>", "Status N = ", scales::comma(count, 1), "</em></span>")) |> 
   mutate(offense_type = factor(offense_type,
                                 levels = c("Status Offense",
                                            "All Other Offenses")))
@@ -1360,7 +1370,7 @@ ggplot(data = df_complaints_youth_intake_decision_offense_bar_viz, aes(y = perce
       fontface = "bold"
     ),
     position = position_stack(vjust = .5),
-    size = 5,
+    size = 6,
     fill = "white",
     colour = "gray40",
     show.legend = FALSE
@@ -1377,13 +1387,14 @@ ggplot(data = df_complaints_youth_intake_decision_offense_bar_viz, aes(y = perce
        title = NULL,
        subtitle = NULL) +
   theme(legend.position = "top",
-        legend.title.align=0.5,
+        legend.title = element_text(hjust = 0.5,size = 13),
+        legend.text = element_text(size = 13),
         plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0.5),
         # axis.text.x = element_markdown(),
-        axis.text.y = element_markdown(),
-        axis.text.x = element_text(face = "bold", hjust = 1, size = 12),
+        axis.text.y = element_markdown(size=14),
+        axis.text.x = element_text(face = "bold", hjust = 1, size = 14),
         axis.ticks.length = unit(0, "cm"),
         panel.grid.major.y = element_blank(),
         panel.grid.major.x = element_blank(),
@@ -1618,8 +1629,8 @@ df_complaints_youth_intake_decision_table_status <- df_analytic_complaints_dispo
             by = "referral_type") %>% 
   mutate(
     referral_type_n = paste0(
-      "<span style = 'font-size:12pt'>", referral_type, "</span><br><br>",
-      "<span style = 'font-size:8pt'><em>", "N = ", scales::comma(count, 1), "</em></span>")) 
+      "<span style = 'font-size:14pt'>", referral_type, "</span><br>",
+      "<span style = 'font-size:10pt'><em>", "N = ", scales::comma(count, 1), "</em></span>")) 
 
 ### plot
 ### bar plot
@@ -1641,7 +1652,7 @@ ggplot(data = df_complaints_youth_intake_decision_table_status,
       fontface = "bold"
     ),
     position = position_stack(vjust = .5),
-    size = 5,
+    size = 6,
     colour = "white",
     show.legend = FALSE
   ) +
@@ -1654,13 +1665,14 @@ ggplot(data = df_complaints_youth_intake_decision_table_status,
        subtitle = NULL) +
   theme_minimal() +
   theme(legend.position = "top",
-        legend.title.align=0.5,
+        legend.title = element_text(hjust = 0.5,size = 13),
+        legend.text = element_text(size = 13),
         plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0.5),
         # axis.text.x = element_markdown(),
-        axis.text.y = element_markdown(),
-        axis.text.x = element_text(face = "bold", hjust = 1, size = 12),
+        axis.text.y = element_markdown(size = 14),
+        axis.text.x = element_text(face = "bold", hjust = 1, size = 14),
         axis.ticks.length = unit(0, "cm"),
         panel.grid.major.y = element_blank(),
         # panel.grid.major.x = element_blank(),
@@ -1833,13 +1845,14 @@ ggplot(data = df_complaints_youth_intake_decision_offense_viz, aes(y = percent, 
        title = NULL,
        subtitle = NULL) +
   theme(legend.position = "top",
-        legend.title.align=0.5,
+        legend.title = element_text(hjust = 0.5,size = 13),
+        legend.text = element_text(size = 13),
         plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0.5),
         # axis.text.x = element_markdown(),
-        axis.text.y = element_markdown(),
-        axis.text.x = element_text(face = "bold", hjust = 1, size = 12),
+        axis.text.y = element_markdown(size = 14),
+        axis.text.x = element_text(face = "bold", hjust = 1, size = 14),
         axis.ticks.length = unit(0, "cm"),
         panel.grid.major.y = element_blank(),
         panel.grid.major.x = element_blank(),
@@ -2121,7 +2134,7 @@ ggplot(data = df_complaints_youth_intake_decision_offense_viz, aes(y = percent, 
       fontface = "bold"
     ),
     position = position_stack(vjust = .5),
-    size = 5,
+    size = 6,
     colour = "white",
     show.legend = FALSE
   ) +
@@ -2137,13 +2150,14 @@ ggplot(data = df_complaints_youth_intake_decision_offense_viz, aes(y = percent, 
        title = NULL,
        subtitle = NULL) +
   theme(legend.position = "top",
-        legend.title.align=0.5,
+        legend.title = element_text(hjust = 0.5,size = 13),
+        legend.text = element_text(size = 13),
         plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0.5),
         # axis.text.x = element_markdown(),
-        axis.text.y = element_markdown(),
-        axis.text.x = element_text(face = "bold", hjust = 1, size = 12),
+        axis.text.y = element_markdown(size=14),
+        axis.text.x = element_text(face = "bold", hjust = 1, size = 14),
         axis.ticks.length = unit(0, "cm"),
         panel.grid.major.y = element_blank(),
         panel.grid.major.x = element_blank(),
@@ -2362,7 +2376,7 @@ ggplot(data = df_complaints_youth_intake_decision_offense_viz, aes(y = percent, 
       fontface = "bold"
     ),
     position = position_stack(vjust = .5),
-    size = 5,
+    size = 6,
     colour = "white",
     show.legend = FALSE
   ) +
@@ -2378,13 +2392,14 @@ ggplot(data = df_complaints_youth_intake_decision_offense_viz, aes(y = percent, 
        title = NULL,
        subtitle = NULL) +
   theme(legend.position = "top",
-        legend.title.align=0.5,
+        legend.title = element_text(hjust = 0.5,size = 13),
+        legend.text = element_text(size = 13),
         plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5),
         plot.caption = element_text(hjust = 0.5),
         # axis.text.x = element_markdown(),
-        axis.text.y = element_markdown(),
-        axis.text.x = element_text(face = "bold", hjust = 1, size = 12),
+        axis.text.y = element_markdown(size = 14),
+        axis.text.x = element_text(face = "bold", hjust = 1, size = 14),
         axis.ticks.length = unit(0, "cm"),
         panel.grid.major.y = element_blank(),
         panel.grid.major.x = element_blank(),

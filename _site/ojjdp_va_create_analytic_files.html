@@ -1211,26 +1211,20 @@ Caused by warning:
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="do">########################################################################</span></span>
-<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a><span class="do">########################################################################</span></span>
-<span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a><span class="do">############ CODE REVIEW W/ BECKY -- LEFT OFF HERE</span></span>
-<span id="cb113-4"><a href="#cb113-4" aria-hidden="true" tabindex="-1"></a><span class="do">########################################################################</span></span>
-<span id="cb113-5"><a href="#cb113-5" aria-hidden="true" tabindex="-1"></a><span class="do">########################################################################</span></span>
-<span id="cb113-6"><a href="#cb113-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-7"><a href="#cb113-7" aria-hidden="true" tabindex="-1"></a><span class="do">######################################################################################################</span></span>
-<span id="cb113-8"><a href="#cb113-8" aria-hidden="true" tabindex="-1"></a><span class="do">### join three files together to create preliminary analytic file for both part I and part II analysis</span></span>
-<span id="cb113-9"><a href="#cb113-9" aria-hidden="true" tabindex="-1"></a><span class="do">######################################################################################################</span></span>
-<span id="cb113-10"><a href="#cb113-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-11"><a href="#cb113-11" aria-hidden="true" tabindex="-1"></a><span class="do">### first, left join df_complaints_youth_intake_decision and disposition_clean</span></span>
-<span id="cb113-12"><a href="#cb113-12" aria-hidden="true" tabindex="-1"></a><span class="do">### we have already dropped disposition records without accompanying intake records which were petitioned</span></span>
-<span id="cb113-13"><a href="#cb113-13" aria-hidden="true" tabindex="-1"></a><span class="do">### so any disposition missingness indicates that case wasn't petitioned</span></span>
-<span id="cb113-14"><a href="#cb113-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-15"><a href="#cb113-15" aria-hidden="true" tabindex="-1"></a><span class="do">### also: because we have already de-duped both df_complaints_youth_intake_decision (keeping most serious offense per case/complaint) and disposition_clean (keeping most serious disposition per case/complaint), we can just join by case/complaint as opposed to charge</span></span>
-<span id="cb113-16"><a href="#cb113-16" aria-hidden="true" tabindex="-1"></a><span class="do">### this approach also covers the possibility that the most serious disposition is actually linked by DJJ to a less serious offense; we have separately pulled out the most serious offense and disposition without relying on a join across offense ID</span></span>
-<span id="cb113-17"><a href="#cb113-17" aria-hidden="true" tabindex="-1"></a>df_analytic_complaints_disposition_caseload <span class="ot">&lt;-</span> <span class="fu">left_join</span>(df_complaints_youth_intake_decision,</span>
-<span id="cb113-18"><a href="#cb113-18" aria-hidden="true" tabindex="-1"></a>                                               disposition_clean,</span>
-<span id="cb113-19"><a href="#cb113-19" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"juvenile_number"</span>,</span>
-<span id="cb113-20"><a href="#cb113-20" aria-hidden="true" tabindex="-1"></a>                                                      <span class="st">"case_number"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="do">######################################################################################################</span></span>
+<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a><span class="do">### join three files together to create preliminary analytic file for both part I and part II analysis</span></span>
+<span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a><span class="do">######################################################################################################</span></span>
+<span id="cb113-4"><a href="#cb113-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-5"><a href="#cb113-5" aria-hidden="true" tabindex="-1"></a><span class="do">### first, left join df_complaints_youth_intake_decision and disposition_clean</span></span>
+<span id="cb113-6"><a href="#cb113-6" aria-hidden="true" tabindex="-1"></a><span class="do">### we have already dropped disposition records without accompanying intake records which were petitioned</span></span>
+<span id="cb113-7"><a href="#cb113-7" aria-hidden="true" tabindex="-1"></a><span class="do">### so any disposition missingness indicates that case wasn't petitioned</span></span>
+<span id="cb113-8"><a href="#cb113-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-9"><a href="#cb113-9" aria-hidden="true" tabindex="-1"></a><span class="do">### also: because we have already de-duped both df_complaints_youth_intake_decision (keeping most serious offense per case/complaint) and disposition_clean (keeping most serious disposition per case/complaint), we can just join by case/complaint as opposed to charge</span></span>
+<span id="cb113-10"><a href="#cb113-10" aria-hidden="true" tabindex="-1"></a><span class="do">### this approach also covers the possibility that the most serious disposition is actually linked by DJJ to a less serious offense; we have separately pulled out the most serious offense and disposition without relying on a join across offense ID</span></span>
+<span id="cb113-11"><a href="#cb113-11" aria-hidden="true" tabindex="-1"></a>df_analytic_complaints_disposition_caseload <span class="ot">&lt;-</span> <span class="fu">left_join</span>(df_complaints_youth_intake_decision,</span>
+<span id="cb113-12"><a href="#cb113-12" aria-hidden="true" tabindex="-1"></a>                                               disposition_clean,</span>
+<span id="cb113-13"><a href="#cb113-13" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"juvenile_number"</span>,</span>
+<span id="cb113-14"><a href="#cb113-14" aria-hidden="true" tabindex="-1"></a>                                                      <span class="st">"case_number"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>left_join: added 14 columns (court_disp_age, dispo_description, days_int_to_cd, dispo_id, dispo_description_clean, …)</code></pre>
 </div>

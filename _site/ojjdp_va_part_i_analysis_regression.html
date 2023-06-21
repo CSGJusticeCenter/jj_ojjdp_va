@@ -244,6 +244,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#research-question-a1-petition" id="toc-research-question-a1-petition" class="nav-link active" data-scroll-target="#research-question-a1-petition">Research Question A1: Petition</a>
   <ul class="collapse">
   <li><a href="#table-1.-model-output-petition" id="toc-table-1.-model-output-petition" class="nav-link" data-scroll-target="#table-1.-model-output-petition">Table 1. Model Output: Petition</a></li>
+  <li><a href="#model-a1-variance-inflation-factor-vif" id="toc-model-a1-variance-inflation-factor-vif" class="nav-link" data-scroll-target="#model-a1-variance-inflation-factor-vif">Model A1 Variance Inflation Factor (VIF)</a></li>
   <li><a href="#table-2-predicted-probabilities-by-raceethnicity" id="toc-table-2-predicted-probabilities-by-raceethnicity" class="nav-link" data-scroll-target="#table-2-predicted-probabilities-by-raceethnicity">Table 2: Predicted Probabilities by Race/Ethnicity</a></li>
   <li><a href="#figure-1-predicted-probabilities-by-raceethnicity" id="toc-figure-1-predicted-probabilities-by-raceethnicity" class="nav-link" data-scroll-target="#figure-1-predicted-probabilities-by-raceethnicity">Figure 1: Predicted Probabilities by Race/Ethnicity</a></li>
   <li><a href="#table-3-predicted-probabilities-by-gender" id="toc-table-3-predicted-probabilities-by-gender" class="nav-link" data-scroll-target="#table-3-predicted-probabilities-by-gender">Table 3: Predicted Probabilities by Gender</a></li>
@@ -254,11 +255,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#figure-3b-predicted-probabilities-by-csu-mapped" id="toc-figure-3b-predicted-probabilities-by-csu-mapped" class="nav-link" data-scroll-target="#figure-3b-predicted-probabilities-by-csu-mapped">Figure 3b: Predicted Probabilities by CSU (mapped)</a></li>
   <li><a href="#table-5-predicted-probabilities-by-charge-type" id="toc-table-5-predicted-probabilities-by-charge-type" class="nav-link" data-scroll-target="#table-5-predicted-probabilities-by-charge-type">Table 5: Predicted Probabilities by Charge Type</a></li>
   <li><a href="#figure-3-predicted-probabilities-by-charge-type" id="toc-figure-3-predicted-probabilities-by-charge-type" class="nav-link" data-scroll-target="#figure-3-predicted-probabilities-by-charge-type">Figure 3: Predicted Probabilities by Charge Type</a></li>
-  <li><a href="#figure-4-predicted-probabilities-of-petition-by-csu-for-status-offenses" id="toc-figure-4-predicted-probabilities-of-petition-by-csu-for-status-offenses" class="nav-link" data-scroll-target="#figure-4-predicted-probabilities-of-petition-by-csu-for-status-offenses">Figure 4: Predicted Probabilities of Petition by CSU for Status Offenses</a></li>
+  <li><a href="#figure-4a-predicted-probabilities-of-petition-by-csu-for-status-offenses" id="toc-figure-4a-predicted-probabilities-of-petition-by-csu-for-status-offenses" class="nav-link" data-scroll-target="#figure-4a-predicted-probabilities-of-petition-by-csu-for-status-offenses">Figure 4a: Predicted Probabilities of Petition by CSU for Status Offenses</a></li>
+  <li><a href="#figure-4b-predicted-probabilities-of-petition-by-csu-for-class-1-misdemeanor-offenses" id="toc-figure-4b-predicted-probabilities-of-petition-by-csu-for-class-1-misdemeanor-offenses" class="nav-link" data-scroll-target="#figure-4b-predicted-probabilities-of-petition-by-csu-for-class-1-misdemeanor-offenses">Figure 4b: Predicted Probabilities of Petition by CSU for Class 1 Misdemeanor Offenses</a></li>
+  <li><a href="#figure-4c-predicted-probabilities-of-petition-by-csu-for-felony-offenses" id="toc-figure-4c-predicted-probabilities-of-petition-by-csu-for-felony-offenses" class="nav-link" data-scroll-target="#figure-4c-predicted-probabilities-of-petition-by-csu-for-felony-offenses">Figure 4c: Predicted Probabilities of Petition by CSU for Felony Offenses</a></li>
   </ul></li>
   <li><a href="#research-question-a2-diversion-outcomes" id="toc-research-question-a2-diversion-outcomes" class="nav-link" data-scroll-target="#research-question-a2-diversion-outcomes">Research Question A2: Diversion Outcomes</a>
   <ul class="collapse">
   <li><a href="#table-6.-model-output-successful-diversion" id="toc-table-6.-model-output-successful-diversion" class="nav-link" data-scroll-target="#table-6.-model-output-successful-diversion">Table 6. Model Output: Successful Diversion</a></li>
+  <li><a href="#model-a2-variance-inflation-factor-vif" id="toc-model-a2-variance-inflation-factor-vif" class="nav-link" data-scroll-target="#model-a2-variance-inflation-factor-vif">Model A2 Variance Inflation Factor (VIF)</a></li>
   <li><a href="#table-7-predicted-probabilities-by-raceethnicity" id="toc-table-7-predicted-probabilities-by-raceethnicity" class="nav-link" data-scroll-target="#table-7-predicted-probabilities-by-raceethnicity">Table 7: Predicted Probabilities by Race/Ethnicity</a></li>
   <li><a href="#figure-5-predicted-probabilities-by-raceethnicity" id="toc-figure-5-predicted-probabilities-by-raceethnicity" class="nav-link" data-scroll-target="#figure-5-predicted-probabilities-by-raceethnicity">Figure 5: Predicted Probabilities by Race/Ethnicity</a></li>
   <li><a href="#table-8-predicted-probabilities-by-gender" id="toc-table-8-predicted-probabilities-by-gender" class="nav-link" data-scroll-target="#table-8-predicted-probabilities-by-gender">Table 8: Predicted Probabilities by Gender</a></li>
@@ -274,6 +278,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#research-question-b-subsequent-complaint" id="toc-research-question-b-subsequent-complaint" class="nav-link" data-scroll-target="#research-question-b-subsequent-complaint">Research Question B: Subsequent Complaint</a>
   <ul class="collapse">
   <li><a href="#table-6.-model-output-subsequent-complaint-within-one-year" id="toc-table-6.-model-output-subsequent-complaint-within-one-year" class="nav-link" data-scroll-target="#table-6.-model-output-subsequent-complaint-within-one-year">Table 6. Model Output: Subsequent Complaint within One Year</a></li>
+  <li><a href="#model-b-variance-inflation-factor-vif" id="toc-model-b-variance-inflation-factor-vif" class="nav-link" data-scroll-target="#model-b-variance-inflation-factor-vif">Model B Variance Inflation Factor (VIF)</a></li>
   <li><a href="#table-7-predicted-probabilities-by-raceethnicity-1" id="toc-table-7-predicted-probabilities-by-raceethnicity-1" class="nav-link" data-scroll-target="#table-7-predicted-probabilities-by-raceethnicity-1">Table 7: Predicted Probabilities by Race/Ethnicity</a></li>
   <li><a href="#figure-6-predicted-probabilities-by-raceethnicity" id="toc-figure-6-predicted-probabilities-by-raceethnicity" class="nav-link" data-scroll-target="#figure-6-predicted-probabilities-by-raceethnicity">Figure 6: Predicted Probabilities by Race/Ethnicity</a></li>
   <li><a href="#table-8-predicted-probabilities-by-gender-1" id="toc-table-8-predicted-probabilities-by-gender-1" class="nav-link" data-scroll-target="#table-8-predicted-probabilities-by-gender-1">Table 8: Predicted Probabilities by Gender</a></li>
@@ -776,6 +781,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p><br></p>
 </section>
+<section id="model-a1-variance-inflation-factor-vif" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="model-a1-variance-inflation-factor-vif">Model A1 Variance Inflation Factor (VIF)</h2>
+<p><strong>Note:</strong> Independent variables with VIF values over 5 indicate “a potentially severe correlation” between two predictors (see https://www.statology.org/variance-inflation-factor-r/)</p>
+<p><strong>Question:</strong> Should we be using GVIF or GVIF^(1/(2*DF)) which accounts for DF in calculating the GVIF?</p>
+<p>Here’s a relevant post:</p>
+<ul>
+<li>https://stats.stackexchange.com/questions/70679/which-variance-inflation-factor-should-i-be-using-textgvif-or-textgvif</li>
+</ul>
+<div class="cell column-page-right">
+<div class="cell-output cell-output-stdout">
+<pre><code>                                      GVIF Df GVIF^(1/(2*Df))
+race                              1.532381  5        1.043606
+gender                            1.035035  1        1.017367
+intake_age                        1.240984  1        1.113994
+csu                               2.530688 31        1.015088
+referral_source_clean             7.057889  7        1.149793
+dai_clean                       550.896694  7        1.569606
+date_opened_fy                    1.072912  5        1.007062
+count_misd_with_case              2.678658  1        1.636661
+count_felony_with_case            5.507363  1        2.346777
+count_status_with_case           11.041969  1        3.322946
+count_other_violation_with_case   2.867399  1        1.693340
+count_violation_with_case         1.011302  1        1.005635</code></pre>
+</div>
+</div>
+<p><br></p>
+</section>
 <section id="table-2-predicted-probabilities-by-raceethnicity" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="table-2-predicted-probabilities-by-raceethnicity">Table 2: Predicted Probabilities by Race/Ethnicity</h2>
 <div class="cell page-columns page-full">
@@ -845,7 +877,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="figure-1-predicted-probabilities-by-raceethnicity">Figure 1: Predicted Probabilities by Race/Ethnicity</h2>
 <div class="cell page-columns page-full">
 <div class="cell-output-display column-page-right">
-<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" style="width:85.0%"></p>
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" style="width:85.0%"></p>
 </div>
 </div>
 <p><br></p>
@@ -891,7 +923,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="figure-2a-predicted-probabilities-by-gender">Figure 2a: Predicted Probabilities by Gender</h2>
 <div class="cell page-columns page-full">
 <div class="cell-output-display column-page-right">
-<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" style="width:85.0%"></p>
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" style="width:85.0%"></p>
 </div>
 </div>
 <p><br></p>
@@ -900,7 +932,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="figure-2b-predicted-probabilities-by-raceethnicity-and-gender">Figure 2b: Predicted Probabilities by Race/Ethnicity and Gender</h2>
 <div class="cell page-columns page-full">
 <div class="cell-output-display column-page-right">
-<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" style="width:85.0%"></p>
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" style="width:85.0%"></p>
 </div>
 </div>
 <p><br></p>
@@ -1123,7 +1155,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="figure-3a-predicted-probabilities-by-csu">Figure 3a: Predicted Probabilities by CSU</h2>
 <div class="cell page-columns page-full">
 <div class="cell-output-display column-page-right">
-<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" style="width:85.0%"></p>
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" style="width:85.0%"></p>
 </div>
 </div>
 <p><br></p>
@@ -1132,7 +1164,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="figure-3b-predicted-probabilities-by-csu-mapped">Figure 3b: Predicted Probabilities by CSU (mapped)</h2>
 <div class="cell page-columns page-full">
 <div class="cell-output-display column-page-right">
-<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" style="width:100.0%"></p>
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" style="width:100.0%"></p>
 </div>
 </div>
 <p><br></p>
@@ -1211,19 +1243,38 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="figure-3-predicted-probabilities-by-charge-type">Figure 3: Predicted Probabilities by Charge Type</h2>
 <div class="cell page-columns page-full">
 <div class="cell-output-display column-page-right">
-<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" style="width:85.0%"></p>
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" style="width:85.0%"></p>
 </div>
 </div>
 <p><br></p>
 </section>
-<section id="figure-4-predicted-probabilities-of-petition-by-csu-for-status-offenses" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="figure-4-predicted-probabilities-of-petition-by-csu-for-status-offenses">Figure 4: Predicted Probabilities of Petition by CSU for Status Offenses</h2>
+<section id="figure-4a-predicted-probabilities-of-petition-by-csu-for-status-offenses" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="figure-4a-predicted-probabilities-of-petition-by-csu-for-status-offenses">Figure 4a: Predicted Probabilities of Petition by CSU for Status Offenses</h2>
 <p><strong>NOTE:</strong> This analysis excludes CHINS complaints.</p>
 <div class="cell page-columns page-full">
 <div class="cell-output-display column-page-right">
-<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" style="width:85.0%"></p>
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" style="width:85.0%"></p>
 </div>
 </div>
+<p><br></p>
+</section>
+<section id="figure-4b-predicted-probabilities-of-petition-by-csu-for-class-1-misdemeanor-offenses" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="figure-4b-predicted-probabilities-of-petition-by-csu-for-class-1-misdemeanor-offenses">Figure 4b: Predicted Probabilities of Petition by CSU for Class 1 Misdemeanor Offenses</h2>
+<div class="cell page-columns page-full">
+<div class="cell-output-display column-page-right">
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" style="width:85.0%"></p>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="figure-4c-predicted-probabilities-of-petition-by-csu-for-felony-offenses" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="figure-4c-predicted-probabilities-of-petition-by-csu-for-felony-offenses">Figure 4c: Predicted Probabilities of Petition by CSU for Felony Offenses</h2>
+<div class="cell page-columns page-full">
+<div class="cell-output-display column-page-right">
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" style="width:85.0%"></p>
+</div>
+</div>
+<p><br><br></p>
 </section>
 </section>
 <section id="research-question-a2-diversion-outcomes" class="level1 page-columns page-full">
@@ -1245,28 +1296,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>counts of felony, misdemeanor, status, and violation charges associated with intake/complaint</p></li>
 </ul>
 <div class="cell page-columns page-full">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>intake_complaints_no_prior_jj_to_model_diversion_outcome <span class="ot">&lt;-</span> df_analytic_complaints_disposition_caseload <span class="sc">%&gt;%</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(jj_history_clean<span class="sc">==</span><span class="st">"No Prior JJ History"</span>,</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">is.na</span>(intake_decision_regression_model_petition)<span class="sc">==</span><span class="cn">TRUE</span>,</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>         intake_decision_label<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"UNSUCCESSFUL DIVERSION/PETITION FILED"</span>, <span class="st">"SUCCESSFUL DIVERSION"</span>,<span class="st">"UNSUCCESSFUL DIVERSION/NO PETITION FILED"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">race =</span> <span class="fu">fct_relevel</span>(race_clean, <span class="st">"White"</span>),</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">gender =</span> <span class="fu">fct_relevel</span>(gender_clean, <span class="st">"Male"</span>),</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">referral_source_clean =</span> <span class="fu">fct_relevel</span>(referral_source_clean, <span class="st">"Other"</span>),</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">date_opened_fy =</span> <span class="fu">fct_relevel</span>(<span class="fu">as.character</span>(date_opened_fy), <span class="st">"2016"</span>),</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">diversion_success_regression_model_num =</span> <span class="fu">ifelse</span>(intake_decision_label<span class="sc">==</span><span class="st">"SUCCESSFUL DIVERSION"</span>,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                                           <span class="dv">1</span>,<span class="dv">0</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(juvenile_number,</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">.keep_all=</span><span class="cn">TRUE</span>)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>va_diversion_outcome_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  diversion_success_regression_model_num <span class="sc">~</span> race <span class="sc">+</span> gender <span class="sc">+</span> intake_age <span class="sc">+</span> csu <span class="sc">+</span> referral_source_clean <span class="sc">+</span> dai_clean <span class="sc">+</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    date_opened_fy <span class="sc">+</span> count_misd_with_case <span class="sc">+</span> count_felony_with_case <span class="sc">+</span> count_status_with_case <span class="sc">+</span> count_other_violation_with_case <span class="sc">+</span> count_violation_with_case,</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">"binomial"</span>, </span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> intake_complaints_no_prior_jj_to_model_diversion_outcome)</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="fu">tab_model</span>(va_diversion_outcome_model,</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>          <span class="at">p.style =</span> <span class="st">"numeric_stars"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>intake_complaints_no_prior_jj_to_model_diversion_outcome <span class="ot">&lt;-</span> df_analytic_complaints_disposition_caseload <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(jj_history_clean<span class="sc">==</span><span class="st">"No Prior JJ History"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">is.na</span>(intake_decision_regression_model_petition)<span class="sc">==</span><span class="cn">TRUE</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>         intake_decision_label<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"UNSUCCESSFUL DIVERSION/PETITION FILED"</span>, <span class="st">"SUCCESSFUL DIVERSION"</span>,<span class="st">"UNSUCCESSFUL DIVERSION/NO PETITION FILED"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">race =</span> <span class="fu">fct_relevel</span>(race_clean, <span class="st">"White"</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">gender =</span> <span class="fu">fct_relevel</span>(gender_clean, <span class="st">"Male"</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">referral_source_clean =</span> <span class="fu">fct_relevel</span>(referral_source_clean, <span class="st">"Other"</span>),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">date_opened_fy =</span> <span class="fu">fct_relevel</span>(<span class="fu">as.character</span>(date_opened_fy), <span class="st">"2016"</span>),</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">diversion_success_regression_model_num =</span> <span class="fu">ifelse</span>(intake_decision_label<span class="sc">==</span><span class="st">"SUCCESSFUL DIVERSION"</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>                                           <span class="dv">1</span>,<span class="dv">0</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(juvenile_number,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">.keep_all=</span><span class="cn">TRUE</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>va_diversion_outcome_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  diversion_success_regression_model_num <span class="sc">~</span> race <span class="sc">+</span> gender <span class="sc">+</span> intake_age <span class="sc">+</span> csu <span class="sc">+</span> referral_source_clean <span class="sc">+</span> dai_clean <span class="sc">+</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    date_opened_fy <span class="sc">+</span> count_misd_with_case <span class="sc">+</span> count_felony_with_case <span class="sc">+</span> count_status_with_case <span class="sc">+</span> count_other_violation_with_case <span class="sc">+</span> count_violation_with_case,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">"binomial"</span>, </span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> intake_complaints_no_prior_jj_to_model_diversion_outcome)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="fu">tab_model</span>(va_diversion_outcome_model,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>          <span class="at">p.style =</span> <span class="st">"numeric_stars"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display column-page-right">
 
 <table style="border-collapse:collapse; border:none;">
@@ -1676,6 +1727,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p><br></p>
 </section>
+<section id="model-a2-variance-inflation-factor-vif" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="model-a2-variance-inflation-factor-vif">Model A2 Variance Inflation Factor (VIF)</h2>
+<p><strong>Note:</strong> Independent variables with VIF values over 5 indicate “a potentially severe correlation” between two predictors (see https://www.statology.org/variance-inflation-factor-r/)</p>
+<p><strong>Question:</strong> Should we be using GVIF or GVIF^(1/(2*DF)) which accounts for DF in calculating the GVIF?</p>
+<p>Here’s a relevant post:</p>
+<ul>
+<li>https://stats.stackexchange.com/questions/70679/which-variance-inflation-factor-should-i-be-using-textgvif-or-textgvif</li>
+</ul>
+<div class="cell column-page-right">
+<div class="cell-output cell-output-stdout">
+<pre><code>                                      GVIF Df GVIF^(1/(2*Df))
+race                              1.658558  5        1.051897
+gender                            1.025475  1        1.012658
+intake_age                        1.107942  1        1.052588
+csu                               3.839855 31        1.021938
+referral_source_clean             9.204122  7        1.171806
+dai_clean                       614.794645  7        1.581958
+date_opened_fy                    1.167583  5        1.015614
+count_misd_with_case              1.832308  1        1.353628
+count_felony_with_case            6.992696  1        2.644371
+count_status_with_case           10.905218  1        3.302305
+count_other_violation_with_case   2.899785  1        1.702876
+count_violation_with_case         1.000000  1        1.000000</code></pre>
+</div>
+</div>
+<p><br></p>
+</section>
 <section id="table-7-predicted-probabilities-by-raceethnicity" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="table-7-predicted-probabilities-by-raceethnicity">Table 7: Predicted Probabilities by Race/Ethnicity</h2>
 <div class="cell page-columns page-full">
@@ -1745,7 +1823,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="figure-5-predicted-probabilities-by-raceethnicity">Figure 5: Predicted Probabilities by Race/Ethnicity</h2>
 <div class="cell page-columns page-full">
 <div class="cell-output-display column-page-right">
-<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" style="width:85.0%"></p>
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" style="width:85.0%"></p>
 </div>
 </div>
 <p><br></p>
@@ -1791,7 +1869,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="figure-6a-predicted-probabilities-by-gender">Figure 6a: Predicted Probabilities by Gender</h2>
 <div class="cell page-columns page-full">
 <div class="cell-output-display column-page-right">
-<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" style="width:85.0%"></p>
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" style="width:85.0%"></p>
 </div>
 </div>
 <p><br></p>
@@ -1800,7 +1878,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="figure-6b-predicted-probabilities-by-raceethnicity-and-gender">Figure 6b: Predicted Probabilities by Race/Ethnicity and Gender</h2>
 <div class="cell page-columns page-full">
 <div class="cell-output-display column-page-right">
-<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" style="width:85.0%"></p>
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" style="width:85.0%"></p>
 </div>
 </div>
 <p><br></p>
@@ -2023,7 +2101,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="figure-7a-predicted-probabilities-by-csu">Figure 7a: Predicted Probabilities by CSU</h2>
 <div class="cell page-columns page-full">
 <div class="cell-output-display column-page-right">
-<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" style="width:85.0%"></p>
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" style="width:85.0%"></p>
 </div>
 </div>
 <p><br></p>
@@ -2032,7 +2110,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="figure-7b-predicted-probabilities-by-csu-mapped">Figure 7b: Predicted Probabilities by CSU (mapped)</h2>
 <div class="cell page-columns page-full">
 <div class="cell-output-display column-page-right">
-<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" style="width:100.0%"></p>
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" style="width:100.0%"></p>
 </div>
 </div>
 <p><br></p>
@@ -2111,7 +2189,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="figure-8-predicted-probabilities-by-charge-type">Figure 8: Predicted Probabilities by Charge Type</h2>
 <div class="cell page-columns page-full">
 <div class="cell-output-display column-page-right">
-<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" style="width:85.0%"></p>
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" style="width:85.0%"></p>
 </div>
 </div>
 <p><br></p>
@@ -2121,7 +2199,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><strong>NOTE:</strong> This analysis excludes CHINS complaints.</p>
 <div class="cell page-columns page-full">
 <div class="cell-output-display column-page-right">
-<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" style="width:85.0%"></p>
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" style="width:85.0%"></p>
 </div>
 </div>
 <p><br><br></p>
@@ -2146,27 +2224,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>counts of felony, misdemeanor, status, and violation charges associated with intake/complaint</p></li>
 </ul>
 <div class="cell page-columns page-full">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>intake_initial_diversion_re_complaint_within_a_year_model <span class="ot">&lt;-</span> df_analytic_complaints_disposition_caseload <span class="sc">%&gt;%</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(jj_history_clean<span class="sc">==</span><span class="st">"No Prior JJ History"</span>,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>         intake_decision_clean<span class="sc">==</span><span class="st">"Diverted"</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">is.na</span>(intake_decision_regression_model_petition)<span class="sc">==</span><span class="cn">TRUE</span>,</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>         date_opened<span class="sc">&lt;=</span><span class="st">"2020-06-30"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">race =</span> <span class="fu">fct_relevel</span>(race_clean, <span class="st">"White"</span>),</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">gender =</span> <span class="fu">fct_relevel</span>(gender_clean, <span class="st">"Male"</span>),</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">referral_source_clean =</span> <span class="fu">fct_relevel</span>(referral_source_clean, <span class="st">"Other"</span>),</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">date_opened_fy =</span> <span class="fu">fct_relevel</span>(<span class="fu">as.character</span>(date_opened_fy), <span class="st">"2016"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(juvenile_number,</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">.keep_all=</span><span class="cn">TRUE</span>)</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>va_diversion_re_complaint_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  regression_outcome_new_complaint_one_year_first_time_jj <span class="sc">~</span> race <span class="sc">+</span> gender <span class="sc">+</span> intake_age <span class="sc">+</span> csu <span class="sc">+</span> referral_source_clean <span class="sc">+</span> dai_clean <span class="sc">+</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    date_opened_fy <span class="sc">+</span> count_misd_with_case <span class="sc">+</span> count_felony_with_case <span class="sc">+</span> count_status_with_case <span class="sc">+</span> count_other_violation_with_case <span class="sc">+</span> count_violation_with_case,</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">"binomial"</span>, </span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> intake_initial_diversion_re_complaint_within_a_year_model)</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="fu">tab_model</span>(va_diversion_re_complaint_model,</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>          <span class="at">p.style =</span> <span class="st">"numeric_stars"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>intake_initial_diversion_re_complaint_within_a_year_model <span class="ot">&lt;-</span> df_analytic_complaints_disposition_caseload <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(jj_history_clean<span class="sc">==</span><span class="st">"No Prior JJ History"</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>         intake_decision_clean<span class="sc">==</span><span class="st">"Diverted"</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">is.na</span>(intake_decision_regression_model_petition)<span class="sc">==</span><span class="cn">TRUE</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>         date_opened<span class="sc">&lt;=</span><span class="st">"2020-06-30"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">race =</span> <span class="fu">fct_relevel</span>(race_clean, <span class="st">"White"</span>),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">gender =</span> <span class="fu">fct_relevel</span>(gender_clean, <span class="st">"Male"</span>),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">referral_source_clean =</span> <span class="fu">fct_relevel</span>(referral_source_clean, <span class="st">"Other"</span>),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">date_opened_fy =</span> <span class="fu">fct_relevel</span>(<span class="fu">as.character</span>(date_opened_fy), <span class="st">"2016"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(juvenile_number,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">.keep_all=</span><span class="cn">TRUE</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>va_diversion_re_complaint_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  regression_outcome_new_complaint_one_year_first_time_jj <span class="sc">~</span> race <span class="sc">+</span> gender <span class="sc">+</span> intake_age <span class="sc">+</span> csu <span class="sc">+</span> referral_source_clean <span class="sc">+</span> dai_clean <span class="sc">+</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    date_opened_fy <span class="sc">+</span> count_misd_with_case <span class="sc">+</span> count_felony_with_case <span class="sc">+</span> count_status_with_case <span class="sc">+</span> count_other_violation_with_case <span class="sc">+</span> count_violation_with_case,</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="st">"binomial"</span>, </span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> intake_initial_diversion_re_complaint_within_a_year_model)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="fu">tab_model</span>(va_diversion_re_complaint_model,</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>          <span class="at">p.style =</span> <span class="st">"numeric_stars"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display column-page-right">
 
 <table style="border-collapse:collapse; border:none;">
@@ -2570,6 +2648,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p><br></p>
 </section>
+<section id="model-b-variance-inflation-factor-vif" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="model-b-variance-inflation-factor-vif">Model B Variance Inflation Factor (VIF)</h2>
+<p><strong>Note:</strong> Independent variables with VIF values over 5 indicate “a potentially severe correlation” between two predictors (see https://www.statology.org/variance-inflation-factor-r/)</p>
+<p><strong>Question:</strong> Should we be using GVIF or GVIF^(1/(2*DF)) which accounts for DF in calculating the GVIF?</p>
+<p>Here’s a relevant post:</p>
+<ul>
+<li>https://stats.stackexchange.com/questions/70679/which-variance-inflation-factor-should-i-be-using-textgvif-or-textgvif</li>
+</ul>
+<div class="cell column-page-right">
+<div class="cell-output cell-output-stdout">
+<pre><code>                                      GVIF Df GVIF^(1/(2*Df))
+race                              1.603252  5        1.048335
+gender                            1.027275  1        1.013546
+intake_age                        1.130205  1        1.063111
+csu                               3.290949 31        1.019398
+referral_source_clean             6.673359  7        1.145201
+dai_clean                       420.867836  7        1.539710
+date_opened_fy                    1.096300  4        1.011559
+count_misd_with_case              2.400019  1        1.549199
+count_felony_with_case            6.252939  1        2.500588
+count_status_with_case            7.492156  1        2.737180
+count_other_violation_with_case   2.777106  1        1.666465
+count_violation_with_case         1.011116  1        1.005542</code></pre>
+</div>
+</div>
+<p><br></p>
+</section>
 <section id="table-7-predicted-probabilities-by-raceethnicity-1" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="table-7-predicted-probabilities-by-raceethnicity-1">Table 7: Predicted Probabilities by Race/Ethnicity</h2>
 <div class="cell page-columns page-full">
@@ -2639,7 +2744,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="figure-6-predicted-probabilities-by-raceethnicity">Figure 6: Predicted Probabilities by Race/Ethnicity</h2>
 <div class="cell page-columns page-full">
 <div class="cell-output-display column-page-right">
-<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid" style="width:85.0%"></p>
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-49-1.png" class="img-fluid" style="width:85.0%"></p>
 </div>
 </div>
 <p><br></p>
@@ -2685,7 +2790,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="figure-7-predicted-probabilities-by-gender">Figure 7: Predicted Probabilities by Gender</h2>
 <div class="cell page-columns page-full">
 <div class="cell-output-display column-page-right">
-<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-46-1.png" class="img-fluid" style="width:85.0%"></p>
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-51-1.png" class="img-fluid" style="width:85.0%"></p>
 </div>
 </div>
 <p><br></p>
@@ -2908,7 +3013,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="figure-8a-predicted-probabilities-by-csu">Figure 8a: Predicted Probabilities by CSU</h2>
 <div class="cell page-columns page-full">
 <div class="cell-output-display column-page-right">
-<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-48-1.png" class="img-fluid" style="width:85.0%"></p>
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-53-1.png" class="img-fluid" style="width:85.0%"></p>
 </div>
 </div>
 <p><br></p>
@@ -2917,7 +3022,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="figure-8b-predicted-probabilities-by-csu-mapped">Figure 8b: Predicted Probabilities by CSU (mapped)</h2>
 <div class="cell page-columns page-full">
 <div class="cell-output-display column-page-right">
-<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-49-1.png" class="img-fluid" style="width:100.0%"></p>
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-54-1.png" class="img-fluid" style="width:100.0%"></p>
 </div>
 </div>
 <p><br></p>
@@ -3062,7 +3167,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="figure-9-predicted-probabilities-by-charge-type">Figure 9: Predicted Probabilities by Charge Type</h2>
 <div class="cell page-columns page-full">
 <div class="cell-output-display column-page-right">
-<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-52-1.png" class="img-fluid" style="width:85.0%"></p>
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-57-1.png" class="img-fluid" style="width:85.0%"></p>
 </div>
 </div>
 <p><br></p>
@@ -3072,7 +3177,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><strong>NOTE:</strong> This analysis excludes CHINS complaints.</p>
 <div class="cell page-columns page-full">
 <div class="cell-output-display column-page-right">
-<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-53-1.png" class="img-fluid" style="width:85.0%"></p>
+<p><img src="ojjdp_va_part_i_analysis_regression_files/figure-html/unnamed-chunk-58-1.png" class="img-fluid" style="width:85.0%"></p>
 </div>
 </div>
 <p><br><br></p>
