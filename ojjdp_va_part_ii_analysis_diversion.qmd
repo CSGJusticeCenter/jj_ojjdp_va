@@ -1801,10 +1801,12 @@ df_complaints_youth_intake_decision_offense_viz <- df_analytic_complaints_dispos
   #       TRUE ~ as.character(NA))) |> 
   filter(!is.na(referral_source_clean)) |>
   dplyr::group_by(referral_source_clean) %>% 
-  dplyr::summarise(`Complaints Petitioned` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"])/n_distinct(unique_complaint_id),
-                   `Complaints Not Petitioned` = n_distinct(unique_complaint_id[intake_decision_clean!="Petitioned"])/n_distinct(unique_complaint_id)) %>%
+  dplyr::summarise(`Complaints Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"]),
+                   `Complaints Petitioned (%)` = n_distinct(unique_complaint_id[intake_decision_clean=="Petitioned"])/n_distinct(unique_complaint_id),
+                   `Complaints Not Petitioned (N)` = n_distinct(unique_complaint_id[intake_decision_clean!="Petitioned"]),
+                   `Complaints Not Petitioned (%)` = n_distinct(unique_complaint_id[intake_decision_clean!="Petitioned"])/n_distinct(unique_complaint_id)) %>%
   ungroup() |> 
-  pivot_longer(!referral_source_clean, names_to = "petition_status", values_to = "percent") |>
+  # pivot_longer(!referral_source_clean, names_to = "petition_status", values_to = "percent") |>
   mutate(referral_source_clean = factor(referral_source_clean,
                                 levels = c("Probation Officer",
                                            "Other",

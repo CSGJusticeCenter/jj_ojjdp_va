@@ -2519,18 +2519,36 @@ kable(pred_prob_diversion_petition_dai_overall,
 #| out-width: 85%
 
 ### create denominator -- unique complaint for entire sample
-subsequent_complaints_status_sample_denom <- n_distinct(intake_initial_diversion_re_complaint_within_a_year_model$unique_complaint_id[intake_initial_diversion_re_complaint_within_a_year_model$dai=="Status Offense" & intake_initial_diversion_re_complaint_within_a_year_model$regression_outcome_new_complaint_one_year_first_time_jj==1])
+subsequent_complaints_status_sample_denom <- n_distinct(intake_initial_diversion_re_complaint_within_a_year_model$unique_complaint_id[intake_initial_diversion_re_complaint_within_a_year_model$dai=="Status Offense" & intake_initial_diversion_re_complaint_within_a_year_model$next_complaint_dai=="Status Offense" &  intake_initial_diversion_re_complaint_within_a_year_model$regression_outcome_new_complaint_one_year_first_time_jj==1])
 
 ### unique complaints split out
 df_complaints_youth_intake_decision_table_subsequent_offense <- intake_initial_diversion_re_complaint_within_a_year_model %>% 
+    mutate(description_clean_viz = case_when(
+    description=="CURFEW VIOLATION BETWEEN 10 PM AND 6 AM" ~ "Curfew",
+    description=="MOTION TO SHOW CAUSE - PARENTS FAIL TO OBEY CHINS/DELINQ ORD" ~ "Parents/CHINS",
+    description=="Purchase, attempted purchase or possession of tobacco by minor" ~ "Tobacco",
+    description=="RUNAWAY, CHILD IN NEED OF SUPERVISION" ~ "Runaway",
+    description=="SERVICES, CHILD IN NEED OF" ~ "Need for Services",
+    description=="TRUANCY, CHILD IN NEED OF SUPERVISION" ~ "Truancy",
+    TRUE ~ as.character(NA)),
+    next_complaint_description_clean_viz = case_when(
+    next_complaint_description=="CURFEW VIOLATION BETWEEN 10 PM AND 6 AM" ~ "Curfew",
+    next_complaint_description=="MOTION TO SHOW CAUSE - PARENTS FAIL TO OBEY CHINS/DELINQ ORD" ~ "Parents/CHINS",
+    next_complaint_description=="Purchase, attempted purchase or possession of tobacco by minor" ~ "Tobacco",
+    next_complaint_description=="RUNAWAY, CHILD IN NEED OF SUPERVISION" ~ "Runaway",
+    next_complaint_description=="SERVICES, CHILD IN NEED OF" ~ "Need for Services",
+    next_complaint_description=="TRUANCY, CHILD IN NEED OF SUPERVISION" ~ "Truancy",
+    TRUE ~ as.character(NA))) |>
+  # filter(description_clean_viz!="Parents/CHINS") |> 
   filter(dai=="Status Offense",
+         next_complaint_dai=="Status Offense",
          regression_outcome_new_complaint_one_year_first_time_jj==1) |> 
-  dplyr::group_by(next_complaint_dai) %>% 
+  dplyr::group_by(next_complaint_description_clean_viz) %>% 
   dplyr::summarise(`All Complaints (N)` = n_distinct(unique_complaint_id),
                    `All Complaints (column %)` = scales::percent(`All Complaints (N)`/subsequent_complaints_status_sample_denom,
                                                                        accuracy = .1)) %>% 
   ungroup() %>% 
-  dplyr::rename(`Subsequent Offense` = next_complaint_dai)  
+  dplyr::rename(`Subsequent Offense` = next_complaint_description_clean_viz)  
 
 
 ### print table via kableextra

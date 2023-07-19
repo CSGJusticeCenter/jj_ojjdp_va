@@ -381,6 +381,9 @@ df_complaints_youth_intake_decision <- df_djj_intake_complaints_clean %>%
          next_complaint_dai = dplyr::lead(dai,
                                                    1,
                                                    default=NA),
+         next_complaint_description = dplyr::lead(description,
+                                                   1,
+                                                   default=NA),
          next_petition_intake_date = dplyr::lead(date_opened_petitioned_only,
                                                    1,
                                                    default=NA)) %>%

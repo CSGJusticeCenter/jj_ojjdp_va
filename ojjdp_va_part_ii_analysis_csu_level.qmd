@@ -1011,6 +1011,26 @@ df_va_csu_youth_population_8_17 <- left_join(df_acs_bridged_age_race_sex_15_19_f
                                                  na.rm = TRUE)) %>% 
   ungroup()
 
+### create quantiles object
+no_classes <- 4
+
+### extract quantiles from var we're mapping
+quantiles <- df_va_csu_youth_population_8_17 %>%
+  pull(overall_8_17_population) %>%
+  quantile(probs = seq(0, 1, length.out = no_classes + 1), na.rm=TRUE) %>%
+  as.vector() 
+
+### make labels for map's legend
+label_petition_rate <- c("42,200 to 154,400","23,100 to 42,200","14,000 to 23,100","5,100 to 14,000")
+
+### create a new variable with the specified quantiles
+df_va_csu_youth_population_8_17 %<>%
+  mutate(youth_pop_quartile = cut(-overall_8_17_population,
+                               breaks = -quantiles,
+                               right = TRUE,
+                               labels = label_petition_rate,
+                               include.lowest = T))
+
 ### Intake Decisions by Petitioner Type/Referral Source (per 10k youth by CSU)
 df_complaints_youth_intake_decision_pet_desc_rate_csu <- df_analytic_complaints_disposition_caseload %>% 
   filter(!is.na(referral_source_clean_csu_level_categories)==TRUE) %>% 
